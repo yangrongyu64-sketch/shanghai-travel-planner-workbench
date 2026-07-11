@@ -527,7 +527,7 @@
     <header class="topbar">
       <div class="brand">
         <h1>上海攻略生成工作台</h1>
-        <p>6 条路线 · 游客攻略 / 小红书 / 抖音 / 游记 / 路线图 / 路线对比 / 交付验收 / 体检 / 素材 / 发布看板 / 官方总表 / 官方回填</p>
+        <p>6 条路线 · 游客攻略 / 小红书 / 抖音 / 游记 / 路线图 / 路线对比 / 交付验收 / 体检 / 素材 / 平台导入 / 发布看板 / 官方总表 / 官方回填</p>
       </div>
       <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-11</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">普通工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
       <div class="metrics" aria-label="工作台概览">
@@ -546,7 +546,7 @@
               <div class="field"><label for="intensity-select">强度</label><select id="intensity-select" name="intensity"><option value="relaxed" selected>躺平</option><option value="balanced">均衡</option><option value="high_walk">暴走</option></select></div>
               <div class="field"><label for="theme-select">主题</label><select id="theme-select" name="theme"><option value="any">不限</option><option value="city_walk">city walk</option><option value="landmark">地标打卡</option><option value="culture">文化艺术</option><option value="local_life">生活感</option></select></div>
               <div class="field"><label for="stay-select">住宿区</label><select id="stay-select" name="stay"><option value="any" selected>不限</option><option value="人民广场">人民广场</option><option value="静安寺 / 南京西路">静安寺 / 南京西路</option><option value="淮海中路 / 衡复">淮海中路 / 衡复</option></select></div>
-              <div class="field"><label for="purpose-select">内容用途</label><select id="purpose-select" name="purpose"><option value="traveler">游客攻略</option><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="essay">游记</option><option value="map">路线图</option><option value="route_compare">路线对比</option><option value="project_acceptance">交付验收</option><option value="audit">体检</option><option value="materials">素材审核</option><option value="publish_dashboard">发布看板</option><option value="official_queue">官方总表</option><option value="official">官方回填</option></select></div>
+              <div class="field"><label for="purpose-select">内容用途</label><select id="purpose-select" name="purpose"><option value="traveler">游客攻略</option><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="essay">游记</option><option value="map">路线图</option><option value="route_compare">路线对比</option><option value="project_acceptance">交付验收</option><option value="audit">体检</option><option value="materials">素材审核</option><option value="platform_import">平台导入</option><option value="publish_dashboard">发布看板</option><option value="official_queue">官方总表</option><option value="official">官方回填</option></select></div>
               <div class="field full"><label for="preference-input">偏好补充</label><textarea id="preference-input" name="preference" placeholder="亲子、少排队、想拍夜景、不要太商业"></textarea></div>
             </div>
             <button class="generate" type="submit">生成攻略</button>
@@ -591,6 +591,7 @@
           <button class="tab" data-tab="project_acceptance">交付验收</button>
           <button class="tab" data-tab="audit">体检</button>
           <button class="tab" data-tab="materials">素材</button>
+          <button class="tab" data-tab="platform_import">平台导入</button>
           <button class="tab" data-tab="publish_dashboard">发布看板</button>
           <button class="tab" data-tab="official_queue">官方总表</button>
           <button class="tab" data-tab="official">官方回填</button>
@@ -670,7 +671,7 @@
       });
     }
     const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], projectPublishArchiveReceipt: null, projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
-    const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
+    const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
     const PROJECT_WORKBENCH_STATE_HISTORY_STORAGE_KEY = 'shanghai_planner_workbench_history_v1';
@@ -959,7 +960,7 @@
       return `${route.tripId}:${tab}`;
     }
     function routeBaseContentText(route, tab){
-      return tab === 'map' ? routeMapMarkdown(route) : tab === 'route_compare' ? routeComparisonMarkdown() : tab === 'project_acceptance' ? projectAcceptanceMarkdown() : tab === 'audit' ? auditMarkdown(route) : tab === 'materials' ? materialsMarkdown(route) : tab === 'publish_dashboard' ? publishDashboardMarkdown() : tab === 'official_queue' ? officialQueueMarkdown() : tab === 'official' ? JSON.stringify(officialVerificationPayload(), null, 2) : route.content[tab];
+      return tab === 'map' ? routeMapMarkdown(route) : tab === 'route_compare' ? routeComparisonMarkdown() : tab === 'project_acceptance' ? projectAcceptanceMarkdown() : tab === 'audit' ? auditMarkdown(route) : tab === 'materials' ? materialsMarkdown(route) : tab === 'platform_import' ? platformMaterialImportMarkdown(route) : tab === 'publish_dashboard' ? publishDashboardMarkdown() : tab === 'official_queue' ? officialQueueMarkdown() : tab === 'official' ? JSON.stringify(officialVerificationPayload(), null, 2) : route.content[tab];
     }
     function routeContentText(route, tab){
       const key = routeContentDraftKey(route, tab);
@@ -1173,6 +1174,149 @@
       const gradeText = Object.entries(gradeSummary).map(([grade, count]) => `${grade}:${count}`).join(' / ') || '无';
       const blocks = sources.map(source => `### ${source.title}\n\n- ID：${source.id}\n- 平台：${source.platformLabel}\n- 来源等级：${source.sourceGrade}\n- 审核状态：${source.status}\n- 来源链接：${source.sourceUrl}\n\n#### 内容角度\n${bulletLines(source.contentAngles)}\n\n#### 路线信号\n${bulletLines(source.routeHints)}\n\n#### 避坑信号\n${bulletLines(source.cautionNotes)}`).join('\n\n');
       return `# 素材审核\n\n- 发布风险等级：${quality.status}\n- 素材质量分：${quality.score}/100\n- 素材数量：${sources.length}\n- 来源等级：${gradeText}\n- 使用原则：平台素材只作为结构和体验信号，发布前仍需事实复核。\n\n## 发布前清单\n\n${bulletLines(quality.checklist)}\n\n## 素材列表\n\n${blocks || '- 暂无素材'}`;
+    }
+    function platformMaterialImportPlatformLabel(platform){
+      return platform === 'xiaohongshu' ? '小红书' : platform === 'douyin' ? '抖音' : platform === 'travel_website' ? '旅游网站' : platform || '平台素材';
+    }
+    function platformMaterialImportRouteStops(route){
+      return (route.mapDays || []).flatMap(day => (day.stops || []).map(stop => ({...stop, day: day.day})));
+    }
+    function platformMaterialImportMatchedStops(route, text){
+      const source = String(text || '');
+      const seen = new Set();
+      return platformMaterialImportRouteStops(route).filter(stop => {
+        const aliases = [stop.placeName, stop.placeId, ...(String(stop.placeName || '').split('/'))].map(value => String(value || '').trim()).filter(Boolean);
+        const matched = aliases.some(alias => {
+          if (alias === '外滩') return source.includes('外滩') && !source.includes('外滩源到外滩源');
+          return source.includes(alias);
+        });
+        if (!matched || seen.has(stop.placeId)) return false;
+        seen.add(stop.placeId);
+        return true;
+      });
+    }
+    function platformMaterialImportHasCityWalk(text){
+      const compact = String(text || '').replace(/\s+/g, '').toLowerCase();
+      return compact.includes('citywalk') || compact.includes('citywalk') || String(text || '').includes('街区') || String(text || '').includes('步行');
+    }
+    function platformMaterialImportContentAngles(route, text){
+      const duration = `${route.durationDays}天`;
+      const intensity = route.intensityLabel || '';
+      const source = String(text || '');
+      const angles = [];
+      if (duration && intensity && platformMaterialImportHasCityWalk(source)) angles.push(`${duration}${intensity} city walk`);
+      else if (duration && intensity) angles.push(`${duration}${intensity}玩法`);
+      if (source.includes('不累') || route.durationDays === 2) angles.push('短途不累玩法');
+      if (source.includes('少换区') || route.durationDays === 2) angles.push('少换区的2日路线');
+      if (/文化|博物馆|美术馆/.test(source)) angles.push('文化艺术路线');
+      if (/地标|外滩|陆家嘴/.test(source)) angles.push('地标打卡路线');
+      return [...new Set(angles.filter(Boolean))];
+    }
+    function platformMaterialImportTags(route, text){
+      const hashtags = Array.from(String(text || '').matchAll(/#([A-Za-z0-9_\-\u4e00-\u9fff]+)/g)).map(match => match[1]);
+      return [...new Set([...hashtags, `${route.durationDays}天`, route.intensityLabel, platformMaterialImportHasCityWalk(text) ? 'citywalk' : '', route.primaryAngle].filter(Boolean))];
+    }
+    function platformMaterialImportCautionNotes(text){
+      const source = String(text || '');
+      const notes = [];
+      if (/不要|别|避开|不宜|排满/.test(source)) notes.push('避免把短途路线排成高强度打卡。');
+      if (source.includes('咖啡') && /排满|排队|热门/.test(source)) notes.push('咖啡和拍照点只保留少量确定目标，避免排队打乱节奏。');
+      if (!notes.length) notes.push('把原文中的避坑信号改写后再发布。');
+      return [...new Set(notes)];
+    }
+    function platformMaterialImportRouteHints(route, matchedStops){
+      const names = matchedStops.map(stop => stop.placeName).slice(0, 6);
+      const hints = [];
+      if (names.length) hints.push(`按同片区串联${names.join('、')}，把素材转成顺路动线。`);
+      if (route.durationDays === 2) hints.push('短途行程优先少换区，把经典景点作为收尾而不是全天赶场。');
+      if (!hints.length) hints.push('先提炼路线结构，再回到官方信息确认开放、预约和交通。');
+      return hints;
+    }
+    function platformMaterialImportTitle(route, text){
+      const suffix = platformMaterialImportHasCityWalk(text) ? ' city walk' : '';
+      return `手动粘贴素材：${route.durationDays}天${route.intensityLabel}${suffix} 参考`;
+    }
+    function platformMaterialImportPayload(options){
+      const selectedRouteId = options?.route?.tripId || document.getElementById('platform-material-import-route-select')?.value || state.selectedId;
+      const route = options?.route || routes.find(item => item.tripId === selectedRouteId) || currentRoute();
+      const platform = options?.platform || document.getElementById('platform-material-platform-select')?.value || 'xiaohongshu';
+      const sourceUrl = options?.sourceUrl || document.getElementById('platform-material-source-url-input')?.value || 'paste:platform-material';
+      const capturedAt = options?.capturedAt || document.getElementById('platform-material-captured-at-input')?.value || new Date().toISOString().slice(0, 10);
+      const rawText = String(options?.rawText ?? document.getElementById('platform-material-raw-text')?.value ?? '');
+      const matchedStops = platformMaterialImportMatchedStops(route, rawText);
+      const placeNames = matchedStops.map(stop => stop.placeName);
+      const angles = platformMaterialImportContentAngles(route, rawText);
+      return {
+        package_type: 'platform_material_import',
+        route_id: route.tripId,
+        route_name: route.templateName,
+        platform,
+        platform_label: platformMaterialImportPlatformLabel(platform),
+        source_grade: 'C',
+        source_url: sourceUrl,
+        captured_at: capturedAt,
+        title: platformMaterialImportTitle(route, rawText),
+        summary: `手动粘贴素材提到${placeNames.join('、') || '待人工补充地点'}；适合提炼${angles.slice(0, 3).join('、') || route.primaryAngle}。不复制第三方原文，只保留结构化洞察。`,
+        tags: platformMaterialImportTags(route, rawText),
+        referenced_place_ids: matchedStops.map(stop => stop.placeId),
+        referenced_place_names: placeNames,
+        content_angles: angles,
+        route_hints: platformMaterialImportRouteHints(route, matchedStops),
+        caution_notes: platformMaterialImportCautionNotes(rawText),
+        official_fields_to_verify: ['opening_status', 'reservation_status', 'ticket_status', 'transport_status', 'temporary_closure'],
+        usage_notice: '不复制第三方原文，只保留结构化洞察。',
+        next_steps: ['人工复核来源 URL 和采集日期。', '删除任何完整原文段落，只保留结构化字段。', '将复核后的 JSON 放入 outputs/captured_materials 后合并进 data/materials。'],
+      };
+    }
+    function platformMaterialImportPreview(payload){
+      return JSON.stringify(payload, null, 2);
+    }
+    function platformMaterialImportFileName(payload){
+      const routeId = String(payload?.route_id || 'shanghai-route').replace(/[^a-zA-Z0-9_\-]+/g, '-');
+      const platform = String(payload?.platform || 'platform').replace(/[^a-zA-Z0-9_\-]+/g, '-');
+      return `${routeId}-platform-material-${platform}.json`;
+    }
+    function platformMaterialImportMarkdown(route){
+      return `# 平台素材导入\n\n- 当前路线：${route.templateName}\n- 使用原则：不复制第三方原文，只保留结构化洞察。\n- 支持平台：小红书、抖音、旅游网站。\n- 导出 JSON 后，先人工复核，再合并进 data/materials。`; 
+    }
+    function platformMaterialImportHtml(route){
+      const routeOptions = routes.map(item => `<option value="${escapeHtml(item.tripId)}"${item.tripId === route.tripId ? ' selected' : ''}>${escapeHtml(item.durationDays + '天 · ' + item.templateName)}</option>`).join('');
+      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>`;
+    }
+    function bindPlatformMaterialImport(){
+      const previewButton = document.getElementById('platform-material-preview-button');
+      const downloadButton = document.getElementById('download-platform-material-json-button');
+      const preview = document.getElementById('platform-material-preview');
+      const status = document.getElementById('platform-material-import-status');
+      const routeSelect = document.getElementById('platform-material-import-route-select');
+      if (!previewButton || !downloadButton || !preview || !status) return;
+      const renderPreview = () => {
+        const payload = platformMaterialImportPayload();
+        preview.textContent = platformMaterialImportPreview(payload);
+        status.textContent = `已生成 ${payload.referenced_place_ids.length} 个地点、${payload.content_angles.length} 个内容角度；导出前请人工复核。`; 
+        return payload;
+      };
+      previewButton.addEventListener('click', renderPreview);
+      downloadButton.addEventListener('click', () => downloadPlatformMaterialImportJson());
+      if (routeSelect) routeSelect.addEventListener('change', () => { state.selectedId = routeSelect.value; renderMain(); });
+    }
+    function downloadPlatformMaterialImportJson(){
+      const payload = platformMaterialImportPayload();
+      const preview = document.getElementById('platform-material-preview');
+      if (preview) preview.textContent = platformMaterialImportPreview(payload);
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = platformMaterialImportFileName(payload);
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      const button = document.getElementById('download-platform-material-json-button');
+      const status = document.getElementById('platform-material-import-status');
+      if (button) button.textContent = '素材JSON已下载';
+      if (status) status.textContent = `已下载 ${platformMaterialImportFileName(payload)}；复核后可合并进 data/materials。`; 
     }
     function routeMapReviewStatusItem(route){
       const draft = projectMapReviewDraft(route?.tripId);
@@ -5629,13 +5773,14 @@
       currentContentText = preferenceVariantContentText(route, state.tab) || '';
       currentPublishText = publishReadyText(currentContentText, state.tab);
       currentDownloadName = contentFileName(route, state.tab);
-      contentView.innerHTML = state.tab === 'official' ? officialEditorHtml(route) : state.tab === 'official_queue' ? officialQueueHtml() : state.tab === 'publish_dashboard' ? publishDashboardHtml() : state.tab === 'project_acceptance' ? projectAcceptanceHtml() : state.tab === 'route_compare' ? routeComparisonHtml() : state.tab === 'map' ? routeMapHtml(route) : `${preferenceEditor}${contentDraftTools}${markdownToHtml(displayedContent || '')}`
+      contentView.innerHTML = state.tab === 'official' ? officialEditorHtml(route) : state.tab === 'official_queue' ? officialQueueHtml() : state.tab === 'publish_dashboard' ? publishDashboardHtml() : state.tab === 'project_acceptance' ? projectAcceptanceHtml() : state.tab === 'route_compare' ? routeComparisonHtml() : state.tab === 'map' ? routeMapHtml(route) : state.tab === 'platform_import' ? platformMaterialImportHtml(route) : `${preferenceEditor}${contentDraftTools}${markdownToHtml(displayedContent || '')}`
       if (state.tab === 'official') bindOfficialEditor(route);
       if (state.tab === 'official_queue') bindOfficialQueue();
       if (state.tab === 'publish_dashboard') bindPublishDashboard();
       if (state.tab === 'project_acceptance') bindProjectAcceptance();
       if (state.tab === 'route_compare') bindRouteComparison();
       if (state.tab === 'map') bindRouteMapTools(route);
+      if (state.tab === 'platform_import') bindPlatformMaterialImport();
       bindPreferenceVariantEditor(route);
       bindContentDraftControls(route);
       document.querySelectorAll('.tab').forEach(button => button.classList.toggle('active', button.dataset.tab === state.tab));

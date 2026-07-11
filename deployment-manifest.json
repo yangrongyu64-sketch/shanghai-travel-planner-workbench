@@ -23,5 +23,13 @@
     "演示版自动填充发布工作台",
     "普通工作台入口 workbench.html 可访问",
     "离线演示包 workbench-demo.zip 可下载"
-  ]
+  ],
+  "live_deployment": {
+    "status": "published",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+    "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
+    "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
+    "published_at": "2026-07-11"
+  }
 }

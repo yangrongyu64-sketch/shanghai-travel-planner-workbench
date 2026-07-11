@@ -8,7 +8,8 @@
   },
   "download_files": [
     "workbench-demo.zip",
-    "miniprogram-handoff.zip"
+    "miniprogram-handoff.zip",
+    "maintenance-report.zip"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -20,6 +21,11 @@
     "directory": "miniprogram-handoff",
     "archive": "miniprogram-handoff.zip",
     "target": "微信小程序 / 移动端壳"
+  },
+  "maintenance": {
+    "directory": "maintenance",
+    "archive": "maintenance-report.zip",
+    "health_report": "maintenance/health-report.json"
   },
   "deploy_scripts": {
     "github_pages": "deploy-github-pages.sh"
@@ -35,6 +41,7 @@
     "演示版自动填充发布工作台",
     "普通工作台入口 workbench.html 可访问",
     "离线演示包 workbench-demo.zip 可下载",
+    "维护健康包 maintenance-report.zip 可下载",
     "PWA manifest 可访问且 service worker 可注册"
   ],
   "live_deployment": {

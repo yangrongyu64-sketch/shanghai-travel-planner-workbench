@@ -21,6 +21,12 @@
     .metric{border:1px solid var(--line);background:var(--surface-strong);padding:8px 10px;min-width:88px}
     .metric b{display:block;font-size:20px;line-height:1.1}
     .metric span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+    .live-deployment-banner{display:grid;gap:7px;min-width:min(360px,100%);padding:10px;border:1px solid rgba(36,87,166,.2);background:#edf4ff;border-radius:8px;color:#173b76}
+    .live-deployment-banner div{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .live-deployment-banner b{font-size:13px;line-height:1.35}
+    .live-deployment-banner span{font-size:12px;color:#173b76;line-height:1.35}
+    .live-deployment-banner nav{display:flex;gap:6px;flex-wrap:wrap}
+    .live-deployment-banner a{display:inline-flex;align-items:center;min-height:28px;padding:0 8px;border:1px solid rgba(36,87,166,.22);background:#fff;border-radius:8px;color:#173b76;font-size:12px;font-weight:800;white-space:nowrap}
     .workspace{display:grid;grid-template-columns:320px minmax(0,1fr) 330px;gap:0;min-height:0;overflow-x:hidden}
     .sidebar,.inspector{border-right:1px solid var(--line);background:#fbfaf7;min-width:0}
     .inspector{border-right:0;border-left:1px solid var(--line);background:#fffaf1}
@@ -506,7 +512,7 @@
     .route-map-stop-detail b{display:inline-block;margin-right:6px;color:var(--ink)}
     .empty{padding:18px;color:var(--muted)}
     @media(max-width:1100px){.workspace{grid-template-columns:280px minmax(0,1fr)}.inspector{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:760px){.topbar{display:block;padding:18px}.metrics{justify-content:flex-start;margin-top:14px}.workspace{grid-template-columns:1fr}.sidebar,.inspector{border:0;border-bottom:1px solid var(--line)}.route-list{max-height:none}.inspector{display:block}.route-title{display:block}.scorebox{margin-top:12px}.content-tabs{padding:10px}.content-wrap{padding:10px}.markdown-body{padding:14px}.brand h1{font-size:22px}.form-grid{grid-template-columns:1fr 1fr}.route-map-tools-grid{grid-template-columns:1fr}.preference-variant-row{grid-template-columns:1fr}.preference-variant-copy{width:100%}.project-publish-workspace{padding:10px}.publish-workspace-section{padding:10px}.publish-workspace-head{display:grid}.publish-workspace-actions button{flex:1 1 150px}.publish-ready-preview-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.topbar{display:block;padding:18px}.live-deployment-banner{margin-top:14px}.metrics{justify-content:flex-start;margin-top:14px}.workspace{grid-template-columns:1fr}.sidebar,.inspector{border:0;border-bottom:1px solid var(--line)}.route-list{max-height:none}.inspector{display:block}.route-title{display:block}.scorebox{margin-top:12px}.content-tabs{padding:10px}.content-wrap{padding:10px}.markdown-body{padding:14px}.brand h1{font-size:22px}.form-grid{grid-template-columns:1fr 1fr}.route-map-tools-grid{grid-template-columns:1fr}.preference-variant-row{grid-template-columns:1fr}.preference-variant-copy{width:100%}.project-publish-workspace{padding:10px}.publish-workspace-section{padding:10px}.publish-workspace-head{display:grid}.publish-workspace-actions button{flex:1 1 150px}.publish-ready-preview-grid{grid-template-columns:1fr}}
     @media(max-width:900px){.project-publish-next-step{grid-template-columns:1fr 1fr}.project-publish-next-step-main,.project-publish-next-step-actions{grid-column:1/-1}.project-publish-next-step-actions{justify-content:stretch}.project-publish-next-step-action{flex:1 1 150px;box-sizing:border-box}.project-publish-next-step-metric{min-height:58px}.project-publish-next-step-import-body{grid-template-columns:1fr}.project-publish-next-step-import-controls{min-width:0}}
     @media(max-width:760px){.publish-workspace-secondary-actions{width:100%}.publish-workspace-secondary-actions summary,.publish-workspace-primary-action{width:100%;box-sizing:border-box}.publish-workspace-secondary-actions-body{display:grid;grid-template-columns:1fr}}
     @media(max-width:520px){.project-publish-next-step{grid-template-columns:1fr}}
@@ -520,6 +526,7 @@
         <h1>上海攻略生成工作台</h1>
         <p>6 条路线 · 游客攻略 / 小红书 / 抖音 / 游记 / 路线图 / 路线对比 / 交付验收 / 体检 / 素材 / 发布看板 / 官方总表 / 官方回填</p>
       </div>
+      <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-11</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">普通工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
       <div class="metrics" aria-label="工作台概览">
         <div class="metric"><b>6</b><span>路线</span></div>
         <div class="metric"><b id="avg-route-score">--</b><span>路线均分</span></div>

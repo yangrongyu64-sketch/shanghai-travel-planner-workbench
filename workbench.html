@@ -670,7 +670,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], projectPublishArchiveReceipt: null, projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], projectPublishArchiveReceipt: null, projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -1167,8 +1167,14 @@
       return `# 内容体检\n\n- 内容健康分：${route.contentScore}/100\n- 路线总分：${route.routeScore}/100\n- 来源问题：${route.sourceIssueCount}\n\n## 待优化点\n\n${issues}\n\n## 下一步动作\n\n${actions}`;
     }
     function bulletLines(values){ return values.length ? values.map(value => `- ${value}`).join('\n') : '- 无'; }
+    function routeMaterialSources(route){
+      const baseSources = route?.materialSources || [];
+      const routeId = String(route?.tripId || '').trim();
+      const importedSources = platformMaterialImportRecords().filter(record => record.route_id === routeId).map(platformMaterialImportSourceRecord);
+      return baseSources.concat(importedSources);
+    }
     function materialsMarkdown(route){
-      const sources = route.materialSources || [];
+      const sources = routeMaterialSources(route);
       const quality = routeMaterialQuality(route);
       const gradeSummary = sources.reduce((result, source) => { result[source.sourceGrade] = (result[source.sourceGrade] || 0) + 1; return result; }, {});
       const gradeText = Object.entries(gradeSummary).map(([grade, count]) => `${grade}:${count}`).join(' / ') || '无';
@@ -1276,20 +1282,97 @@
       const platform = String(payload?.platform || 'platform').replace(/[^a-zA-Z0-9_\-]+/g, '-');
       return `${routeId}-platform-material-${platform}.json`;
     }
+    function platformMaterialImportArray(value){
+      return Array.isArray(value) ? value.map(item => String(item || '').trim()).filter(Boolean) : [];
+    }
+    function platformMaterialImportSafeSlug(value, fallback){
+      return String(value || fallback || 'item').trim().replace(/[^a-zA-Z0-9_\-]+/g, '_').replace(/^_+|_+$/g, '') || String(fallback || 'item');
+    }
+    function platformMaterialImportRecordId(record){
+      const routeId = platformMaterialImportSafeSlug(record?.route_id || record?.routeId, 'route');
+      const platform = platformMaterialImportSafeSlug(record?.platform, 'platform');
+      const capturedAt = String(record?.captured_at || record?.capturedAt || new Date().toISOString().slice(0, 10)).replace(/[^0-9]/g, '') || 'undated';
+      return `capture_${routeId}_${platform}_${capturedAt}`;
+    }
+    function normalizePlatformMaterialImportRecord(raw){
+      if (!raw || typeof raw !== 'object') return null;
+      const routeId = String(raw.route_id || raw.routeId || '').trim();
+      const platform = String(raw.platform || 'platform').trim();
+      if (!routeId || !routes.some(route => route.tripId === routeId)) return null;
+      const record = {
+        route_id: routeId,
+        route_name: String(raw.route_name || raw.routeName || '').trim(),
+        platform,
+        platform_label: String(raw.platform_label || raw.platformLabel || platformMaterialImportPlatformLabel(platform)).trim(),
+        source_grade: String(raw.source_grade || raw.sourceGrade || 'C').trim().toUpperCase() || 'C',
+        source_url: String(raw.source_url || raw.sourceUrl || 'paste:platform-material').trim(),
+        captured_at: String(raw.captured_at || raw.capturedAt || new Date().toISOString().slice(0, 10)).trim(),
+        title: String(raw.title || '手动粘贴素材').trim(),
+        referenced_place_ids: platformMaterialImportArray(raw.referenced_place_ids || raw.referencedPlaceIds),
+        referenced_place_names: platformMaterialImportArray(raw.referenced_place_names || raw.referencedPlaceNames),
+        content_angles: platformMaterialImportArray(raw.content_angles || raw.contentAngles),
+        route_hints: platformMaterialImportArray(raw.route_hints || raw.routeHints),
+        caution_notes: platformMaterialImportArray(raw.caution_notes || raw.cautionNotes),
+        official_fields_to_verify: platformMaterialImportArray(raw.official_fields_to_verify || raw.officialFieldsToVerify),
+        usage_notice: '不复制第三方原文，只保留结构化洞察。'
+      };
+      record.id = String(raw.id || platformMaterialImportRecordId(record)).trim();
+      return record;
+    }
+    function platformMaterialImportRecords(records){
+      const source = Array.isArray(records) ? records : Array.isArray(records?.platform_material_imports) ? records.platform_material_imports : Array.isArray(records?.platformMaterialImports) ? records.platformMaterialImports : state.platformMaterialImports;
+      const seen = new Set();
+      return (Array.isArray(source) ? source : []).map(normalizePlatformMaterialImportRecord).filter(record => {
+        if (!record || seen.has(record.id)) return false;
+        seen.add(record.id);
+        return true;
+      });
+    }
+    function platformMaterialImportSourceRecord(record){
+      return {
+        id: record.id,
+        platform: record.platform,
+        platformLabel: record.platform_label,
+        sourceGrade: record.source_grade,
+        status: '需复核',
+        title: record.title,
+        sourceUrl: record.source_url,
+        contentAngles: record.content_angles,
+        routeHints: record.route_hints,
+        cautionNotes: record.caution_notes
+      };
+    }
+    function applyPlatformMaterialImportPayload(payload){
+      const record = normalizePlatformMaterialImportRecord(payload);
+      if (!record) return {imported: 0, message: '平台素材导入失败：缺少有效路线。'};
+      const records = platformMaterialImportRecords().filter(item => item.id !== record.id);
+      state.platformMaterialImports = records.concat([record]);
+      return {imported: 1, record, message: `已导入平台素材：${record.title}。`};
+    }
+    function applyPlatformMaterialImportRecords(records){
+      state.platformMaterialImports = [];
+      let imported = 0;
+      platformMaterialImportRecords(records).forEach(record => {
+        const result = applyPlatformMaterialImportPayload(record);
+        imported += result.imported || 0;
+      });
+      return imported;
+    }
     function platformMaterialImportMarkdown(route){
       return `# 平台素材导入\n\n- 当前路线：${route.templateName}\n- 使用原则：不复制第三方原文，只保留结构化洞察。\n- 支持平台：小红书、抖音、旅游网站。\n- 导出 JSON 后，先人工复核，再合并进 data/materials。`; 
     }
     function platformMaterialImportHtml(route){
       const routeOptions = routes.map(item => `<option value="${escapeHtml(item.tripId)}"${item.tripId === route.tripId ? ' selected' : ''}>${escapeHtml(item.durationDays + '天 · ' + item.templateName)}</option>`).join('');
-      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>`;
+      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="import-platform-material-button">导入到素材池</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>`;
     }
     function bindPlatformMaterialImport(){
       const previewButton = document.getElementById('platform-material-preview-button');
+      const importButton = document.getElementById('import-platform-material-button');
       const downloadButton = document.getElementById('download-platform-material-json-button');
       const preview = document.getElementById('platform-material-preview');
       const status = document.getElementById('platform-material-import-status');
       const routeSelect = document.getElementById('platform-material-import-route-select');
-      if (!previewButton || !downloadButton || !preview || !status) return;
+      if (!previewButton || !importButton || !downloadButton || !preview || !status) return;
       const renderPreview = () => {
         const payload = platformMaterialImportPayload();
         preview.textContent = platformMaterialImportPreview(payload);
@@ -1297,6 +1380,18 @@
         return payload;
       };
       previewButton.addEventListener('click', renderPreview);
+      importButton.addEventListener('click', () => {
+        const payload = renderPreview();
+        const result = applyPlatformMaterialImportPayload(payload);
+        if (result.imported) {
+          persistProjectWorkbenchState();
+          importButton.textContent = '已导入素材池';
+          status.textContent = `${result.message} 已写入本机状态，可切到素材审核查看。`; 
+        } else {
+          status.textContent = result.message;
+          status.classList.add('warn');
+        }
+      });
       downloadButton.addEventListener('click', () => downloadPlatformMaterialImportJson());
       if (routeSelect) routeSelect.addEventListener('change', () => { state.selectedId = routeSelect.value; renderMain(); });
     }
@@ -6143,6 +6238,7 @@
         project_dashboard_task_edits: projectDashboardRecommendedTaskEditRecords(),
         project_map_review_drafts: projectMapReviewDraftRecords(),
         project_publish_health_import_log: projectPublishHealthImportLogRecords(),
+        platform_material_imports: platformMaterialImportRecords(),
         project_publish_archive_receipt: projectPublishArchiveReceiptPayload()
       };
     }
@@ -6188,13 +6284,14 @@
         project_dashboard_task_edits: projectWorkbenchStateRecords(source, 'project_dashboard_task_edits', 'projectDashboardTaskEdits').length,
         project_map_review_drafts: projectWorkbenchStateRecords(source, 'project_map_review_drafts', 'projectMapReviewDrafts').length,
         project_publish_health_import_log: projectWorkbenchStateRecords(source, 'project_publish_health_import_log', 'projectPublishHealthImportLog').length,
+        platform_material_imports: projectWorkbenchStateRecords(source, 'platform_material_imports', 'platformMaterialImports').length,
         project_publish_archive_receipt: source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt ? 1 : 0
       };
     }
     function projectWorkbenchLocalStateSummaryText(summary){
       if (!summary) return '本机暂无可恢复状态。';
       const scheduleText = summary.schedule_start || '未设置';
-      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
+      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
     }
     function projectWorkbenchCurrentStateSummary(){
       return projectWorkbenchStateSummary(projectWorkbenchStatePayload());
@@ -6214,6 +6311,7 @@
         ['followup_draft_edits', '二创编辑'],
         ['project_dashboard_task_edits', '推荐任务'],
         ['project_map_review_drafts', '地图复核'],
+        ['platform_material_imports', '平台素材'],
         ['project_publish_archive_receipt', '归档回执']
       ];
       if (!incoming) return {current, incoming: null, schedule_changed: false, count_changes: [], has_changes: false};
@@ -6539,7 +6637,7 @@
     }
     function applyProjectWorkbenchState(payload){
       const source = projectWorkbenchStateSource(payload);
-      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, project_publish_archive_receipt: 0};
+      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, project_publish_archive_receipt: 0};
       imported.schedule = applyProjectWorkbenchSchedule(source?.schedule);
       state.publishReadyEdits = {};
       state.publishExecutionUpdates = {};
@@ -6549,6 +6647,7 @@
       state.projectMapReviewDrafts = {};
       state.projectMapRevisionDiffs = [];
       state.projectPublishHealthImportLog = [];
+      state.platformMaterialImports = [];
       state.projectPublishArchiveReceipt = null;
       imported.publish_ready_edits = applyPublishReadyEdits(projectWorkbenchStateRecords(source, 'publish_ready_edits', 'publishReadyEdits'));
       imported.publish_execution_updates = applyPublishExecutionUpdates(projectWorkbenchStateRecords(source, 'publish_execution_updates', 'publishExecutionUpdates'));
@@ -6557,6 +6656,7 @@
       imported.project_dashboard_task_edits = applyProjectDashboardRecommendedTaskEdits(projectWorkbenchStateRecords(source, 'project_dashboard_task_edits', 'projectDashboardTaskEdits'));
       imported.project_map_review_drafts = applyProjectMapReviewDrafts(projectWorkbenchStateRecords(source, 'project_map_review_drafts', 'projectMapReviewDrafts'), {trackDiff: false});
       imported.project_publish_health_import_log = applyProjectPublishHealthImportLog(projectWorkbenchStateRecords(source, 'project_publish_health_import_log', 'projectPublishHealthImportLog'));
+      imported.platform_material_imports = applyPlatformMaterialImportRecords(projectWorkbenchStateRecords(source, 'platform_material_imports', 'platformMaterialImports'));
       imported.project_publish_archive_receipt = applyProjectPublishArchiveReceipt(source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt || null);
       return imported;
     }
@@ -6570,7 +6670,7 @@
       return applyProjectWorkbenchState(payload);
     }
     function projectWorkbenchStateImportSummary(imported, options){
-      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`; 
+      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`; 
       return options?.protected_import ? `${summary} 已自动备份导入前状态，可从覆盖前备份或状态历史恢复。` : summary;
     }
     function projectWorkbenchStateImportFailureMessage(){

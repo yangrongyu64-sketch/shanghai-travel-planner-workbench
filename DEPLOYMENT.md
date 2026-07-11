@@ -39,3 +39,4 @@
 - 点击“返回普通工作台”应进入 `workbench.html`。
 - 在 `workbench.html` 点击“打开演示链接”应返回 `index.html`。
 - 下载 `workbench-demo.zip` 应得到离线演示包。
+- 浏览器开发者工具里应能看到 PWA manifest，并成功注册 `service-worker.js`。

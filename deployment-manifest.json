@@ -9,6 +9,12 @@
   "download_files": [
     "workbench-demo.zip"
   ],
+  "pwa": {
+    "manifest": "manifest.webmanifest",
+    "service_worker": "service-worker.js",
+    "icon": "app-icon.svg",
+    "installable_entry": "index.html"
+  },
   "deploy_scripts": {
     "github_pages": "deploy-github-pages.sh"
   },
@@ -22,7 +28,8 @@
     "根路径打开后显示上海攻略生成工作台",
     "演示版自动填充发布工作台",
     "普通工作台入口 workbench.html 可访问",
-    "离线演示包 workbench-demo.zip 可下载"
+    "离线演示包 workbench-demo.zip 可下载",
+    "PWA manifest 可访问且 service worker 可注册"
   ],
   "live_deployment": {
     "status": "published",

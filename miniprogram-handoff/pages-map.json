@@ -1,0 +1,59 @@
+{
+  "platform": "wechat_miniprogram",
+  "navigation": [
+    {
+      "label": "路线",
+      "page": "route_list"
+    },
+    {
+      "label": "地图",
+      "page": "route_map"
+    },
+    {
+      "label": "发布",
+      "page": "creator_publish"
+    },
+    {
+      "label": "设置",
+      "page": "settings"
+    }
+  ],
+  "pages": [
+    {
+      "key": "home",
+      "title": "首页",
+      "source": "index.html",
+      "purpose": "展示项目入口、推荐路线、公网/PWA 状态。"
+    },
+    {
+      "key": "route_list",
+      "title": "路线列表页",
+      "source": "routes.json",
+      "purpose": "筛选 2/3/5/7/15 天和不同旅行强度的上海路线。"
+    },
+    {
+      "key": "route_detail",
+      "title": "路线详情页",
+      "source": "routes.json",
+      "purpose": "展示游客攻略、内容资产、路线评分、素材和官方复核状态。"
+    },
+    {
+      "key": "route_map",
+      "title": "地图路线页",
+      "source": "route_map_html / route_map_geojson",
+      "purpose": "展示路线天数、停靠点顺序、交通提示和地图复核入口。"
+    },
+    {
+      "key": "creator_publish",
+      "title": "创作发布页",
+      "source": "workbench.html",
+      "purpose": "承接发布准备、排期、执行、复盘和二创草稿流程。"
+    },
+    {
+      "key": "settings",
+      "title": "设置页",
+      "source": "manifest.webmanifest",
+      "purpose": "展示版本、离线包、PWA 和数据来源说明。"
+    }
+  ]
+}

@@ -7,6 +7,7 @@
 - `index.html`：默认首页，已自动填充演示状态，适合给别人快速看发布工作台。
 - `workbench.html`：普通工作台入口，不预填演示状态，适合真实填写和本机状态管理。
 - `workbench-demo.zip`：可下载转发的离线演示包。
+- `miniprogram-handoff.zip`：小程序迁移包，给后续微信小程序或移动端壳开发使用。
 - `manifest.webmanifest`：PWA 安装清单，支持浏览器添加到主屏幕。
 - `service-worker.js`：缓存核心入口文件，提升二次打开和离线兜底体验。
 - `app-icon.svg`：PWA 图标。

@@ -1,0 +1,251 @@
+{
+  "source": "上海攻略生成工作台",
+  "route_count": 6,
+  "routes": [
+    {
+      "trip_id": "relaxed_2d1n_citywalk",
+      "template_name": "上海2天1晚躺平 city walk 版",
+      "duration_days": 2,
+      "intensity": "relaxed",
+      "themes": [
+        "city_walk",
+        "coffee",
+        "architecture",
+        "night_view"
+      ],
+      "stay_area": "淮海中路 / 衡复",
+      "route_score": 89,
+      "content_score": 100,
+      "primary_angle": "2天躺平 city walk",
+      "primary_title": "2天躺平 city walk，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 6,
+        "verified_count": 0,
+        "pending_count": 0,
+        "missing_count": 6
+      },
+      "map_day_count": 2,
+      "content_assets": {
+        "traveler": "../relaxed_2d1n_citywalk/traveler.md",
+        "xiaohongshu": "../relaxed_2d1n_citywalk/xiaohongshu.md",
+        "douyin": "../relaxed_2d1n_citywalk/douyin.md",
+        "essay": "../relaxed_2d1n_citywalk/essay.md",
+        "preview": "../relaxed_2d1n_citywalk/preview.html",
+        "route_map_html": "../relaxed_2d1n_citywalk/route-map.html",
+        "route_map_geojson": "../relaxed_2d1n_citywalk/route-map.geojson",
+        "package": "../creator_packages/relaxed_2d1n_citywalk.zip"
+      }
+    },
+    {
+      "trip_id": "first_time_3d2n_balanced",
+      "template_name": "上海3天2晚首次来均衡版",
+      "duration_days": 3,
+      "intensity": "balanced",
+      "themes": [
+        "landmark",
+        "city_walk",
+        "museum",
+        "coffee",
+        "night_view"
+      ],
+      "stay_area": "人民广场",
+      "route_score": 89,
+      "content_score": 100,
+      "primary_angle": "3天初来上海不绕路",
+      "primary_title": "3天初来上海不绕路，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 10,
+        "verified_count": 0,
+        "pending_count": 1,
+        "missing_count": 9
+      },
+      "map_day_count": 3,
+      "content_assets": {
+        "traveler": "../first_time_3d2n_balanced/traveler.md",
+        "xiaohongshu": "../first_time_3d2n_balanced/xiaohongshu.md",
+        "douyin": "../first_time_3d2n_balanced/douyin.md",
+        "essay": "../first_time_3d2n_balanced/essay.md",
+        "preview": "../first_time_3d2n_balanced/preview.html",
+        "route_map_html": "../first_time_3d2n_balanced/route-map.html",
+        "route_map_geojson": "../first_time_3d2n_balanced/route-map.geojson",
+        "package": "../creator_packages/first_time_3d2n_balanced.zip"
+      }
+    },
+    {
+      "trip_id": "highwalk_3d2n_landmark_citywalk",
+      "template_name": "上海3天2晚暴走地标 + city walk 版",
+      "duration_days": 3,
+      "intensity": "high_walk",
+      "themes": [
+        "landmark",
+        "city_walk",
+        "museum",
+        "architecture",
+        "night_view"
+      ],
+      "stay_area": "人民广场",
+      "route_score": 89,
+      "content_score": 100,
+      "primary_angle": "3天暴走地标线",
+      "primary_title": "3天暴走地标线，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 12,
+        "verified_count": 0,
+        "pending_count": 1,
+        "missing_count": 11
+      },
+      "map_day_count": 3,
+      "content_assets": {
+        "traveler": "../highwalk_3d2n_landmark_citywalk/traveler.md",
+        "xiaohongshu": "../highwalk_3d2n_landmark_citywalk/xiaohongshu.md",
+        "douyin": "../highwalk_3d2n_landmark_citywalk/douyin.md",
+        "essay": "../highwalk_3d2n_landmark_citywalk/essay.md",
+        "preview": "../highwalk_3d2n_landmark_citywalk/preview.html",
+        "route_map_html": "../highwalk_3d2n_landmark_citywalk/route-map.html",
+        "route_map_geojson": "../highwalk_3d2n_landmark_citywalk/route-map.geojson",
+        "package": "../creator_packages/highwalk_3d2n_landmark_citywalk.zip"
+      }
+    },
+    {
+      "trip_id": "deep_5d4n_culture_citywalk",
+      "template_name": "上海5天4晚文化 city walk 深度版",
+      "duration_days": 5,
+      "intensity": "balanced",
+      "themes": [
+        "landmark",
+        "city_walk",
+        "museum",
+        "architecture",
+        "coffee",
+        "night_view"
+      ],
+      "stay_area": "静安寺 / 南京西路",
+      "route_score": 91,
+      "content_score": 100,
+      "primary_angle": "5天文化 city walk",
+      "primary_title": "5天文化 city walk，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 12,
+        "verified_count": 0,
+        "pending_count": 1,
+        "missing_count": 11
+      },
+      "map_day_count": 5,
+      "content_assets": {
+        "traveler": "../deep_5d4n_culture_citywalk/traveler.md",
+        "xiaohongshu": "../deep_5d4n_culture_citywalk/xiaohongshu.md",
+        "douyin": "../deep_5d4n_culture_citywalk/douyin.md",
+        "essay": "../deep_5d4n_culture_citywalk/essay.md",
+        "preview": "../deep_5d4n_culture_citywalk/preview.html",
+        "route_map_html": "../deep_5d4n_culture_citywalk/route-map.html",
+        "route_map_geojson": "../deep_5d4n_culture_citywalk/route-map.geojson",
+        "package": "../creator_packages/deep_5d4n_culture_citywalk.zip"
+      }
+    },
+    {
+      "trip_id": "local_life_7d6n_balanced",
+      "template_name": "上海7天6晚生活感均衡版",
+      "duration_days": 7,
+      "intensity": "balanced",
+      "themes": [
+        "local_life",
+        "city_walk",
+        "museum",
+        "art",
+        "park",
+        "waterfront",
+        "coffee"
+      ],
+      "stay_area": "静安寺 / 南京西路",
+      "route_score": 92,
+      "content_score": 100,
+      "primary_angle": "7天生活感 city walk",
+      "primary_title": "7天生活感 city walk，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 23,
+        "verified_count": 0,
+        "pending_count": 3,
+        "missing_count": 20
+      },
+      "map_day_count": 7,
+      "content_assets": {
+        "traveler": "../local_life_7d6n_balanced/traveler.md",
+        "xiaohongshu": "../local_life_7d6n_balanced/xiaohongshu.md",
+        "douyin": "../local_life_7d6n_balanced/douyin.md",
+        "essay": "../local_life_7d6n_balanced/essay.md",
+        "preview": "../local_life_7d6n_balanced/preview.html",
+        "route_map_html": "../local_life_7d6n_balanced/route-map.html",
+        "route_map_geojson": "../local_life_7d6n_balanced/route-map.geojson",
+        "package": "../creator_packages/local_life_7d6n_balanced.zip"
+      }
+    },
+    {
+      "trip_id": "longstay_15d14n_balanced",
+      "template_name": "上海15天14晚长住慢旅行版",
+      "duration_days": 15,
+      "intensity": "balanced",
+      "themes": [
+        "long_stay",
+        "local_life",
+        "city_walk",
+        "museum",
+        "art",
+        "park",
+        "waterfront",
+        "coffee"
+      ],
+      "stay_area": "静安寺 / 南京西路",
+      "route_score": 92,
+      "content_score": 100,
+      "primary_angle": "15天长住慢旅行",
+      "primary_title": "15天长住慢旅行，别再照景点清单走",
+      "material_quality": {
+        "status": "需补官方信息",
+        "score": 74
+      },
+      "official_summary": {
+        "status_label": "可继续回填",
+        "total_count": 34,
+        "verified_count": 0,
+        "pending_count": 3,
+        "missing_count": 31
+      },
+      "map_day_count": 15,
+      "content_assets": {
+        "traveler": "../longstay_15d14n_balanced/traveler.md",
+        "xiaohongshu": "../longstay_15d14n_balanced/xiaohongshu.md",
+        "douyin": "../longstay_15d14n_balanced/douyin.md",
+        "essay": "../longstay_15d14n_balanced/essay.md",
+        "preview": "../longstay_15d14n_balanced/preview.html",
+        "route_map_html": "../longstay_15d14n_balanced/route-map.html",
+        "route_map_geojson": "../longstay_15d14n_balanced/route-map.geojson",
+        "package": "../creator_packages/longstay_15d14n_balanced.zip"
+      }
+    }
+  ]
+}

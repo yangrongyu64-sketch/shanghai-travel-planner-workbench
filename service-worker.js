@@ -3,6 +3,7 @@ const APP_SHELL_ASSETS = [
   './index.html',
   './workbench.html',
   './workbench-demo.zip',
+  './miniprogram-handoff.zip',
   './manifest.webmanifest',
   './app-icon.svg',
   './README.md',

@@ -1,0 +1,23 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "wechat_miniprogram_handoff",
+  "handoff_status": "ready_for_miniapp_shell",
+  "source_assets": {
+    "web_entry": "index.html",
+    "normal_workbench": "workbench.html",
+    "offline_demo_zip": "workbench-demo.zip",
+    "pwa_manifest": "manifest.webmanifest",
+    "service_worker": "service-worker.js",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+    "live_deployment_record": "LIVE_DEPLOYMENT.md"
+  },
+  "files": [
+    "README.md",
+    "product-brief.md",
+    "pages-map.json",
+    "routes.json",
+    "acceptance-checklist.md",
+    "handoff-manifest.json"
+  ]
+}

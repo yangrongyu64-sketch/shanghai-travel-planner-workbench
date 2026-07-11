@@ -7,13 +7,19 @@
     "workbench": "workbench.html"
   },
   "download_files": [
-    "workbench-demo.zip"
+    "workbench-demo.zip",
+    "miniprogram-handoff.zip"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
     "service_worker": "service-worker.js",
     "icon": "app-icon.svg",
     "installable_entry": "index.html"
+  },
+  "miniprogram_handoff": {
+    "directory": "miniprogram-handoff",
+    "archive": "miniprogram-handoff.zip",
+    "target": "微信小程序 / 移动端壳"
   },
   "deploy_scripts": {
     "github_pages": "deploy-github-pages.sh"

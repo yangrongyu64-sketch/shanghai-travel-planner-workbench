@@ -1,0 +1,24 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "platform_material_refresh_package",
+  "status": "ready_for_manual_capture",
+  "route_count": 6,
+  "source_assets": {
+    "web_entry": "index.html",
+    "normal_workbench": "workbench.html",
+    "capture_command": "python -m shanghai_planner.cli --capture-material",
+    "merge_command": "python -m shanghai_planner.cli --merge-captured-materials",
+    "materials_dir": "data/materials",
+    "captured_materials_dir": "outputs/captured_materials",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html"
+  },
+  "files": [
+    "README.md",
+    "capture-workflow.md",
+    "intake-template.json",
+    "topic-signals.json",
+    "acceptance-checklist.md",
+    "platform-refresh-manifest.json"
+  ]
+}

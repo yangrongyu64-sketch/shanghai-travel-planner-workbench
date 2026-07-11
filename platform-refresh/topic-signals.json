@@ -1,0 +1,119 @@
+{
+  "source": "上海攻略生成工作台",
+  "source_policy": "platform_material_as_structure_only",
+  "platforms": [
+    "xiaohongshu",
+    "douyin",
+    "travel_website"
+  ],
+  "signals": [
+    {
+      "route_id": "relaxed_2d1n_citywalk",
+      "route_name": "上海2天1晚躺平 city walk 版",
+      "duration_days": 2,
+      "primary_angle": "2天躺平 city walk",
+      "recommended_prompts": [
+        "小红书搜索：上海 2天 2天躺平 city walk 路线 避坑",
+        "抖音搜索：上海 2天 relaxed city walk 口播",
+        "旅游网站搜索：上海 2天 2天躺平 city walk 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    },
+    {
+      "route_id": "first_time_3d2n_balanced",
+      "route_name": "上海3天2晚首次来均衡版",
+      "duration_days": 3,
+      "primary_angle": "3天初来上海不绕路",
+      "recommended_prompts": [
+        "小红书搜索：上海 3天 3天初来上海不绕路 路线 避坑",
+        "抖音搜索：上海 3天 balanced city walk 口播",
+        "旅游网站搜索：上海 3天 3天初来上海不绕路 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    },
+    {
+      "route_id": "highwalk_3d2n_landmark_citywalk",
+      "route_name": "上海3天2晚暴走地标 + city walk 版",
+      "duration_days": 3,
+      "primary_angle": "3天暴走地标线",
+      "recommended_prompts": [
+        "小红书搜索：上海 3天 3天暴走地标线 路线 避坑",
+        "抖音搜索：上海 3天 high_walk city walk 口播",
+        "旅游网站搜索：上海 3天 3天暴走地标线 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    },
+    {
+      "route_id": "deep_5d4n_culture_citywalk",
+      "route_name": "上海5天4晚文化 city walk 深度版",
+      "duration_days": 5,
+      "primary_angle": "5天文化 city walk",
+      "recommended_prompts": [
+        "小红书搜索：上海 5天 5天文化 city walk 路线 避坑",
+        "抖音搜索：上海 5天 balanced city walk 口播",
+        "旅游网站搜索：上海 5天 5天文化 city walk 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    },
+    {
+      "route_id": "local_life_7d6n_balanced",
+      "route_name": "上海7天6晚生活感均衡版",
+      "duration_days": 7,
+      "primary_angle": "7天生活感 city walk",
+      "recommended_prompts": [
+        "小红书搜索：上海 7天 7天生活感 city walk 路线 避坑",
+        "抖音搜索：上海 7天 balanced city walk 口播",
+        "旅游网站搜索：上海 7天 7天生活感 city walk 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    },
+    {
+      "route_id": "longstay_15d14n_balanced",
+      "route_name": "上海15天14晚长住慢旅行版",
+      "duration_days": 15,
+      "primary_angle": "15天长住慢旅行",
+      "recommended_prompts": [
+        "小红书搜索：上海 15天 15天长住慢旅行 路线 避坑",
+        "抖音搜索：上海 15天 balanced city walk 口播",
+        "旅游网站搜索：上海 15天 15天长住慢旅行 交通 预约"
+      ],
+      "capture_focus": [
+        "标题角度",
+        "用户真实痛点",
+        "路线顺序",
+        "避坑提醒",
+        "待官方复核字段"
+      ]
+    }
+  ]
+}

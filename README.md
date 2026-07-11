@@ -8,6 +8,7 @@
 - `workbench.html`：普通工作台入口，不预填演示状态，适合真实填写和本机状态管理。
 - `workbench-demo.zip`：可下载转发的离线演示包。
 - `miniprogram-handoff.zip`：小程序迁移包，给后续微信小程序或移动端壳开发使用。
+- `platform-refresh.zip`：平台素材刷新包，给小红书、抖音、旅游网站素材导入和人工复核使用。
 - `maintenance-report.zip`：站点健康和发布刷新包，用于检查关键文件、路线数和部署状态。
 - `manifest.webmanifest`：PWA 安装清单，支持浏览器添加到主屏幕。
 - `service-worker.js`：缓存核心入口文件，提升二次打开和离线兜底体验。

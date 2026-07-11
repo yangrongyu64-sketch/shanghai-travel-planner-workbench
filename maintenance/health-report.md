@@ -10,6 +10,7 @@
 - offline_demo：healthy
 - pwa：healthy
 - miniprogram_handoff：healthy
+- platform_refresh：healthy
 - live_deployment：healthy
 
 ## 路线快照

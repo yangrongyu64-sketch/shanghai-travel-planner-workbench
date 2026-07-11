@@ -40,5 +40,6 @@
 - 在 `workbench.html` 点击“打开演示链接”应返回 `index.html`。
 - 下载 `workbench-demo.zip` 应得到离线演示包。
 - 下载 `miniprogram-handoff.zip` 应得到小程序迁移资料包。
+- 下载 `platform-refresh.zip` 应得到平台素材刷新资料包。
 - 下载 `maintenance-report.zip` 应得到站点健康和刷新清单。
 - 浏览器开发者工具里应能看到 PWA manifest，并成功注册 `service-worker.js`。

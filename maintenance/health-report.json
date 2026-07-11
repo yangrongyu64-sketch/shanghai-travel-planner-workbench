@@ -184,6 +184,20 @@
       "missing": [],
       "route_count": 6
     },
+    "platform_refresh": {
+      "status": "healthy",
+      "files": [
+        "platform-refresh/README.md",
+        "platform-refresh/capture-workflow.md",
+        "platform-refresh/intake-template.json",
+        "platform-refresh/topic-signals.json",
+        "platform-refresh/acceptance-checklist.md",
+        "platform-refresh/platform-refresh-manifest.json",
+        "platform-refresh.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "live_deployment": {
       "status": "healthy",
       "files": [

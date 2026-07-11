@@ -1,0 +1,27 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "static_site",
+  "default_entry": "index.html",
+  "entries": {
+    "demo": "index.html",
+    "workbench": "workbench.html"
+  },
+  "download_files": [
+    "workbench-demo.zip"
+  ],
+  "deploy_scripts": {
+    "github_pages": "deploy-github-pages.sh"
+  },
+  "deployment_targets": [
+    "GitHub Pages",
+    "Vercel",
+    "Netlify",
+    "静态文件服务器"
+  ],
+  "smoke_checks": [
+    "根路径打开后显示上海攻略生成工作台",
+    "演示版自动填充发布工作台",
+    "普通工作台入口 workbench.html 可访问",
+    "离线演示包 workbench-demo.zip 可下载"
+  ]
+}

@@ -96,7 +96,7 @@
     .chip{display:inline-flex;align-items:center;min-height:24px;padding:3px 7px;border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12px;color:var(--muted)}
     .chip.good{border-color:rgba(40,115,72,.28);color:var(--success);background:#edf8f0}
     .chip.warn{border-color:rgba(179,58,46,.25);color:var(--danger);background:#fff0ee}
-    .main{min-width:0;display:grid;grid-template-rows:auto auto minmax(0,1fr);background:var(--bg)}
+    .main{min-width:0;display:grid;grid-template-rows:auto auto auto minmax(0,1fr);background:var(--bg)}
     .route-header{padding:20px 22px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fffdfa,#f7f5f1)}
     .route-title{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
     .route-title h2{margin:0;font-size:24px;line-height:1.2;letter-spacing:0}
@@ -105,6 +105,17 @@
     .score{min-width:72px;text-align:center;border:1px solid var(--line);background:var(--surface);padding:8px}
     .score strong{display:block;font-size:22px;line-height:1}
     .score span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+    .product-quick-start{display:grid;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:#fffdfa}
+    .product-quick-start-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+    .product-quick-start-head h3{margin:0;font-size:14px;line-height:1.35;color:var(--ink);letter-spacing:0}
+    .product-quick-start-head p{margin:0;color:var(--muted);font-size:12px;line-height:1.45;word-break:break-word}
+    .product-quick-start-status{margin:0;color:#173b76;font-size:12px;line-height:1.45;word-break:break-word}
+    .product-quick-start-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(132px,100%),1fr));gap:8px;min-width:0}
+    .product-quick-action{display:grid;gap:3px;align-content:center;min-height:54px;padding:8px 9px;border:1px solid rgba(36,87,166,.16);background:#f6f9ff;border-radius:8px;color:#173b76;text-align:left;min-width:0}
+    .product-quick-action b{font-size:13px;line-height:1.25;color:#173b76;word-break:break-word}
+    .product-quick-action span{font-size:11px;line-height:1.3;color:var(--muted);word-break:break-word}
+    .product-quick-action.primary{border-color:rgba(15,118,110,.28);background:#f0fbf7;color:#064e48}
+    .product-quick-action.primary b{color:#064e48}
     .content-tabs{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:#fbfaf7;overflow:auto}
     .tab{padding:0 14px;border-radius:8px;white-space:nowrap}
     .tab.active{background:var(--ink);border-color:var(--ink);color:#fff}
@@ -594,6 +605,20 @@
             </div>
           </div>
         </section>
+        <section id="product-quick-start" class="product-quick-start" aria-label="工作台快捷入口">
+          <div class="product-quick-start-head">
+            <div><h3>工作台快捷入口</h3><p id="product-quick-start-note"></p></div>
+            <p id="product-quick-start-status" class="product-quick-start-status" aria-live="polite"></p>
+          </div>
+          <div id="product-quick-start-actions" class="product-quick-start-actions">
+            <button type="button" class="product-quick-action primary" data-product-quick-action="route_picker"><b>选路线</b><span>天数 / 强度 / 主题</span></button>
+            <button type="button" class="product-quick-action" data-product-quick-action="map"><b>看地图</b><span>路线图 / GeoJSON</span></button>
+            <button type="button" class="product-quick-action" data-product-quick-action="xiaohongshu"><b>复制平台文案</b><span>小红书发布版</span></button>
+            <button type="button" class="product-quick-action" data-product-quick-action="quality"><b>发布前质检</b><span>复制检查清单</span></button>
+            <button type="button" class="product-quick-action" data-product-quick-action="delivery"><b>下载交付包</b><span>当前路线 ZIP</span></button>
+            <button type="button" class="product-quick-action" data-product-quick-action="publish"><b>发布看板</b><span>排期 / 终审 / 复盘</span></button>
+          </div>
+        </section>
         <nav class="content-tabs" id="content-tabs" aria-label="内容类型">
           <button class="tab active" data-tab="traveler">游客攻略</button>
           <button class="tab" data-tab="xiaohongshu">小红书</button>
@@ -707,6 +732,9 @@
     const deliveryPackageButton = document.getElementById('delivery-package-button');
     const projectDeliveryPackageButton = document.getElementById('project-delivery-package-button');
     const deliveryPackageRiskNote = document.getElementById('delivery-package-risk-note');
+    const productQuickStartActions = document.getElementById('product-quick-start-actions');
+    const productQuickStartNote = document.getElementById('product-quick-start-note');
+    const productQuickStartStatus = document.getElementById('product-quick-start-status');
     const copyDeliveryNoteButton = document.getElementById('copy-delivery-note-button');
     const deliveryNotePreview = document.getElementById('delivery-note-preview');
     const copyRoutePublishQualityChecklistButton = document.getElementById('copy-route-publish-quality-checklist-button');
@@ -785,6 +813,81 @@
       return `${route.tripId}-${suffix}.md`;
     }
     function currentRoute(){ return routes.find(route => route.tripId === state.selectedId) || routes[0]; }
+    function productQuickStartItems(route){
+      return [
+        {action: 'route_picker', label: '选路线', detail: `${route.durationDays}天 · ${route.intensityLabel}`, primary: true},
+        {action: 'map', label: '看地图', detail: '路线图 / GeoJSON', primary: false},
+        {action: 'xiaohongshu', label: '复制平台文案', detail: '小红书发布版', primary: false},
+        {action: 'quality', label: '发布前质检', detail: '复制检查清单', primary: false},
+        {action: 'delivery', label: '下载交付包', detail: '当前路线 ZIP', primary: false},
+        {action: 'publish', label: '发布看板', detail: '排期 / 终审 / 复盘', primary: false},
+      ];
+    }
+    function renderProductQuickStart(route){
+      if (!productQuickStartActions) return;
+      const readiness = routeDeliveryReadiness(route);
+      if (productQuickStartNote) productQuickStartNote.textContent = `当前路线：${route.templateName}；交付状态：${readiness.label}`;
+      productQuickStartActions.innerHTML = productQuickStartItems(route).map(item => `<button type="button" class="product-quick-action ${item.primary ? 'primary' : ''}" data-product-quick-action="${escapeHtml(item.action)}"><b>${escapeHtml(item.label)}</b><span>${escapeHtml(item.detail)}</span></button>`).join('');
+      if (productQuickStartStatus && !productQuickStartStatus.textContent) productQuickStartStatus.textContent = '选择一个动作开始。';
+    }
+    function setProductQuickStartStatus(message){
+      if (productQuickStartStatus) productQuickStartStatus.textContent = message;
+    }
+    function scrollWorkbenchTarget(selector){
+      const target = document.querySelector(selector) || document.getElementById(String(selector || '').replace(/^#/, ''));
+      if (target && typeof target.scrollIntoView === 'function') target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+    function runProductQuickAction(action){
+      const route = currentRoute();
+      if (!route) return false;
+      if (action === 'route_picker') {
+        scrollWorkbenchTarget('.sidebar');
+        setProductQuickStartStatus('已定位到路线选择区。');
+        return true;
+      }
+      if (action === 'map') {
+        state.tab = 'map';
+        renderMain();
+        scrollWorkbenchTarget('.content-wrap');
+        setProductQuickStartStatus('已打开路线图。');
+        return true;
+      }
+      if (action === 'xiaohongshu') {
+        state.tab = 'xiaohongshu';
+        renderMain();
+        publishCopyButton.click();
+        setProductQuickStartStatus('已复制小红书发布版。');
+        return true;
+      }
+      if (action === 'quality') {
+        copyRoutePublishQualityChecklistButton.click();
+        scrollWorkbenchTarget('#route-publish-quality-checker');
+        setProductQuickStartStatus('已复制发布前质检清单。');
+        return true;
+      }
+      if (action === 'delivery') {
+        deliveryPackageButton.click();
+        setProductQuickStartStatus('已触发当前路线交付包下载。');
+        return true;
+      }
+      if (action === 'publish') {
+        state.tab = 'project_acceptance';
+        renderMain();
+        if (window?.location) window.location.hash = '#project-publish-workspace';
+        scrollProjectPublishCommandTarget('#project-publish-workspace');
+        setProductQuickStartStatus('已打开发布看板。');
+        return true;
+      }
+      return false;
+    }
+    function bindProductQuickStart(){
+      if (!productQuickStartActions) return;
+      productQuickStartActions.addEventListener('click', event => {
+        const button = event.target.closest('[data-product-quick-action]');
+        if (!button) return;
+        runProductQuickAction(button.dataset.productQuickAction);
+      });
+    }
     function themeMatches(route, theme){
       if (theme === 'any') return true;
       if (route.themes.includes(theme)) return true;
@@ -2108,7 +2211,8 @@
       const updateStatus = () => {
         const keyState = apiKey.value.trim() ? '已填写 Key，可进入真实底图接入。' : '无 Key 时继续使用 SVG 示意图。';
         const securityState = securityCode.value.trim() ? '安全密钥已填写。' : '高德 Web Key 通常还需要安全密钥。';
-        status.textContent = `${provider.options[provider.selectedIndex].text}：${keyState}${provider.value === 'amap' ? securityState : ''}GeoJSON 可直接交给地图适配层。`; 
+        const providerLabel = provider.options?.[provider.selectedIndex]?.text || provider.value || '地图服务';
+        status.textContent = `${providerLabel}：${keyState}${provider.value === 'amap' ? securityState : ''}GeoJSON 可直接交给地图适配层。`; 
       };
       provider.addEventListener('change', updateStatus);
       apiKey.addEventListener('input', updateStatus);
@@ -6255,6 +6359,7 @@
       document.getElementById('content-score').textContent = route.contentScore;
       document.getElementById('primary-angle').textContent = route.primaryAngle;
       document.getElementById('primary-title').textContent = route.primaryTitle;
+      renderProductQuickStart(route);
       const displayedContent = preferenceDisplayContentText(route, state.tab);
       const preferenceEditor = preferenceVariantEditorHtml(route, state.tab);
       const contentDraftTools = contentDraftControlsHtml(route, state.tab);
@@ -6382,6 +6487,7 @@
     document.querySelectorAll('.tab').forEach(button => {
       button.addEventListener('click', () => { state.tab = button.dataset.tab; renderMain(); });
     });
+    bindProductQuickStart();
     document.getElementById('search').addEventListener('input', event => {
       state.query = event.target.value;
       const first = filteredRoutes()[0];

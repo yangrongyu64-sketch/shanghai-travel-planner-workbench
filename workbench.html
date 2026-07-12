@@ -168,6 +168,18 @@
     .workflow-command button{border-radius:8px;border-color:rgba(36,87,166,.28);background:#edf4ff;color:#173b76;padding:0 12px}
     .workflow-command button.copied{background:var(--success);border-color:var(--success);color:#fff}
     .refresh-command-preview{white-space:pre-wrap;word-break:break-word;background:#f7f5f1;border:1px solid var(--line);padding:8px;font-size:11px;color:var(--muted);max-height:132px;overflow:auto}
+    .route-publish-quality{display:grid;gap:10px}
+    .route-publish-quality-status{display:inline-flex;align-items:center;width:max-content;max-width:100%;min-height:28px;padding:0 8px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:12px;font-weight:800;word-break:break-word}
+    .route-publish-quality-status.ready{border-color:rgba(40,115,72,.28);background:#edf8f0;color:var(--success)}
+    .route-publish-quality-status.review{border-color:rgba(179,122,30,.28);background:#fff8e8;color:#7a4c12}
+    .route-publish-quality-status.warn{border-color:rgba(179,58,46,.25);background:#fff0ee;color:#76251f}
+    .route-publish-quality-block{display:grid;gap:6px}
+    .route-publish-quality-block b{font-size:12px;color:var(--muted);line-height:1.35}
+    .route-publish-quality-block.review .action-list li{border-color:rgba(179,122,30,.28);background:#fff8e8;color:#7a4c12}
+    .route-publish-quality-block.missing .action-list li{border-color:rgba(179,58,46,.25);background:#fff0ee;color:#76251f}
+    .route-publish-quality-copy{min-height:34px;border-radius:8px;padding:0 10px;border-color:rgba(36,87,166,.28);background:#edf4ff;color:#173b76;font-size:12px;font-weight:800;white-space:nowrap}
+    .route-publish-quality-copy.copied{background:var(--success);border-color:var(--success);color:#fff}
+    .route-publish-quality-checklist{white-space:pre-wrap;word-break:break-word;background:#f7f5f1;border:1px solid var(--line);padding:8px;font-size:11px;color:var(--muted);max-height:180px;overflow:auto}
     .official-editor{display:grid;gap:14px}
     .official-editor-actions{display:flex;gap:8px;flex-wrap:wrap}
     .official-editor-actions button{border-radius:8px;padding:0 12px}
@@ -629,6 +641,15 @@
           <h3>官方校验</h3>
           <ul id="official-summary-list" class="action-list"></ul>
         </section>
+        <section id="route-publish-quality-checker" class="inspector-section route-publish-quality">
+          <h3>攻略发布前质量检查器</h3>
+          <p id="route-publish-quality-status" class="route-publish-quality-status"></p>
+          <div class="route-publish-quality-block ready"><b>已具备</b><ul id="route-publish-quality-ready-list" class="action-list"></ul></div>
+          <div class="route-publish-quality-block review"><b>发布前复核</b><ul id="route-publish-quality-review-list" class="action-list"></ul></div>
+          <div class="route-publish-quality-block missing"><b>待补齐</b><ul id="route-publish-quality-missing-list" class="action-list"></ul></div>
+          <button type="button" id="copy-route-publish-quality-checklist-button" class="route-publish-quality-copy">复制质检清单</button>
+          <pre id="route-publish-quality-checklist-text" class="route-publish-quality-checklist"></pre>
+        </section>
         <section class="inspector-section publish-workflow">
           <h3>发布流程</h3>
           <ol id="publish-workflow-list" class="workflow-list">
@@ -688,6 +709,7 @@
     const deliveryPackageRiskNote = document.getElementById('delivery-package-risk-note');
     const copyDeliveryNoteButton = document.getElementById('copy-delivery-note-button');
     const deliveryNotePreview = document.getElementById('delivery-note-preview');
+    const copyRoutePublishQualityChecklistButton = document.getElementById('copy-route-publish-quality-checklist-button');
     const copyRefreshCommandButton = document.getElementById('copy-refresh-command-button');
     const refreshCommandPreview = document.getElementById('refresh-command-preview');
     const generatorResult = document.getElementById('generator-result');
@@ -701,6 +723,7 @@
     let currentPublishText = '';
     let currentDownloadName = '';
     let currentDeliveryHandoffText = '';
+    let currentRoutePublishQualityChecklistText = '';
     let amapLoadPromise = null;
     let amapMapInstance = null;
     const mapConfigStorageKey = 'shanghaiPlanner.mapConfig.v1';
@@ -6252,6 +6275,7 @@
       renderList('issue-list', route.auditIssues.length ? route.auditIssues : ['无']);
       renderList('action-list', route.actionItems);
       renderOfficialSummary(route);
+      renderRoutePublishQualityChecker(route);
       renderLinks(route);
       renderDeliveryReadiness(route);
       renderDeliveryPackageRiskNote(route);
@@ -6269,6 +6293,8 @@
       deliveryPackageButton.textContent = '下载交付包.zip';
       copyDeliveryNoteButton.classList.remove('copied');
       copyDeliveryNoteButton.textContent = '复制交付说明';
+      copyRoutePublishQualityChecklistButton.classList.remove('copied');
+      copyRoutePublishQualityChecklistButton.textContent = '复制质检清单';
     }
     function renderList(id, values){
       document.getElementById(id).innerHTML = values.map(value => `<li>${escapeHtml(value)}</li>`).join('');
@@ -6380,6 +6406,7 @@
       bindPlannerRecommendations();
     });
     document.getElementById('apply-project-demo-publish-state-button')?.addEventListener('click', applyProjectDemoPublishStateFromUi);
+    copyRoutePublishQualityChecklistButton.addEventListener('click', copyRoutePublishQualityChecklist);
     copyButton.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(currentContentText);
@@ -8083,6 +8110,90 @@
       list.innerHTML = items.map(item => `<li>${escapeHtml(item.name)}：${escapeHtml(item.status)}</li>`).join('');
       const draftItems = items.filter(item => item.status === '草稿覆盖').map(item => item.name.replace(/\.md$/, ''));
       note.textContent = draftItems.length ? `草稿覆盖：${draftItems.join('、')}` : '当前内容文件均使用原稿';
+    }
+    function routePublishQualityStops(route){
+      return (route.mapDays || []).flatMap(day => day.stops || []);
+    }
+    function routePublishQualityText(route){
+      const content = route.content || {};
+      const contentText = Object.values(content).join('\n');
+      const stopText = routePublishQualityStops(route).map(stop => [stop.placeName, stop.routeNote, stop.transportHint, stop.cautionTip, stop.area, stop.timeBlock].join(' ')).join(' ');
+      const materialText = routeMaterialSources(route).map(source => [source.title, ...(source.contentAngles || []), ...(source.routeHints || []), ...(source.cautionNotes || [])].join(' ')).join(' ');
+      return [route.templateName, route.stayArea, route.primaryAngle, route.primaryTitle, contentText, stopText, materialText].join('\n');
+    }
+    function routePublishQualityItem(label, detail){
+      return {label, detail};
+    }
+    function routePublishQualityCheck(route){
+      const text = routePublishQualityText(route);
+      const content = route.content || {};
+      const stops = routePublishQualityStops(route);
+      const official = route.officialSummary || {totalCount: 0, verifiedCount: 0, pendingCount: 0, missingCount: 0, validationErrorCount: 0, validationWarningCount: 0};
+      const checks = [
+        routePublishQualityItem('住宿', route.stayArea ? `住宿区：${route.stayArea}` : '缺住宿区域判断'),
+        routePublishQualityItem('交通', /交通|地铁|步行|打车|骑行|导航|metro|transport/i.test(text) ? '已包含交通执行提示和实时导航提醒' : '缺交通路线或移动方式提示'),
+        routePublishQualityItem('美食', /吃喝|咖啡|晚餐|午餐|brunch|轻食|餐饮|休息|补给/.test(text) ? '已包含吃喝、休息或补给建议' : '缺美食或休息建议'),
+        routePublishQualityItem('景点', stops.length ? `已包含 ${stops.length} 个路线点位` : '缺景点/点位安排'),
+        routePublishQualityItem('地图', (route.links?.route_map_html && route.links?.route_map_geojson && stops.length) ? '已生成路线图 HTML 与 GeoJSON' : '缺路线地图或 GeoJSON'),
+        routePublishQualityItem('平台文案', (content.xiaohongshu && content.douyin) ? '已生成小红书图文和抖音脚本' : '缺小红书或抖音平台文案'),
+        routePublishQualityItem('风险提醒', ((route.auditIssues || []).length || (route.actionItems || []).length || /避坑|风险|复核|确认|闭馆|预约|天气/.test(text)) ? '已包含避坑、复核或发布安全线' : '缺发布风险提醒'),
+      ];
+      const ready = [];
+      const missing = [];
+      checks.forEach(item => {
+        if (/^缺/.test(item.detail)) missing.push(item); else ready.push(item);
+      });
+      const review = [];
+      if (official.totalCount || official.missingCount || official.pendingCount || official.validationErrorCount || official.validationWarningCount) {
+        const officialDetail = official.validationErrorCount ? `官方 JSON 错误 ${official.validationErrorCount}；未回填 ${official.missingCount || 0} / 待复核 ${official.pendingCount || 0} / 提醒 ${official.validationWarningCount || 0}` : (official.missingCount || official.pendingCount || official.validationWarningCount) ? `未回填 ${official.missingCount || 0} / 待复核 ${official.pendingCount || 0} / 提醒 ${official.validationWarningCount || 0}` : `已核验 ${official.verifiedCount || 0} / 总计 ${official.totalCount || 0}`;
+        const officialItem = routePublishQualityItem('官方复核', officialDetail);
+        if (official.validationErrorCount || official.missingCount || official.pendingCount || official.validationWarningCount) review.push(officialItem); else ready.push(officialItem);
+      } else {
+        review.push(routePublishQualityItem('官方复核', '未接入官方复核摘要，发布当天人工确认开放、预约、票务和临时闭馆。'));
+      }
+      const label = missing.length ? '待补齐发布素材' : review.length ? '可发布草案，官方待复核' : '可发布终审';
+      const level = missing.length ? 'warn' : review.length ? 'review' : 'ready';
+      return {label, level, ready, review, missing};
+    }
+    function routePublishQualityChecklistText(route){
+      const check = routePublishQualityCheck(route);
+      const line = (mark, item) => `- [${mark}] ${item.label}：${item.detail}`;
+      return ['# 攻略发布前质量检查', '', `- 路线：${route.templateName}`, `- 路线 ID：${route.tripId}`, `- 状态：${check.label}`, '', '## 已具备', '', ...(check.ready.length ? check.ready.map(item => line('x', item)) : ['- 无']), '', '## 发布前复核', '', ...(check.review.length ? check.review.map(item => line(' ', item)) : ['- 无']), '', '## 待补齐', '', ...(check.missing.length ? check.missing.map(item => line(' ', item)) : ['- 无，当前攻略基础发布素材已齐。']), '', '## 发布安全线', '', '- 不复制第三方平台原文，只复用结构、选题和体验信号。', '- 发布当天复核官方开放、预约、票务、交通、天气和临时闭馆。'].join('\n');
+    }
+    function renderRoutePublishQualityList(id, items, emptyText){
+      const list = document.getElementById(id);
+      if (!list) return;
+      const rows = items.length ? items.map(item => `<li>${escapeHtml(item.label)}：${escapeHtml(item.detail)}</li>`) : [`<li>${escapeHtml(emptyText)}</li>`];
+      list.innerHTML = rows.join('');
+    }
+    function renderRoutePublishQualityChecker(route){
+      const status = document.getElementById('route-publish-quality-status');
+      const checklist = document.getElementById('route-publish-quality-checklist-text');
+      const check = routePublishQualityCheck(route);
+      currentRoutePublishQualityChecklistText = routePublishQualityChecklistText(route);
+      if (status) {
+        status.textContent = check.label;
+        status.className = `route-publish-quality-status ${check.level}`;
+      }
+      renderRoutePublishQualityList('route-publish-quality-ready-list', check.ready, '暂无已具备项');
+      renderRoutePublishQualityList('route-publish-quality-review-list', check.review, '无，官方复核已满足终审口径。');
+      renderRoutePublishQualityList('route-publish-quality-missing-list', check.missing, '无，当前攻略基础发布素材已齐。');
+      if (checklist) checklist.textContent = currentRoutePublishQualityChecklistText;
+    }
+    async function copyRoutePublishQualityChecklist(){
+      try {
+        await navigator.clipboard.writeText(currentRoutePublishQualityChecklistText);
+        copyRoutePublishQualityChecklistButton.textContent = '已复制质检清单';
+        copyRoutePublishQualityChecklistButton.classList.add('copied');
+      } catch (error) {
+        const checklist = document.getElementById('route-publish-quality-checklist-text');
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(checklist);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        copyRoutePublishQualityChecklistButton.textContent = '已选中质检清单';
+      }
     }
     function routeDeliveryHandoffText(route){
       const preference = String(state.activePreference || '').trim() || '未填写';

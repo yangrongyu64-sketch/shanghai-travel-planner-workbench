@@ -1314,6 +1314,11 @@
         route_hints: platformMaterialImportArray(raw.route_hints || raw.routeHints),
         caution_notes: platformMaterialImportArray(raw.caution_notes || raw.cautionNotes),
         official_fields_to_verify: platformMaterialImportArray(raw.official_fields_to_verify || raw.officialFieldsToVerify),
+        review_status: String(raw.review_status || raw.reviewStatus || '待复核').trim() || '待复核',
+        reviewer: String(raw.reviewer || '').trim(),
+        checked_at: String(raw.checked_at || raw.checkedAt || '').trim(),
+        cleanup_note: String(raw.cleanup_note || raw.cleanupNote || '').trim(),
+        official_verification_note: String(raw.official_verification_note || raw.officialVerificationNote || '').trim(),
         usage_notice: '不复制第三方原文，只保留结构化洞察。'
       };
       record.id = String(raw.id || platformMaterialImportRecordId(record)).trim();
@@ -1334,7 +1339,7 @@
         platform: record.platform,
         platformLabel: record.platform_label,
         sourceGrade: record.source_grade,
-        status: '需复核',
+        status: record.review_status === '待复核' ? '需复核' : record.review_status || '需复核',
         title: record.title,
         sourceUrl: record.source_url,
         contentAngles: record.content_angles,
@@ -1412,15 +1417,64 @@
       });
       return {imported, total: platformMaterialImportRecords().length, message: `已批量导入 ${imported} 条平台素材，当前素材池 ${platformMaterialImportRecords().length} 条。`};
     }
+    function platformMaterialAssetHandoffPayload(){
+      const records = platformMaterialImportRecords();
+      return {
+        package_type: 'platform_material_handoff',
+        version: 1,
+        generated_at: new Date().toISOString(),
+        usage_notice: '不复制第三方原文，只保留结构化洞察。',
+        summary: platformMaterialAssetSummary(records),
+        return_fields: ['review_status', 'reviewer', 'checked_at', 'cleanup_note', 'official_verification_note'],
+        instructions: ['逐条确认是否保留素材角度和路线信号。', '只回填结构化复核意见，不粘贴第三方原文。', '事实字段仍需官方来源二次复核。', '回传整个 JSON 包，可用素材池的批量导入入口回填。'],
+        platform_material_imports: records.map(record => ({
+          ...record,
+          route_label: platformMaterialAssetRouteLabel(record.route_id),
+          review_status: record.review_status || '待复核',
+          reviewer: record.reviewer || '',
+          checked_at: record.checked_at || '',
+          cleanup_note: record.cleanup_note || '',
+          official_verification_note: record.official_verification_note || ''
+        }))
+      };
+    }
+    function platformMaterialAssetHandoffMarkdown(){
+      const payload = platformMaterialAssetHandoffPayload();
+      const rows = payload.platform_material_imports.map((record, index) => `| ${index + 1} | ${record.route_label} | ${platformMaterialImportPlatformLabel(record.platform)} | ${record.title} | ${record.review_status || '待复核'} | ${record.reviewer || '未回填'} |`).join('\n');
+      const table = rows || '| - | 暂无 | 暂无 | 暂无 | 暂无 | 暂无 |';
+      return ['# 平台素材交接包', '', `- 素材数量：${payload.summary.total}`, `- 覆盖路线：${payload.summary.route_count}`, `- 平台分布：${platformMaterialAssetPlatformSummaryText(payload.summary)}`, '- 使用边界：不复制第三方原文，只保留结构化洞察。', '', '## 素材协作者回填字段', '', '- review_status：待复核 / 已清洗 / 丢弃 / 需官方复核', '- reviewer：复核人', '- checked_at：复核日期', '- cleanup_note：清洗说明', '- official_verification_note：官方复核提醒', '', '## 素材列表', '', '| # | 路线 | 平台 | 标题 | 复核状态 | 复核人 |', '| --- | --- | --- | --- | --- | --- |', table, '', '## 回传方式', '', '把回填后的 JSON 整包粘贴到素材池的“批量导入结构化素材 JSON”。'].join('\n');
+    }
+    function downloadPlatformMaterialAssetHandoffJson(){
+      const blob = new Blob([JSON.stringify(platformMaterialAssetHandoffPayload(), null, 2)], {type: 'application/json;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'platform-material-handoff.json';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+    function downloadPlatformMaterialAssetHandoffMarkdown(){
+      const blob = new Blob([platformMaterialAssetHandoffMarkdown()], {type: 'text/markdown;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'platform-material-handoff.md';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
     function platformMaterialAssetDashboardHtml(){
       const summary = platformMaterialAssetSummary();
       const rows = platformMaterialAssetFilteredRecords();
       const routeOptions = ['<option value="all">全部路线</option>'].concat(routes.map(route => `<option value="${escapeHtml(route.tripId)}"${state.platformMaterialAssetRouteFilter === route.tripId ? ' selected' : ''}>${escapeHtml(route.templateName)}</option>`)).join('');
       const platformValues = ['all', 'xiaohongshu', 'douyin', 'travel_website'];
       const platformOptions = platformValues.map(platform => `<option value="${escapeHtml(platform)}"${(state.platformMaterialAssetPlatformFilter || 'all') === platform ? ' selected' : ''}>${escapeHtml(platform === 'all' ? '全部平台' : platformMaterialImportPlatformLabel(platform))}</option>`).join('');
-      const tableRows = rows.map(record => `<tr><td>${escapeHtml(platformMaterialAssetRouteLabel(record.route_id))}</td><td>${escapeHtml(platformMaterialImportPlatformLabel(record.platform))}</td><td>${escapeHtml(record.title)}</td><td>${escapeHtml(record.source_grade)}</td><td>${escapeHtml(record.content_angles.join(' / ') || '未提炼')}</td><td>${escapeHtml(record.caution_notes.join(' / ') || '待复核')}</td></tr>`).join('') || '<tr><td colspan="6">暂无导入素材</td></tr>';
+      const tableRows = rows.map(record => `<tr><td>${escapeHtml(platformMaterialAssetRouteLabel(record.route_id))}</td><td>${escapeHtml(platformMaterialImportPlatformLabel(record.platform))}</td><td>${escapeHtml(record.title)}</td><td>${escapeHtml(record.source_grade)}</td><td>${escapeHtml(record.review_status || '待复核')}</td><td>${escapeHtml(record.reviewer || '未回填')}</td><td>${escapeHtml(record.content_angles.join(' / ') || '未提炼')}</td><td>${escapeHtml(record.caution_notes.join(' / ') || '待复核')}</td></tr>`).join('') || '<tr><td colspan="8">暂无导入素材</td></tr>';
       const feedback = state.platformMaterialAssetImportFeedback || '可粘贴单条平台素材 JSON、数组，或包含 platform_material_imports 的状态片段。';
-      return `<section id="platform-material-asset-dashboard" class="official-import platform-material-assets"><h3 class="markdown-section-title">平台素材池</h3><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>导入素材</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待复核字段</span></div><div class="metric"><b>${summary.caution_count}</b><span>避坑信号</span></div></div><p class="official-import-status">平台分布：${escapeHtml(platformMaterialAssetPlatformSummaryText(summary))}</p><div class="official-queue-form"><label>路线筛选<select id="platform-material-asset-route-filter">${routeOptions}</select></label><label>平台筛选<select id="platform-material-asset-platform-filter">${platformOptions}</select></label></div><div class="field"><label for="platform-material-bulk-json-import">批量导入结构化素材 JSON</label><textarea id="platform-material-bulk-json-import" placeholder="粘贴 platform_material_imports 数组、单条素材 JSON 或素材数组"></textarea></div><div class="official-import-actions"><button type="button" id="import-platform-material-bulk-button">批量导入素材</button><p id="platform-material-bulk-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><div class="project-acceptance-table-wrap"><table id="platform-material-asset-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>标题</th><th>等级</th><th>角度</th><th>避坑</th></tr></thead><tbody>${tableRows}</tbody></table></div></section>`;
+      return `<section id="platform-material-asset-dashboard" class="official-import platform-material-assets"><h3 class="markdown-section-title">平台素材池</h3><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>导入素材</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待复核字段</span></div><div class="metric"><b>${summary.caution_count}</b><span>避坑信号</span></div></div><p class="official-import-status">平台分布：${escapeHtml(platformMaterialAssetPlatformSummaryText(summary))}</p><div class="official-queue-form"><label>路线筛选<select id="platform-material-asset-route-filter">${routeOptions}</select></label><label>平台筛选<select id="platform-material-asset-platform-filter">${platformOptions}</select></label></div><div class="field"><label for="platform-material-bulk-json-import">批量导入结构化素材 JSON</label><textarea id="platform-material-bulk-json-import" placeholder="粘贴 platform_material_imports 数组、单条素材 JSON 或素材数组"></textarea></div><div class="official-import-actions"><button type="button" id="import-platform-material-bulk-button">批量导入素材</button><button type="button" id="download-platform-material-handoff-json-button">下载交接JSON</button><button type="button" id="download-platform-material-handoff-md-button">下载交接Markdown</button><p id="platform-material-bulk-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><div class="project-acceptance-table-wrap"><table id="platform-material-asset-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>标题</th><th>等级</th><th>复核状态</th><th>复核人</th><th>角度</th><th>避坑</th></tr></thead><tbody>${tableRows}</tbody></table></div></section>`;
     }
     function renderPlatformMaterialAssetDashboard(){
       const dashboard = document.getElementById('platform-material-asset-dashboard');
@@ -1440,6 +1494,8 @@
       const platformFilter = document.getElementById('platform-material-asset-platform-filter');
       const bulkImportText = document.getElementById('platform-material-bulk-json-import');
       const bulkImportButton = document.getElementById('import-platform-material-bulk-button');
+      const handoffJsonButton = document.getElementById('download-platform-material-handoff-json-button');
+      const handoffMarkdownButton = document.getElementById('download-platform-material-handoff-md-button');
       if (routeFilter) routeFilter.addEventListener('change', () => { state.platformMaterialAssetRouteFilter = routeFilter.value || 'all'; renderPlatformMaterialAssetDashboard(); });
       if (platformFilter) platformFilter.addEventListener('change', () => { state.platformMaterialAssetPlatformFilter = platformFilter.value || 'all'; renderPlatformMaterialAssetDashboard(); });
       if (bulkImportButton) bulkImportButton.addEventListener('click', () => {
@@ -1453,6 +1509,8 @@
           renderPlatformMaterialAssetDashboard();
         }
       });
+      if (handoffJsonButton) handoffJsonButton.addEventListener('click', downloadPlatformMaterialAssetHandoffJson);
+      if (handoffMarkdownButton) handoffMarkdownButton.addEventListener('click', downloadPlatformMaterialAssetHandoffMarkdown);
     }
     function bindPlatformMaterialImport(){
       const previewButton = document.getElementById('platform-material-preview-button');

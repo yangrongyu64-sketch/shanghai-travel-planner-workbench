@@ -50,6 +50,11 @@
     .map-export-actions button{min-height:36px;border:1px solid #173b76;background:#173b76;color:#fff;font:inherit;font-weight:800;cursor:pointer;padding:0 12px}
     .map-export-actions button.secondary{border-color:#cfd7ca;background:#fff;color:#173b76}
     .map-export-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
+    .component-preview{display:grid;grid-template-columns:minmax(320px,1.1fr) minmax(260px,.9fr);gap:10px;margin:10px 0 12px}
+    .component-map{min-height:250px;border:1px solid #e1e6df;background:#f8faf7;overflow:hidden}
+    .component-map svg{display:block;width:100%;height:auto;min-height:250px}
+    .component-summary{margin:0;padding-left:18px;color:#252525;font-size:13px;line-height:1.65}
+    .component-summary li{margin-bottom:6px}
     .map-export-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
     .map-export-panel{min-width:0}
     .map-export-panel h3{margin:0 0 6px;color:#173b76;font-size:13px}
@@ -76,7 +81,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -152,13 +157,28 @@
         <div class="map-export-actions">
           <button id="copy-place-route-geojson-button" type="button">复制 GeoJSON</button>
           <button id="copy-place-map-review-button" class="secondary" type="button">复制复核清单</button>
+          <button id="copy-place-miniprogram-map-config-button" class="secondary" type="button">复制小程序配置</button>
         </div>
       </div>
       <p id="place-route-map-export-status" class="map-export-status" aria-live="polite">请先选择点位，生成 GeoJSON 和地图复核清单。</p>
+      <div id="place-route-component-preview" class="component-preview" aria-label="地图组件预览">
+        <div>
+          <h3>地图组件预览</h3>
+          <div id="place-route-component-svg" class="component-map"></div>
+        </div>
+        <div>
+          <h3>小程序 map 配置摘要</h3>
+          <ul id="place-route-component-summary" class="component-summary"></ul>
+        </div>
+      </div>
       <div class="map-export-grid">
         <div class="map-export-panel">
           <h3>GeoJSON FeatureCollection</h3>
           <pre id="place-route-geojson-text" class="map-export-text">{"type":"FeatureCollection","features":[]}</pre>
+        </div>
+        <div class="map-export-panel">
+          <h3>小程序 map 配置</h3>
+          <pre id="place-miniprogram-map-config-text" class="map-export-text">{"markers":[],"polyline":[]}</pre>
         </div>
         <div class="map-export-panel">
           <h3>地图复核清单</h3>
@@ -339,8 +359,12 @@
     const placeRouteMapPreview = document.getElementById('place-route-map-preview');
     const placeRouteMapSvg = document.getElementById('place-route-map-svg');
     const placeRouteSegmentSummary = document.getElementById('place-route-segment-summary');
+    const placeRouteComponentPreview = document.getElementById('place-route-component-preview');
+    const placeRouteComponentSvg = document.getElementById('place-route-component-svg');
+    const placeRouteComponentSummary = document.getElementById('place-route-component-summary');
     const placeRouteGeoJsonText = document.getElementById('place-route-geojson-text');
     const placeMapReviewText = document.getElementById('place-map-review-text');
+    const placeMiniProgramMapConfigText = document.getElementById('place-miniprogram-map-config-text');
     const placeRouteMapExportStatus = document.getElementById('place-route-map-export-status');
     const placeItineraryDraft = document.getElementById('place-itinerary-draft');
     const placeItineraryDraftText = document.getElementById('place-itinerary-draft-text');
@@ -350,6 +374,7 @@
     const copyPlaceItineraryDraftButton = document.getElementById('copy-place-itinerary-draft-button');
     const copyPlaceRouteGeoJsonButton = document.getElementById('copy-place-route-geojson-button');
     const copyPlaceMapReviewButton = document.getElementById('copy-place-map-review-button');
+    const copyPlaceMiniProgramMapConfigButton = document.getElementById('copy-place-miniprogram-map-config-button');
     const clearPlaceSelectionButton = document.getElementById('clear-place-selection-button');
     const themeLabels = {landmark:'地标',museum:'博物馆',culture:'文化',rainy_day:'雨天备选',shopping:'商业街',architecture:'建筑',night_view:'夜景',city_walk:'City Walk',history:'历史',food:'美食',coffee:'咖啡街区',local_life:'本地生活',art:'艺术',waterfront:'滨江',cycling:'骑行',family:'亲子',park:'公园',relaxed:'慢节奏',nature:'自然',theme_park:'主题乐园',lifestyle:'生活方式'};
     function rowMatchesPlaceCatalogFilters(row) {
@@ -494,6 +519,45 @@
       const lineFeature = lineCoordinates.length > 1 ? [{type:'Feature', geometry:{type:'LineString', coordinates:lineCoordinates}, properties:{kind:'selected_place_route_line', pointCount:lineCoordinates.length, routeName:points.map(point => point.name).join(' → ')}}] : [];
       return {type:'FeatureCollection', name:'shanghai_selected_place_route', features:[...pointFeatures, ...lineFeature]};
     }
+    function selectedRouteMiniProgramMapConfig(points) {
+      const numericPoints = points.map(point => ({...point, longitude:numericCoordinate(point.lng), latitude:numericCoordinate(point.lat)})).filter(point => point.longitude !== null && point.latitude !== null);
+      const center = numericPoints.length ? numericPoints.reduce((acc, point) => ({longitude:acc.longitude + point.longitude / numericPoints.length, latitude:acc.latitude + point.latitude / numericPoints.length}), {longitude:0, latitude:0}) : {longitude:121.4752, latitude:31.2304};
+      const markers = numericPoints.map(point => ({id:point.order, latitude:point.latitude, longitude:point.longitude, title:point.name, callout:{content:`${point.order}. ${point.name}`, display:'ALWAYS', padding:8, borderRadius:6}, label:{content:String(point.order), color:'#ffffff', fontSize:12}, width:28, height:28}));
+      const polyline = numericPoints.length > 1 ? [{points:numericPoints.map(point => ({latitude:point.latitude, longitude:point.longitude})), color:'#0f766e', width:5, arrowLine:true}] : [];
+      return {latitude:Number(center.latitude.toFixed(6)), longitude:Number(center.longitude.toFixed(6)), scale:numericPoints.length > 4 ? 11 : 12, markers, polyline};
+    }
+    function projectGeoPointToPreview(point, bounds) {
+      const lngRange = bounds.maxLng - bounds.minLng || 0.01;
+      const latRange = bounds.maxLat - bounds.minLat || 0.01;
+      return {x:70 + ((point.longitude - bounds.minLng) / lngRange) * 620, y:430 - ((point.latitude - bounds.minLat) / latRange) * 300};
+    }
+    function routeComponentPreviewSvgForGeoJson(geoJson) {
+      const pointFeatures = geoJson.features.filter(feature => feature.geometry.type === 'Point');
+      if (!pointFeatures.length) {
+        return `<svg viewBox="0 0 760 500" role="img" aria-label="地图组件预览"><rect width="760" height="500" fill="#f8faf7"/><text x="380" y="235" text-anchor="middle" fill="#625d55" font-size="18" font-weight="800">选择点位后生成地图组件预览</text><text x="380" y="263" text-anchor="middle" fill="#625d55" font-size="13">该图层使用 GeoJSON 坐标投影，便于后续接入真实地图</text></svg>`;
+      }
+      const geoPoints = pointFeatures.map(feature => ({order:feature.properties.order, name:feature.properties.placeName, area:feature.properties.area, longitude:feature.geometry.coordinates[0], latitude:feature.geometry.coordinates[1]}));
+      const lngs = geoPoints.map(point => point.longitude);
+      const lats = geoPoints.map(point => point.latitude);
+      const bounds = {minLng:Math.min(...lngs) - 0.003, maxLng:Math.max(...lngs) + 0.003, minLat:Math.min(...lats) - 0.003, maxLat:Math.max(...lats) + 0.003};
+      const projected = geoPoints.map(point => ({...point, ...projectGeoPointToPreview(point, bounds)}));
+      const gridLines = [1,2,3,4].map(index => `<line x1="70" y1="${110 + index * 60}" x2="690" y2="${110 + index * 60}" stroke="#e2e8e2"/><line x1="${70 + index * 124}" y1="100" x2="${70 + index * 124}" y2="430" stroke="#e2e8e2"/>`).join('');
+      const routeLine = projected.length > 1 ? `<polyline points="${projected.map(point => `${point.x},${point.y}`).join(' ')}" fill="none" stroke="#0f766e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>` : '';
+      const markers = projected.map(point => `<g><circle cx="${point.x}" cy="${point.y}" r="15" fill="#173b76"/><text x="${point.x}" y="${point.y + 5}" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">${point.order}</text><text x="${Math.min(point.x + 20, 610)}" y="${point.y - 10}" fill="#252525" font-size="13" font-weight="800">${escapeHtml(point.name)}</text><text x="${Math.min(point.x + 20, 610)}" y="${point.y + 8}" fill="#625d55" font-size="11">${escapeHtml(point.area)}</text></g>`).join('');
+      return `<svg viewBox="0 0 760 500" role="img" aria-label="地图组件预览"><rect width="760" height="500" fill="#f8faf7"/><rect x="70" y="100" width="620" height="330" fill="#fff" stroke="#cfd7ca"/>${gridLines}<text x="52" y="60" fill="#173b76" font-size="18" font-weight="800">地图组件预览</text><text x="52" y="84" fill="#625d55" font-size="12">GeoJSON 坐标投影图层：markers + polyline，正式地图需接入实时底图</text>${routeLine}${markers}</svg>`;
+    }
+    function renderSelectedRouteMapComponentPreview(points, geoJson) {
+      if (placeRouteComponentSvg) placeRouteComponentSvg.innerHTML = routeComponentPreviewSvgForGeoJson(geoJson);
+      const miniProgramConfig = selectedRouteMiniProgramMapConfig(points);
+      if (placeMiniProgramMapConfigText) placeMiniProgramMapConfigText.textContent = JSON.stringify(miniProgramConfig, null, 2);
+      if (placeRouteComponentPreview) placeRouteComponentPreview.dataset.markerCount = String(miniProgramConfig.markers.length);
+      if (placeRouteComponentPreview) placeRouteComponentPreview.dataset.polylineCount = String(miniProgramConfig.polyline.length);
+      if (placeRouteComponentSummary) {
+        const markerCount = miniProgramConfig.markers.length;
+        const polylineCount = miniProgramConfig.polyline.length;
+        placeRouteComponentSummary.innerHTML = markerCount ? [`<li>markers：${markerCount} 个点位标记，已包含序号 callout。</li>`, `<li>polyline：${polylineCount} 条路线线段，arrowLine 已开启。</li>`, `<li>中心点：${miniProgramConfig.longitude}, ${miniProgramConfig.latitude}；缩放级别：${miniProgramConfig.scale}。</li>`].join('') : '<li>请选择点位后生成 markers、polyline 和中心点配置。</li>';
+      }
+    }
     function selectedRouteMapReviewText(points, draft) {
       if (!points.length) return '# 自选路线地图复核清单\n\n请先勾选 2-4 个点位，再生成地图数据和复核清单。';
       const lines = ['# 自选路线地图复核清单', '', `路线：${points.map(point => point.name).join(' → ')}`, `建议形态：${draft.suggestedDays} · ${draft.intensity} · ${formatMinutes(draft.journeyMinutes)}`, `区域：${draft.areas.join('、') || '待确认'}`, '', '## 点位顺序'];
@@ -511,8 +575,10 @@
       return lines.join('\n');
     }
     function renderSelectedRouteMapExport(points, draft) {
-      if (placeRouteGeoJsonText) placeRouteGeoJsonText.textContent = JSON.stringify(selectedRouteGeoJsonFeatureCollection(points), null, 2);
+      const geoJson = selectedRouteGeoJsonFeatureCollection(points);
+      if (placeRouteGeoJsonText) placeRouteGeoJsonText.textContent = JSON.stringify(geoJson, null, 2);
       if (placeMapReviewText) placeMapReviewText.textContent = selectedRouteMapReviewText(points, draft);
+      renderSelectedRouteMapComponentPreview(points, geoJson);
       if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = points.length ? '地图数据已生成，可复制给协作者或接入真实地图组件。' : '请先选择点位，生成 GeoJSON 和地图复核清单。';
     }
     function renderSelectedRouteMap(draft) {
@@ -608,6 +674,16 @@
         if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制复核清单，请手动选中文本复制。';
       }
     }
+    async function copySelectedMiniProgramMapConfig() {
+      const text = placeMiniProgramMapConfigText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '小程序 map 配置已复制，可交给开发接入 markers / polyline。';
+      } catch (error) {
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制小程序配置，请手动选中文本复制。';
+      }
+    }
     function clearPlaceSelection() {
       placeSelects.forEach(checkbox => { checkbox.checked = false; });
       updateSelectedPlaceSummary();
@@ -634,6 +710,7 @@
     copyPlaceItineraryDraftButton?.addEventListener('click', copyPlaceItineraryDraft);
     copyPlaceRouteGeoJsonButton?.addEventListener('click', copySelectedRouteGeoJson);
     copyPlaceMapReviewButton?.addEventListener('click', copySelectedRouteMapReview);
+    copyPlaceMiniProgramMapConfigButton?.addEventListener('click', copySelectedMiniProgramMapConfig);
     clearPlaceSelectionButton?.addEventListener('click', clearPlaceSelection);
     applyPlaceCatalogFilters();
     clearPlaceSelection();

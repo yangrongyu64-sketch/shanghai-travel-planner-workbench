@@ -55,6 +55,13 @@
     .component-map svg{display:block;width:100%;height:auto;min-height:250px}
     .component-summary{margin:0;padding-left:18px;color:#252525;font-size:13px;line-height:1.65}
     .component-summary li{margin-bottom:6px}
+    .delivery-checker{margin:10px 0 12px;padding:12px;border:1px solid #d8ddd4;background:#f8faf7;border-radius:6px}
+    .delivery-checker-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+    .delivery-checker h3{margin:0 0 6px;color:#173b76;font-size:13px}
+    .delivery-checker button{min-height:34px;border:1px solid #cfd7ca;background:#fff;color:#173b76;font:inherit;font-weight:800;cursor:pointer;padding:0 10px}
+    .delivery-status{margin:0;color:#252525;font-size:13px;font-weight:800}
+    .delivery-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+    .delivery-columns ul{margin:0;padding-left:18px;color:#252525;font-size:13px;line-height:1.65}
     .map-export-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
     .map-export-panel{min-width:0}
     .map-export-panel h3{margin:0 0 6px;color:#173b76;font-size:13px}
@@ -81,7 +88,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -171,6 +178,26 @@
           <h3>小程序 map 配置摘要</h3>
           <ul id="place-route-component-summary" class="component-summary"></ul>
         </div>
+      </div>
+      <div id="place-map-delivery-checker" class="delivery-checker" aria-label="地图交付检查器">
+        <div class="delivery-checker-head">
+          <div>
+            <h3>地图交付检查器</h3>
+            <p id="place-map-delivery-status" class="delivery-status" aria-live="polite">地图交付状态：待选点位</p>
+          </div>
+          <button id="copy-place-map-delivery-checklist-button" type="button">复制交付清单</button>
+        </div>
+        <div class="delivery-columns">
+          <div>
+            <h3>已具备</h3>
+            <ul id="place-map-delivery-ready-list"><li>暂无</li></ul>
+          </div>
+          <div>
+            <h3>待补齐</h3>
+            <ul id="place-map-delivery-missing-list"><li>请先选择点位。</li></ul>
+          </div>
+        </div>
+        <pre id="place-map-delivery-checklist-text" class="map-export-text"># 地图交付检查清单&#10;&#10;状态：待选点位&#10;&#10;上线地图必备项会在选择点位后自动检查。</pre>
       </div>
       <div class="map-export-grid">
         <div class="map-export-panel">
@@ -371,6 +398,11 @@
     const placeMapReviewText = document.getElementById('place-map-review-text');
     const placeMiniProgramMapConfigText = document.getElementById('place-miniprogram-map-config-text');
     const placeMapSdkPackageText = document.getElementById('place-map-sdk-package-text');
+    const placeMapDeliveryChecker = document.getElementById('place-map-delivery-checker');
+    const placeMapDeliveryStatus = document.getElementById('place-map-delivery-status');
+    const placeMapDeliveryReadyList = document.getElementById('place-map-delivery-ready-list');
+    const placeMapDeliveryMissingList = document.getElementById('place-map-delivery-missing-list');
+    const placeMapDeliveryChecklistText = document.getElementById('place-map-delivery-checklist-text');
     const placeRouteMapExportStatus = document.getElementById('place-route-map-export-status');
     const placeItineraryDraft = document.getElementById('place-itinerary-draft');
     const placeItineraryDraftText = document.getElementById('place-itinerary-draft-text');
@@ -382,6 +414,7 @@
     const copyPlaceMapReviewButton = document.getElementById('copy-place-map-review-button');
     const copyPlaceMiniProgramMapConfigButton = document.getElementById('copy-place-miniprogram-map-config-button');
     const copyPlaceMapSdkPackageButton = document.getElementById('copy-place-map-sdk-package-button');
+    const copyPlaceMapDeliveryChecklistButton = document.getElementById('copy-place-map-delivery-checklist-button');
     const clearPlaceSelectionButton = document.getElementById('clear-place-selection-button');
     const themeLabels = {landmark:'地标',museum:'博物馆',culture:'文化',rainy_day:'雨天备选',shopping:'商业街',architecture:'建筑',night_view:'夜景',city_walk:'City Walk',history:'历史',food:'美食',coffee:'咖啡街区',local_life:'本地生活',art:'艺术',waterfront:'滨江',cycling:'骑行',family:'亲子',park:'公园',relaxed:'慢节奏',nature:'自然',theme_park:'主题乐园',lifestyle:'生活方式'};
     function rowMatchesPlaceCatalogFilters(row) {
@@ -572,6 +605,39 @@
       if (!pointArray.length) return '# 真实地图 SDK 接入包\n\n请先勾选点位，再生成微信小程序 map、腾讯地图 JS GL、高德地图 JS API 的接入片段。';
       return [`# 真实地图 SDK 接入包`, ``, `路线：${pointArray.map(point => point.title).join(' → ')}`, `中心点：${config.latitude}, ${config.longitude}`, ``, `## 微信小程序 map`, '```json', JSON.stringify({...config, includePoints:pointArray.map(point => ({latitude:point.latitude, longitude:point.longitude}))}, null, 2), '```', ``, `## 腾讯地图 JS GL`, '```js', `const center = new TMap.LatLng(${config.latitude}, ${config.longitude});`, `const map = new TMap.Map('map', { center, zoom: 12 });`, `const markers = new TMap.MultiMarker({ map, geometries: ${JSON.stringify(pointArray.map(point => ({id:String(point.id), position:{lat:point.latitude, lng:point.longitude}, properties:{title:point.title}})), null, 2)} });`, `const routeLine = new TMap.MultiPolyline({ map, styles: { route: new TMap.PolylineStyle({ color: '#0f766e', width: 6 }) }, geometries: [{ id: 'selected-route', styleId: 'route', paths: ${JSON.stringify(pathArray, null, 2)} }] });`, `// Script: https://map.qq.com/api/gljs?v=1.exp&key=YOUR_TENCENT_MAP_KEY`, '```', ``, `## 高德地图 JS API`, '```js', `const map = new AMap.Map('map', { zoom: 12, center: [${config.longitude}, ${config.latitude}] });`, `const points = ${JSON.stringify(pointArray.map(point => ({name:point.title, position:[point.longitude, point.latitude]})), null, 2)};`, `const markers = points.map((point, index) => new AMap.Marker({ map, position: point.position, title: point.name, label: { content: String(index + 1), direction: 'top' } }));`, `const polyline = new AMap.Polyline({ map, path: points.map(point => point.position), strokeColor: '#0f766e', strokeWeight: 6 });`, `map.setFitView([...markers, polyline]);`, `// Script: https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY`, '```', ``, `## 接入提醒`, `- Key 使用环境变量或服务端配置注入，不要写进公开仓库。`, `- 正式上线前复核坐标偏移、路线可达性、实时交通和地图服务配额。`].join('\n');
     }
+    function selectedRouteMapDeliveryCheck(points, draft, geoJson) {
+      const config = selectedRouteMiniProgramMapConfig(points);
+      const sdkPackage = selectedRouteMapSdkAdapterPackage(points);
+      const reviewText = selectedRouteMapReviewText(points, draft);
+      const checks = [
+        {key:'points', label:'至少 2 个点位', ok:points.length >= 2, missing:'请至少选择 2 个点位，才能形成路线。'},
+        {key:'coordinates', label:'坐标齐全', ok:points.length > 0 && points.every(point => numericCoordinate(point.lng) !== null && numericCoordinate(point.lat) !== null), missing:'存在点位缺少经纬度，需补坐标后再接真实地图。'},
+        {key:'geojson', label:'GeoJSON 含 Point / LineString', ok:geoJson.features.some(feature => feature.geometry.type === 'Point') && geoJson.features.some(feature => feature.geometry.type === 'LineString'), missing:'GeoJSON 还没有完整 Point / LineString。'},
+        {key:'markers', label:'小程序 markers / polyline', ok:config.markers.length >= 2 && config.polyline.length >= 1, missing:'小程序 map 配置缺少 markers 或 polyline。'},
+        {key:'sdk', label:'SDK 接入包', ok:sdkPackage.includes('TMap.MultiMarker') && sdkPackage.includes('AMap.Polyline') && sdkPackage.includes('微信小程序 map'), missing:'SDK 接入包尚未生成完整三端片段。'},
+        {key:'review', label:'地图复核清单', ok:reviewText.includes('用实时地图复核') && reviewText.includes('路线段复核'), missing:'地图复核清单缺少实时地图或路线段复核提醒。'},
+      ];
+      const ready = checks.filter(check => check.ok);
+      const missing = checks.filter(check => !check.ok);
+      const status = !points.length ? '待选点位' : missing.length ? '待补齐' : '可交付';
+      return {status, ready, missing, markerCount:config.markers.length, polylineCount:config.polyline.length, routeName:points.map(point => point.name).join(' → ') || '待选择路线'};
+    }
+    function mapDeliveryChecklistText(check) {
+      const lines = ['# 地图交付检查清单', '', `状态：${check.status}`, `路线：${check.routeName}`, `markers：${check.markerCount}；polyline：${check.polylineCount}`, '', '## 已具备'];
+      (check.ready.length ? check.ready : [{label:'暂无'}]).forEach(item => lines.push(`- ${item.label}`));
+      lines.push('', '## 待补齐');
+      (check.missing.length ? check.missing : [{missing:'无，当前路线地图交付物已齐。'}]).forEach(item => lines.push(`- ${item.missing}`));
+      lines.push('', '## 上线地图必备项', '- 真实地图 Key 通过安全配置注入。', '- 出发前用实时地图复核通勤、开放时间和路线可达性。', '- 线上发布前检查地图服务配额、域名白名单和小程序定位授权。');
+      return lines.join('\n');
+    }
+    function renderSelectedRouteMapDeliveryChecker(points, draft, geoJson) {
+      const check = selectedRouteMapDeliveryCheck(points, draft, geoJson);
+      if (placeMapDeliveryChecker) placeMapDeliveryChecker.dataset.status = check.status;
+      if (placeMapDeliveryStatus) placeMapDeliveryStatus.textContent = `地图交付状态：${check.status}`;
+      if (placeMapDeliveryReadyList) placeMapDeliveryReadyList.innerHTML = (check.ready.length ? check.ready : [{label:'暂无'}]).map(item => `<li>${escapeHtml(item.label)}</li>`).join('');
+      if (placeMapDeliveryMissingList) placeMapDeliveryMissingList.innerHTML = (check.missing.length ? check.missing : [{missing:'无，当前路线地图交付物已齐。'}]).map(item => `<li>${escapeHtml(item.missing)}</li>`).join('');
+      if (placeMapDeliveryChecklistText) placeMapDeliveryChecklistText.textContent = mapDeliveryChecklistText(check);
+    }
     function selectedRouteMapReviewText(points, draft) {
       if (!points.length) return '# 自选路线地图复核清单\n\n请先勾选 2-4 个点位，再生成地图数据和复核清单。';
       const lines = ['# 自选路线地图复核清单', '', `路线：${points.map(point => point.name).join(' → ')}`, `建议形态：${draft.suggestedDays} · ${draft.intensity} · ${formatMinutes(draft.journeyMinutes)}`, `区域：${draft.areas.join('、') || '待确认'}`, '', '## 点位顺序'];
@@ -594,6 +660,7 @@
       if (placeMapReviewText) placeMapReviewText.textContent = selectedRouteMapReviewText(points, draft);
       if (placeMapSdkPackageText) placeMapSdkPackageText.textContent = selectedRouteMapSdkAdapterPackage(points);
       renderSelectedRouteMapComponentPreview(points, geoJson);
+      renderSelectedRouteMapDeliveryChecker(points, draft, geoJson);
       if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = points.length ? '地图数据已生成，可复制给协作者或接入真实地图组件。' : '请先选择点位，生成 GeoJSON 和地图复核清单。';
     }
     function renderSelectedRouteMap(draft) {
@@ -709,6 +776,16 @@
         if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制 SDK 接入包，请手动选中文本复制。';
       }
     }
+    async function copySelectedMapDeliveryChecklist() {
+      const text = placeMapDeliveryChecklistText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '地图交付检查清单已复制，可用于上线前核对。';
+      } catch (error) {
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制交付清单，请手动选中文本复制。';
+      }
+    }
     function clearPlaceSelection() {
       placeSelects.forEach(checkbox => { checkbox.checked = false; });
       updateSelectedPlaceSummary();
@@ -737,6 +814,7 @@
     copyPlaceMapReviewButton?.addEventListener('click', copySelectedRouteMapReview);
     copyPlaceMiniProgramMapConfigButton?.addEventListener('click', copySelectedMiniProgramMapConfig);
     copyPlaceMapSdkPackageButton?.addEventListener('click', copySelectedMapSdkAdapterPackage);
+    copyPlaceMapDeliveryChecklistButton?.addEventListener('click', copySelectedMapDeliveryChecklist);
     clearPlaceSelectionButton?.addEventListener('click', clearPlaceSelection);
     applyPlaceCatalogFilters();
     clearPlaceSelection();

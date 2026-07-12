@@ -145,6 +145,8 @@
     .trial-feedback-board-metrics small{font-size:11px;color:var(--muted);line-height:1.25;word-break:break-word}
     .trial-feedback-board-import label{font-size:12px;color:var(--muted);font-weight:800}
     .trial-feedback-board-import textarea{width:100%;min-height:88px;resize:vertical;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;color:var(--ink)}
+    .trial-feedback-board-filter{display:grid;gap:4px;min-width:0}
+    .trial-feedback-board-filter select{width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;color:var(--ink)}
     .trial-feedback-board-actions{display:flex;gap:7px;flex-wrap:wrap}
     .trial-feedback-board-actions button{flex:1 1 140px;border-radius:8px;padding:0 10px;border-color:rgba(36,87,166,.28);background:#edf4ff;color:#173b76;font-size:13px;font-weight:800;white-space:nowrap}
     .trial-feedback-board-actions button.primary{background:#173b76;border-color:#173b76;color:#fff}
@@ -721,6 +723,7 @@
               <button type="button" id="copy-trial-feedback-task-list-button">复制维护任务</button>
               <button type="button" id="copy-trial-feedback-release-note-button">复制更新日志</button>
             </div>
+            <div class="trial-feedback-board-filter"><label for="trial-feedback-status-filter">状态筛选</label><select id="trial-feedback-status-filter"><option value="all">全部状态</option><option value="待处理">待处理</option><option value="处理中">处理中</option><option value="已处理">已处理</option><option value="暂缓">暂缓</option></select></div>
             <p id="trial-feedback-board-status" class="trial-feedback-board-status" aria-live="polite"></p>
           </div>
           <div id="trial-feedback-board-list" class="trial-feedback-board-list"></div>
@@ -838,7 +841,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -872,6 +875,7 @@
     const copyTrialFeedbackSummaryButton = document.getElementById('copy-trial-feedback-summary-button');
     const copyTrialFeedbackTaskListButton = document.getElementById('copy-trial-feedback-task-list-button');
     const copyTrialFeedbackReleaseNoteButton = document.getElementById('copy-trial-feedback-release-note-button');
+    const trialFeedbackStatusFilter = document.getElementById('trial-feedback-status-filter');
     const trialFeedbackBoardStatus = document.getElementById('trial-feedback-board-status');
     const trialFeedbackBoardMetrics = document.getElementById('trial-feedback-board-metrics');
     const trialFeedbackBoardList = document.getElementById('trial-feedback-board-list');
@@ -1145,6 +1149,37 @@
       });
       return normalized.sort((left, right) => String(left.created_at || '').localeCompare(String(right.created_at || '')));
     }
+    function trialFeedbackStatusCounts(){
+      const source = Array.isArray(arguments[0]) ? arguments[0] : trialFeedbackRecords();
+      const counts = Object.fromEntries(trialFeedbackStatusLabels.map(status => [status, 0]));
+      source.forEach(record => {
+        const status = validTrialFeedbackStatus(record.status) || '待处理';
+        counts[status] = (counts[status] || 0) + 1;
+      });
+      return counts;
+    }
+    function trialFeedbackActiveStatusFilter(){
+      const value = String(state.trialFeedbackStatusFilter || 'all').trim();
+      return value === 'all' ? 'all' : validTrialFeedbackStatus(value) || 'all';
+    }
+    function filteredTrialFeedbackRecords(){
+      const records = trialFeedbackRecords();
+      const status = trialFeedbackActiveStatusFilter();
+      return status === 'all' ? records : records.filter(record => record.status === status);
+    }
+    function setTrialFeedbackStatusFilter(status){
+      const value = String(status || 'all').trim();
+      const nextStatus = value === 'all' ? 'all' : validTrialFeedbackStatus(value);
+      if (!nextStatus) return {ok: false, message: '未找到可筛选的反馈状态。'};
+      state.trialFeedbackStatusFilter = nextStatus;
+      if (trialFeedbackStatusFilter) trialFeedbackStatusFilter.value = nextStatus;
+      renderTrialFeedbackBoard();
+      const total = trialFeedbackRecords().length;
+      const filtered = filteredTrialFeedbackRecords().length;
+      const label = nextStatus === 'all' ? '全部状态' : nextStatus;
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = `当前筛选：${label}，显示 ${filtered} / ${total} 条反馈。`;
+      return {ok: true, status: nextStatus, filtered_count: filtered, total_count: total};
+    }
     function trialFeedbackPayloadRecords(payload){
       if (Array.isArray(payload)) return payload;
       const source = projectWorkbenchStateSource(payload);
@@ -1193,6 +1228,7 @@
       const countBy = key => records.reduce((counts, record) => { const value = record[key] || 'unknown'; counts[value] = (counts[value] || 0) + 1; return counts; }, {});
       const categories = countBy('category');
       const severities = countBy('severity');
+      const statuses = trialFeedbackStatusCounts(records);
       return {
         total: records.length,
         blocker: severities.blocker || 0,
@@ -1202,6 +1238,7 @@
         copy: categories.copy || 0,
         official: categories.official || 0,
         ux: categories.ux || 0,
+        statuses,
         categories,
         severities
       };
@@ -1263,16 +1300,23 @@
     }
     function renderTrialFeedbackBoard(){
       const summary = trialFeedbackBoardSummary();
+      if (trialFeedbackStatusFilter) trialFeedbackStatusFilter.value = trialFeedbackActiveStatusFilter();
       if (trialFeedbackBoardMetrics) {
         trialFeedbackBoardMetrics.innerHTML = [
           ['总反馈', summary.total],
           ['阻塞试用', summary.blocker],
           ['官方复核', summary.official],
-          ['地图问题', summary.map]
+          ['地图问题', summary.map],
+          ['待处理', summary.statuses['待处理'] || 0],
+          ['处理中', summary.statuses['处理中'] || 0],
+          ['已处理', summary.statuses['已处理'] || 0],
+          ['暂缓', summary.statuses['暂缓'] || 0]
         ].map(([label, value]) => `<span><b>${escapeHtml(value)}</b><small>${escapeHtml(label)}</small></span>`).join('');
       }
       if (trialFeedbackBoardList) {
-        const records = trialFeedbackRecords().slice().reverse();
+        const totalRecords = trialFeedbackRecords();
+        const records = filteredTrialFeedbackRecords().slice().reverse();
+        const emptyText = totalRecords.length ? '当前状态暂无反馈。' : '暂无导入反馈。';
         trialFeedbackBoardList.innerHTML = records.length ? records.map(record => {
           const statusActions = trialFeedbackStatusLabels.map(status => {
             const activeClass = record.status === status ? ' class="active"' : '';
@@ -1280,7 +1324,7 @@
           }).join('');
           const updatedText = record.status_updated_at ? `｜状态更新 ${record.status_updated_at}` : '';
           return `<article class="trial-feedback-board-item"><div class="trial-feedback-board-item-meta"><span>${escapeHtml(record.severity_label)}</span><span>${escapeHtml(record.category_label)}</span><span>${escapeHtml(record.status)}</span></div><strong>${escapeHtml(record.route_name || record.route_id || '未绑定路线')}</strong><p>${escapeHtml(record.message)}</p><p>${escapeHtml(record.contact || '未留联系方式')}｜${escapeHtml(record.created_at || '')}${escapeHtml(updatedText)}</p><div class="trial-feedback-status-actions">${statusActions}</div></article>`;
-        }).join('') : '<p class="trial-feedback-board-empty">暂无导入反馈。</p>';
+        }).join('') : `<p class="trial-feedback-board-empty">${escapeHtml(emptyText)}</p>`;
       }
       if (trialFeedbackBoardStatus && !trialFeedbackBoardStatus.textContent) trialFeedbackBoardStatus.textContent = '可粘贴反馈 JSON 导入问题池。';
     }
@@ -9213,6 +9257,7 @@
     copyTrialFeedbackSummaryButton.addEventListener('click', copyTrialFeedbackProcessingSummary);
     copyTrialFeedbackTaskListButton.addEventListener('click', copyTrialFeedbackMaintenanceTaskList);
     copyTrialFeedbackReleaseNoteButton.addEventListener('click', copyTrialFeedbackReleaseNote);
+    trialFeedbackStatusFilter.addEventListener('change', () => setTrialFeedbackStatusFilter(trialFeedbackStatusFilter.value));
     trialFeedbackBoardList.addEventListener('click', event => {
       const button = event.target?.closest?.('[data-trial-feedback-status-id]');
       if (!button) return;

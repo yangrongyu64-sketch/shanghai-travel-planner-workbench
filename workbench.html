@@ -5989,8 +5989,33 @@
         publish_note: String(raw.publish_note || raw.publishNote || '待回填人工核验结果。').trim(),
       };
     }
+    function officialDraftRecordFromPlatformMaterialTask(task){
+      if (!task || typeof task !== 'object') return null;
+      const template = task.return_template && typeof task.return_template === 'object' ? task.return_template : task;
+      const placeId = String(template.place_id || template.placeId || task.place_id || task.placeId || '').trim();
+      if (!placeId) return null;
+      return {
+        ...template,
+        place_id: placeId,
+        status: String(template.status || template.verification_status || template.verificationStatus || '待人工复核').trim() || '待人工复核',
+        publish_note: String(template.publish_note || template.publishNote || `素材触发复核：${task.material_title || task.materialTitle || task.place_name || placeId}`).trim()
+      };
+    }
+    function officialDraftRecordsFromPayload(payload){
+      if (Array.isArray(payload)) return payload;
+      if (!payload || typeof payload !== 'object') return [];
+      if (payload.package_type === 'platform_material_official_review_handoff' || Array.isArray(payload.official_review_tasks) || Array.isArray(payload.officialReviewTasks)) {
+        const tasks = Array.isArray(payload.official_review_tasks) ? payload.official_review_tasks : Array.isArray(payload.officialReviewTasks) ? payload.officialReviewTasks : [];
+        return tasks.map(officialDraftRecordFromPlatformMaterialTask).filter(Boolean);
+      }
+      if (Array.isArray(payload.items)) return payload.items;
+      if (Array.isArray(payload.verifications)) return payload.verifications;
+      if (Array.isArray(payload.official_verifications)) return payload.official_verifications;
+      if (Array.isArray(payload.officialVerifications)) return payload.officialVerifications;
+      return [];
+    }
     function applyOfficialDrafts(payload){
-      const records = Array.isArray(payload) ? payload : Array.isArray(payload?.items) ? payload.items : Array.isArray(payload?.verifications) ? payload.verifications : [];
+      const records = officialDraftRecordsFromPayload(payload);
       let imported = 0;
       records.forEach(record => {
         const normalized = normalizeOfficialDraft(record);

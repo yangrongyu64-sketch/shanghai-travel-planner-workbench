@@ -35,6 +35,15 @@
     .route-draft div{border:1px solid #e1e6df;background:#f8faf7;padding:10px;border-radius:6px}
     .route-draft b{display:block;margin-bottom:4px;font-size:12px;color:#173b76}
     .route-draft p{font-size:13px;color:#252525}
+    .itinerary-draft{margin:12px 0 18px;padding:14px;border:1px solid #d8ddd4;background:#fff;border-radius:8px}
+    .itinerary-draft-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+    .itinerary-draft h2{margin:0 0 4px;font-size:18px}
+    .itinerary-draft p{margin:0;color:#625d55;font-size:13px}
+    .itinerary-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .itinerary-actions button{min-height:36px;border:1px solid #173b76;background:#173b76;color:#fff;font:inherit;font-weight:800;cursor:pointer;padding:0 12px}
+    .itinerary-actions button.secondary{border-color:#cfd7ca;background:#fff;color:#173b76}
+    .itinerary-copy-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
+    .itinerary-text{white-space:pre-wrap;margin:0;min-height:150px;padding:12px;border:1px solid #e1e6df;background:#f8faf7;color:#252525;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;overflow:auto}
     section{border-top:1px solid #d8ddd4;margin-top:18px;padding-top:4px}
     [hidden]{display:none!important}
     section p{color:#625d55;margin:0 0 12px}
@@ -102,6 +111,20 @@
         </div>
       </div>
       <div id="place-route-draft" class="route-draft" aria-live="polite"></div>
+    </section>
+    <section id="place-itinerary-draft" class="itinerary-draft" aria-label="正式行程草案">
+      <div class="itinerary-draft-head">
+        <div>
+          <h2>正式行程草案</h2>
+          <p>把选中的点位拆成 1-3 日、上午/下午/晚上结构，可复制到攻略正文继续补住宿、美食和地图截图。</p>
+        </div>
+        <div class="itinerary-actions">
+          <button id="build-place-itinerary-draft-button" type="button">生成行程草案</button>
+          <button id="copy-place-itinerary-draft-button" class="secondary" type="button">复制草案</button>
+        </div>
+      </div>
+      <p id="place-itinerary-copy-status" class="itinerary-copy-status" aria-live="polite">可复制到攻略正文前，请先选择点位。</p>
+      <pre id="place-itinerary-draft-text" class="itinerary-text">请先勾选 2-4 个点位，再生成可复制到攻略正文的正式行程草案。</pre>
     </section>
     <div class="summary">
       <article class="summary-card"><b>7</b><span>地标打卡</span><p>首次来上海、短途打卡和夜景路线的高识别度点位。</p></article>
@@ -259,7 +282,12 @@
     const resultCount = document.getElementById('place-catalog-result-count');
     const selectedPlaceSummary = document.getElementById('selected-place-summary');
     const placeRouteDraft = document.getElementById('place-route-draft');
+    const placeItineraryDraft = document.getElementById('place-itinerary-draft');
+    const placeItineraryDraftText = document.getElementById('place-itinerary-draft-text');
+    const placeItineraryCopyStatus = document.getElementById('place-itinerary-copy-status');
     const buildPlaceRouteDraftButton = document.getElementById('build-place-route-draft-button');
+    const buildPlaceItineraryDraftButton = document.getElementById('build-place-itinerary-draft-button');
+    const copyPlaceItineraryDraftButton = document.getElementById('copy-place-itinerary-draft-button');
     const clearPlaceSelectionButton = document.getElementById('clear-place-selection-button');
     const themeLabels = {landmark:'地标',museum:'博物馆',culture:'文化',rainy_day:'雨天备选',shopping:'商业街',architecture:'建筑',night_view:'夜景',city_walk:'City Walk',history:'历史',food:'美食',coffee:'咖啡街区',local_life:'本地生活',art:'艺术',waterfront:'滨江',cycling:'骑行',family:'亲子',park:'公园',relaxed:'慢节奏',nature:'自然',theme_park:'主题乐园',lifestyle:'生活方式'};
     function rowMatchesPlaceCatalogFilters(row) {
@@ -353,15 +381,76 @@
       const warnings = draft.warnings.length ? draft.warnings : ['可进入下一步：按地图复核交通，再拆成上午 / 下午 / 夜景段。'];
       placeRouteDraft.innerHTML = [`<div><b>选点</b><p>${placeNames.length ? escapeHtml(placeNames.join(' → ')) : '请先勾选 2-4 个点位'}</p></div>`, `<div><b>建议形态</b><p>${escapeHtml(draft.suggestedDays || '待判断')} · ${escapeHtml(draft.intensity || '待判断')} · ${escapeHtml(formatMinutes(draft.journeyMinutes))}</p></div>`, `<div><b>主题方向</b><p>${escapeHtml(draft.topThemes.length ? draft.topThemes.join(' + ') : '综合路线')}</p></div>`, `<div><b>区域跨度</b><p>${escapeHtml(draft.areas.length ? draft.areas.join('、') : '待选择')}</p></div>`, `<div><b>已有路线匹配</b><p>${escapeHtml(draft.matchedRoutes.length ? draft.matchedRoutes.join('；') : '暂无强匹配，可作为新路线素材')}</p></div>`, `<div><b>下一步</b><p>${escapeHtml(warnings.join('；'))}</p></div>`].join('');
     }
+    function itineraryDayCountForDraft(draft) {
+      if (!draft.rows.length) return 1;
+      if (draft.journeyMinutes > 720 || draft.rows.length > 6) return 3;
+      if (draft.journeyMinutes > 420 || draft.areas.length >= 3 || draft.rows.length > 4) return 2;
+      return 1;
+    }
+    function chunkRowsForDays(rows, dayCount) {
+      const chunks = Array.from({length: dayCount}, () => []);
+      rows.forEach((row, index) => chunks[Math.min(dayCount - 1, Math.floor(index * dayCount / Math.max(rows.length, 1)))].push(row));
+      return chunks.map(chunk => chunk.length ? chunk : rows.slice(0, 1));
+    }
+    function itinerarySegmentLines(rows) {
+      const names = rows.map(row => row.dataset.placeName).filter(Boolean);
+      const first = names[0] || '待选点位';
+      const middle = names.slice(1, Math.max(2, names.length - 1)).join(' → ') || first;
+      const last = names[names.length - 1] || first;
+      return [`上午｜${first}：先完成核心点位，控制拍摄和排队时间。`, `下午｜${middle}：串联相邻街区/展馆，保留咖啡或休息缓冲。`, `晚上｜${last}：按夜景、晚餐或返程便利做收尾。`];
+    }
+    function itineraryDraftTextFromDraft(draft) {
+      if (!draft.rows.length) return '请先勾选 2-4 个点位，再生成可复制到攻略正文的正式行程草案。';
+      const dayCount = itineraryDayCountForDraft(draft);
+      const chunks = chunkRowsForDays(draft.rows, dayCount);
+      const title = `上海${dayCount}日游｜${draft.topThemes.length ? draft.topThemes.join(' + ') : '自选点位'}｜${draft.intensity}`;
+      const lines = [title, '', `总判断：${draft.suggestedDays}，预计游玩与换乘 ${formatMinutes(draft.journeyMinutes)}，区域：${draft.areas.join('、') || '待确认'}。`, `适合：${draft.intensity === '躺平' ? '慢旅行、第一次试水、轻 city walk' : draft.intensity === '暴走' ? '体力好、想多打卡、可接受跨区换乘' : '多数首次来上海或二刷用户'}。`, ''];
+      chunks.forEach((chunk, index) => {
+        const dayRows = chunk.length ? chunk : draft.rows.slice(0, 1);
+        lines.push(`Day ${index + 1}｜${dayRows.map(row => row.dataset.placeName).filter(Boolean).join(' → ')}`);
+        itinerarySegmentLines(dayRows).forEach(line => lines.push(line));
+        lines.push('');
+      });
+      lines.push(`交通提醒：${draft.areas.length >= 3 ? '跨区较多，先用地图复核通勤时间，再决定是否拆天。' : '区域相对集中，可优先用地铁 + 步行串联。'}`);
+      lines.push(`内容角度：${draft.topThemes.length ? draft.topThemes.join('、') : '综合路线'}，可复制到攻略正文后再补餐厅、预约和地图截图。`);
+      if (draft.warnings.length) lines.push(`风险提醒：${draft.warnings.join('；')}`);
+      return lines.join('\n');
+    }
+    function renderPlaceItineraryDraft(draft) {
+      if (!placeItineraryDraftText) return;
+      const text = itineraryDraftTextFromDraft(draft);
+      placeItineraryDraftText.textContent = text;
+      if (placeItineraryDraft) placeItineraryDraft.dataset.hasDraft = draft.rows.length ? 'true' : 'false';
+      if (placeItineraryCopyStatus) placeItineraryCopyStatus.textContent = draft.rows.length ? '已生成，可复制到攻略正文。' : '可复制到攻略正文前，请先选择点位。';
+    }
     function buildSelectedPlaceRouteDraft() {
       const draft = routeDraftDataFromRows(selectedPlaceRows());
       renderPlaceRouteDraft(draft);
+      renderPlaceItineraryDraft(draft);
       updateSelectedPlaceSummary();
+    }
+    function buildSelectedPlaceItineraryDraft() {
+      const draft = routeDraftDataFromRows(selectedPlaceRows());
+      renderPlaceRouteDraft(draft);
+      renderPlaceItineraryDraft(draft);
+      updateSelectedPlaceSummary();
+    }
+    async function copyPlaceItineraryDraft() {
+      const text = placeItineraryDraftText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeItineraryCopyStatus) placeItineraryCopyStatus.textContent = '已复制，可粘贴到攻略正文。';
+      } catch (error) {
+        if (placeItineraryCopyStatus) placeItineraryCopyStatus.textContent = '浏览器未授权复制，请手动选中文案复制。';
+      }
     }
     function clearPlaceSelection() {
       placeSelects.forEach(checkbox => { checkbox.checked = false; });
       updateSelectedPlaceSummary();
-      renderPlaceRouteDraft(routeDraftDataFromRows([]));
+      const emptyDraft = routeDraftDataFromRows([]);
+      renderPlaceRouteDraft(emptyDraft);
+      renderPlaceItineraryDraft(emptyDraft);
     }
     function resetPlaceCatalogFilters() {
       if (searchInput) searchInput.value = '';
@@ -377,6 +466,8 @@
     resetButton?.addEventListener('click', resetPlaceCatalogFilters);
     placeSelects.forEach(checkbox => checkbox.addEventListener('change', updateSelectedPlaceSummary));
     buildPlaceRouteDraftButton?.addEventListener('click', buildSelectedPlaceRouteDraft);
+    buildPlaceItineraryDraftButton?.addEventListener('click', buildSelectedPlaceItineraryDraft);
+    copyPlaceItineraryDraftButton?.addEventListener('click', copyPlaceItineraryDraft);
     clearPlaceSelectionButton?.addEventListener('click', clearPlaceSelection);
     applyPlaceCatalogFilters();
     clearPlaceSelection();

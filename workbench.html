@@ -1390,6 +1390,72 @@
       const entries = Object.entries(summary?.platform_counts || {});
       return entries.length ? entries.map(([platform, count]) => `${platformMaterialImportPlatformLabel(platform)}:${count}`).join(' / ') : '暂无';
     }
+    function platformMaterialOfficialFieldLabel(field){
+      const labels = {opening_status: '开放状态', reservation_status: '预约状态', ticket_status: '票务状态', transport_status: '交通状态', temporary_closure: '临时闭馆'};
+      return labels[field] || field;
+    }
+    function platformMaterialOfficialPlaceLookup(){
+      const byPlace = new Map();
+      routes.forEach(route => (route.officialItems || []).forEach(item => {
+        const current = byPlace.get(item.placeId) || {place_id: item.placeId, place_name: item.placeName, priority: item.priority || '中'};
+        if (item.priority === '高') current.priority = '高';
+        if (!current.place_name && item.placeName) current.place_name = item.placeName;
+        byPlace.set(item.placeId, current);
+      }));
+      return byPlace;
+    }
+    function platformMaterialTriggeredOfficialReviewItems(records){
+      const lookup = platformMaterialOfficialPlaceLookup();
+      const fallbackFields = ['opening_status', 'reservation_status', 'ticket_status', 'transport_status', 'temporary_closure'];
+      const items = [];
+      platformMaterialImportRecords(records).forEach(record => {
+        const fields = Array.from(new Set(((record.official_fields_to_verify || []).length ? record.official_fields_to_verify : fallbackFields).filter(Boolean)));
+        const seenPlaceIds = new Set();
+        (record.referenced_place_ids || []).forEach((placeId, index) => {
+          if (!placeId || seenPlaceIds.has(placeId)) return;
+          seenPlaceIds.add(placeId);
+          const officialPlace = lookup.get(placeId) || {};
+          const placeName = officialPlace.place_name || (record.referenced_place_names || [])[index] || placeId;
+          items.push({
+            route_id: record.route_id,
+            route_label: platformMaterialAssetRouteLabel(record.route_id),
+            platform: record.platform,
+            platform_label: platformMaterialImportPlatformLabel(record.platform),
+            source_grade: record.source_grade,
+            source_url: record.source_url,
+            material_id: record.id,
+            material_title: record.title,
+            review_status: record.review_status || '待复核',
+            reviewer: record.reviewer || '',
+            place_id: placeId,
+            place_name: placeName,
+            priority: officialPlace.priority || '中',
+            official_fields: fields,
+            field_labels: fields.map(platformMaterialOfficialFieldLabel),
+            field_count: fields.length
+          });
+        });
+      });
+      return items;
+    }
+    function platformMaterialOfficialReviewSummary(records){
+      const items = platformMaterialTriggeredOfficialReviewItems(records);
+      const materialIds = new Set();
+      const routeIds = new Set();
+      const placeIds = new Set();
+      let fieldCount = 0;
+      items.forEach(item => {
+        if (item.material_id) materialIds.add(item.material_id);
+        if (item.route_id) routeIds.add(item.route_id);
+        if (item.place_id) placeIds.add(item.place_id);
+        fieldCount += item.field_count || 0;
+      });
+      return {item_count: items.length, field_count: fieldCount, material_count: materialIds.size, route_count: routeIds.size, place_count: placeIds.size};
+    }
+    function platformMaterialOfficialReviewRowsHtml(items){
+      const rows = (items || []).map(item => `<tr><td>${escapeHtml(item.route_label)}</td><td><strong>${escapeHtml(item.place_name)}</strong><br><span>${escapeHtml(item.place_id)}</span></td><td>${escapeHtml(item.platform_label)}<br><span>${escapeHtml(item.material_title)}</span></td><td>${escapeHtml((item.field_labels || []).join(' / ') || '待补充')}</td><td>${escapeHtml(item.source_url || '待补充')}</td></tr>`).join('');
+      return rows || '<tr><td colspan="5">暂无素材触发复核任务</td></tr>';
+    }
     function platformMaterialAssetFilteredRecords(records){
       const routeFilter = state.platformMaterialAssetRouteFilter || 'all';
       const platformFilter = state.platformMaterialAssetPlatformFilter || 'all';
@@ -1469,12 +1535,15 @@
     function platformMaterialAssetDashboardHtml(){
       const summary = platformMaterialAssetSummary();
       const rows = platformMaterialAssetFilteredRecords();
+      const officialReviewItems = platformMaterialTriggeredOfficialReviewItems(rows);
+      const officialReviewSummary = platformMaterialOfficialReviewSummary(rows);
       const routeOptions = ['<option value="all">全部路线</option>'].concat(routes.map(route => `<option value="${escapeHtml(route.tripId)}"${state.platformMaterialAssetRouteFilter === route.tripId ? ' selected' : ''}>${escapeHtml(route.templateName)}</option>`)).join('');
       const platformValues = ['all', 'xiaohongshu', 'douyin', 'travel_website'];
       const platformOptions = platformValues.map(platform => `<option value="${escapeHtml(platform)}"${(state.platformMaterialAssetPlatformFilter || 'all') === platform ? ' selected' : ''}>${escapeHtml(platform === 'all' ? '全部平台' : platformMaterialImportPlatformLabel(platform))}</option>`).join('');
       const tableRows = rows.map(record => `<tr><td>${escapeHtml(platformMaterialAssetRouteLabel(record.route_id))}</td><td>${escapeHtml(platformMaterialImportPlatformLabel(record.platform))}</td><td>${escapeHtml(record.title)}</td><td>${escapeHtml(record.source_grade)}</td><td>${escapeHtml(record.review_status || '待复核')}</td><td>${escapeHtml(record.reviewer || '未回填')}</td><td>${escapeHtml(record.content_angles.join(' / ') || '未提炼')}</td><td>${escapeHtml(record.caution_notes.join(' / ') || '待复核')}</td></tr>`).join('') || '<tr><td colspan="8">暂无导入素材</td></tr>';
+      const officialReviewRows = platformMaterialOfficialReviewRowsHtml(officialReviewItems);
       const feedback = state.platformMaterialAssetImportFeedback || '可粘贴单条平台素材 JSON、数组，或包含 platform_material_imports 的状态片段。';
-      return `<section id="platform-material-asset-dashboard" class="official-import platform-material-assets"><h3 class="markdown-section-title">平台素材池</h3><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>导入素材</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待复核字段</span></div><div class="metric"><b>${summary.caution_count}</b><span>避坑信号</span></div></div><p class="official-import-status">平台分布：${escapeHtml(platformMaterialAssetPlatformSummaryText(summary))}</p><div class="official-queue-form"><label>路线筛选<select id="platform-material-asset-route-filter">${routeOptions}</select></label><label>平台筛选<select id="platform-material-asset-platform-filter">${platformOptions}</select></label></div><div class="field"><label for="platform-material-bulk-json-import">批量导入结构化素材 JSON</label><textarea id="platform-material-bulk-json-import" placeholder="粘贴 platform_material_imports 数组、单条素材 JSON 或素材数组"></textarea></div><div class="official-import-actions"><button type="button" id="import-platform-material-bulk-button">批量导入素材</button><button type="button" id="download-platform-material-handoff-json-button">下载交接JSON</button><button type="button" id="download-platform-material-handoff-md-button">下载交接Markdown</button><p id="platform-material-bulk-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><div class="project-acceptance-table-wrap"><table id="platform-material-asset-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>标题</th><th>等级</th><th>复核状态</th><th>复核人</th><th>角度</th><th>避坑</th></tr></thead><tbody>${tableRows}</tbody></table></div></section>`;
+      return `<section id="platform-material-asset-dashboard" class="official-import platform-material-assets"><h3 class="markdown-section-title">平台素材池</h3><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>导入素材</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待复核字段</span></div><div class="metric"><b>${officialReviewSummary.item_count}</b><span>素材触发复核</span></div><div class="metric"><b>${summary.caution_count}</b><span>避坑信号</span></div></div><p class="official-import-status">平台分布：${escapeHtml(platformMaterialAssetPlatformSummaryText(summary))}</p><div class="official-queue-form"><label>路线筛选<select id="platform-material-asset-route-filter">${routeOptions}</select></label><label>平台筛选<select id="platform-material-asset-platform-filter">${platformOptions}</select></label></div><div class="field"><label for="platform-material-bulk-json-import">批量导入结构化素材 JSON</label><textarea id="platform-material-bulk-json-import" placeholder="粘贴 platform_material_imports 数组、单条素材 JSON 或素材数组"></textarea></div><div class="official-import-actions"><button type="button" id="import-platform-material-bulk-button">批量导入素材</button><button type="button" id="download-platform-material-handoff-json-button">下载交接JSON</button><button type="button" id="download-platform-material-handoff-md-button">下载交接Markdown</button><p id="platform-material-bulk-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><div class="project-acceptance-table-wrap"><table id="platform-material-asset-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>标题</th><th>等级</th><th>复核状态</th><th>复核人</th><th>角度</th><th>避坑</th></tr></thead><tbody>${tableRows}</tbody></table></div><h4 class="markdown-section-title">素材触发复核</h4><p class="official-import-status">当前筛选下有 ${officialReviewSummary.item_count} 个地点任务、${officialReviewSummary.field_count} 个字段要回到官方来源确认。</p><div class="project-acceptance-table-wrap"><table id="platform-material-official-review-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>地点</th><th>素材</th><th>待复核字段</th><th>来源</th></tr></thead><tbody>${officialReviewRows}</tbody></table></div></section>`;
     }
     function renderPlatformMaterialAssetDashboard(){
       const dashboard = document.getElementById('platform-material-asset-dashboard');
@@ -2034,6 +2103,7 @@
     }
     function officialQueueHtml(){
       const routeOptions = routes.map(route => `<option value="${escapeHtml(route.tripId)}">${escapeHtml(route.durationDays + '天 · ' + route.templateName)}</option>`).join('');
+      const platformReviewSummary = platformMaterialOfficialReviewSummary();
       return `<div class="official-queue">
         <h3 class="markdown-section-title">官方回填总表</h3>
         <form id="official-queue-form" class="official-queue-form">
@@ -2042,6 +2112,7 @@
           <div class="field"><label for="official-route-filter">路线</label><select id="official-route-filter" name="route"><option value="all">全部路线</option>${routeOptions}</select></div>
           <div class="official-queue-summary" id="official-queue-summary">筛选结果</div>
         </form>
+        <p id="platform-material-official-review-summary" class="official-import-status">素材触发复核：${platformReviewSummary.item_count} 个地点任务 / ${platformReviewSummary.field_count} 个字段；到平台素材池查看素材来源。</p>
         <div class="official-queue-table-wrap"><table id="official-queue-table" class="official-queue-table"><thead><tr><th>地点</th><th>优先级</th><th>状态</th><th>路线</th><th>官方来源</th><th>开放/预约/票务/交通</th><th>操作</th></tr></thead><tbody></tbody></table></div>
       </div>`;
     }
@@ -5970,11 +6041,14 @@
       const form = document.getElementById('official-queue-form');
       const table = document.getElementById('official-queue-table');
       const summary = document.getElementById('official-queue-summary');
+      const platformReviewSummaryNode = document.getElementById('platform-material-official-review-summary');
       if (!form || !table || !summary) return;
       const tbody = table.querySelector('tbody');
       const renderRows = () => {
         const items = officialQueueFilteredItems();
-        summary.textContent = `筛选结果：${items.length} / ${officialQueueItems().length} 个地点`; 
+        const platformReviewSummary = platformMaterialOfficialReviewSummary();
+        summary.textContent = `筛选结果：${items.length} / ${officialQueueItems().length} 个地点；素材触发复核 ${platformReviewSummary.item_count} 个地点任务`; 
+        if (platformReviewSummaryNode) platformReviewSummaryNode.textContent = `素材触发复核：${platformReviewSummary.item_count} 个地点任务 / ${platformReviewSummary.field_count} 个字段；到平台素材池查看素材来源。`; 
         tbody.innerHTML = items.map(item => {
           const routeText = item.routeIds.join(' / ');
           const officialLink = item.officialUrl ? `<a href="${escapeHtml(item.officialUrl)}">来源</a>` : '待补充';

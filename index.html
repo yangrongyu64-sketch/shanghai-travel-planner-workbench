@@ -529,7 +529,7 @@
         <h1>上海攻略生成工作台</h1>
         <p>6 条路线 · 游客攻略 / 小红书 / 抖音 / 游记 / 路线图 / 路线对比 / 交付验收 / 体检 / 素材 / 平台导入 / 发布看板 / 官方总表 / 官方回填</p>
       </div>
-      <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-11</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">普通工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+      <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-12</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">普通工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
       <div class="metrics" aria-label="工作台概览">
         <div class="metric"><b>6</b><span>路线</span></div>
         <div class="metric"><b id="avg-route-score">--</b><span>路线均分</span></div>
@@ -670,7 +670,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], projectPublishArchiveReceipt: null, projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -1358,12 +1358,101 @@
       });
       return imported;
     }
+    function platformMaterialAssetRouteLabel(routeId){
+      const route = routes.find(item => item.tripId === routeId);
+      return route?.templateName || routeId || '未知路线';
+    }
+    function platformMaterialAssetSummary(records){
+      const items = platformMaterialImportRecords(records);
+      const platformCounts = {};
+      const routeIds = new Set();
+      let officialFieldCount = 0;
+      let cautionCount = 0;
+      items.forEach(item => {
+        routeIds.add(item.route_id);
+        platformCounts[item.platform] = (platformCounts[item.platform] || 0) + 1;
+        officialFieldCount += (item.official_fields_to_verify || []).length;
+        cautionCount += (item.caution_notes || []).length;
+      });
+      const platformOrder = ['xiaohongshu', 'douyin', 'travel_website'];
+      const orderedPlatformCounts = {};
+      platformOrder.concat(Object.keys(platformCounts).sort()).forEach(platform => {
+        if (platformCounts[platform] && !Object.prototype.hasOwnProperty.call(orderedPlatformCounts, platform)) orderedPlatformCounts[platform] = platformCounts[platform];
+      });
+      return {total: items.length, route_count: routeIds.size, platform_counts: orderedPlatformCounts, official_field_count: officialFieldCount, caution_count: cautionCount};
+    }
+    function platformMaterialAssetPlatformSummaryText(summary){
+      const entries = Object.entries(summary?.platform_counts || {});
+      return entries.length ? entries.map(([platform, count]) => `${platformMaterialImportPlatformLabel(platform)}:${count}`).join(' / ') : '暂无';
+    }
+    function platformMaterialAssetFilteredRecords(records){
+      const routeFilter = state.platformMaterialAssetRouteFilter || 'all';
+      const platformFilter = state.platformMaterialAssetPlatformFilter || 'all';
+      return platformMaterialImportRecords(records).filter(record => {
+        if (routeFilter !== 'all' && record.route_id !== routeFilter) return false;
+        if (platformFilter !== 'all' && record.platform !== platformFilter) return false;
+        return true;
+      });
+    }
+    function platformMaterialBulkRecordsFromPayload(payload){
+      if (Array.isArray(payload)) return payload;
+      if (payload?.package_type === 'platform_material_import') return [payload];
+      if (Array.isArray(payload?.platform_material_imports)) return payload.platform_material_imports;
+      if (Array.isArray(payload?.platformMaterialImports)) return payload.platformMaterialImports;
+      if (Array.isArray(payload?.items)) return payload.items;
+      return [];
+    }
+    function importPlatformMaterialBulkJsonText(text){
+      const payload = JSON.parse(String(text || '').trim() || '[]');
+      const records = platformMaterialBulkRecordsFromPayload(payload);
+      let imported = 0;
+      records.forEach(record => {
+        const result = applyPlatformMaterialImportPayload(record);
+        imported += result.imported || 0;
+      });
+      return {imported, total: platformMaterialImportRecords().length, message: `已批量导入 ${imported} 条平台素材，当前素材池 ${platformMaterialImportRecords().length} 条。`};
+    }
+    function platformMaterialAssetDashboardHtml(){
+      const summary = platformMaterialAssetSummary();
+      const rows = platformMaterialAssetFilteredRecords();
+      const routeOptions = ['<option value="all">全部路线</option>'].concat(routes.map(route => `<option value="${escapeHtml(route.tripId)}"${state.platformMaterialAssetRouteFilter === route.tripId ? ' selected' : ''}>${escapeHtml(route.templateName)}</option>`)).join('');
+      const platformValues = ['all', 'xiaohongshu', 'douyin', 'travel_website'];
+      const platformOptions = platformValues.map(platform => `<option value="${escapeHtml(platform)}"${(state.platformMaterialAssetPlatformFilter || 'all') === platform ? ' selected' : ''}>${escapeHtml(platform === 'all' ? '全部平台' : platformMaterialImportPlatformLabel(platform))}</option>`).join('');
+      const tableRows = rows.map(record => `<tr><td>${escapeHtml(platformMaterialAssetRouteLabel(record.route_id))}</td><td>${escapeHtml(platformMaterialImportPlatformLabel(record.platform))}</td><td>${escapeHtml(record.title)}</td><td>${escapeHtml(record.source_grade)}</td><td>${escapeHtml(record.content_angles.join(' / ') || '未提炼')}</td><td>${escapeHtml(record.caution_notes.join(' / ') || '待复核')}</td></tr>`).join('') || '<tr><td colspan="6">暂无导入素材</td></tr>';
+      const feedback = state.platformMaterialAssetImportFeedback || '可粘贴单条平台素材 JSON、数组，或包含 platform_material_imports 的状态片段。';
+      return `<section id="platform-material-asset-dashboard" class="official-import platform-material-assets"><h3 class="markdown-section-title">平台素材池</h3><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>导入素材</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待复核字段</span></div><div class="metric"><b>${summary.caution_count}</b><span>避坑信号</span></div></div><p class="official-import-status">平台分布：${escapeHtml(platformMaterialAssetPlatformSummaryText(summary))}</p><div class="official-queue-form"><label>路线筛选<select id="platform-material-asset-route-filter">${routeOptions}</select></label><label>平台筛选<select id="platform-material-asset-platform-filter">${platformOptions}</select></label></div><div class="field"><label for="platform-material-bulk-json-import">批量导入结构化素材 JSON</label><textarea id="platform-material-bulk-json-import" placeholder="粘贴 platform_material_imports 数组、单条素材 JSON 或素材数组"></textarea></div><div class="official-import-actions"><button type="button" id="import-platform-material-bulk-button">批量导入素材</button><p id="platform-material-bulk-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><div class="project-acceptance-table-wrap"><table id="platform-material-asset-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>标题</th><th>等级</th><th>角度</th><th>避坑</th></tr></thead><tbody>${tableRows}</tbody></table></div></section>`;
+    }
+    function renderPlatformMaterialAssetDashboard(){
+      const dashboard = document.getElementById('platform-material-asset-dashboard');
+      if (!dashboard) return;
+      dashboard.outerHTML = platformMaterialAssetDashboardHtml();
+      bindPlatformMaterialAssetDashboard();
+    }
     function platformMaterialImportMarkdown(route){
       return `# 平台素材导入\n\n- 当前路线：${route.templateName}\n- 使用原则：不复制第三方原文，只保留结构化洞察。\n- 支持平台：小红书、抖音、旅游网站。\n- 导出 JSON 后，先人工复核，再合并进 data/materials。`; 
     }
     function platformMaterialImportHtml(route){
       const routeOptions = routes.map(item => `<option value="${escapeHtml(item.tripId)}"${item.tripId === route.tripId ? ' selected' : ''}>${escapeHtml(item.durationDays + '天 · ' + item.templateName)}</option>`).join('');
-      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="import-platform-material-button">导入到素材池</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>`;
+      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="import-platform-material-button">导入到素材池</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>${platformMaterialAssetDashboardHtml()}`;
+    }
+    function bindPlatformMaterialAssetDashboard(){
+      const routeFilter = document.getElementById('platform-material-asset-route-filter');
+      const platformFilter = document.getElementById('platform-material-asset-platform-filter');
+      const bulkImportText = document.getElementById('platform-material-bulk-json-import');
+      const bulkImportButton = document.getElementById('import-platform-material-bulk-button');
+      if (routeFilter) routeFilter.addEventListener('change', () => { state.platformMaterialAssetRouteFilter = routeFilter.value || 'all'; renderPlatformMaterialAssetDashboard(); });
+      if (platformFilter) platformFilter.addEventListener('change', () => { state.platformMaterialAssetPlatformFilter = platformFilter.value || 'all'; renderPlatformMaterialAssetDashboard(); });
+      if (bulkImportButton) bulkImportButton.addEventListener('click', () => {
+        try {
+          const result = importPlatformMaterialBulkJsonText(bulkImportText?.value || '');
+          state.platformMaterialAssetImportFeedback = result.message;
+          persistProjectWorkbenchState();
+          renderPlatformMaterialAssetDashboard();
+        } catch (error) {
+          state.platformMaterialAssetImportFeedback = '批量素材 JSON 解析失败，请检查格式。';
+          renderPlatformMaterialAssetDashboard();
+        }
+      });
     }
     function bindPlatformMaterialImport(){
       const previewButton = document.getElementById('platform-material-preview-button');
@@ -1385,6 +1474,7 @@
         const result = applyPlatformMaterialImportPayload(payload);
         if (result.imported) {
           persistProjectWorkbenchState();
+          renderPlatformMaterialAssetDashboard();
           importButton.textContent = '已导入素材池';
           status.textContent = `${result.message} 已写入本机状态，可切到素材审核查看。`; 
         } else {
@@ -1394,6 +1484,7 @@
       });
       downloadButton.addEventListener('click', () => downloadPlatformMaterialImportJson());
       if (routeSelect) routeSelect.addEventListener('change', () => { state.selectedId = routeSelect.value; renderMain(); });
+      bindPlatformMaterialAssetDashboard();
     }
     function downloadPlatformMaterialImportJson(){
       const payload = platformMaterialImportPayload();

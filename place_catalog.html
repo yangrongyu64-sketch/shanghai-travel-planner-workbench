@@ -42,6 +42,18 @@
     .route-map-canvas svg{display:block;width:100%;height:auto;min-height:260px}
     .route-segments{margin:0;padding-left:18px;color:#252525;font-size:13px;line-height:1.65}
     .route-segments li{margin-bottom:6px}
+    .map-export{margin:12px 0 18px;padding:14px;border:1px solid #d8ddd4;background:#fff;border-radius:8px}
+    .map-export-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+    .map-export h2{margin:0 0 4px;font-size:18px}
+    .map-export p{margin:0;color:#625d55;font-size:13px}
+    .map-export-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .map-export-actions button{min-height:36px;border:1px solid #173b76;background:#173b76;color:#fff;font:inherit;font-weight:800;cursor:pointer;padding:0 12px}
+    .map-export-actions button.secondary{border-color:#cfd7ca;background:#fff;color:#173b76}
+    .map-export-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
+    .map-export-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+    .map-export-panel{min-width:0}
+    .map-export-panel h3{margin:0 0 6px;color:#173b76;font-size:13px}
+    .map-export-text{white-space:pre-wrap;margin:0;min-height:190px;max-height:360px;padding:12px;border:1px solid #e1e6df;background:#f8faf7;color:#252525;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;overflow:auto}
     .itinerary-draft{margin:12px 0 18px;padding:14px;border:1px solid #d8ddd4;background:#fff;border-radius:8px}
     .itinerary-draft-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
     .itinerary-draft h2{margin:0 0 4px;font-size:18px}
@@ -64,7 +76,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -129,6 +141,29 @@
         <h2>路线段摘要</h2>
         <p>先看是否同区、跨区、是否需要拆天。</p>
         <ul id="place-route-segment-summary" class="route-segments"></ul>
+      </div>
+    </section>
+    <section id="place-route-map-export" class="map-export" aria-label="地图数据导出">
+      <div class="map-export-head">
+        <div>
+          <h2>地图数据导出</h2>
+          <p>生成 GeoJSON 和地图复核清单，可给协作者复核，也可接入真实地图或小程序地图组件。</p>
+        </div>
+        <div class="map-export-actions">
+          <button id="copy-place-route-geojson-button" type="button">复制 GeoJSON</button>
+          <button id="copy-place-map-review-button" class="secondary" type="button">复制复核清单</button>
+        </div>
+      </div>
+      <p id="place-route-map-export-status" class="map-export-status" aria-live="polite">请先选择点位，生成 GeoJSON 和地图复核清单。</p>
+      <div class="map-export-grid">
+        <div class="map-export-panel">
+          <h3>GeoJSON FeatureCollection</h3>
+          <pre id="place-route-geojson-text" class="map-export-text">{"type":"FeatureCollection","features":[]}</pre>
+        </div>
+        <div class="map-export-panel">
+          <h3>地图复核清单</h3>
+          <pre id="place-map-review-text" class="map-export-text"># 自选路线地图复核清单&#10;&#10;请先勾选 2-4 个点位，再生成地图数据和复核清单。&#10;&#10;FeatureCollection / Point / LineString 会在选择点位后自动生成。</pre>
+        </div>
       </div>
     </section>
     <section id="place-itinerary-draft" class="itinerary-draft" aria-label="正式行程草案">
@@ -304,12 +339,17 @@
     const placeRouteMapPreview = document.getElementById('place-route-map-preview');
     const placeRouteMapSvg = document.getElementById('place-route-map-svg');
     const placeRouteSegmentSummary = document.getElementById('place-route-segment-summary');
+    const placeRouteGeoJsonText = document.getElementById('place-route-geojson-text');
+    const placeMapReviewText = document.getElementById('place-map-review-text');
+    const placeRouteMapExportStatus = document.getElementById('place-route-map-export-status');
     const placeItineraryDraft = document.getElementById('place-itinerary-draft');
     const placeItineraryDraftText = document.getElementById('place-itinerary-draft-text');
     const placeItineraryCopyStatus = document.getElementById('place-itinerary-copy-status');
     const buildPlaceRouteDraftButton = document.getElementById('build-place-route-draft-button');
     const buildPlaceItineraryDraftButton = document.getElementById('build-place-itinerary-draft-button');
     const copyPlaceItineraryDraftButton = document.getElementById('copy-place-itinerary-draft-button');
+    const copyPlaceRouteGeoJsonButton = document.getElementById('copy-place-route-geojson-button');
+    const copyPlaceMapReviewButton = document.getElementById('copy-place-map-review-button');
     const clearPlaceSelectionButton = document.getElementById('clear-place-selection-button');
     const themeLabels = {landmark:'地标',museum:'博物馆',culture:'文化',rainy_day:'雨天备选',shopping:'商业街',architecture:'建筑',night_view:'夜景',city_walk:'City Walk',history:'历史',food:'美食',coffee:'咖啡街区',local_life:'本地生活',art:'艺术',waterfront:'滨江',cycling:'骑行',family:'亲子',park:'公园',relaxed:'慢节奏',nature:'自然',theme_park:'主题乐园',lifestyle:'生活方式'};
     function rowMatchesPlaceCatalogFilters(row) {
@@ -439,11 +479,48 @@
       const warnings = draft.warnings.length ? `<li>地图复核：${escapeHtml(draft.warnings.join('；'))}</li>` : '<li>地图复核：区域较集中，仍需出发前确认实时通勤。</li>';
       placeRouteSegmentSummary.innerHTML = [...segmentItems, warnings, `<li>坐标备忘：${escapeHtml(geoNote)}</li>`].join('');
     }
+    function numericCoordinate(value) {
+      const parsed = Number.parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+    function selectedRouteGeoJsonFeatureCollection(points) {
+      const pointFeatures = points.map(point => {
+        const lng = numericCoordinate(point.lng);
+        const lat = numericCoordinate(point.lat);
+        if (lng === null || lat === null) return null;
+        return {type:'Feature', geometry:{type:'Point', coordinates:[lng, lat]}, properties:{kind:'selected_place_route_stop', order:point.order, placeId:point.id, placeName:point.name, area:point.area}};
+      }).filter(Boolean);
+      const lineCoordinates = pointFeatures.map(feature => feature.geometry.coordinates);
+      const lineFeature = lineCoordinates.length > 1 ? [{type:'Feature', geometry:{type:'LineString', coordinates:lineCoordinates}, properties:{kind:'selected_place_route_line', pointCount:lineCoordinates.length, routeName:points.map(point => point.name).join(' → ')}}] : [];
+      return {type:'FeatureCollection', name:'shanghai_selected_place_route', features:[...pointFeatures, ...lineFeature]};
+    }
+    function selectedRouteMapReviewText(points, draft) {
+      if (!points.length) return '# 自选路线地图复核清单\n\n请先勾选 2-4 个点位，再生成地图数据和复核清单。';
+      const lines = ['# 自选路线地图复核清单', '', `路线：${points.map(point => point.name).join(' → ')}`, `建议形态：${draft.suggestedDays} · ${draft.intensity} · ${formatMinutes(draft.journeyMinutes)}`, `区域：${draft.areas.join('、') || '待确认'}`, '', '## 点位顺序'];
+      points.forEach(point => lines.push(`${point.order}. ${point.name}｜${point.area}｜${point.lng},${point.lat}`));
+      if (points.length > 1) {
+        lines.push('', '## 路线段复核');
+        points.slice(0, -1).forEach((point, index) => {
+          const next = points[index + 1];
+          const hint = point.area === next.area ? '同区或近距离，优先步行/骑行复核' : '跨区移动，优先地铁/打车复核';
+          lines.push(`${point.order}. ${point.name} → ${next.name}｜${hint}`);
+        });
+      }
+      lines.push('', '## 出发前确认', '- 用实时地图复核每段通勤时间和首末班车。', '- 复核开放时间、预约、票价、临时闭馆和天气。', '- 如果跨区通勤超过预期，优先拆天或删减远端点位。');
+      if (draft.warnings.length) lines.push('', `风险提醒：${draft.warnings.join('；')}`);
+      return lines.join('\n');
+    }
+    function renderSelectedRouteMapExport(points, draft) {
+      if (placeRouteGeoJsonText) placeRouteGeoJsonText.textContent = JSON.stringify(selectedRouteGeoJsonFeatureCollection(points), null, 2);
+      if (placeMapReviewText) placeMapReviewText.textContent = selectedRouteMapReviewText(points, draft);
+      if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = points.length ? '地图数据已生成，可复制给协作者或接入真实地图组件。' : '请先选择点位，生成 GeoJSON 和地图复核清单。';
+    }
     function renderSelectedRouteMap(draft) {
       const points = selectedRouteMapPoints(draft.rows);
       if (placeRouteMapSvg) placeRouteMapSvg.innerHTML = routeMapSvgForPoints(points);
       if (placeRouteMapPreview) placeRouteMapPreview.dataset.pointCount = String(points.length);
       renderRouteSegmentSummary(points, draft);
+      renderSelectedRouteMapExport(points, draft);
     }
     function itineraryDayCountForDraft(draft) {
       if (!draft.rows.length) return 1;
@@ -511,6 +588,26 @@
         if (placeItineraryCopyStatus) placeItineraryCopyStatus.textContent = '浏览器未授权复制，请手动选中文案复制。';
       }
     }
+    async function copySelectedRouteGeoJson() {
+      const text = placeRouteGeoJsonText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = 'GeoJSON 已复制，可粘贴到地图工具或小程序组件。';
+      } catch (error) {
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制 GeoJSON，请手动选中文本复制。';
+      }
+    }
+    async function copySelectedRouteMapReview() {
+      const text = placeMapReviewText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '地图复核清单已复制，可发给协作者核对。';
+      } catch (error) {
+        if (placeRouteMapExportStatus) placeRouteMapExportStatus.textContent = '浏览器未授权复制复核清单，请手动选中文本复制。';
+      }
+    }
     function clearPlaceSelection() {
       placeSelects.forEach(checkbox => { checkbox.checked = false; });
       updateSelectedPlaceSummary();
@@ -535,6 +632,8 @@
     buildPlaceRouteDraftButton?.addEventListener('click', buildSelectedPlaceRouteDraft);
     buildPlaceItineraryDraftButton?.addEventListener('click', buildSelectedPlaceItineraryDraft);
     copyPlaceItineraryDraftButton?.addEventListener('click', copyPlaceItineraryDraft);
+    copyPlaceRouteGeoJsonButton?.addEventListener('click', copySelectedRouteGeoJson);
+    copyPlaceMapReviewButton?.addEventListener('click', copySelectedRouteMapReview);
     clearPlaceSelectionButton?.addEventListener('click', clearPlaceSelection);
     applyPlaceCatalogFilters();
     clearPlaceSelection();

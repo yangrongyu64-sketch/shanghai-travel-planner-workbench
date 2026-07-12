@@ -38,6 +38,7 @@
 - 根路径应自动进入演示状态，并能看到“可发布路线打包”。
 - 点击“返回普通工作台”应进入 `workbench.html`。
 - 在 `workbench.html` 点击“打开演示链接”应返回 `index.html`。
+- 打开 `place_catalog.html` 应看到上海点位库。
 - 下载 `workbench-demo.zip` 应得到离线演示包。
 - 下载 `miniprogram-handoff.zip` 应得到小程序迁移资料包。
 - 下载 `platform-refresh.zip` 应得到平台素材刷新资料包。

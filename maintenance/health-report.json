@@ -131,6 +131,7 @@
       "files": [
         "index.html",
         "workbench.html",
+        "place_catalog.html",
         "README.md",
         "DEPLOYMENT.md",
         "deployment-manifest.json",
@@ -158,6 +159,7 @@
         "expected_assets": [
           "index.html",
           "workbench.html",
+          "place_catalog.html",
           "workbench-demo.zip",
           "miniprogram-handoff.zip",
           "maintenance-report.zip",

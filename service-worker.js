@@ -2,6 +2,7 @@ const CACHE_NAME = 'shanghai-travel-planner-workbench-v1';
 const APP_SHELL_ASSETS = [
   './index.html',
   './workbench.html',
+  './place_catalog.html',
   './workbench-demo.zip',
   './miniprogram-handoff.zip',
   './platform-refresh.zip',

@@ -4,7 +4,11 @@
   "default_entry": "index.html",
   "entries": {
     "demo": "index.html",
-    "workbench": "workbench.html"
+    "workbench": "workbench.html",
+    "place_catalog": "place_catalog.html"
+  },
+  "content_assets": {
+    "place_catalog": "place_catalog.html"
   },
   "download_files": [
     "workbench-demo.zip",
@@ -47,6 +51,7 @@
     "根路径打开后显示上海攻略生成工作台",
     "演示版自动填充发布工作台",
     "普通工作台入口 workbench.html 可访问",
+    "点位库 place_catalog.html 可访问",
     "离线演示包 workbench-demo.zip 可下载",
     "平台素材刷新包 platform-refresh.zip 可下载",
     "维护健康包 maintenance-report.zip 可下载",

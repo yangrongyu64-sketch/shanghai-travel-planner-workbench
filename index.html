@@ -155,6 +155,9 @@
     .trial-feedback-board-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.45;word-break:break-word}
     .trial-feedback-board-item-meta{display:flex;gap:5px;flex-wrap:wrap}
     .trial-feedback-board-item-meta span{display:inline-flex;align-items:center;min-height:22px;padding:0 6px;border:1px solid rgba(36,87,166,.16);background:#f6f9ff;border-radius:999px;font-size:11px;color:#173b76;font-weight:800}
+    .trial-feedback-status-actions{display:flex;gap:5px;flex-wrap:wrap}
+    .trial-feedback-status-actions button{min-height:24px;padding:0 7px;border:1px solid rgba(36,87,166,.18);background:#fff;color:#173b76;border-radius:8px;font-size:11px;font-weight:800;white-space:nowrap}
+    .trial-feedback-status-actions button.active{background:#173b76;border-color:#173b76;color:#fff}
     .product-quick-start{display:grid;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:#fffdfa}
     .product-quick-start-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
     .product-quick-start-head h3{margin:0;font-size:14px;line-height:1.35;color:var(--ink);letter-spacing:0}
@@ -1015,8 +1018,13 @@
     }
     const trialFeedbackCategoryLabels = {route: '路线建议', map: '地图问题', copy: '平台文案', official: '官方复核', ux: '使用体验'};
     const trialFeedbackSeverityLabels = {suggestion: '建议优化', minor: '轻微影响', major: '明显影响', blocker: '阻塞试用'};
+    const trialFeedbackStatusLabels = ['待处理', '处理中', '已处理', '暂缓'];
     function selectedFeedbackLabel(value, labels, fallback){
       return labels[String(value || '')] || fallback;
+    }
+    function validTrialFeedbackStatus(status){
+      const value = String(status || '').trim();
+      return trialFeedbackStatusLabels.includes(value) ? value : '';
     }
     function trialFeedbackPayload(){
       const route = currentRoute();
@@ -1101,6 +1109,7 @@
       const route = routes.find(item => item.tripId === routeId);
       const category = Object.prototype.hasOwnProperty.call(trialFeedbackCategoryLabels, String(record.category || '')) ? String(record.category) : 'route';
       const severity = Object.prototype.hasOwnProperty.call(trialFeedbackSeverityLabels, String(record.severity || '')) ? String(record.severity) : 'suggestion';
+      const status = validTrialFeedbackStatus(record.status) || '待处理';
       const message = String(record.message || record.feedback || record.content || '').trim();
       if (!message) return null;
       const normalized = {
@@ -1118,7 +1127,8 @@
         page_url: String(record.page_url || record.pageUrl || '').trim(),
         review_boundary: String(record.review_boundary || record.reviewBoundary || '发布前仍需人工复核官方开放、预约、票务、交通和临时闭馆。').trim(),
         created_at: String(record.created_at || record.createdAt || new Date().toISOString()).trim(),
-        status: String(record.status || '待处理').trim() || '待处理'
+        status,
+        status_updated_at: String(record.status_updated_at || record.statusUpdatedAt || '').trim()
       };
       normalized.feedback_id = normalized.feedback_id || trialFeedbackStableId(normalized);
       return normalized;
@@ -1163,6 +1173,20 @@
       renderTrialFeedbackBoard();
       if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = `已导入 ${result.imported} 条反馈，跳过 ${result.duplicate} 条重复反馈。`;
       return result;
+    }
+    function updateTrialFeedbackStatus(feedbackId, status){
+      const id = String(feedbackId || '').trim();
+      const nextStatus = validTrialFeedbackStatus(status);
+      if (!id || !nextStatus) return {ok: false, message: '未找到可更新的反馈状态。'};
+      const records = trialFeedbackRecords();
+      const target = records.find(record => record.feedback_id === id);
+      if (!target) return {ok: false, message: '未找到这条反馈。'};
+      target.status = nextStatus;
+      target.status_updated_at = new Date().toISOString();
+      state.trialFeedbackRecords = records;
+      renderTrialFeedbackBoard();
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = `已将反馈状态更新为 ${nextStatus}。`;
+      return {ok: true, record: target};
     }
     function trialFeedbackBoardSummary(){
       const records = trialFeedbackRecords();
@@ -1224,7 +1248,7 @@
       const taskLines = records.length ? records.map(record => {
         const routeText = record.route_name || record.route_id || '未绑定路线';
         const contactText = record.contact || '未留联系方式';
-        return `- [ ] [${trialFeedbackMaintenancePriority(record)}] ${record.category_label}｜${routeText}｜${record.message}｜下一步：${trialFeedbackNextAction(record)}｜处理线索：${trialFeedbackCategoryAction(record)}｜联系人：${contactText}`;
+        return `- [ ] [${trialFeedbackMaintenancePriority(record)}] ${record.category_label}｜${routeText}｜${record.message}｜状态：${record.status}｜下一步：${trialFeedbackNextAction(record)}｜处理线索：${trialFeedbackCategoryAction(record)}｜联系人：${contactText}`;
       }) : ['- [ ] 暂无待处理反馈。'];
       return ['# 上海攻略生成工作台反馈维护任务', '', `总反馈：${summary.total}`, `阻塞试用：${summary.blocker}`, `明显影响：${summary.major}`, '', '## 任务清单', ...taskLines, '', '## 处理原则', '- 先处理阻塞试用和明显影响，再处理表达润色和体验建议。', '- 地图问题先回到路线图/GeoJSON 复核，官方问题进入官方总表。', '- 官方开放、预约、票务、交通和临时闭馆仍需人工复核。'].join('\n');
     }
@@ -1249,7 +1273,14 @@
       }
       if (trialFeedbackBoardList) {
         const records = trialFeedbackRecords().slice().reverse();
-        trialFeedbackBoardList.innerHTML = records.length ? records.map(record => `<article class="trial-feedback-board-item"><div class="trial-feedback-board-item-meta"><span>${escapeHtml(record.severity_label)}</span><span>${escapeHtml(record.category_label)}</span><span>${escapeHtml(record.status)}</span></div><strong>${escapeHtml(record.route_name || record.route_id || '未绑定路线')}</strong><p>${escapeHtml(record.message)}</p><p>${escapeHtml(record.contact || '未留联系方式')}｜${escapeHtml(record.created_at || '')}</p></article>`).join('') : '<p class="trial-feedback-board-empty">暂无导入反馈。</p>';
+        trialFeedbackBoardList.innerHTML = records.length ? records.map(record => {
+          const statusActions = trialFeedbackStatusLabels.map(status => {
+            const activeClass = record.status === status ? ' class="active"' : '';
+            return `<button type="button"${activeClass} data-trial-feedback-status-id="${escapeHtml(record.feedback_id)}" data-trial-feedback-status-value="${escapeHtml(status)}">${escapeHtml(status)}</button>`;
+          }).join('');
+          const updatedText = record.status_updated_at ? `｜状态更新 ${record.status_updated_at}` : '';
+          return `<article class="trial-feedback-board-item"><div class="trial-feedback-board-item-meta"><span>${escapeHtml(record.severity_label)}</span><span>${escapeHtml(record.category_label)}</span><span>${escapeHtml(record.status)}</span></div><strong>${escapeHtml(record.route_name || record.route_id || '未绑定路线')}</strong><p>${escapeHtml(record.message)}</p><p>${escapeHtml(record.contact || '未留联系方式')}｜${escapeHtml(record.created_at || '')}${escapeHtml(updatedText)}</p><div class="trial-feedback-status-actions">${statusActions}</div></article>`;
+        }).join('') : '<p class="trial-feedback-board-empty">暂无导入反馈。</p>';
       }
       if (trialFeedbackBoardStatus && !trialFeedbackBoardStatus.textContent) trialFeedbackBoardStatus.textContent = '可粘贴反馈 JSON 导入问题池。';
     }
@@ -9182,6 +9213,11 @@
     copyTrialFeedbackSummaryButton.addEventListener('click', copyTrialFeedbackProcessingSummary);
     copyTrialFeedbackTaskListButton.addEventListener('click', copyTrialFeedbackMaintenanceTaskList);
     copyTrialFeedbackReleaseNoteButton.addEventListener('click', copyTrialFeedbackReleaseNote);
+    trialFeedbackBoardList.addEventListener('click', event => {
+      const button = event.target?.closest?.('[data-trial-feedback-status-id]');
+      if (!button) return;
+      updateTrialFeedbackStatus(button.dataset.trialFeedbackStatusId, button.dataset.trialFeedbackStatusValue);
+    });
     copyDeliveryNoteButton.addEventListener('click', copyDeliveryHandoffText);
     refreshCommandPreview.textContent = refreshReportCommand;
     copyRefreshCommandButton.addEventListener('click', async () => {

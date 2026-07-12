@@ -7142,6 +7142,57 @@
         publish_note: '演示样例：发布前复核官方来源是否仍有效。'
       }));
     }
+    function projectDemoPublishStatePlatformMaterialRecords(){
+      const returnedRoute = routes.find(route => route.tripId === 'relaxed_2d1n_citywalk') || routes[0];
+      const pendingRoute = routes.find(route => route.tripId === 'first_time_3d2n_balanced') || returnedRoute;
+      if (!returnedRoute || !pendingRoute) return [];
+      return [
+        {
+          id: 'demo_platform_returned_hengfu',
+          route_id: returnedRoute.tripId,
+          route_name: returnedRoute.templateName,
+          platform: 'xiaohongshu',
+          platform_label: '小红书',
+          source_grade: 'C',
+          source_url: 'demo:platform-returned-hengfu',
+          captured_at: '2026-07-12',
+          title: '演示素材：衡复 city walk 复核已回传',
+          referenced_place_ids: ['wukang_road', 'anfu_road'],
+          referenced_place_names: ['武康路', '安福路'],
+          content_angles: ['2天躺平 city walk', '建筑和咖啡慢走'],
+          route_hints: ['把衡复街区作为低强度主线，用官方回传结果确认开放、交通和发布备注。'],
+          caution_notes: ['不要把短途路线排成高强度打卡。'],
+          official_fields_to_verify: ['opening_status', 'reservation_status', 'ticket_status', 'transport_status'],
+          review_status: '已清洗',
+          reviewer: '演示素材协作者',
+          checked_at: '2026-07-12',
+          cleanup_note: '演示样例：只保留结构化洞察。',
+          official_verification_note: '演示样例：官方复核已回传，可进入终审。'
+        },
+        {
+          id: 'demo_platform_pending_pop_up',
+          route_id: pendingRoute.tripId,
+          route_name: pendingRoute.templateName,
+          platform: 'douyin',
+          platform_label: '抖音',
+          source_grade: 'C',
+          source_url: 'demo:platform-pending-pop-up',
+          captured_at: '2026-07-12',
+          title: '演示素材：临时展览点待官方回传',
+          referenced_place_ids: ['demo_unlisted_pop_up'],
+          referenced_place_names: ['临时展览快闪点'],
+          content_angles: ['地标和展览补充素材'],
+          route_hints: ['先把素材转成候选任务，等官方来源、日期和开放状态回传后再写进正式攻略。'],
+          caution_notes: ['临时展览和快闪点不要直接写成稳定开放结论。'],
+          official_fields_to_verify: ['opening_status', 'reservation_status', 'ticket_status', 'transport_status', 'temporary_closure'],
+          review_status: '需官方复核',
+          reviewer: '演示素材协作者',
+          checked_at: '2026-07-12',
+          cleanup_note: '演示样例：保留为待回传任务。',
+          official_verification_note: '演示样例：等待官方来源、核验日期和开放信息回传。'
+        }
+      ];
+    }
     function projectDemoPublishStateTaskUrl(taskId){
       return `https://example.com/shanghai-demo/${String(taskId || '').replace(/[^a-z0-9_-]/gi, '-')}`;
     }
@@ -7189,6 +7240,7 @@
       if (firstRoute) state.selectedId = firstRoute.tripId;
       const officialImported = applyOfficialDrafts(projectDemoPublishStateOfficialRecords());
       const materialImported = applyMaterialRepairDrafts(projectDemoPublishStateMaterialRecords());
+      const platformMaterialImported = applyPlatformMaterialImportRecords(projectDemoPublishStatePlatformMaterialRecords());
       state.publishScheduleStartDate = '2026-07-12';
       state.publishScheduleIntervalDays = 2;
       state.publishScheduleXiaohongshuTime = '21:20';
@@ -7212,7 +7264,7 @@
       const performance = publishPerformanceSummary();
       const followup = followupTopicPoolSummary();
       const health = projectPublishReadyHealthCheckSummary();
-      return {ok: true, official_imported: officialImported, material_imported: materialImported, execution_imported: executionImported, performance_imported: performanceImported, followup_updated: followupUpdated, ready_route_count: projectPublishReadyRoutes().length, scheduled: execution.scheduled, published: execution.published, measured: performance.measured, followup_topics: followup.topic_count, health_issue_count: health.issue_count};
+      return {ok: true, official_imported: officialImported, material_imported: materialImported, platform_material_imported: platformMaterialImported, execution_imported: executionImported, performance_imported: performanceImported, followup_updated: followupUpdated, ready_route_count: projectPublishReadyRoutes().length, scheduled: execution.scheduled, published: execution.published, measured: performance.measured, followup_topics: followup.topic_count, health_issue_count: health.issue_count};
     }
     function publishSchedulePlannedDate(routeIndex){
       return addDaysIsoDate(state.publishScheduleStartDate, routeIndex * publishScheduleIntervalDays());

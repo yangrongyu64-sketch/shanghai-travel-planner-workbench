@@ -2418,6 +2418,23 @@
       if (!reviews.length) return '# 上海攻略生成工作台发布前终审面板\n\n暂无终审面板。';
       return reviews.slice().reverse().map(trialFeedbackPublishFinalReviewMarkdown).join('\n\n---\n\n');
     }
+    function latestTrialFeedbackPublishFinalReview(){
+      const reviews = trialFeedbackPublishFinalReviewRecords();
+      return reviews.length ? reviews[reviews.length - 1] : null;
+    }
+    function feedbackPublishFinalReviewPayload(){
+      const reviews = trialFeedbackPublishFinalReviewRecords();
+      const latest = latestTrialFeedbackPublishFinalReview();
+      return {kind: 'shanghai_planner_feedback_publish_final_review', version: 1, generated_at: new Date().toISOString(), review_count: reviews.length, latest_review: latest, reviews};
+    }
+    function feedbackPublishFinalReviewMarkdown(){
+      const latest = latestTrialFeedbackPublishFinalReview();
+      if (!latest) return ['# 试用反馈发布前终审面板', '', '- 状态：暂无试用反馈发布前终审面板。', '- 使用方式：先在试用反馈看板生成发布编辑应用结果，再生成发布前终审面板。', '- 交接提醒：即使暂无反馈终审面板，发布前仍需人工复核官方开放、预约、票务、交通、临时闭馆和平台表达。'].join('\n');
+      return trialFeedbackPublishFinalReviewMarkdown(latest);
+    }
+    function feedbackPublishFinalReviewJson(){
+      return JSON.stringify(feedbackPublishFinalReviewPayload(), null, 2);
+    }
     function trialFeedbackPayloadRecords(payload){
       if (Array.isArray(payload)) return payload;
       const source = projectWorkbenchStateSource(payload);
@@ -6695,7 +6712,7 @@
     function projectPublishWorkspaceHtml(){
       const navItems = [['dashboard', 'project-dashboard', '总览'], ['command', 'project-publish-command-center', '总控'], ['health_check', 'publish-workspace-health_check', '体检'], ['state', 'publish-workspace-state', '状态'], ['schedule', 'publish-workspace-schedule', '排期'], ['execution', 'publish-workspace-execution', '执行'], ['performance', 'publish-workspace-performance', '复盘/二创'], ['edits', 'publish-workspace-edits', '编辑'], ['final_check', 'publish-workspace-final_check', '验收'], ['preview', 'publish-ready-preview', '预览']];
       const nav = `<nav class="publish-workspace-rail" data-publish-workspace-mobile-shortcuts="true" aria-label="发布工作台快捷入口">${navItems.map(([key, href, label]) => `<a href="#${href}" data-publish-workspace-shortcut="${key}">${label}</a>`).join('')}</nav>`;
-      const actions = `<div class="publish-workspace-actions"><button type="button" data-apply-project-demo-publish-state>填充演示状态</button><button type="button" id="download-project-publish-ready-package-button" class="publish-workspace-primary-action">下载可发布包.zip</button><details class="publish-workspace-secondary-actions"><summary>更多导出</summary><div class="publish-workspace-secondary-actions-body"><button type="button" id="download-project-publish-progress-md-button">下载进度Markdown</button><button type="button" id="download-project-publish-progress-json-button">下载进度JSON</button><button type="button" id="copy-project-health-handoff-text-button">复制交接话术</button><button type="button" id="download-project-health-handoff-md-button">下载交接Markdown</button><button type="button" id="download-project-health-handoff-json-button">下载交接JSON</button><button type="button" id="download-publish-schedule-csv-button">下载排期CSV</button><button type="button" id="download-publish-schedule-md-button">下载排期Markdown</button><button type="button" id="download-publish-calendar-ics-button">下载日历ICS</button></div></details></div>`;
+      const actions = `<div class="publish-workspace-actions"><button type="button" data-apply-project-demo-publish-state>填充演示状态</button><button type="button" id="download-project-publish-ready-package-button" class="publish-workspace-primary-action">下载可发布包.zip</button><details class="publish-workspace-secondary-actions"><summary>更多导出</summary><div class="publish-workspace-secondary-actions-body"><button type="button" id="download-project-publish-progress-md-button">下载进度Markdown</button><button type="button" id="download-project-publish-progress-json-button">下载进度JSON</button><button type="button" id="download-feedback-publish-final-review-md-button">下载反馈终审MD</button><button type="button" id="download-feedback-publish-final-review-json-button">下载反馈终审JSON</button><button type="button" id="copy-project-health-handoff-text-button">复制交接话术</button><button type="button" id="download-project-health-handoff-md-button">下载交接Markdown</button><button type="button" id="download-project-health-handoff-json-button">下载交接JSON</button><button type="button" id="download-publish-schedule-csv-button">下载排期CSV</button><button type="button" id="download-publish-schedule-md-button">下载排期Markdown</button><button type="button" id="download-publish-calendar-ics-button">下载日历ICS</button></div></details></div>`;
       return `<section id="project-publish-workspace" class="official-import publish-ready-export project-publish-workspace"><div class="publish-workspace-head"><div><h3 class="markdown-section-title">可发布路线打包</h3><p id="project-publish-ready-package-status" class="official-import-status">只打包当前筛选/勾选范围内“可发布终审”的路线。${projectPublishReadyHealthCheckStatusHtml()}</p></div>${actions}</div>${projectDemoPublishStateHtml()}${projectPublishWorkspaceNextStepHtml()}${nav}${projectPublishWorkspaceSectionHtml('dashboard', '项目总览', projectDashboardHtml())}${projectPublishWorkspaceSectionHtml('command', '发布总控', projectPublishCommandCenterHtml())}${projectPublishWorkspaceSectionHtml('health_check', '下载前体检', projectPublishReadyHealthCheckHtml())}${projectPublishWorkspaceSectionHtml('state', '工作台状态', projectWorkbenchStatePersistenceHtml())}${projectPublishWorkspaceSectionHtml('schedule', '排期参数', projectPublishScheduleSettingsHtml())}${projectPublishWorkspaceSectionHtml('execution', '发布执行', projectPublishExecutionHtml())}${projectPublishWorkspaceSectionHtml('performance', '数据复盘与二创', projectPublishPerformanceHtml())}${projectPublishWorkspaceSectionHtml('edits', '发布版编辑', projectPublishReadyEditsPersistenceHtml())}${projectPublishWorkspaceSectionHtml('final_check', '最终验收', projectPublishFinalCheckHtml())}${projectPublishWorkspaceSectionHtml('preview', '可发布包预览', projectPublishReadyPreviewHtml())}</section>`;
     }
     function openProjectPublishCommandTarget(commandKey){
@@ -7755,6 +7772,8 @@
       document.getElementById('download-project-publish-ready-package-button')?.addEventListener('click', downloadProjectPublishReadyPackage);
       document.getElementById('download-project-publish-progress-md-button')?.addEventListener('click', downloadProjectPublishProgressMarkdown);
       document.getElementById('download-project-publish-progress-json-button')?.addEventListener('click', downloadProjectPublishProgressJson);
+      document.getElementById('download-feedback-publish-final-review-md-button')?.addEventListener('click', downloadFeedbackPublishFinalReviewMarkdown);
+      document.getElementById('download-feedback-publish-final-review-json-button')?.addEventListener('click', downloadFeedbackPublishFinalReviewJson);
       document.getElementById('copy-project-health-handoff-text-button')?.addEventListener('click', copyProjectHealthHandoffText);
       document.getElementById('download-project-health-handoff-md-button')?.addEventListener('click', downloadProjectHealthHandoffMarkdown);
       document.getElementById('download-project-health-handoff-json-button')?.addEventListener('click', downloadProjectHealthHandoffJson);
@@ -9155,7 +9174,7 @@
     function projectPublishReadyReadmeMarkdown(){
       const readyRoutes = projectPublishReadyRoutes();
       const routeLines = readyRoutes.length ? readyRoutes.map(route => `- ${route.templateName}｜routes/${route.tripId}/`).join('\n') : '- 当前范围暂无可发布终审路线。';
-      return ['# 上海攻略可发布路线包', '', `- 可发布路线：${readyRoutes.length}`, `- 导出范围：${projectDeliverySummary().scope}`, '- 最终验收：publish-final-check.md', '- 发布闭环总览：project-publish-progress.md / project-publish-progress.json', '- 交接摘要：handoff.md / handoff.json', '- 发布总控：publish-command-center.md', '- 排期文件：publish-schedule.csv / publish-schedule.md / publish-calendar.ics', '- 执行回填：publish-execution-template.json / publish-execution-status.md', '- 数据复盘：publish-performance-template.json / publish-performance.csv / publish-performance-report.md', '- 二次选题：followup-topic-pool.csv / followup-topic-pool.md / followup-topic-briefs.json', '- 二创草稿：followup-drafts.md / followup-drafts.json / followup-draft-edits.json', '- 草稿质检：followup-draft-audit.csv / followup-draft-audit.md / followup-draft-audit.json', '- 二创草稿终审入口：followup-draft-final-review.md', '', '## 协作者接手说明', '', '1. 主理人先看 handoff.md，脚本或自动化先读 handoff.json。', '2. 协作者回填 handoff.json 里 automation_next_action.return_package_file 指向的问题包。', '3. 回传后在网页「下载前体检」里粘贴或上传问题包 JSON。', '4. 导入后看 project-publish-progress.json 的 health_return_board 或页面里的协作者回传看板。', '', '## 路线目录', '', routeLines, '', '## 使用边界', '', '- 本包只收录发布前总控台为“可发布终审”的路线。', '- 包内正文是去除 Markdown 标题符号后的发布版文本，仍需人工终审。', '- 不复制第三方平台原文，只使用结构、选题和体验信号。'].join('\n');
+      return ['# 上海攻略可发布路线包', '', `- 可发布路线：${readyRoutes.length}`, `- 导出范围：${projectDeliverySummary().scope}`, '- 最终验收：publish-final-check.md', '- 试用反馈终审：feedback-publish-final-review.md / feedback-publish-final-review.json', '- 发布闭环总览：project-publish-progress.md / project-publish-progress.json', '- 交接摘要：handoff.md / handoff.json', '- 发布总控：publish-command-center.md', '- 排期文件：publish-schedule.csv / publish-schedule.md / publish-calendar.ics', '- 执行回填：publish-execution-template.json / publish-execution-status.md', '- 数据复盘：publish-performance-template.json / publish-performance.csv / publish-performance-report.md', '- 二次选题：followup-topic-pool.csv / followup-topic-pool.md / followup-topic-briefs.json', '- 二创草稿：followup-drafts.md / followup-drafts.json / followup-draft-edits.json', '- 草稿质检：followup-draft-audit.csv / followup-draft-audit.md / followup-draft-audit.json', '- 二创草稿终审入口：followup-draft-final-review.md', '', '## 协作者接手说明', '', '1. 主理人先看 handoff.md，脚本或自动化先读 handoff.json。', '2. 若经历过试用反馈处理，再看 feedback-publish-final-review.md/json 判断哪些改动已写入、哪些仍需人工终审。', '3. 协作者回填 handoff.json 里 automation_next_action.return_package_file 指向的问题包。', '4. 回传后在网页「下载前体检」里粘贴或上传问题包 JSON。', '5. 导入后看 project-publish-progress.json 的 health_return_board 或页面里的协作者回传看板。', '', '## 路线目录', '', routeLines, '', '## 使用边界', '', '- 本包只收录发布前总控台为“可发布终审”的路线。', '- 包内正文是去除 Markdown 标题符号后的发布版文本，仍需人工终审。', '- 不复制第三方平台原文，只使用结构、选题和体验信号。'].join('\n');
     }
     function projectPublishFinalCheckMarkdown(){
       const readyRoutes = projectPublishReadyRoutes();
@@ -10059,7 +10078,7 @@
       return `<div id="followup-draft-preview" class="followup-draft-preview"><div class="official-import-status">二创草稿：${followupDraftItems().length} 条 / 已编辑 ${followupDraftEditRecords().length} 条</div><div class="project-acceptance-table-wrap"><table class="project-acceptance-table"><thead><tr><th>平台</th><th>草稿</th><th>来源</th><th>提醒</th></tr></thead><tbody>${rows}</tbody></table></div>${editors}${persistence}</div>`;
     }
     function projectPublishReadyPackageFiles(){
-      const rootFiles = [{name: 'README.md', content: projectPublishReadyReadmeMarkdown()}, {name: 'publish-final-check.md', content: projectPublishFinalCheckMarkdown()}, {name: 'project-publish-progress.md', content: projectPublishProgressMarkdown()}, {name: 'project-publish-progress.json', content: projectPublishProgressJson()}, {name: 'handoff.md', content: projectPublishHealthHandoffMarkdown()}, {name: 'handoff.json', content: projectPublishHealthHandoffJson()}, {name: 'publish-control.md', content: publishControlMarkdown()}, {name: 'publish-command-center.md', content: projectPublishCommandCenterMarkdown()}, {name: 'publish-schedule.csv', content: publishScheduleCsv()}, {name: 'publish-schedule.md', content: publishScheduleMarkdown()}, {name: 'publish-calendar.ics', content: publishScheduleIcs()}, {name: 'publish-execution-template.json', content: publishExecutionTemplateJson()}, {name: 'publish-execution-status.md', content: publishExecutionStatusMarkdown()}, {name: 'publish-performance-template.json', content: publishPerformanceTemplateJson()}, {name: 'publish-performance.csv', content: publishPerformanceCsv()}, {name: 'publish-performance-report.md', content: publishPerformanceReportMarkdown()}, {name: 'followup-topic-pool.csv', content: followupTopicPoolCsv()}, {name: 'followup-topic-pool.md', content: followupTopicPoolMarkdown()}, {name: 'followup-topic-briefs.json', content: followupTopicBriefsJson()}, {name: 'followup-drafts.md', content: followupDraftsMarkdown()}, {name: 'followup-drafts.json', content: followupDraftsJson()}, {name: 'followup-draft-edits.json', content: followupDraftEditsJson()}, {name: 'followup-draft-audit.csv', content: followupDraftAuditCsv()}, {name: 'followup-draft-audit.md', content: followupDraftAuditMarkdown()}, {name: 'followup-draft-audit.json', content: followupDraftAuditJson()}, {name: 'followup-draft-final-review.md', content: followupDraftFinalReviewMarkdown()}];
+      const rootFiles = [{name: 'README.md', content: projectPublishReadyReadmeMarkdown()}, {name: 'publish-final-check.md', content: projectPublishFinalCheckMarkdown()}, {name: 'feedback-publish-final-review.md', content: feedbackPublishFinalReviewMarkdown()}, {name: 'feedback-publish-final-review.json', content: feedbackPublishFinalReviewJson()}, {name: 'project-publish-progress.md', content: projectPublishProgressMarkdown()}, {name: 'project-publish-progress.json', content: projectPublishProgressJson()}, {name: 'handoff.md', content: projectPublishHealthHandoffMarkdown()}, {name: 'handoff.json', content: projectPublishHealthHandoffJson()}, {name: 'publish-control.md', content: publishControlMarkdown()}, {name: 'publish-command-center.md', content: projectPublishCommandCenterMarkdown()}, {name: 'publish-schedule.csv', content: publishScheduleCsv()}, {name: 'publish-schedule.md', content: publishScheduleMarkdown()}, {name: 'publish-calendar.ics', content: publishScheduleIcs()}, {name: 'publish-execution-template.json', content: publishExecutionTemplateJson()}, {name: 'publish-execution-status.md', content: publishExecutionStatusMarkdown()}, {name: 'publish-performance-template.json', content: publishPerformanceTemplateJson()}, {name: 'publish-performance.csv', content: publishPerformanceCsv()}, {name: 'publish-performance-report.md', content: publishPerformanceReportMarkdown()}, {name: 'followup-topic-pool.csv', content: followupTopicPoolCsv()}, {name: 'followup-topic-pool.md', content: followupTopicPoolMarkdown()}, {name: 'followup-topic-briefs.json', content: followupTopicBriefsJson()}, {name: 'followup-drafts.md', content: followupDraftsMarkdown()}, {name: 'followup-drafts.json', content: followupDraftsJson()}, {name: 'followup-draft-edits.json', content: followupDraftEditsJson()}, {name: 'followup-draft-audit.csv', content: followupDraftAuditCsv()}, {name: 'followup-draft-audit.md', content: followupDraftAuditMarkdown()}, {name: 'followup-draft-audit.json', content: followupDraftAuditJson()}, {name: 'followup-draft-final-review.md', content: followupDraftFinalReviewMarkdown()}];
       const routeFiles = projectPublishReadyRoutes().flatMap(route => routePublishReadyPackageFiles(route).map(file => ({name: `routes/${route.tripId}/${file.name}`, content: file.content})));
       return rootFiles.concat(routeFiles);
     }
@@ -10489,6 +10508,40 @@
       const status = document.getElementById('project-publish-ready-package-status');
       if (button) button.textContent = '进度JSON已下载';
       if (status) status.textContent = '已导出项目级发布闭环总览 JSON。';
+    }
+    function downloadFeedbackPublishFinalReviewMarkdown(){
+      const fileName = 'feedback-publish-final-review.md';
+      const blob = new Blob([feedbackPublishFinalReviewMarkdown()], {type: 'text/markdown;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      const button = document.getElementById('download-feedback-publish-final-review-md-button');
+      const status = document.getElementById('project-publish-ready-package-status');
+      if (button) button.textContent = '反馈终审MD已下载';
+      if (status) status.textContent = '已导出试用反馈发布前终审 Markdown。';
+      return {ok: true, file_name: fileName, review_count: trialFeedbackPublishFinalReviewRecords().length};
+    }
+    function downloadFeedbackPublishFinalReviewJson(){
+      const fileName = 'feedback-publish-final-review.json';
+      const blob = new Blob([feedbackPublishFinalReviewJson()], {type: 'application/json;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      const button = document.getElementById('download-feedback-publish-final-review-json-button');
+      const status = document.getElementById('project-publish-ready-package-status');
+      if (button) button.textContent = '反馈终审JSON已下载';
+      if (status) status.textContent = '已导出试用反馈发布前终审 JSON。';
+      return {ok: true, file_name: fileName, review_count: trialFeedbackPublishFinalReviewRecords().length};
     }
     async function copyProjectHealthHandoffText(){
       const text = projectPublishHealthHandoffSummary().copy_text || '';

@@ -413,6 +413,18 @@
     .project-publish-archive-receipt span{display:block;color:var(--muted);font-size:12px;line-height:1.45;word-break:break-word}
     .project-publish-archive-receipt-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
     .project-publish-archive-receipt-actions button{min-height:30px;border:1px solid rgba(40,115,72,.24);border-radius:8px;background:#f4fbf5;color:#1e5b34;padding:0 9px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;white-space:nowrap}
+    .project-publish-archive-completion{grid-column:1/-1;display:grid;gap:8px;padding:10px;border:1px solid rgba(15,118,110,.22);border-radius:8px;background:#f0fdfa;color:var(--text);min-width:0}
+    .project-publish-archive-completion-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+    .project-publish-archive-completion-head b{display:block;color:#0f4f48;font-size:13px;line-height:1.35}
+    .project-publish-archive-completion-head span{display:block;color:var(--muted);font-size:12px;line-height:1.45}
+    .project-publish-archive-completion-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .project-publish-archive-completion-actions button{min-height:30px;border:1px solid rgba(15,118,110,.24);border-radius:8px;background:#fff;color:#0f4f48;padding:0 9px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;white-space:nowrap}
+    .project-publish-archive-completion-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px;margin:0;padding:0;list-style:none}
+    .project-publish-archive-completion-list li{display:grid;gap:3px;padding:7px;border:1px solid rgba(15,118,110,.16);border-radius:8px;background:#fff;font-size:12px;line-height:1.4}
+    .project-publish-archive-completion-list li.done{border-color:rgba(40,115,72,.24);background:#f6fff8}
+    .project-publish-archive-completion-list li.pending{border-color:rgba(161,98,7,.24);background:#fff7ed}
+    .project-publish-archive-completion-list strong{color:var(--ink)}
+    .project-publish-archive-completion-list span{color:var(--muted);word-break:break-word}
     .publish-workspace-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
     .publish-workspace-head h3{margin:0}
     .publish-workspace-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -884,7 +896,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackApplicationResults: [], trialFeedbackPublishFinalReviews: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, projectPublishArchiveCompletionExports: {}, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackApplicationResults: [], trialFeedbackPublishFinalReviews: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -6133,6 +6145,7 @@
     function recordProjectPublishArchiveReceipt(files){
       const receipt = buildProjectPublishArchiveReceipt(files);
       state.projectPublishArchiveReceipt = receipt;
+      state.projectPublishArchiveCompletionExports = {};
       return receipt;
     }
     function projectPublishArchiveReceiptPayload(){
@@ -6152,6 +6165,60 @@
       const receipt = projectPublishArchiveReceiptPayload();
       if (!receipt) return '';
       return `<div id="project-publish-archive-receipt" class="project-publish-archive-receipt"><div><b>发布完成回执</b><span>${escapeHtml(receipt.package_file)} · ${receipt.ready_route_count} 条路线 · ${receipt.file_count} 个文件 · 下载前体检：${escapeHtml(receipt.health_status)}</span><span>${escapeHtml(receipt.next_archive_action)}</span></div><div class="project-publish-archive-receipt-actions"><button type="button" data-project-publish-archive-receipt-download="md">导出回执MD</button><button type="button" data-project-publish-archive-receipt-download="json">导出回执JSON</button></div></div>`;
+    }
+    function normalizeProjectPublishArchiveCompletionExports(exports){
+      const source = exports && typeof exports === 'object' ? exports : {};
+      return {receipt_md: Boolean(source.receipt_md || source.receiptMd), receipt_json: Boolean(source.receipt_json || source.receiptJson), state_json: Boolean(source.state_json || source.stateJson)};
+    }
+    function projectPublishArchiveCompletionExportsPayload(){
+      return normalizeProjectPublishArchiveCompletionExports(state.projectPublishArchiveCompletionExports);
+    }
+    function markProjectPublishArchiveCompletionExport(key){
+      const normalized = projectPublishArchiveCompletionExportsPayload();
+      if (key === 'receipt_md') normalized.receipt_md = true;
+      if (key === 'receipt_json') normalized.receipt_json = true;
+      if (key === 'state_json') normalized.state_json = true;
+      state.projectPublishArchiveCompletionExports = normalized;
+      return normalized;
+    }
+    function projectPublishArchiveCompletionFileIncluded(receipt, names){
+      const fileNames = new Set(receipt?.file_names || []);
+      return names.every(name => fileNames.has(name));
+    }
+    function projectPublishArchiveCompletionItems(){
+      const receipt = projectPublishArchiveReceiptPayload();
+      const exports = projectPublishArchiveCompletionExportsPayload();
+      const hasReceipt = Boolean(receipt);
+      const item = (key, label, completed, fileNames, doneStatus, pendingStatus, nextAction) => ({key, label, completed: Boolean(completed), file_names: fileNames, status: completed ? doneStatus : pendingStatus, next_action: nextAction});
+      return [
+        item('ready_package_zip', '可发布包 ZIP', hasReceipt, [receipt?.package_file || projectPublishReadyPackageFileName()], '已下载', '待下载可发布包', '先点击“下载可发布包.zip”。'),
+        item('publish_final_check', '最终验收清单', hasReceipt && projectPublishArchiveCompletionFileIncluded(receipt, ['publish-final-check.md']), ['publish-final-check.md'], '已包含', '待生成包内清单', '重新下载可发布包。'),
+        item('feedback_final_review', '试用反馈终审', hasReceipt && projectPublishArchiveCompletionFileIncluded(receipt, ['feedback-publish-final-review.md', 'feedback-publish-final-review.json']), ['feedback-publish-final-review.md', 'feedback-publish-final-review.json'], '已包含', '待写入发布包', '先生成或确认反馈终审，再重新下载可发布包。'),
+        item('handoff_files', '交接文件', hasReceipt && projectPublishArchiveCompletionFileIncluded(receipt, ['handoff.md', 'handoff.json', 'project-publish-progress.json']), ['handoff.md', 'handoff.json', 'project-publish-progress.json'], '已包含', '待写入发布包', '重新下载可发布包并核对交接文件。'),
+        item('archive_receipt_exports', '发布完成回执', hasReceipt && exports.receipt_md && exports.receipt_json, ['archive-receipt.md', 'archive-receipt.json'], '已导出', hasReceipt ? '待导出 MD/JSON' : '待生成回执', '导出回执 MD 和 JSON。'),
+        item('workbench_state_backup', '工作台状态备份', hasReceipt && exports.state_json, ['shanghai-workbench-state.json'], '已导出', hasReceipt ? '待导出状态备份' : '待生成回执', '下载状态 JSON，保留可恢复现场。')
+      ];
+    }
+    function projectPublishArchiveCompletionPayload(){
+      const receipt = projectPublishArchiveReceiptPayload();
+      const items = projectPublishArchiveCompletionItems();
+      const completedCount = items.filter(item => item.completed).length;
+      const totalCount = items.length;
+      const status = !receipt ? '待下载可发布包' : completedCount === totalCount ? '归档完成' : '待归档补齐';
+      return {kind: 'project_publish_archive_completion', version: 1, generated_at: new Date().toISOString(), status, completed_count: completedCount, total_count: totalCount, package_file: receipt?.package_file || projectPublishReadyPackageFileName(), receipt, exports: projectPublishArchiveCompletionExportsPayload(), items};
+    }
+    function projectPublishArchiveCompletionMarkdown(){
+      const payload = projectPublishArchiveCompletionPayload();
+      const rows = payload.items.map(item => `| ${markdownTableCell(item.label)} | ${markdownTableCell(item.status)} | ${markdownTableCell(item.file_names.join(' / '))} | ${markdownTableCell(item.next_action)} |`);
+      return ['# 上海攻略发布归档完成卡', '', `- 状态：${payload.status}`, `- 完成度：${payload.completed_count}/${payload.total_count}`, `- 发布包：${payload.package_file}`, '', '## 归档检查', '', '| 项目 | 状态 | 文件 | 下一步 |', '| --- | --- | --- | --- |'].concat(rows).concat(['', '## 交接提醒', '', '- 把可发布包 ZIP、archive-receipt.md/json、shanghai-workbench-state.json 一起归档。', '- 若经历过试用反馈处理，重点核对 feedback-publish-final-review.md/json。', '- 发布当天仍需复核官方开放、预约、票务、交通、临时闭馆和平台表达。']).join('\n');
+    }
+    function projectPublishArchiveCompletionHtml(){
+      const receipt = projectPublishArchiveReceiptPayload();
+      if (!receipt) return '';
+      const payload = projectPublishArchiveCompletionPayload();
+      const rows = payload.items.map(item => `<li class="${item.completed ? 'done' : 'pending'}"><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.status)}</span><span>${escapeHtml(item.file_names.join(' / '))}</span></li>`).join('');
+      const actions = '<div class="project-publish-archive-completion-actions"><button type="button" data-project-publish-archive-completion-download="receipt_md">导出回执MD</button><button type="button" data-project-publish-archive-completion-download="receipt_json">导出回执JSON</button><button type="button" data-project-publish-archive-completion-download="state_json">下载状态JSON</button></div>';
+      return `<div id="project-publish-archive-completion" class="project-publish-archive-completion"><div class="project-publish-archive-completion-head"><div><b>发布归档完成卡</b><span>${escapeHtml(payload.status)} · 完成 ${payload.completed_count}/${payload.total_count} · ${escapeHtml(payload.package_file)}</span></div>${actions}</div><ul class="project-publish-archive-completion-list">${rows}</ul></div>`;
     }
     function projectPublishWorkspaceNextStepAction(board, automationAction){
       const items = board?.items || [];
@@ -6208,7 +6275,8 @@
       const readyPackageAction = action.target_key === 'download' ? '<button type="button" class="project-publish-next-step-action" data-project-publish-next-step-ready-package="true">下载可发布包</button>' : '';
       const importBox = `<details class="project-publish-next-step-import"><summary>导入协作者回传包</summary><div class="project-publish-next-step-import-body"><textarea id="project-publish-next-step-issue-json-import" placeholder="粘贴协作者回传的 health-*.json"></textarea><div class="project-publish-next-step-import-controls"><button type="button" id="import-project-publish-next-step-issue-json-button">导入回传包</button></div><p id="project-publish-next-step-issue-json-import-status" class="project-publish-next-step-import-status">可在这里导入协作者回传的问题包。</p></div></details>`;
       const receiptHtml = projectPublishArchiveReceiptHtml();
-      return `<section id="project-publish-workspace-next-step" class="project-publish-next-step ${level}"><div class="project-publish-next-step-main"><h4>当前最该做</h4><p>${escapeHtml(action.target_label || payload.progress_next_action?.stage || '发布闭环')}：${escapeHtml(actionText)}</p><span>${escapeHtml(action.owner_role || '主理人')} · ${escapeHtml(returnStatus)} · 回传文件：${escapeHtml(returnFile)}</span></div><div class="project-publish-next-step-metric"><b>${escapeHtml(payload.metrics.routes)}</b><span>可发布路线</span></div><div class="project-publish-next-step-metric"><b>${payload.metrics.pending_returns}</b><span>待回传</span></div><div class="project-publish-next-step-metric"><b>${payload.metrics.returned}</b><span>已回传</span></div><div class="project-publish-next-step-actions"><a class="project-publish-next-step-action" href="${escapeHtml(targetHref)}" data-project-publish-next-step-target="${escapeHtml(action.target_key || '')}">${escapeHtml(buttonLabel)}</a>${issuePackageAction}${readyPackageAction}</div>${importBox}${receiptHtml}</section>`;
+      const completionHtml = projectPublishArchiveCompletionHtml();
+      return `<section id="project-publish-workspace-next-step" class="project-publish-next-step ${level}"><div class="project-publish-next-step-main"><h4>当前最该做</h4><p>${escapeHtml(action.target_label || payload.progress_next_action?.stage || '发布闭环')}：${escapeHtml(actionText)}</p><span>${escapeHtml(action.owner_role || '主理人')} · ${escapeHtml(returnStatus)} · 回传文件：${escapeHtml(returnFile)}</span></div><div class="project-publish-next-step-metric"><b>${escapeHtml(payload.metrics.routes)}</b><span>可发布路线</span></div><div class="project-publish-next-step-metric"><b>${payload.metrics.pending_returns}</b><span>待回传</span></div><div class="project-publish-next-step-metric"><b>${payload.metrics.returned}</b><span>已回传</span></div><div class="project-publish-next-step-actions"><a class="project-publish-next-step-action" href="${escapeHtml(targetHref)}" data-project-publish-next-step-target="${escapeHtml(action.target_key || '')}">${escapeHtml(buttonLabel)}</a>${issuePackageAction}${readyPackageAction}</div>${importBox}${receiptHtml}${completionHtml}</section>`;
     }
     function projectDashboardPercent(done, total){
       const denominator = Number(total || 0);
@@ -7591,6 +7659,16 @@
           else downloadProjectPublishArchiveReceiptMarkdown();
           return;
         }
+        const completionDownload = event.target.closest('[data-project-publish-archive-completion-download]');
+        if (completionDownload) {
+          event.preventDefault();
+          const action = completionDownload.dataset.projectPublishArchiveCompletionDownload || '';
+          if (action === 'receipt_md') downloadProjectPublishArchiveReceiptMarkdown();
+          if (action === 'receipt_json') downloadProjectPublishArchiveReceiptJson();
+          if (action === 'state_json') downloadProjectPublishArchiveCompletionStateJson();
+          render();
+          return;
+        }
         const action = event.target.closest('[data-project-publish-next-step-target]');
         if (!action) return;
         event.preventDefault();
@@ -8688,7 +8766,8 @@
         trial_feedback_application_packages: trialFeedbackApplicationPackageRecords(),
         trial_feedback_application_results: trialFeedbackApplicationResultRecords(),
         trial_feedback_publish_final_reviews: trialFeedbackPublishFinalReviewRecords(),
-        project_publish_archive_receipt: projectPublishArchiveReceiptPayload()
+        project_publish_archive_receipt: projectPublishArchiveReceiptPayload(),
+        project_publish_archive_completion_exports: projectPublishArchiveCompletionExportsPayload()
       };
     }
     function projectWorkbenchStateJson(payload){
@@ -9091,6 +9170,10 @@
       state.projectPublishArchiveReceipt = normalizeProjectPublishArchiveReceipt(receipt);
       return state.projectPublishArchiveReceipt ? 1 : 0;
     }
+    function applyProjectPublishArchiveCompletionExports(exports){
+      state.projectPublishArchiveCompletionExports = normalizeProjectPublishArchiveCompletionExports(exports);
+      return Object.values(state.projectPublishArchiveCompletionExports).filter(Boolean).length;
+    }
     function applyProjectWorkbenchSchedule(schedule){
       if (!schedule || typeof schedule !== 'object') return 0;
       state.publishScheduleStartDate = String(schedule.start_date || schedule.startDate || '').trim();
@@ -9102,7 +9185,7 @@
     }
     function applyProjectWorkbenchState(payload){
       const source = projectWorkbenchStateSource(payload);
-      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, trial_feedback_application_results: 0, trial_feedback_publish_final_reviews: 0, project_publish_archive_receipt: 0};
+      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, trial_feedback_application_results: 0, trial_feedback_publish_final_reviews: 0, project_publish_archive_receipt: 0, project_publish_archive_completion_exports: 0};
       imported.schedule = applyProjectWorkbenchSchedule(source?.schedule);
       state.publishReadyEdits = {};
       state.publishExecutionUpdates = {};
@@ -9122,6 +9205,7 @@
       state.trialFeedbackApplicationResults = [];
       state.trialFeedbackPublishFinalReviews = [];
       state.projectPublishArchiveReceipt = null;
+      state.projectPublishArchiveCompletionExports = {};
       imported.publish_ready_edits = applyPublishReadyEdits(projectWorkbenchStateRecords(source, 'publish_ready_edits', 'publishReadyEdits'));
       imported.publish_execution_updates = applyPublishExecutionUpdates(projectWorkbenchStateRecords(source, 'publish_execution_updates', 'publishExecutionUpdates'));
       imported.publish_performance_updates = applyPublishPerformanceUpdates(projectWorkbenchStateRecords(source, 'publish_performance_updates', 'publishPerformanceUpdates'));
@@ -9139,6 +9223,7 @@
       imported.trial_feedback_application_results = applyTrialFeedbackApplicationResults(projectWorkbenchStateRecords(source, 'trial_feedback_application_results', 'trialFeedbackApplicationResults'), {replace: true}).total;
       imported.trial_feedback_publish_final_reviews = applyTrialFeedbackPublishFinalReviews(projectWorkbenchStateRecords(source, 'trial_feedback_publish_final_reviews', 'trialFeedbackPublishFinalReviews'), {replace: true}).total;
       imported.project_publish_archive_receipt = applyProjectPublishArchiveReceipt(source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt || null);
+      imported.project_publish_archive_completion_exports = applyProjectPublishArchiveCompletionExports(source?.project_publish_archive_completion_exports || source?.projectPublishArchiveCompletionExports || null);
       return imported;
     }
     function importProjectWorkbenchStateJsonText(text){
@@ -9347,6 +9432,7 @@
       state.projectDeliverySelection = [];
       state.projectPublishHealthImportLog = [];
       state.projectPublishArchiveReceipt = null;
+      state.projectPublishArchiveCompletionExports = {};
       state.publishReadyEditorRouteId = '';
       const firstRoute = filteredRoutes()[0];
       if (firstRoute) state.selectedId = firstRoute.tripId;
@@ -10457,6 +10543,7 @@
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(url);
+      markProjectPublishArchiveCompletionExport('receipt_md');
       if (status) status.textContent = `已导出发布完成回执 Markdown：${receipt.package_file}。`; 
       return {ok: true, file_name: 'archive-receipt.md', package_file: receipt.package_file};
     }
@@ -10476,6 +10563,7 @@
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(url);
+      markProjectPublishArchiveCompletionExport('receipt_json');
       if (status) status.textContent = `已导出发布完成回执 JSON：${receipt.package_file}。`; 
       return {ok: true, file_name: 'archive-receipt.json', package_file: receipt.package_file};
     }
@@ -10699,6 +10787,14 @@
       const status = document.getElementById('project-workbench-state-json-import-status') || document.getElementById('project-publish-ready-package-status');
       if (button) button.textContent = '状态JSON已下载';
       if (status) status.textContent = '已导出当前工作台状态，可用于下次导入恢复。';
+      return {ok: true, file_name: 'shanghai-workbench-state.json'};
+    }
+    function downloadProjectPublishArchiveCompletionStateJson(){
+      markProjectPublishArchiveCompletionExport('state_json');
+      const result = downloadProjectWorkbenchStateJson();
+      const status = document.getElementById('project-publish-ready-package-status');
+      if (status) status.textContent = '已导出发布归档状态备份 JSON。';
+      return Object.assign({}, result, {completion: projectPublishArchiveCompletionPayload()});
     }
     downloadButton.addEventListener('click', downloadCurrentMarkdown);
     draftPackageButton.addEventListener('click', downloadRouteDraftPackage);

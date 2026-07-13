@@ -154,13 +154,16 @@
     .trial-feedback-board-actions button.copied{background:var(--success);border-color:var(--success);color:#fff}
     .trial-feedback-board-results{display:grid;gap:8px;min-width:0}
     .trial-feedback-board-list{display:grid;gap:8px;max-height:238px;overflow:auto;min-width:0}
-    .trial-feedback-batch-list,.trial-feedback-next-version-plan-list{display:grid;gap:6px;min-width:0}
-    .trial-feedback-batch-item,.trial-feedback-next-version-plan-item{display:grid;gap:4px;padding:8px;border:1px solid rgba(15,118,110,.18);background:#f0fdfa;border-radius:8px;min-width:0}
+    .trial-feedback-batch-list,.trial-feedback-next-version-plan-list,.trial-feedback-revision-suggestion-list{display:grid;gap:6px;min-width:0}
+    .trial-feedback-batch-item,.trial-feedback-next-version-plan-item,.trial-feedback-revision-suggestion-item{display:grid;gap:4px;padding:8px;border:1px solid rgba(15,118,110,.18);background:#f0fdfa;border-radius:8px;min-width:0}
     .trial-feedback-next-version-plan-item{border-color:rgba(126,34,206,.18);background:#faf5ff}
-    .trial-feedback-batch-item strong,.trial-feedback-next-version-plan-item strong{font-size:12px;line-height:1.35;color:#0f4f48;word-break:break-word}
+    .trial-feedback-revision-suggestion-item{border-color:rgba(180,83,9,.18);background:#fffbeb}
+    .trial-feedback-batch-item strong,.trial-feedback-next-version-plan-item strong,.trial-feedback-revision-suggestion-item strong{font-size:12px;line-height:1.35;color:#0f4f48;word-break:break-word}
     .trial-feedback-next-version-plan-item strong{color:#5b21b6}
-    .trial-feedback-batch-item p,.trial-feedback-next-version-plan-item p{margin:0;color:#42625d;font-size:11px;line-height:1.45;word-break:break-word}
+    .trial-feedback-revision-suggestion-item strong{color:#92400e}
+    .trial-feedback-batch-item p,.trial-feedback-next-version-plan-item p,.trial-feedback-revision-suggestion-item p{margin:0;color:#42625d;font-size:11px;line-height:1.45;word-break:break-word}
     .trial-feedback-next-version-plan-item p{color:#665179}
+    .trial-feedback-revision-suggestion-item p{color:#75501f}
     .trial-feedback-board-item{display:grid;gap:5px;padding:9px;border:1px solid var(--line);background:#fff;border-radius:8px;min-width:0}
     .trial-feedback-board-item strong{font-size:13px;line-height:1.35;color:var(--ink);word-break:break-word}
     .trial-feedback-board-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.45;word-break:break-word}
@@ -735,13 +738,16 @@
               <button type="button" id="copy-trial-feedback-batch-log-button">复制批次记录</button>
               <button type="button" id="create-trial-feedback-next-version-plan-button">生成改动清单</button>
               <button type="button" id="copy-trial-feedback-next-version-plan-button">复制改动清单</button>
+              <button type="button" id="create-trial-feedback-revision-suggestion-button">生成修订建议</button>
+              <button type="button" id="copy-trial-feedback-revision-suggestion-button">复制修订建议</button>
             </div>
             <div class="trial-feedback-board-filter"><label for="trial-feedback-status-filter">状态筛选</label><select id="trial-feedback-status-filter"><option value="all">全部状态</option><option value="待处理">待处理</option><option value="处理中">处理中</option><option value="已处理">已处理</option><option value="暂缓">暂缓</option></select></div>
             <div class="trial-feedback-board-filter"><label for="trial-feedback-batch-note">处理批次备注</label><input id="trial-feedback-batch-note" type="text" placeholder="例：2026-07-13 第1轮试用反馈处理"></div>
             <div class="trial-feedback-board-filter"><label for="trial-feedback-next-version-note">改动清单备注</label><input id="trial-feedback-next-version-note" type="text" placeholder="例：优先修官方复核和路线图"></div>
+            <div class="trial-feedback-board-filter"><label for="trial-feedback-revision-note">修订建议备注</label><input id="trial-feedback-revision-note" type="text" placeholder="例：先给人工编辑，不自动覆盖正文"></div>
             <p id="trial-feedback-board-status" class="trial-feedback-board-status" aria-live="polite"></p>
           </div>
-          <div class="trial-feedback-board-results"><div id="trial-feedback-next-version-plan-list" class="trial-feedback-next-version-plan-list"></div><div id="trial-feedback-batch-list" class="trial-feedback-batch-list"></div><div id="trial-feedback-board-list" class="trial-feedback-board-list"></div></div>
+          <div class="trial-feedback-board-results"><div id="trial-feedback-revision-suggestion-list" class="trial-feedback-revision-suggestion-list"></div><div id="trial-feedback-next-version-plan-list" class="trial-feedback-next-version-plan-list"></div><div id="trial-feedback-batch-list" class="trial-feedback-batch-list"></div><div id="trial-feedback-board-list" class="trial-feedback-board-list"></div></div>
         </section>
         <section id="product-quick-start" class="product-quick-start" aria-label="工作台快捷入口">
           <div class="product-quick-start-head">
@@ -856,7 +862,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -894,14 +900,18 @@
     const copyTrialFeedbackBatchLogButton = document.getElementById('copy-trial-feedback-batch-log-button');
     const createTrialFeedbackNextVersionPlanButton = document.getElementById('create-trial-feedback-next-version-plan-button');
     const copyTrialFeedbackNextVersionPlanButton = document.getElementById('copy-trial-feedback-next-version-plan-button');
+    const createTrialFeedbackRevisionSuggestionButton = document.getElementById('create-trial-feedback-revision-suggestion-button');
+    const copyTrialFeedbackRevisionSuggestionButton = document.getElementById('copy-trial-feedback-revision-suggestion-button');
     const trialFeedbackStatusFilter = document.getElementById('trial-feedback-status-filter');
     const trialFeedbackBatchNote = document.getElementById('trial-feedback-batch-note');
     const trialFeedbackNextVersionNote = document.getElementById('trial-feedback-next-version-note');
+    const trialFeedbackRevisionNote = document.getElementById('trial-feedback-revision-note');
     const trialFeedbackBoardStatus = document.getElementById('trial-feedback-board-status');
     const trialFeedbackBoardMetrics = document.getElementById('trial-feedback-board-metrics');
     const trialFeedbackBoardList = document.getElementById('trial-feedback-board-list');
     const trialFeedbackBatchList = document.getElementById('trial-feedback-batch-list');
     const trialFeedbackNextVersionPlanList = document.getElementById('trial-feedback-next-version-plan-list');
+    const trialFeedbackRevisionSuggestionList = document.getElementById('trial-feedback-revision-suggestion-list');
     const copyDeliveryNoteButton = document.getElementById('copy-delivery-note-button');
     const deliveryNotePreview = document.getElementById('delivery-note-preview');
     const copyRoutePublishQualityChecklistButton = document.getElementById('copy-route-publish-quality-checklist-button');
@@ -1528,6 +1538,192 @@
       if (!plans.length) return '# 上海攻略生成工作台下一版改动清单\n\n暂无改动清单。';
       return plans.slice().reverse().map(trialFeedbackNextVersionPlanMarkdown).join('\n\n---\n\n');
     }
+    function trialFeedbackRevisionTarget(change){
+      if (change.category === 'official') return '官方复核';
+      if (change.category === 'map') return '路线图';
+      if (change.category === 'copy') return '平台文案';
+      if (change.category === 'ux') return '工作台体验';
+      return '路线正文';
+    }
+    function trialFeedbackRevisionTargetFiles(change){
+      if (change.category === 'official') return ['official_checklist.html', 'official_validation.html', 'traveler-publish.md'];
+      if (change.category === 'map') return ['route-map.html', 'route-map.geojson', 'traveler.md'];
+      if (change.category === 'copy') return ['xiaohongshu.md', 'douyin.md', 'essay.md'];
+      if (change.category === 'ux') return ['workbench.html', 'index.html'];
+      return ['traveler.md', 'route_compare.md', 'draft-package.md'];
+    }
+    function trialFeedbackRevisionAction(change){
+      if (change.status === '暂缓') return '暂不改正文，记录为下一轮体验观察项。';
+      if (change.status === '已处理') return '保留为发布前校验记录，确认已处理内容没有回退。';
+      if (change.category === 'official') return '把预约、开放、票务或临时变动提醒补进官方复核和发布前终审。';
+      if (change.category === 'map') return '补清点位顺序、步行/换乘说明和容易走错的位置。';
+      if (change.category === 'copy') return '把标题、开头和口播表达改成更像真人分享的版本。';
+      if (change.category === 'ux') return '优化按钮反馈、移动端密度和当前操作提示。';
+      return '补充路线取舍理由、游玩顺序和体验提醒。';
+    }
+    function trialFeedbackRevisionVerification(change){
+      if (change.category === 'official') return '发布前仍需人工复核官方开放、预约、票务、交通和临时闭馆。';
+      if (change.category === 'map') return '发布前用地图 App 实测点位顺序、跨区交通和步行时间。';
+      if (change.category === 'copy') return '发布前人工检查平台语气，避免复制第三方原文。';
+      if (change.category === 'ux') return '发布前在桌面和移动端各操作一遍对应按钮。';
+      return '发布前人工复核事实、动线、时间和表达边界。';
+    }
+    function trialFeedbackRevisionSuggestionItem(change){
+      return {
+        feedback_id: change.feedback_id,
+        priority: change.priority || 'P3',
+        status: change.status || '待处理',
+        category: change.category || 'route',
+        category_label: change.category_label || selectedFeedbackLabel(change.category, trialFeedbackCategoryLabels, '路线建议'),
+        severity_label: change.severity_label || selectedFeedbackLabel(change.severity, trialFeedbackSeverityLabels, '建议优化'),
+        target_surface: trialFeedbackRevisionTarget(change),
+        target_files: trialFeedbackRevisionTargetFiles(change),
+        message: change.message || '',
+        revision_action: trialFeedbackRevisionAction(change),
+        revision_note: `根据反馈补充或改写：${change.message || '待补充反馈内容'}` ,
+        verification_note: trialFeedbackRevisionVerification(change),
+      };
+    }
+    function normalizeTrialFeedbackRevisionSuggestionItem(item){
+      if (!item || typeof item !== 'object') return null;
+      const feedbackId = String(item.feedback_id || item.feedbackId || '').trim();
+      const message = String(item.message || '').trim();
+      if (!feedbackId || !message) return null;
+      const category = String(item.category || 'route').trim() || 'route';
+      const normalized = {
+        feedback_id: feedbackId,
+        priority: String(item.priority || 'P3').trim() || 'P3',
+        status: validTrialFeedbackStatus(item.status) || '待处理',
+        category,
+        category_label: String(item.category_label || item.categoryLabel || selectedFeedbackLabel(category, trialFeedbackCategoryLabels, '路线建议')).trim(),
+        severity_label: String(item.severity_label || item.severityLabel || '').trim(),
+        target_surface: String(item.target_surface || item.targetSurface || trialFeedbackRevisionTarget({category})).trim(),
+        target_files: (Array.isArray(item.target_files) ? item.target_files : Array.isArray(item.targetFiles) ? item.targetFiles : trialFeedbackRevisionTargetFiles({category})).map(value => String(value || '').trim()).filter(Boolean),
+        message,
+        revision_action: String(item.revision_action || item.revisionAction || '').trim(),
+        revision_note: String(item.revision_note || item.revisionNote || '').trim(),
+        verification_note: String(item.verification_note || item.verificationNote || '').trim(),
+      };
+      normalized.revision_action = normalized.revision_action || trialFeedbackRevisionAction(normalized);
+      normalized.revision_note = normalized.revision_note || `根据反馈补充或改写：${normalized.message}`;
+      normalized.verification_note = normalized.verification_note || trialFeedbackRevisionVerification(normalized);
+      return normalized;
+    }
+    function normalizeTrialFeedbackRevisionRouteSuggestion(item){
+      if (!item || typeof item !== 'object') return null;
+      const suggestions = (Array.isArray(item.suggestions) ? item.suggestions : []).map(normalizeTrialFeedbackRevisionSuggestionItem).filter(Boolean).sort((left, right) => trialFeedbackNextVersionPriorityRank(left.priority) - trialFeedbackNextVersionPriorityRank(right.priority) || String(left.target_surface || '').localeCompare(String(right.target_surface || '')));
+      const routeId = String(item.route_id || item.routeId || '').trim();
+      const routeName = String(item.route_name || item.routeName || '').trim();
+      if (!routeId && !routeName && !suggestions.length) return null;
+      const highestPriority = String(item.highest_priority || item.highestPriority || suggestions[0]?.priority || 'P3').trim() || 'P3';
+      return {route_id: routeId, route_name: routeName, highest_priority: highestPriority, suggestion_count: Number(item.suggestion_count || item.suggestionCount || suggestions.length || 0), suggestions};
+    }
+    function trialFeedbackRevisionSuggestionStableId(suggestion){
+      const seed = [suggestion.title, suggestion.note, suggestion.created_at, suggestion.source_plan_id, (suggestion.source_feedback_ids || []).join('|')].map(value => String(value || '').trim()).join('|');
+      let hash = 0;
+      for (let index = 0; index < seed.length; index += 1) hash = ((hash << 5) - hash + seed.charCodeAt(index)) | 0;
+      return `trial-feedback-revision-suggestion-${Math.abs(hash).toString(36)}`;
+    }
+    function normalizeTrialFeedbackRevisionSuggestionRecord(record){
+      if (!record || typeof record !== 'object') return null;
+      const routeSuggestions = (Array.isArray(record.route_suggestions) ? record.route_suggestions : Array.isArray(record.routeSuggestions) ? record.routeSuggestions : []).map(normalizeTrialFeedbackRevisionRouteSuggestion).filter(Boolean);
+      const flatSuggestions = routeSuggestions.flatMap(route => route.suggestions);
+      const sourceFeedbackIds = (Array.isArray(record.source_feedback_ids) ? record.source_feedback_ids : Array.isArray(record.sourceFeedbackIds) ? record.sourceFeedbackIds : flatSuggestions.map(item => item.feedback_id)).map(value => String(value || '').trim()).filter(Boolean);
+      const createdAt = String(record.created_at || record.createdAt || new Date().toISOString()).trim();
+      const suggestion = {
+        suggestion_id: String(record.suggestion_id || record.suggestionId || '').trim(),
+        title: String(record.title || record.suggestion_title || record.suggestionTitle || '具体修订建议').trim() || '具体修订建议',
+        note: String(record.note || record.memo || '').trim(),
+        created_at: createdAt,
+        source_plan_id: String(record.source_plan_id || record.sourcePlanId || '').trim(),
+        source_plan_title: String(record.source_plan_title || record.sourcePlanTitle || '').trim(),
+        source_feedback_ids: Array.from(new Set(sourceFeedbackIds)),
+        suggestion_count: Number(record.suggestion_count || record.suggestionCount || flatSuggestions.length || 0),
+        route_count: Number(record.route_count || record.routeCount || routeSuggestions.length || 0),
+        target_counts: record.target_counts || record.targetCounts || trialFeedbackCountBy(flatSuggestions, 'target_surface'),
+        priority_counts: record.priority_counts || record.priorityCounts || trialFeedbackCountBy(flatSuggestions, 'priority'),
+        route_suggestions: routeSuggestions,
+      };
+      suggestion.suggestion_id = suggestion.suggestion_id || trialFeedbackRevisionSuggestionStableId(suggestion);
+      suggestion.suggestion_count = suggestion.suggestion_count || flatSuggestions.length;
+      suggestion.route_count = suggestion.route_count || routeSuggestions.length;
+      return suggestion.suggestion_count ? suggestion : null;
+    }
+    function trialFeedbackRevisionSuggestionRecords(records){
+      const source = Array.isArray(records) ? records : state.trialFeedbackRevisionSuggestions;
+      const seen = new Set();
+      const normalized = [];
+      source.forEach(record => {
+        const item = normalizeTrialFeedbackRevisionSuggestionRecord(record);
+        if (!item || seen.has(item.suggestion_id)) return;
+        seen.add(item.suggestion_id);
+        normalized.push(item);
+      });
+      return normalized.sort((left, right) => String(left.created_at || '').localeCompare(String(right.created_at || '')));
+    }
+    function applyTrialFeedbackRevisionSuggestions(records, options){
+      const existing = options?.replace ? [] : trialFeedbackRevisionSuggestionRecords();
+      const byId = new Map(existing.map(record => [record.suggestion_id, record]));
+      let imported = 0;
+      let duplicate = 0;
+      trialFeedbackRevisionSuggestionRecords(records).forEach(record => {
+        if (byId.has(record.suggestion_id)) { duplicate += 1; return; }
+        byId.set(record.suggestion_id, record);
+        imported += 1;
+      });
+      state.trialFeedbackRevisionSuggestions = Array.from(byId.values()).sort((left, right) => String(left.created_at || '').localeCompare(String(right.created_at || '')));
+      return {imported, duplicate, total: state.trialFeedbackRevisionSuggestions.length};
+    }
+    function createTrialFeedbackRevisionSuggestion(options){
+      const plans = trialFeedbackNextVersionPlanRecords();
+      const sourcePlan = normalizeTrialFeedbackNextVersionPlanRecord(options?.plan || plans[plans.length - 1]);
+      if (!sourcePlan) return {ok: false, message: '请先生成下一版改动清单，再生成具体修订建议。'};
+      const createdAt = new Date().toISOString();
+      const note = String(options?.note ?? trialFeedbackRevisionNote?.value ?? '').trim();
+      const title = String(options?.title || '').trim() || note || `具体修订建议 ${trialFeedbackRevisionSuggestionRecords().length + 1}`;
+      const routeSuggestions = sourcePlan.route_items.map(route => {
+        const suggestions = route.change_items.map(trialFeedbackRevisionSuggestionItem);
+        return normalizeTrialFeedbackRevisionRouteSuggestion({route_id: route.route_id, route_name: route.route_name, highest_priority: route.highest_priority, suggestions});
+      }).filter(Boolean).sort((left, right) => trialFeedbackNextVersionPriorityRank(left.highest_priority) - trialFeedbackNextVersionPriorityRank(right.highest_priority) || String(left.route_name || left.route_id || '').localeCompare(String(right.route_name || right.route_id || '')));
+      const flatSuggestions = routeSuggestions.flatMap(route => route.suggestions);
+      const suggestion = normalizeTrialFeedbackRevisionSuggestionRecord({
+        suggestion_id: `trial-feedback-revision-suggestion-${createdAt.replace(/[^0-9A-Za-z]/g, '')}`,
+        title,
+        note,
+        created_at: createdAt,
+        source_plan_id: sourcePlan.plan_id,
+        source_plan_title: sourcePlan.title,
+        source_feedback_ids: sourcePlan.source_feedback_ids,
+        suggestion_count: flatSuggestions.length,
+        route_count: routeSuggestions.length,
+        target_counts: trialFeedbackCountBy(flatSuggestions, 'target_surface'),
+        priority_counts: trialFeedbackCountBy(flatSuggestions, 'priority'),
+        route_suggestions: routeSuggestions,
+      });
+      if (!suggestion) return {ok: false, message: '修订建议生成失败。'};
+      applyTrialFeedbackRevisionSuggestions([suggestion]);
+      renderTrialFeedbackRevisionSuggestions();
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = `已生成具体修订建议：${suggestion.title}（${suggestion.suggestion_count} 条建议）。`;
+      return {ok: true, suggestion};
+    }
+    function trialFeedbackRevisionSuggestionMarkdown(suggestion){
+      const item = normalizeTrialFeedbackRevisionSuggestionRecord(suggestion);
+      if (!item) return '# 具体修订建议\n\n暂无修订建议。';
+      const targetText = ['官方复核', '路线图', '路线正文', '平台文案', '工作台体验'].filter(key => item.target_counts?.[key]).map(key => `${key} ${item.target_counts[key]}`).join('，') || '暂无目标统计';
+      const priorityText = ['P0', 'P1', 'P2', 'P3', 'P4'].filter(key => item.priority_counts?.[key]).map(key => `${key} ${item.priority_counts[key]}`).join('，') || '暂无优先级统计';
+      const noteText = item.note ? [`- 备注：${item.note}`] : [];
+      const routeLines = item.route_suggestions.length ? item.route_suggestions.flatMap(route => {
+        const routeTitle = `### [${route.highest_priority}] ${route.route_name || route.route_id || '未绑定路线'}`;
+        const lines = route.suggestions.map(entry => `- [${entry.priority}/${entry.status}/${entry.category_label}] 目标：${entry.target_surface}｜文件：${entry.target_files.join('、')}｜反馈：${entry.message}｜动作：${entry.revision_action}｜建议：${entry.revision_note}｜复核：${entry.verification_note}｜ID：${entry.feedback_id}`);
+        return [routeTitle, ...lines];
+      }) : ['暂无修订建议。'];
+      return [`# ${item.title}`, '', `- 建议 ID：${item.suggestion_id}`, `- 创建时间：${item.created_at}`, `- 来源改动清单：${item.source_plan_title || item.source_plan_id || '未绑定'}`, `- 涉及路线：${item.route_count}`, `- 建议数：${item.suggestion_count}`, `- 目标统计：${targetText}`, `- 优先级：${priorityText}`, ...noteText, '', '## 具体改稿建议', ...routeLines, '', '## 使用边界', '- 这是面向人工编辑的修订建议，不会自动覆盖原始攻略、路线图或平台文案。', '- 发布前仍需人工复核官方开放、预约、票务、交通和临时闭馆。'].join('\n');
+    }
+    function trialFeedbackRevisionSuggestionLogText(){
+      const suggestions = trialFeedbackRevisionSuggestionRecords();
+      if (!suggestions.length) return '# 上海攻略生成工作台具体修订建议\n\n暂无修订建议。';
+      return suggestions.slice().reverse().map(trialFeedbackRevisionSuggestionMarkdown).join('\n\n---\n\n');
+    }
     function trialFeedbackPayloadRecords(payload){
       if (Array.isArray(payload)) return payload;
       const source = projectWorkbenchStateSource(payload);
@@ -1663,6 +1859,14 @@
         return `<article class="trial-feedback-next-version-plan-item"><strong>${escapeHtml(plan.title)}</strong><p>${escapeHtml(plan.created_at)}｜${escapeHtml(filterText)}｜${escapeHtml(plan.route_count)} 条路线｜${escapeHtml(plan.item_count)} 条改动</p><p>${escapeHtml(priorityText)}｜${escapeHtml(plan.note || '无备注')}</p></article>`;
       }).join('') : '<p class="trial-feedback-board-empty">暂无下一版改动清单。</p>';
     }
+    function renderTrialFeedbackRevisionSuggestions(){
+      if (!trialFeedbackRevisionSuggestionList) return;
+      const suggestions = trialFeedbackRevisionSuggestionRecords().slice().reverse();
+      trialFeedbackRevisionSuggestionList.innerHTML = suggestions.length ? suggestions.map(suggestion => {
+        const targetText = ['官方复核', '路线图', '路线正文', '平台文案', '工作台体验'].filter(key => suggestion.target_counts?.[key]).map(key => `${key} ${suggestion.target_counts[key]}`).join('，') || '暂无目标统计';
+        return `<article class="trial-feedback-revision-suggestion-item"><strong>${escapeHtml(suggestion.title)}</strong><p>${escapeHtml(suggestion.created_at)}｜${escapeHtml(suggestion.route_count)} 条路线｜${escapeHtml(suggestion.suggestion_count)} 条建议</p><p>${escapeHtml(targetText)}｜${escapeHtml(suggestion.note || '无备注')}</p></article>`;
+      }).join('') : '<p class="trial-feedback-board-empty">暂无具体修订建议。</p>';
+    }
     function renderTrialFeedbackBoard(){
       const summary = trialFeedbackBoardSummary();
       if (trialFeedbackStatusFilter) trialFeedbackStatusFilter.value = trialFeedbackActiveStatusFilter();
@@ -1691,9 +1895,20 @@
           return `<article class="trial-feedback-board-item"><div class="trial-feedback-board-item-meta"><span>${escapeHtml(record.severity_label)}</span><span>${escapeHtml(record.category_label)}</span><span>${escapeHtml(record.status)}</span></div><strong>${escapeHtml(record.route_name || record.route_id || '未绑定路线')}</strong><p>${escapeHtml(record.message)}</p><p>${escapeHtml(record.contact || '未留联系方式')}｜${escapeHtml(record.created_at || '')}${escapeHtml(updatedText)}</p><div class="trial-feedback-status-actions">${statusActions}</div></article>`;
         }).join('') : `<p class="trial-feedback-board-empty">${escapeHtml(emptyText)}</p>`;
       }
+      renderTrialFeedbackRevisionSuggestions();
       renderTrialFeedbackNextVersionPlans();
       renderTrialFeedbackBatches();
       if (trialFeedbackBoardStatus && !trialFeedbackBoardStatus.textContent) trialFeedbackBoardStatus.textContent = '可粘贴反馈 JSON 导入问题池。';
+    }
+    async function copyTrialFeedbackRevisionSuggestion(){
+      const text = trialFeedbackRevisionSuggestionLogText();
+      await navigator.clipboard.writeText(text);
+      if (copyTrialFeedbackRevisionSuggestionButton) {
+        copyTrialFeedbackRevisionSuggestionButton.textContent = '已复制修订建议';
+        copyTrialFeedbackRevisionSuggestionButton.classList.add('copied');
+      }
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = '已复制具体修订建议。';
+      return text;
     }
     async function copyTrialFeedbackNextVersionPlan(){
       const text = trialFeedbackNextVersionPlanLogText();
@@ -7679,6 +7894,7 @@
         trial_feedback_records: trialFeedbackRecords(),
         trial_feedback_batches: trialFeedbackBatchRecords(),
         trial_feedback_next_version_plans: trialFeedbackNextVersionPlanRecords(),
+        trial_feedback_revision_suggestions: trialFeedbackRevisionSuggestionRecords(),
         project_publish_archive_receipt: projectPublishArchiveReceiptPayload()
       };
     }
@@ -7728,13 +7944,14 @@
         trial_feedback_records: projectWorkbenchStateRecords(source, 'trial_feedback_records', 'trialFeedbackRecords').length,
         trial_feedback_batches: projectWorkbenchStateRecords(source, 'trial_feedback_batches', 'trialFeedbackBatches').length,
         trial_feedback_next_version_plans: projectWorkbenchStateRecords(source, 'trial_feedback_next_version_plans', 'trialFeedbackNextVersionPlans').length,
+        trial_feedback_revision_suggestions: projectWorkbenchStateRecords(source, 'trial_feedback_revision_suggestions', 'trialFeedbackRevisionSuggestions').length,
         project_publish_archive_receipt: source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt ? 1 : 0
       };
     }
     function projectWorkbenchLocalStateSummaryText(summary){
       if (!summary) return '本机暂无可恢复状态。';
       const scheduleText = summary.schedule_start || '未设置';
-      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
+      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，修订建议 ${summary.trial_feedback_revision_suggestions}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
     }
     function projectWorkbenchCurrentStateSummary(){
       return projectWorkbenchStateSummary(projectWorkbenchStatePayload());
@@ -7758,6 +7975,7 @@
         ['trial_feedback_records', '试用反馈'],
         ['trial_feedback_batches', '反馈批次'],
         ['trial_feedback_next_version_plans', '改动清单'],
+        ['trial_feedback_revision_suggestions', '修订建议'],
         ['project_publish_archive_receipt', '归档回执']
       ];
       if (!incoming) return {current, incoming: null, schedule_changed: false, count_changes: [], has_changes: false};
@@ -8083,7 +8301,7 @@
     }
     function applyProjectWorkbenchState(payload){
       const source = projectWorkbenchStateSource(payload);
-      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, project_publish_archive_receipt: 0};
+      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, project_publish_archive_receipt: 0};
       imported.schedule = applyProjectWorkbenchSchedule(source?.schedule);
       state.publishReadyEdits = {};
       state.publishExecutionUpdates = {};
@@ -8097,6 +8315,7 @@
       state.trialFeedbackRecords = [];
       state.trialFeedbackBatches = [];
       state.trialFeedbackNextVersionPlans = [];
+      state.trialFeedbackRevisionSuggestions = [];
       state.projectPublishArchiveReceipt = null;
       imported.publish_ready_edits = applyPublishReadyEdits(projectWorkbenchStateRecords(source, 'publish_ready_edits', 'publishReadyEdits'));
       imported.publish_execution_updates = applyPublishExecutionUpdates(projectWorkbenchStateRecords(source, 'publish_execution_updates', 'publishExecutionUpdates'));
@@ -8109,6 +8328,7 @@
       imported.trial_feedback_records = applyTrialFeedbackRecords(projectWorkbenchStateRecords(source, 'trial_feedback_records', 'trialFeedbackRecords'), {replace: true}).total;
       imported.trial_feedback_batches = applyTrialFeedbackBatches(projectWorkbenchStateRecords(source, 'trial_feedback_batches', 'trialFeedbackBatches'), {replace: true}).total;
       imported.trial_feedback_next_version_plans = applyTrialFeedbackNextVersionPlans(projectWorkbenchStateRecords(source, 'trial_feedback_next_version_plans', 'trialFeedbackNextVersionPlans'), {replace: true}).total;
+      imported.trial_feedback_revision_suggestions = applyTrialFeedbackRevisionSuggestions(projectWorkbenchStateRecords(source, 'trial_feedback_revision_suggestions', 'trialFeedbackRevisionSuggestions'), {replace: true}).total;
       imported.project_publish_archive_receipt = applyProjectPublishArchiveReceipt(source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt || null);
       return imported;
     }
@@ -8122,7 +8342,7 @@
       return applyProjectWorkbenchState(payload);
     }
     function projectWorkbenchStateImportSummary(imported, options){
-      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
+      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，修订建议 ${imported.trial_feedback_revision_suggestions || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
       return options?.protected_import ? `${summary} 已自动备份导入前状态，可从覆盖前备份或状态历史恢复。` : summary;
     }
     function projectWorkbenchStateImportFailureMessage(){
@@ -9658,6 +9878,8 @@
     copyTrialFeedbackBatchLogButton.addEventListener('click', copyTrialFeedbackBatchLog);
     createTrialFeedbackNextVersionPlanButton.addEventListener('click', () => createTrialFeedbackNextVersionPlan());
     copyTrialFeedbackNextVersionPlanButton.addEventListener('click', copyTrialFeedbackNextVersionPlan);
+    createTrialFeedbackRevisionSuggestionButton.addEventListener('click', () => createTrialFeedbackRevisionSuggestion());
+    copyTrialFeedbackRevisionSuggestionButton.addEventListener('click', copyTrialFeedbackRevisionSuggestion);
     trialFeedbackStatusFilter.addEventListener('change', () => setTrialFeedbackStatusFilter(trialFeedbackStatusFilter.value));
     trialFeedbackBoardList.addEventListener('click', event => {
       const button = event.target?.closest?.('[data-trial-feedback-status-id]');

@@ -154,22 +154,25 @@
     .trial-feedback-board-actions button.copied{background:var(--success);border-color:var(--success);color:#fff}
     .trial-feedback-board-results{display:grid;gap:8px;min-width:0}
     .trial-feedback-board-list{display:grid;gap:8px;max-height:238px;overflow:auto;min-width:0}
-    .trial-feedback-batch-list,.trial-feedback-next-version-plan-list,.trial-feedback-revision-suggestion-list,.trial-feedback-draft-candidate-list,.trial-feedback-application-package-list{display:grid;gap:6px;min-width:0}
-    .trial-feedback-batch-item,.trial-feedback-next-version-plan-item,.trial-feedback-revision-suggestion-item,.trial-feedback-draft-candidate-item,.trial-feedback-application-package-item{display:grid;gap:4px;padding:8px;border:1px solid rgba(15,118,110,.18);background:#f0fdfa;border-radius:8px;min-width:0}
+    .trial-feedback-batch-list,.trial-feedback-next-version-plan-list,.trial-feedback-revision-suggestion-list,.trial-feedback-draft-candidate-list,.trial-feedback-application-package-list,.trial-feedback-application-result-list{display:grid;gap:6px;min-width:0}
+    .trial-feedback-batch-item,.trial-feedback-next-version-plan-item,.trial-feedback-revision-suggestion-item,.trial-feedback-draft-candidate-item,.trial-feedback-application-package-item,.trial-feedback-application-result-item{display:grid;gap:4px;padding:8px;border:1px solid rgba(15,118,110,.18);background:#f0fdfa;border-radius:8px;min-width:0}
     .trial-feedback-next-version-plan-item{border-color:rgba(126,34,206,.18);background:#faf5ff}
     .trial-feedback-revision-suggestion-item{border-color:rgba(180,83,9,.18);background:#fffbeb}
     .trial-feedback-draft-candidate-item{border-color:rgba(14,116,144,.18);background:#ecfeff}
     .trial-feedback-application-package-item{border-color:rgba(21,128,61,.18);background:#f0fdf4}
-    .trial-feedback-batch-item strong,.trial-feedback-next-version-plan-item strong,.trial-feedback-revision-suggestion-item strong,.trial-feedback-draft-candidate-item strong,.trial-feedback-application-package-item strong{font-size:12px;line-height:1.35;color:#0f4f48;word-break:break-word}
+    .trial-feedback-application-result-item{border-color:rgba(37,99,235,.18);background:#eff6ff}
+    .trial-feedback-batch-item strong,.trial-feedback-next-version-plan-item strong,.trial-feedback-revision-suggestion-item strong,.trial-feedback-draft-candidate-item strong,.trial-feedback-application-package-item strong,.trial-feedback-application-result-item strong{font-size:12px;line-height:1.35;color:#0f4f48;word-break:break-word}
     .trial-feedback-next-version-plan-item strong{color:#5b21b6}
     .trial-feedback-revision-suggestion-item strong{color:#92400e}
     .trial-feedback-draft-candidate-item strong{color:#155e75}
     .trial-feedback-application-package-item strong{color:#166534}
-    .trial-feedback-batch-item p,.trial-feedback-next-version-plan-item p,.trial-feedback-revision-suggestion-item p,.trial-feedback-draft-candidate-item p,.trial-feedback-application-package-item p{margin:0;color:#42625d;font-size:11px;line-height:1.45;word-break:break-word}
+    .trial-feedback-application-result-item strong{color:#1d4ed8}
+    .trial-feedback-batch-item p,.trial-feedback-next-version-plan-item p,.trial-feedback-revision-suggestion-item p,.trial-feedback-draft-candidate-item p,.trial-feedback-application-package-item p,.trial-feedback-application-result-item p{margin:0;color:#42625d;font-size:11px;line-height:1.45;word-break:break-word}
     .trial-feedback-next-version-plan-item p{color:#665179}
     .trial-feedback-revision-suggestion-item p{color:#75501f}
     .trial-feedback-draft-candidate-item p{color:#245563}
     .trial-feedback-application-package-item p{color:#24623a}
+    .trial-feedback-application-result-item p{color:#254b82}
     .trial-feedback-board-item{display:grid;gap:5px;padding:9px;border:1px solid var(--line);background:#fff;border-radius:8px;min-width:0}
     .trial-feedback-board-item strong{font-size:13px;line-height:1.35;color:var(--ink);word-break:break-word}
     .trial-feedback-board-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.45;word-break:break-word}
@@ -750,6 +753,8 @@
               <button type="button" id="copy-trial-feedback-draft-candidate-button">复制候选草案</button>
               <button type="button" id="create-trial-feedback-application-package-button">生成应用清单</button>
               <button type="button" id="copy-trial-feedback-application-package-button">复制应用清单</button>
+              <button type="button" id="apply-trial-feedback-application-package-button">应用到发布编辑</button>
+              <button type="button" id="copy-trial-feedback-application-result-button">复制应用结果</button>
             </div>
             <div class="trial-feedback-board-filter"><label for="trial-feedback-status-filter">状态筛选</label><select id="trial-feedback-status-filter"><option value="all">全部状态</option><option value="待处理">待处理</option><option value="处理中">处理中</option><option value="已处理">已处理</option><option value="暂缓">暂缓</option></select></div>
             <div class="trial-feedback-board-filter"><label for="trial-feedback-batch-note">处理批次备注</label><input id="trial-feedback-batch-note" type="text" placeholder="例：2026-07-13 第1轮试用反馈处理"></div>
@@ -759,7 +764,7 @@
             <div class="trial-feedback-board-filter"><label for="trial-feedback-application-package-note">应用清单备注</label><input id="trial-feedback-application-package-note" type="text" placeholder="例：确认后再进入发布版"></div>
             <p id="trial-feedback-board-status" class="trial-feedback-board-status" aria-live="polite"></p>
           </div>
-          <div class="trial-feedback-board-results"><div id="trial-feedback-application-package-list" class="trial-feedback-application-package-list"></div><div id="trial-feedback-draft-candidate-list" class="trial-feedback-draft-candidate-list"></div><div id="trial-feedback-revision-suggestion-list" class="trial-feedback-revision-suggestion-list"></div><div id="trial-feedback-next-version-plan-list" class="trial-feedback-next-version-plan-list"></div><div id="trial-feedback-batch-list" class="trial-feedback-batch-list"></div><div id="trial-feedback-board-list" class="trial-feedback-board-list"></div></div>
+          <div class="trial-feedback-board-results"><div id="trial-feedback-application-result-list" class="trial-feedback-application-result-list"></div><div id="trial-feedback-application-package-list" class="trial-feedback-application-package-list"></div><div id="trial-feedback-draft-candidate-list" class="trial-feedback-draft-candidate-list"></div><div id="trial-feedback-revision-suggestion-list" class="trial-feedback-revision-suggestion-list"></div><div id="trial-feedback-next-version-plan-list" class="trial-feedback-next-version-plan-list"></div><div id="trial-feedback-batch-list" class="trial-feedback-batch-list"></div><div id="trial-feedback-board-list" class="trial-feedback-board-list"></div></div>
         </section>
         <section id="product-quick-start" class="product-quick-start" aria-label="工作台快捷入口">
           <div class="product-quick-start-head">
@@ -874,7 +879,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackApplicationResults: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -918,6 +923,8 @@
     const copyTrialFeedbackDraftCandidateButton = document.getElementById('copy-trial-feedback-draft-candidate-button');
     const createTrialFeedbackApplicationPackageButton = document.getElementById('create-trial-feedback-application-package-button');
     const copyTrialFeedbackApplicationPackageButton = document.getElementById('copy-trial-feedback-application-package-button');
+    const applyTrialFeedbackApplicationPackageButton = document.getElementById('apply-trial-feedback-application-package-button');
+    const copyTrialFeedbackApplicationResultButton = document.getElementById('copy-trial-feedback-application-result-button');
     const trialFeedbackStatusFilter = document.getElementById('trial-feedback-status-filter');
     const trialFeedbackBatchNote = document.getElementById('trial-feedback-batch-note');
     const trialFeedbackNextVersionNote = document.getElementById('trial-feedback-next-version-note');
@@ -932,6 +939,7 @@
     const trialFeedbackRevisionSuggestionList = document.getElementById('trial-feedback-revision-suggestion-list');
     const trialFeedbackDraftCandidateList = document.getElementById('trial-feedback-draft-candidate-list');
     const trialFeedbackApplicationPackageList = document.getElementById('trial-feedback-application-package-list');
+    const trialFeedbackApplicationResultList = document.getElementById('trial-feedback-application-result-list');
     const copyDeliveryNoteButton = document.getElementById('copy-delivery-note-button');
     const deliveryNotePreview = document.getElementById('delivery-note-preview');
     const copyRoutePublishQualityChecklistButton = document.getElementById('copy-route-publish-quality-checklist-button');
@@ -2080,6 +2088,199 @@
       if (!packages.length) return '# 上海攻略生成工作台确认应用清单\n\n暂无确认应用。';
       return packages.slice().reverse().map(trialFeedbackApplicationPackageMarkdown).join('\n\n---\n\n');
     }
+    function trialFeedbackApplicationTargetTabs(item){
+      const target = String(item?.target_area || item?.targetArea || '').trim();
+      if (target === '游客攻略正文' || target === '路线图说明') return ['traveler'];
+      if (target === '平台发布文案') return ['xiaohongshu', 'douyin'];
+      return [];
+    }
+    function trialFeedbackApplicationEditMarker(applicationPackage, item, tab){
+      return `trial-feedback-application:${applicationPackage.application_package_id}:${item.feedback_id}:${tab}`;
+    }
+    function trialFeedbackApplicationEditBlock(applicationPackage, route, item, tab){
+      const marker = trialFeedbackApplicationEditMarker(applicationPackage, item, tab);
+      return [`<!-- ${marker} -->`, `## 试用反馈确认应用｜${item.target_area}`, '', `- 来源应用清单：${applicationPackage.title}`, `- 路线：${route.templateName || item.route_name || item.route_id || '未绑定路线'}`, `- 目标频道：${labels[tab] || tab}`, `- 依据反馈：${item.message || '待补充反馈'}`, `- 写入草案：${item.candidate_text || '待补充候选草案'}`, `- 复核提醒：${item.verification_note || '发布前人工复核事实、动线、时间和表达边界。'}`, `- 反馈 ID：${item.feedback_id}`, '<!-- /trial-feedback-application -->'].join('\n');
+    }
+    function normalizeTrialFeedbackApplicationAppliedItem(item){
+      if (!item || typeof item !== 'object') return null;
+      const feedbackId = String(item.feedback_id || item.feedbackId || '').trim();
+      const routeId = String(item.route_id || item.routeId || '').trim();
+      if (!feedbackId || !routeId) return null;
+      const tabs = (Array.isArray(item.tabs) ? item.tabs : []).map(value => String(value || '').trim()).filter(Boolean);
+      return {
+        feedback_id: feedbackId,
+        route_id: routeId,
+        route_name: String(item.route_name || item.routeName || '').trim(),
+        target_area: String(item.target_area || item.targetArea || '').trim(),
+        tabs,
+        edit_count: Number(item.edit_count || item.editCount || tabs.length || 0),
+        message: String(item.message || '').trim(),
+        candidate_text: String(item.candidate_text || item.candidateText || '').trim(),
+      };
+    }
+    function normalizeTrialFeedbackApplicationEditItem(item){
+      if (!item || typeof item !== 'object') return null;
+      const feedbackId = String(item.feedback_id || item.feedbackId || '').trim();
+      const routeId = String(item.route_id || item.routeId || '').trim();
+      const tab = String(item.tab || '').trim();
+      if (!feedbackId || !routeId || !tab) return null;
+      return {
+        feedback_id: feedbackId,
+        route_id: routeId,
+        route_name: String(item.route_name || item.routeName || '').trim(),
+        tab,
+        target_area: String(item.target_area || item.targetArea || '').trim(),
+        marker: String(item.marker || '').trim(),
+      };
+    }
+    function normalizeTrialFeedbackApplicationSkippedItem(item){
+      if (!item || typeof item !== 'object') return null;
+      const feedbackId = String(item.feedback_id || item.feedbackId || '').trim();
+      if (!feedbackId) return null;
+      return {
+        feedback_id: feedbackId,
+        route_id: String(item.route_id || item.routeId || '').trim(),
+        route_name: String(item.route_name || item.routeName || '').trim(),
+        target_area: String(item.target_area || item.targetArea || '').trim(),
+        reason: String(item.reason || '').trim() || '当前目标区不支持自动写入发布编辑。',
+        message: String(item.message || '').trim(),
+      };
+    }
+    function trialFeedbackApplicationResultStableId(result){
+      const seed = [result.title, result.created_at, result.source_application_package_id, (result.applied_items || []).map(item => `${item.feedback_id}:${(item.tabs || []).join(',')}`).join('|')].map(value => String(value || '').trim()).join('|');
+      let hash = 0;
+      for (let index = 0; index < seed.length; index += 1) hash = ((hash << 5) - hash + seed.charCodeAt(index)) | 0;
+      return `trial-feedback-application-result-${Math.abs(hash).toString(36)}`;
+    }
+    function normalizeTrialFeedbackApplicationResultRecord(record){
+      if (!record || typeof record !== 'object') return null;
+      const appliedItems = (Array.isArray(record.applied_items) ? record.applied_items : Array.isArray(record.appliedItems) ? record.appliedItems : []).map(normalizeTrialFeedbackApplicationAppliedItem).filter(Boolean);
+      const editItems = (Array.isArray(record.edit_items) ? record.edit_items : Array.isArray(record.editItems) ? record.editItems : []).map(normalizeTrialFeedbackApplicationEditItem).filter(Boolean);
+      const skippedItems = (Array.isArray(record.skipped_items) ? record.skipped_items : Array.isArray(record.skippedItems) ? record.skippedItems : []).map(normalizeTrialFeedbackApplicationSkippedItem).filter(Boolean);
+      const createdAt = String(record.created_at || record.createdAt || new Date().toISOString()).trim();
+      const result = {
+        application_result_id: String(record.application_result_id || record.applicationResultId || '').trim(),
+        title: String(record.title || record.result_title || record.resultTitle || '发布编辑应用结果').trim() || '发布编辑应用结果',
+        note: String(record.note || record.memo || '').trim(),
+        created_at: createdAt,
+        source_application_package_id: String(record.source_application_package_id || record.sourceApplicationPackageId || '').trim(),
+        source_application_package_title: String(record.source_application_package_title || record.sourceApplicationPackageTitle || '').trim(),
+        applied_count: Number(record.applied_count || record.appliedCount || appliedItems.length || 0),
+        edit_count: Number(record.edit_count || record.editCount || editItems.length || 0),
+        skipped_count: Number(record.skipped_count || record.skippedCount || skippedItems.length || 0),
+        duplicate_count: Number(record.duplicate_count || record.duplicateCount || 0),
+        route_count: Number(record.route_count || record.routeCount || Array.from(new Set(appliedItems.map(item => item.route_id))).length || 0),
+        target_counts: record.target_counts || record.targetCounts || trialFeedbackCountBy(appliedItems, 'target_area'),
+        tab_counts: record.tab_counts || record.tabCounts || trialFeedbackCountBy(editItems, 'tab'),
+        applied_items: appliedItems,
+        edit_items: editItems,
+        skipped_items: skippedItems,
+      };
+      result.application_result_id = result.application_result_id || trialFeedbackApplicationResultStableId(result);
+      if (!Object.keys(result.target_counts || {}).length) result.target_counts = trialFeedbackCountBy(appliedItems, 'target_area');
+      if (!Object.keys(result.tab_counts || {}).length) result.tab_counts = trialFeedbackCountBy(editItems, 'tab');
+      return result.edit_count || result.skipped_count || result.duplicate_count ? result : null;
+    }
+    function trialFeedbackApplicationResultRecords(records){
+      const source = Array.isArray(records) ? records : state.trialFeedbackApplicationResults;
+      const seen = new Set();
+      const normalized = [];
+      source.forEach(record => {
+        const item = normalizeTrialFeedbackApplicationResultRecord(record);
+        if (!item || seen.has(item.application_result_id)) return;
+        seen.add(item.application_result_id);
+        normalized.push(item);
+      });
+      return normalized.sort((left, right) => String(left.created_at || '').localeCompare(String(right.created_at || '')));
+    }
+    function applyTrialFeedbackApplicationResults(records, options){
+      const existing = options?.replace ? [] : trialFeedbackApplicationResultRecords();
+      const byId = new Map(existing.map(record => [record.application_result_id, record]));
+      let imported = 0;
+      let duplicate = 0;
+      trialFeedbackApplicationResultRecords(records).forEach(record => {
+        if (byId.has(record.application_result_id)) { duplicate += 1; return; }
+        byId.set(record.application_result_id, record);
+        imported += 1;
+      });
+      state.trialFeedbackApplicationResults = Array.from(byId.values()).sort((left, right) => String(left.created_at || '').localeCompare(String(right.created_at || '')));
+      return {imported, duplicate, total: state.trialFeedbackApplicationResults.length};
+    }
+    function applyTrialFeedbackApplicationPackageToPublishReady(options){
+      const packages = trialFeedbackApplicationPackageRecords();
+      const sourcePackage = normalizeTrialFeedbackApplicationPackageRecord(options?.application_package || options?.applicationPackage || packages[packages.length - 1]);
+      if (!sourcePackage) return {ok: false, message: '请先生成确认应用清单，再应用到发布编辑区。'};
+      const createdAt = new Date().toISOString();
+      const title = String(options?.title || '').trim() || `发布编辑应用结果 ${trialFeedbackApplicationResultRecords().length + 1}`;
+      const note = String(options?.note || '').trim();
+      const appliedItems = [];
+      const editItems = [];
+      const skippedItems = [];
+      let duplicateCount = 0;
+      sourcePackage.route_applications.forEach(routeApplication => {
+        const route = routes.find(item => item.tripId === routeApplication.route_id);
+        routeApplication.applications.forEach(application => {
+          const tabs = trialFeedbackApplicationTargetTabs(application).filter(tab => publishReadyEditableTabs().includes(tab));
+          if (!route || !tabs.length) {
+            skippedItems.push({feedback_id: application.feedback_id, route_id: routeApplication.route_id, route_name: routeApplication.route_name, target_area: application.target_area, message: application.message, reason: !route ? '未找到可写入的路线。' : `跳过${application.target_area || '当前目标区'}，当前目标区不支持自动写入发布编辑。`});
+            return;
+          }
+          const writtenTabs = [];
+          tabs.forEach(tab => {
+            const marker = trialFeedbackApplicationEditMarker(sourcePackage, application, tab);
+            const current = publishReadyContentText(route, tab);
+            if (current.includes(marker)) { duplicateCount += 1; return; }
+            const block = trialFeedbackApplicationEditBlock(sourcePackage, route, application, tab);
+            const nextContent = `${String(current || '').trimEnd()}\n\n${block}`.trimStart();
+            if (!setPublishReadyEdit(route.tripId, tab, nextContent)) {
+              skippedItems.push({feedback_id: application.feedback_id, route_id: route.tripId, route_name: route.templateName || routeApplication.route_name, target_area: application.target_area, message: application.message, reason: `无法写入 ${labels[tab] || tab} 发布编辑。`});
+              return;
+            }
+            writtenTabs.push(tab);
+            editItems.push({feedback_id: application.feedback_id, route_id: route.tripId, route_name: route.templateName || routeApplication.route_name, tab, target_area: application.target_area, marker});
+          });
+          if (writtenTabs.length) appliedItems.push({feedback_id: application.feedback_id, route_id: route.tripId, route_name: route.templateName || routeApplication.route_name, target_area: application.target_area, tabs: writtenTabs, edit_count: writtenTabs.length, message: application.message, candidate_text: application.candidate_text});
+        });
+      });
+      const result = normalizeTrialFeedbackApplicationResultRecord({
+        application_result_id: `trial-feedback-application-result-${createdAt.replace(/[^0-9A-Za-z]/g, '')}`,
+        title,
+        note,
+        created_at: createdAt,
+        source_application_package_id: sourcePackage.application_package_id,
+        source_application_package_title: sourcePackage.title,
+        applied_count: appliedItems.length,
+        edit_count: editItems.length,
+        skipped_count: skippedItems.length,
+        duplicate_count: duplicateCount,
+        route_count: Array.from(new Set(appliedItems.map(item => item.route_id))).length,
+        target_counts: trialFeedbackCountBy(appliedItems, 'target_area'),
+        tab_counts: trialFeedbackCountBy(editItems, 'tab'),
+        applied_items: appliedItems,
+        edit_items: editItems,
+        skipped_items: skippedItems,
+      });
+      if (!result) return {ok: false, message: '没有可写入发布编辑区的应用项。'};
+      applyTrialFeedbackApplicationResults([result]);
+      renderTrialFeedbackApplicationResults();
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = `已应用到发布编辑：写入 ${result.edit_count} 条，跳过 ${result.skipped_count} 条。`;
+      return {ok: true, application_result: result};
+    }
+    function trialFeedbackApplicationResultMarkdown(result){
+      const item = normalizeTrialFeedbackApplicationResultRecord(result);
+      if (!item) return '# 发布编辑应用结果\n\n暂无应用结果。';
+      const tabText = ['traveler', 'xiaohongshu', 'douyin'].filter(key => item.tab_counts?.[key]).map(key => `${labels[key] || key} ${item.tab_counts[key]}`).join('，') || '暂无写入频道';
+      const targetText = ['游客攻略正文', '路线图说明', '平台发布文案', '工作台待办'].filter(key => item.target_counts?.[key]).map(key => `${key} ${item.target_counts[key]}`).join('，') || '暂无目标统计';
+      const appliedLines = item.applied_items.length ? item.applied_items.map(entry => `- 写入发布编辑｜${entry.route_name || entry.route_id}｜${entry.target_area}｜频道：${entry.tabs.map(tab => labels[tab] || tab).join('、')}｜反馈：${entry.message}｜ID：${entry.feedback_id}`) : ['- 暂无写入项。'];
+      const skippedLines = item.skipped_items.length ? item.skipped_items.map(entry => `- 跳过${entry.target_area || '应用项'}｜${entry.route_name || entry.route_id || '未绑定路线'}｜原因：${entry.reason}｜反馈：${entry.message}｜ID：${entry.feedback_id}`) : ['- 暂无跳过项。'];
+      const noteText = item.note ? [`- 备注：${item.note}`] : [];
+      return [`# ${item.title}`, '', `- 应用结果 ID：${item.application_result_id}`, `- 创建时间：${item.created_at}`, `- 来源确认应用清单：${item.source_application_package_title || item.source_application_package_id || '未绑定'}`, `- 写入应用项：${item.applied_count}`, `- 写入发布编辑：${item.edit_count}`, `- 跳过：${item.skipped_count}`, `- 重复跳过：${item.duplicate_count}`, `- 涉及路线：${item.route_count}`, `- 写入频道：${tabText}`, `- 目标统计：${targetText}`, ...noteText, '', '## 写入发布编辑', ...appliedLines, '', '## 跳过项', ...skippedLines, '', '## 使用边界', '- 本结果只是把确认应用清单追加到发布编辑草稿，不会自动发布。', '- 发布前仍需人工复核官方开放、预约、票务、交通、临时闭馆和平台表达。'].join('\n');
+    }
+    function trialFeedbackApplicationResultLogText(){
+      const results = trialFeedbackApplicationResultRecords();
+      if (!results.length) return '# 上海攻略生成工作台发布编辑应用结果\n\n暂无应用结果。';
+      return results.slice().reverse().map(trialFeedbackApplicationResultMarkdown).join('\n\n---\n\n');
+    }
     function trialFeedbackPayloadRecords(payload){
       if (Array.isArray(payload)) return payload;
       const source = projectWorkbenchStateSource(payload);
@@ -2239,6 +2440,14 @@
         return `<article class="trial-feedback-application-package-item"><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.created_at)}｜${escapeHtml(item.route_count)} 条路线｜${escapeHtml(item.application_count)} 条应用</p><p>${escapeHtml(targetText)}｜${escapeHtml(item.note || '无备注')}</p></article>`;
       }).join('') : '<p class="trial-feedback-board-empty">暂无确认应用清单。</p>';
     }
+    function renderTrialFeedbackApplicationResults(){
+      if (!trialFeedbackApplicationResultList) return;
+      const results = trialFeedbackApplicationResultRecords().slice().reverse();
+      trialFeedbackApplicationResultList.innerHTML = results.length ? results.map(item => {
+        const tabText = ['traveler', 'xiaohongshu', 'douyin'].filter(key => item.tab_counts?.[key]).map(key => `${labels[key] || key} ${item.tab_counts[key]}`).join('，') || '暂无写入频道';
+        return `<article class="trial-feedback-application-result-item"><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.created_at)}｜${escapeHtml(item.route_count)} 条路线｜${escapeHtml(item.edit_count)} 条写入｜跳过 ${escapeHtml(item.skipped_count)}</p><p>${escapeHtml(tabText)}｜${escapeHtml(item.note || '无备注')}</p></article>`;
+      }).join('') : '<p class="trial-feedback-board-empty">暂无发布编辑应用结果。</p>';
+    }
     function renderTrialFeedbackBoard(){
       const summary = trialFeedbackBoardSummary();
       if (trialFeedbackStatusFilter) trialFeedbackStatusFilter.value = trialFeedbackActiveStatusFilter();
@@ -2267,6 +2476,7 @@
           return `<article class="trial-feedback-board-item"><div class="trial-feedback-board-item-meta"><span>${escapeHtml(record.severity_label)}</span><span>${escapeHtml(record.category_label)}</span><span>${escapeHtml(record.status)}</span></div><strong>${escapeHtml(record.route_name || record.route_id || '未绑定路线')}</strong><p>${escapeHtml(record.message)}</p><p>${escapeHtml(record.contact || '未留联系方式')}｜${escapeHtml(record.created_at || '')}${escapeHtml(updatedText)}</p><div class="trial-feedback-status-actions">${statusActions}</div></article>`;
         }).join('') : `<p class="trial-feedback-board-empty">${escapeHtml(emptyText)}</p>`;
       }
+      renderTrialFeedbackApplicationResults();
       renderTrialFeedbackApplicationPackages();
       renderTrialFeedbackDraftCandidates();
       renderTrialFeedbackRevisionSuggestions();
@@ -2282,6 +2492,16 @@
         copyTrialFeedbackApplicationPackageButton.classList.add('copied');
       }
       if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = '已复制确认应用清单。';
+      return text;
+    }
+    async function copyTrialFeedbackApplicationResult(){
+      const text = trialFeedbackApplicationResultLogText();
+      await navigator.clipboard.writeText(text);
+      if (copyTrialFeedbackApplicationResultButton) {
+        copyTrialFeedbackApplicationResultButton.textContent = '已复制应用结果';
+        copyTrialFeedbackApplicationResultButton.classList.add('copied');
+      }
+      if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = '已复制发布编辑应用结果。';
       return text;
     }
     async function copyTrialFeedbackDraftCandidate(){
@@ -8208,7 +8428,7 @@
       return `${route.tripId}:${tab}`;
     }
     function publishReadyEditableTabs(){
-      return ['xiaohongshu', 'douyin'];
+      return ['traveler', 'xiaohongshu', 'douyin'];
     }
     function publishReadyBaseContentText(route, tab){
       return publishReadyText(contentWithPreferenceRewrite(route, tab, routeContentText(route, tab), true), tab);
@@ -8291,6 +8511,7 @@
         trial_feedback_revision_suggestions: trialFeedbackRevisionSuggestionRecords(),
         trial_feedback_draft_candidates: trialFeedbackDraftCandidateRecords(),
         trial_feedback_application_packages: trialFeedbackApplicationPackageRecords(),
+        trial_feedback_application_results: trialFeedbackApplicationResultRecords(),
         project_publish_archive_receipt: projectPublishArchiveReceiptPayload()
       };
     }
@@ -8343,13 +8564,14 @@
         trial_feedback_revision_suggestions: projectWorkbenchStateRecords(source, 'trial_feedback_revision_suggestions', 'trialFeedbackRevisionSuggestions').length,
         trial_feedback_draft_candidates: projectWorkbenchStateRecords(source, 'trial_feedback_draft_candidates', 'trialFeedbackDraftCandidates').length,
         trial_feedback_application_packages: projectWorkbenchStateRecords(source, 'trial_feedback_application_packages', 'trialFeedbackApplicationPackages').length,
+        trial_feedback_application_results: projectWorkbenchStateRecords(source, 'trial_feedback_application_results', 'trialFeedbackApplicationResults').length,
         project_publish_archive_receipt: source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt ? 1 : 0
       };
     }
     function projectWorkbenchLocalStateSummaryText(summary){
       if (!summary) return '本机暂无可恢复状态。';
       const scheduleText = summary.schedule_start || '未设置';
-      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，修订建议 ${summary.trial_feedback_revision_suggestions}，候选草案 ${summary.trial_feedback_draft_candidates}，应用清单 ${summary.trial_feedback_application_packages}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
+      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，修订建议 ${summary.trial_feedback_revision_suggestions}，候选草案 ${summary.trial_feedback_draft_candidates}，应用清单 ${summary.trial_feedback_application_packages}，应用结果 ${summary.trial_feedback_application_results}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
     }
     function projectWorkbenchCurrentStateSummary(){
       return projectWorkbenchStateSummary(projectWorkbenchStatePayload());
@@ -8376,6 +8598,7 @@
         ['trial_feedback_revision_suggestions', '修订建议'],
         ['trial_feedback_draft_candidates', '候选草案'],
         ['trial_feedback_application_packages', '应用清单'],
+        ['trial_feedback_application_results', '应用结果'],
         ['project_publish_archive_receipt', '归档回执']
       ];
       if (!incoming) return {current, incoming: null, schedule_changed: false, count_changes: [], has_changes: false};
@@ -8701,7 +8924,7 @@
     }
     function applyProjectWorkbenchState(payload){
       const source = projectWorkbenchStateSource(payload);
-      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, project_publish_archive_receipt: 0};
+      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, trial_feedback_application_results: 0, project_publish_archive_receipt: 0};
       imported.schedule = applyProjectWorkbenchSchedule(source?.schedule);
       state.publishReadyEdits = {};
       state.publishExecutionUpdates = {};
@@ -8718,6 +8941,7 @@
       state.trialFeedbackRevisionSuggestions = [];
       state.trialFeedbackDraftCandidates = [];
       state.trialFeedbackApplicationPackages = [];
+      state.trialFeedbackApplicationResults = [];
       state.projectPublishArchiveReceipt = null;
       imported.publish_ready_edits = applyPublishReadyEdits(projectWorkbenchStateRecords(source, 'publish_ready_edits', 'publishReadyEdits'));
       imported.publish_execution_updates = applyPublishExecutionUpdates(projectWorkbenchStateRecords(source, 'publish_execution_updates', 'publishExecutionUpdates'));
@@ -8733,6 +8957,7 @@
       imported.trial_feedback_revision_suggestions = applyTrialFeedbackRevisionSuggestions(projectWorkbenchStateRecords(source, 'trial_feedback_revision_suggestions', 'trialFeedbackRevisionSuggestions'), {replace: true}).total;
       imported.trial_feedback_draft_candidates = applyTrialFeedbackDraftCandidates(projectWorkbenchStateRecords(source, 'trial_feedback_draft_candidates', 'trialFeedbackDraftCandidates'), {replace: true}).total;
       imported.trial_feedback_application_packages = applyTrialFeedbackApplicationPackages(projectWorkbenchStateRecords(source, 'trial_feedback_application_packages', 'trialFeedbackApplicationPackages'), {replace: true}).total;
+      imported.trial_feedback_application_results = applyTrialFeedbackApplicationResults(projectWorkbenchStateRecords(source, 'trial_feedback_application_results', 'trialFeedbackApplicationResults'), {replace: true}).total;
       imported.project_publish_archive_receipt = applyProjectPublishArchiveReceipt(source?.project_publish_archive_receipt || source?.projectPublishArchiveReceipt || null);
       return imported;
     }
@@ -8746,7 +8971,7 @@
       return applyProjectWorkbenchState(payload);
     }
     function projectWorkbenchStateImportSummary(imported, options){
-      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，修订建议 ${imported.trial_feedback_revision_suggestions || 0}，候选草案 ${imported.trial_feedback_draft_candidates || 0}，应用清单 ${imported.trial_feedback_application_packages || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
+      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，修订建议 ${imported.trial_feedback_revision_suggestions || 0}，候选草案 ${imported.trial_feedback_draft_candidates || 0}，应用清单 ${imported.trial_feedback_application_packages || 0}，应用结果 ${imported.trial_feedback_application_results || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
       return options?.protected_import ? `${summary} 已自动备份导入前状态，可从覆盖前备份或状态历史恢复。` : summary;
     }
     function projectWorkbenchStateImportFailureMessage(){
@@ -10288,6 +10513,8 @@
     copyTrialFeedbackDraftCandidateButton.addEventListener('click', copyTrialFeedbackDraftCandidate);
     createTrialFeedbackApplicationPackageButton.addEventListener('click', () => createTrialFeedbackApplicationPackage());
     copyTrialFeedbackApplicationPackageButton.addEventListener('click', copyTrialFeedbackApplicationPackage);
+    applyTrialFeedbackApplicationPackageButton.addEventListener('click', () => applyTrialFeedbackApplicationPackageToPublishReady());
+    copyTrialFeedbackApplicationResultButton.addEventListener('click', copyTrialFeedbackApplicationResult);
     trialFeedbackStatusFilter.addEventListener('change', () => setTrialFeedbackStatusFilter(trialFeedbackStatusFilter.value));
     trialFeedbackBoardList.addEventListener('click', event => {
       const button = event.target?.closest?.('[data-trial-feedback-status-id]');

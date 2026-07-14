@@ -22,7 +22,7 @@
 
 ## 发布后检查
 
-- [ ] 首页返回 200，普通工作台 `workbench.html` 返回 200。
+- [ ] 首页返回 200，创作者工作台 `workbench.html` 返回 200。
 - [ ] `maintenance/health-report.json` 返回 200。
 - [ ] `maintenance-report.zip` 返回 200。
 - [ ] `LIVE_DEPLOYMENT.md` 返回 200，且发布时间、仓库地址正确。

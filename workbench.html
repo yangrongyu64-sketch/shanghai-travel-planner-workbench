@@ -2804,6 +2804,7 @@
       if (trialFeedbackBoardStatus) trialFeedbackBoardStatus.textContent = '已复制试用反馈更新日志。';
       return text;
     }
+    const WORKBENCH_ROUTE_PARAM_TABS = ['traveler', 'map', 'route_compare'];
     const WORKBENCH_TRAVELER_TABS = ['traveler', 'map', 'route_compare'];
     function normalizeWorkbenchAudienceMode(mode){
       return mode === 'creator' ? 'creator' : 'traveler';
@@ -8612,6 +8613,24 @@
         return /(?:^\?|&)demo=(1|true|yes|publish)(?:&|$)/i.test(search);
       }
     }
+    function applyInitialWorkbenchRouteParams(){
+      const search = projectWorkbenchLocationSearch();
+      if (!search) return null;
+      try {
+        const params = new URLSearchParams(search);
+        const routeId = String(params.get('route') || params.get('routeId') || '').trim();
+        const tab = String(params.get('tab') || '').trim();
+        const route = routes.find(item => item.tripId === routeId);
+        if (!route) return null;
+        state.selectedId = route.tripId;
+        state.tab = WORKBENCH_ROUTE_PARAM_TABS.includes(tab) ? tab : 'traveler';
+        state.filter = 'all';
+        state.query = '';
+        return {routeId: route.tripId, tab: state.tab};
+      } catch (error) {
+        return null;
+      }
+    }
     function applyInitialProjectWorkbenchLocationState(){
       if (!shouldApplyProjectDemoPublishStateFromLocation()) return null;
       const result = applyProjectDemoPublishState();
@@ -10984,6 +11003,7 @@
         copyRefreshCommandButton.textContent = '已选中命令';
       }
     });
+    applyInitialWorkbenchRouteParams();
     applyInitialProjectWorkbenchLocationState();
     render();
   </script>

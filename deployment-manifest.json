@@ -3,7 +3,7 @@
   "package_type": "static_site",
   "default_entry": "index.html",
   "entries": {
-    "demo": "index.html",
+    "traveler_home": "index.html",
     "workbench": "workbench.html",
     "place_catalog": "place_catalog.html"
   },
@@ -48,9 +48,9 @@
     "静态文件服务器"
   ],
   "smoke_checks": [
-    "根路径打开后显示上海攻略生成工作台",
-    "演示版自动填充发布工作台",
-    "普通工作台入口 workbench.html 可访问",
+    "根路径打开后显示上海旅行路线游客首页",
+    "游客首页可筛选路线并打开攻略或地图",
+    "创作者工作台入口 workbench.html 可访问",
     "点位库 place_catalog.html 可访问",
     "离线演示包 workbench-demo.zip 可下载",
     "平台素材刷新包 platform-refresh.zip 可下载",

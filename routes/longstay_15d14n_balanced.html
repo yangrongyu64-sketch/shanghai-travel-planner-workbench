@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../app-icon.svg">
+  <title>上海15天14晚长住慢旅行版｜上海旅行路线</title>
+  <style>
+    :root{--bg:#f7f5f1;--surface:#fffdfa;--ink:#252525;--muted:#68635b;--line:#ddd5c8;--accent:#0f766e;--blue:#2457a6;--brick:#9f3d2e;--gold:#8a6a17}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.5}
+    a{color:var(--blue);text-decoration:none}
+    button{font:inherit;cursor:pointer}
+    button:focus-visible,a:focus-visible{outline:3px solid rgba(15,118,110,.28);outline-offset:2px}
+    .route-guide-shell{min-height:100vh}
+    .route-guide-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:28px clamp(16px,4vw,44px);background:var(--surface);border-bottom:1px solid var(--line)}
+    .route-guide-kicker{margin:0 0 8px;color:var(--accent);font-size:13px;font-weight:900}
+    .route-guide-hero h1{margin:0;font-size:clamp(28px,4vw,48px);line-height:1.08;letter-spacing:0}
+    .route-guide-hero p{margin:10px 0 0;color:var(--muted);max-width:760px}
+    .route-guide-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-content:start}
+    .route-guide-actions a,.route-guide-actions button{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:850}
+    .route-guide-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .route-guide-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);gap:16px;padding:18px clamp(16px,4vw,44px) 36px}
+    .route-guide-main,.route-guide-side{display:grid;gap:14px;align-content:start}
+    .route-guide-card{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px}
+    .route-guide-card h2{margin:0 0 10px;font-size:20px;letter-spacing:0}
+    .route-guide-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .route-guide-fact{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
+    .route-guide-fact b{display:block;font-size:18px}.route-guide-fact span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+    .route-guide-day{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px}
+    .route-guide-day h2{margin:0 0 12px;font-size:20px}
+    .route-guide-stop{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+    .route-guide-stop:first-of-type{border-top:0}
+    .route-guide-stop-index{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900}
+    .route-guide-stop-body p{margin:0 0 5px;color:var(--muted);font-size:13px}
+    .route-guide-stop-body h3{margin:0 0 6px;font-size:18px}
+    .route-guide-stop dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 0}
+    .route-guide-stop dl div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:9px}
+    .route-guide-stop dt{font-size:12px;color:var(--brick);font-weight:900}.route-guide-stop dd{margin:4px 0 0;color:var(--ink);font-size:13px}
+    .route-guide-map-svg{width:100%;min-height:260px}
+    .route-guide-map-svg rect{fill:#f4f0e8;stroke:#d6cdbf}
+    .route-guide-map-svg polyline{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .route-guide-map-svg circle{fill:#fff;stroke:var(--brick);stroke-width:1.8}.route-guide-map-svg text{font-size:5.7px;font-weight:900;fill:#332b22}
+    .route-guide-map-empty{display:grid;place-items:center;min-height:240px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
+    .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
+    .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
+    @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts{grid-template-columns:1fr 1fr}.route-guide-stop dl{grid-template-columns:1fr}}
+    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-facts{grid-template-columns:1fr}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
+  </style>
+</head>
+<body>
+<main id="traveler-route-guide" class="route-guide-shell">
+  <header class="route-guide-hero">
+    <div>
+      <p class="route-guide-kicker">15日长住 / 生活感</p>
+      <h1>上海15天14晚长住慢旅行版</h1>
+      <p>适合长住、慢旅行和深度体验。这页适合直接收藏、转发和出发当天查看。</p>
+    </div>
+    <nav class="route-guide-actions" aria-label="路线操作">
+      <a class="primary" href="../index.html">返回路线首页</a>
+      <a href="../place_catalog.html">看点位库</a>
+      <a href="../workbench.html?route=longstay_15d14n_balanced&amp;tab=map">打开完整工作台地图</a>
+      <a href="../workbench.html?route=longstay_15d14n_balanced&amp;tab=traveler">打开工作台攻略</a>
+      <button type="button" id="copy-route-guide-button">复制攻略</button>
+    </nav>
+  </header>
+  <section class="route-guide-layout">
+    <div class="route-guide-main">
+      <section class="route-guide-card">
+        <h2>适合谁</h2>
+        <div class="route-guide-facts">
+          <div class="route-guide-fact"><b>15天</b><span>行程天数</span></div>
+          <div class="route-guide-fact"><b>balanced</b><span>玩法强度</span></div>
+          <div class="route-guide-fact"><b>92</b><span>路线分</span></div>
+          <div class="route-guide-fact"><b>静安寺 / 南京西路</b><span>建议住宿区</span></div>
+        </div>
+      </section>
+      <section class="route-guide-card">
+        <h2>行程安排</h2>
+        <p>15天长住慢旅行</p>
+      </section>
+<section class="route-guide-day">
+  <h2>Day 1 抵达和生活半径建立：静安、南京西路</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>静安寺</h3>
+    <p>jing_an / Jing&#x27;an Temple</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Jing&#x27;an Temple。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚</p>
+    <h3>南京西路</h3>
+    <p>jing_an / West Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：West Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>雨天备选</p>
+    <h3>上海自然博物馆</h3>
+    <p>jing_an / Shanghai Natural History Museum</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>150 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>亲子客流明显，票务和开放信息出发前需要官网确认。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 2 衡复生活感：武康路、安福路、思南公馆</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>武康路</h3>
+    <p>hengfu / Shanghai Library</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>周末热门拍照点人多，不要只挤在武康大楼门口。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>中午</p>
+    <h3>安福路</h3>
+    <p>hengfu / Changshu Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合生活方式内容，不适合只想看大地标的游客。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>思南公馆</h3>
+    <p>huaihai / Xintiandi</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合与复兴公园、新天地串联，不适合只拍一张照离开。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">4</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚</p>
+    <h3>复兴公园</h3>
+    <p>hengfu / Xintiandi</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。</dd></div>
+      <div><dt>避坑提醒</dt><dd>更适合作为路线中的休息点，不建议单独为它跨城前往。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 3 经典第一眼：人民广场、南京东路、外滩</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>人民广场</h3>
+    <p>peoples_square / People&#x27;s Square</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People&#x27;s Square。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>大型换乘站，尽量避开早晚高峰。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>南京东路</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍第一眼识别度强的全景，再补一张人物或路口尺度。</dd></div>
+      <div><dt>避坑提醒</dt><dd>周末和节假日人流很大。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚</p>
+    <h3>外滩</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>夜景价值高，但晚间人流压力也高。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 4 文化雨天锚点：上海博物馆和城市历史</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>上海博物馆</h3>
+    <p>peoples_square / People&#x27;s Square</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People&#x27;s Square。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>预约方式和开放时间出发前必须以官网为准。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>上海市历史博物馆</h3>
+    <p>peoples_square / People&#x27;s Square</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People&#x27;s Square。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合作为上海历史背景补充，开放信息需出发前确认。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>下午备选</p>
+    <h3>上海城市规划展示馆</h3>
+    <p>peoples_square / People&#x27;s Square</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People&#x27;s Square。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合城市规划兴趣人群，不适合只想拍照打卡的人。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 5 老城厢和建筑：豫园、外滩源</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>豫园 / 老城厢</h3>
+    <p>old_city / Yuyuan Garden</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Yuyuan Garden。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>游客密度较高，门票和开放信息出发前需要再次确认。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>外滩源</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>下午备选</p>
+    <h3>外滩美术馆</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>展览体量不大，适合和外滩源组合，不适合单独占半天。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 6 降速日：补给、自然博物馆和南京西路</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>南京西路</h3>
+    <p>jing_an / West Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：West Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>上海自然博物馆</h3>
+    <p>jing_an / Shanghai Natural History Museum</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>150 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>亲子客流明显，票务和开放信息出发前需要官网确认。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚可选</p>
+    <h3>静安寺</h3>
+    <p>jing_an / Jing&#x27;an Temple</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Jing&#x27;an Temple。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 7 西岸艺术和滨江：美术馆、江边、慢走</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>西岸滨江</h3>
+    <p>xuhui_riverside / Longyao Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Longyao Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>户外路段多，夏季暴晒或雨天体验会下降。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>龙美术馆西岸馆</h3>
+    <p>xuhui_riverside / Middle Longhua Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Middle Longhua Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>展览和票务变化大，必须出发前确认。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>下午备选</p>
+    <h3>油罐艺术中心</h3>
+    <p>xuhui_riverside / Longyao Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longyao Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合和西岸一起走，单独跨城前往要看展览质量。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">4</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚</p>
+    <h3>徐汇滨江</h3>
+    <p>xuhui_riverside / Longhua Middle Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longhua Middle Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>户外路段多，雨天或高温天应缩短停留。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 8 苏州河、M50 和北外滩：城市纹理</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>苏州河步道</h3>
+    <p>suzhou_creek / Tiantong Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Tiantong Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合作为串联步行路线，不适合赶场式打卡。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>M50 创意园</h3>
+    <p>suzhou_creek / Jiangning Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Jiangning Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>展览和店铺开放不稳定，适合作为苏州河路线补充。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚</p>
+    <h3>北外滩</h3>
+    <p>hongkou / International Cruise Terminal</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：International Cruise Terminal。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>风大或天气差时体验明显下降，适合作为外滩视角补充。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 9 浦东视角：陆家嘴、世纪公园</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>陆家嘴</h3>
+    <p>lujiazui / Lujiazui</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Lujiazui。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>天际线价值高，但不要强行塞进每一天。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>世纪公园</h3>
+    <p>pudong / Century Park</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Century Park。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>户外为主，夏季和雨天要调整停留时间。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>雨天备选</p>
+    <h3>上海科技馆</h3>
+    <p>pudong / Shanghai Science and Technology Museum</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>180 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Science and Technology Museum。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>场馆开放状态和预约规则变化时，必须以官方信息为准。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 10 杨浦滨江和多伦路：工业、历史、文学</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>杨浦滨江</h3>
+    <p>yangpu / Yangshupu Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Yangshupu Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>更适合复游或深度游，第一次短线不建议优先。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>多伦路文化名人街</h3>
+    <p>hongkou / Dongbaoxing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Dongbaoxing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>更偏文化兴趣点，不适合只追求热门打卡的人。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚备选</p>
+    <h3>北外滩</h3>
+    <p>hongkou / International Cruise Terminal</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：International Cruise Terminal。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>风大或天气差时体验明显下降，适合作为外滩视角补充。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 11 本地生活和公园：徐家汇、龙华</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>徐家汇公园</h3>
+    <p>xujiahui / Xujiahui</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Xujiahui。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合作为街区缓冲点，不建议单独跨城前往。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>龙华寺</h3>
+    <p>xuhui / Longhua</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Longhua。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>更适合文化兴趣路线，不适合硬塞进首次地标打卡。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚备选</p>
+    <h3>徐汇滨江</h3>
+    <p>xuhui_riverside / Longhua Middle Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longhua Middle Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>户外路段多，雨天或高温天应缩短停留。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 12 大公园缓冲：共青森林公园或世纪公园</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>共青森林公园</h3>
+    <p>yangpu / Nenjiang Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>180 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Nenjiang Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>离核心市区较远，更适合 5 天以上或亲子自然主题。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>全天备选</p>
+    <h3>世纪公园</h3>
+    <p>pudong / Century Park</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Century Park。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>户外为主，夏季和雨天要调整停留时间。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>晚上可选</p>
+    <h3>南京西路</h3>
+    <p>jing_an / West Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：West Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 13 远郊选择日：朱家角、七宝或佘山</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>全天主线</p>
+    <h3>朱家角古镇</h3>
+    <p>qingpu / Zhujiajiao</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>240 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Zhujiajiao。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>需要半天到一天，不适合塞进 2-3 天核心上海路线。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>半日备选</p>
+    <h3>七宝老街</h3>
+    <p>minhang / Qibao</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>120 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Qibao。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>游客感较强，适合郊区/古镇兴趣，不适合替代核心上海路线。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>自然备选</p>
+    <h3>佘山</h3>
+    <p>songjiang / Sheshan</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>240 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Sheshan。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>距离市中心较远，适合 5 天以上或郊区自然主题。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 14 创作者复盘日：补拍、补文案、补遗憾</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>安福路</h3>
+    <p>hengfu / Changshu Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Changshu Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合生活方式内容，不适合只想看大地标的游客。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>下午</p>
+    <h3>外滩源</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>傍晚可选</p>
+    <h3>外滩</h3>
+    <p>bund / East Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
+      <div><dt>避坑提醒</dt><dd>夜景价值高，但晚间人流压力也高。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+<section class="route-guide-day">
+  <h2>Day 15 离开日：酒店周边、轻收尾和返程缓冲</h2>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">1</div>
+  <div class="route-guide-stop-body">
+    <p>上午</p>
+    <h3>南京西路</h3>
+    <p>jing_an / West Nanjing Road</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>90 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：West Nanjing Road。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
+      <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">2</div>
+  <div class="route-guide-stop-body">
+    <p>中午可选</p>
+    <h3>人民广场</h3>
+    <p>peoples_square / People&#x27;s Square</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：People&#x27;s Square。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
+      <div><dt>避坑提醒</dt><dd>大型换乘站，尽量避开早晚高峰。</dd></div>
+    </dl>
+  </div>
+</article>
+<article class="route-guide-stop">
+  <div class="route-guide-stop-index">3</div>
+  <div class="route-guide-stop-body">
+    <p>离开前备选</p>
+    <h3>静安寺</h3>
+    <p>jing_an / Jing&#x27;an Temple</p>
+    <dl>
+      <div><dt>停留建议</dt><dd>60 分钟</dd></div>
+      <div><dt>交通判断</dt><dd>跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Jing&#x27;an Temple。</dd></div>
+      <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
+      <div><dt>避坑提醒</dt><dd>周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。</dd></div>
+    </dl>
+  </div>
+</article>
+</section>
+    </div>
+    <aside class="route-guide-side">
+      <section id="route-map" class="route-guide-card">
+        <h2>路线图</h2>
+<svg class="route-guide-map-svg" viewBox="0 0 100 96" role="img" aria-label="路线图">
+          <rect x="1" y="1" width="98" height="94" rx="8"></rect>
+          <polyline points="49.5,35.0 52.7,34.2 55.4,30.4 41.4,50.3 43.5,46.5 52.7,53.4 50.0,56.4 57.6,39.6 65.7,38.0 72.7,39.6 57.6,44.2 59.7,38.0 59.7,40.3 68.4,50.3 69.5,34.2 70.0,30.4 52.7,34.2 55.4,30.4 49.5,35.0 38.1,77.9 39.2,79.4 41.4,82.5 45.7,77.9 62.4,28.1 53.2,22.7 76.5,28.1 81.4,39.6 90.0,64.1 88.9,50.3 85.7,24.3 70.5,22.7 76.5,28.1 39.2,70.2 46.2,84.0 45.7,77.9 86.8,12.0 90.0,64.1 52.7,34.2 10.0,65.6 27.3,76.3 13.2,82.5 43.5,46.5 69.5,34.2 72.7,39.6 52.7,34.2 57.6,39.6 49.5,35.0"></polyline>
+          <circle cx="49.5" cy="35.0" r="3.2"></circle><text x="53.9" y="31.4">1</text>
+          <circle cx="52.7" cy="34.2" r="3.2"></circle><text x="57.1" y="30.6">2</text>
+          <circle cx="55.4" cy="30.4" r="3.2"></circle><text x="59.8" y="26.8">3</text>
+          <circle cx="41.4" cy="50.3" r="3.2"></circle><text x="45.8" y="46.7">4</text>
+          <circle cx="43.5" cy="46.5" r="3.2"></circle><text x="47.9" y="42.9">5</text>
+          <circle cx="52.7" cy="53.4" r="3.2"></circle><text x="57.1" y="49.8">6</text>
+          <circle cx="50.0" cy="56.4" r="3.2"></circle><text x="54.4" y="52.8">7</text>
+          <circle cx="57.6" cy="39.6" r="3.2"></circle><text x="62.0" y="36.0">8</text>
+          <circle cx="65.7" cy="38.0" r="3.2"></circle><text x="70.1" y="34.4">9</text>
+          <circle cx="72.7" cy="39.6" r="3.2"></circle><text x="77.1" y="36.0">10</text>
+          <circle cx="57.6" cy="44.2" r="3.2"></circle><text x="62.0" y="40.6">11</text>
+          <circle cx="59.7" cy="38.0" r="3.2"></circle><text x="64.1" y="34.4">12</text>
+          <circle cx="59.7" cy="40.3" r="3.2"></circle><text x="64.1" y="36.7">13</text>
+          <circle cx="68.4" cy="50.3" r="3.2"></circle><text x="72.8" y="46.7">14</text>
+          <circle cx="69.5" cy="34.2" r="3.2"></circle><text x="73.9" y="30.6">15</text>
+          <circle cx="70.0" cy="30.4" r="3.2"></circle><text x="74.4" y="26.8">16</text>
+          <circle cx="52.7" cy="34.2" r="3.2"></circle><text x="57.1" y="30.6">17</text>
+          <circle cx="55.4" cy="30.4" r="3.2"></circle><text x="59.8" y="26.8">18</text>
+          <circle cx="49.5" cy="35.0" r="3.2"></circle><text x="53.9" y="31.4">19</text>
+          <circle cx="38.1" cy="77.9" r="3.2"></circle><text x="42.5" y="74.3">20</text>
+          <circle cx="39.2" cy="79.4" r="3.2"></circle><text x="43.6" y="75.8">21</text>
+          <circle cx="41.4" cy="82.5" r="3.2"></circle><text x="45.8" y="78.9">22</text>
+          <circle cx="45.7" cy="77.9" r="3.2"></circle><text x="50.1" y="74.3">23</text>
+          <circle cx="62.4" cy="28.1" r="3.2"></circle><text x="66.8" y="24.5">24</text>
+          <circle cx="53.2" cy="22.7" r="3.2"></circle><text x="57.6" y="19.1">25</text>
+          <circle cx="76.5" cy="28.1" r="3.2"></circle><text x="80.9" y="24.5">26</text>
+          <circle cx="81.4" cy="39.6" r="3.2"></circle><text x="85.8" y="36.0">27</text>
+          <circle cx="90.0" cy="64.1" r="3.2"></circle><text x="94.4" y="60.5">28</text>
+          <circle cx="88.9" cy="50.3" r="3.2"></circle><text x="93.3" y="46.7">29</text>
+          <circle cx="85.7" cy="24.3" r="3.2"></circle><text x="90.1" y="20.7">30</text>
+          <circle cx="70.5" cy="22.7" r="3.2"></circle><text x="74.9" y="19.1">31</text>
+          <circle cx="76.5" cy="28.1" r="3.2"></circle><text x="80.9" y="24.5">32</text>
+          <circle cx="39.2" cy="70.2" r="3.2"></circle><text x="43.6" y="66.6">33</text>
+          <circle cx="46.2" cy="84.0" r="3.2"></circle><text x="50.6" y="80.4">34</text>
+          <circle cx="45.7" cy="77.9" r="3.2"></circle><text x="50.1" y="74.3">35</text>
+          <circle cx="86.8" cy="12.0" r="3.2"></circle><text x="91.2" y="8.4">36</text>
+          <circle cx="90.0" cy="64.1" r="3.2"></circle><text x="94.4" y="60.5">37</text>
+          <circle cx="52.7" cy="34.2" r="3.2"></circle><text x="57.1" y="30.6">38</text>
+          <circle cx="10.0" cy="65.6" r="3.2"></circle><text x="14.4" y="62.0">39</text>
+          <circle cx="27.3" cy="76.3" r="3.2"></circle><text x="31.7" y="72.7">40</text>
+          <circle cx="13.2" cy="82.5" r="3.2"></circle><text x="17.6" y="78.9">41</text>
+          <circle cx="43.5" cy="46.5" r="3.2"></circle><text x="47.9" y="42.9">42</text>
+          <circle cx="69.5" cy="34.2" r="3.2"></circle><text x="73.9" y="30.6">43</text>
+          <circle cx="72.7" cy="39.6" r="3.2"></circle><text x="77.1" y="36.0">44</text>
+          <circle cx="52.7" cy="34.2" r="3.2"></circle><text x="57.1" y="30.6">45</text>
+          <circle cx="57.6" cy="39.6" r="3.2"></circle><text x="62.0" y="36.0">46</text>
+          <circle cx="49.5" cy="35.0" r="3.2"></circle><text x="53.9" y="31.4">47</text>
+          <title>静安寺 到 静安寺</title>
+        </svg>
+      </section>
+      <section class="route-guide-card route-guide-review">
+        <h2>出发前复核</h2>
+        <ul><li>素材状态：需补官方信息 / 74</li><li>官方复核：已核验 0，待复核 3，未回填 31</li><li>开放、预约、票务、交通和临时闭馆出发前再查一次。</li></ul>
+        <p id="copy-route-guide-status" class="route-guide-status" aria-live="polite"></p>
+      </section>
+    </aside>
+  </section>
+</main>
+<script>
+  const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海15天14晚长住慢旅行版\n\n- 天数：15天\n- 玩法：balanced\n- 住宿区：静安寺 / 南京西路\n- 适合谁：适合长住、慢旅行和深度体验\n- 主题：生活感\n\n## 行程安排\n\n### Day 1 抵达和生活半径建立：静安、南京西路\n- 1. 下午｜静安寺｜jing_an\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Jing'an Temple。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。\n- 2. 傍晚｜南京西路｜jing_an\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：West Nanjing Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：商业消费属性强，旅行价值取决于是否需要购物和餐饮。\n- 3. 雨天备选｜上海自然博物馆｜jing_an\n  - 停留建议：150 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：亲子客流明显，票务和开放信息出发前需要官网确认。\n\n### Day 2 衡复生活感：武康路、安福路、思南公馆\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜思南公馆｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合与复兴公园、新天地串联，不适合只拍一张照离开。\n- 4. 傍晚｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n\n### Day 3 经典第一眼：人民广场、南京东路、外滩\n- 1. 上午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 下午｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 傍晚｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 4 文化雨天锚点：上海博物馆和城市历史\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜上海市历史博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：适合作为上海历史背景补充，开放信息需出发前确认。\n- 3. 下午备选｜上海城市规划展示馆｜peoples_square\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合城市规划兴趣人群，不适合只想拍照打卡的人。\n\n### Day 5 老城厢和建筑：豫园、外滩源\n- 1. 上午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 2. 下午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 下午备选｜外滩美术馆｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：展览体量不大，适合和外滩源组合，不适合单独占半天。\n\n### Day 6 降速日：补给、自然博物馆和南京西路\n- 1. 上午｜南京西路｜jing_an\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：West Nanjing Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：商业消费属性强，旅行价值取决于是否需要购物和餐饮。\n- 2. 下午｜上海自然博物馆｜jing_an\n  - 停留建议：150 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：亲子客流明显，票务和开放信息出发前需要官网确认。\n- 3. 傍晚可选｜静安寺｜jing_an\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Jing'an Temple。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。\n\n### Day 7 西岸艺术和滨江：美术馆、江边、慢走\n- 1. 上午｜西岸滨江｜xuhui_riverside\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Longyao Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：户外路段多，夏季暴晒或雨天体验会下降。\n- 2. 下午｜龙美术馆西岸馆｜xuhui_riverside\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Middle Longhua Road。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：展览和票务变化大，必须出发前确认。\n- 3. 下午备选｜油罐艺术中心｜xuhui_riverside\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longyao Road。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：适合和西岸一起走，单独跨城前往要看展览质量。\n- 4. 傍晚｜徐汇滨江｜xuhui_riverside\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longhua Middle Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：户外路段多，雨天或高温天应缩短停留。\n\n### Day 8 苏州河、M50 和北外滩：城市纹理\n- 1. 上午｜苏州河步道｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Tiantong Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合作为串联步行路线，不适合赶场式打卡。\n- 2. 下午｜M50 创意园｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Jiangning Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：展览和店铺开放不稳定，适合作为苏州河路线补充。\n- 3. 傍晚｜北外滩｜hongkou\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：International Cruise Terminal。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：风大或天气差时体验明显下降，适合作为外滩视角补充。\n\n### Day 9 浦东视角：陆家嘴、世纪公园\n- 1. 上午｜陆家嘴｜lujiazui\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Lujiazui。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：天际线价值高，但不要强行塞进每一天。\n- 2. 下午｜世纪公园｜pudong\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Century Park。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：户外为主，夏季和雨天要调整停留时间。\n- 3. 雨天备选｜上海科技馆｜pudong\n  - 停留建议：180 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Science and Technology Museum。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：场馆开放状态和预约规则变化时，必须以官方信息为准。\n\n### Day 10 杨浦滨江和多伦路：工业、历史、文学\n- 1. 上午｜杨浦滨江｜yangpu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Yangshupu Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：更适合复游或深度游，第一次短线不建议优先。\n- 2. 下午｜多伦路文化名人街｜hongkou\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Dongbaoxing Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：更偏文化兴趣点，不适合只追求热门打卡的人。\n- 3. 傍晚备选｜北外滩｜hongkou\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：International Cruise Terminal。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：风大或天气差时体验明显下降，适合作为外滩视角补充。\n\n### Day 11 本地生活和公园：徐家汇、龙华\n- 1. 上午｜徐家汇公园｜xujiahui\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Xujiahui。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：适合作为街区缓冲点，不建议单独跨城前往。\n- 2. 下午｜龙华寺｜xuhui\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Longhua。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：更适合文化兴趣路线，不适合硬塞进首次地标打卡。\n- 3. 傍晚备选｜徐汇滨江｜xuhui_riverside\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longhua Middle Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：户外路段多，雨天或高温天应缩短停留。\n\n### Day 12 大公园缓冲：共青森林公园或世纪公园\n- 1. 上午｜共青森林公园｜yangpu\n  - 停留建议：180 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Nenjiang Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：离核心市区较远，更适合 5 天以上或亲子自然主题。\n- 2. 全天备选｜世纪公园｜pudong\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Century Park。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：户外为主，夏季和雨天要调整停留时间。\n- 3. 晚上可选｜南京西路｜jing_an\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：West Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业消费属性强，旅行价值取决于是否需要购物和餐饮。\n\n### Day 13 远郊选择日：朱家角、七宝或佘山\n- 1. 全天主线｜朱家角古镇｜qingpu\n  - 停留建议：240 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Zhujiajiao。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：需要半天到一天，不适合塞进 2-3 天核心上海路线。\n- 2. 半日备选｜七宝老街｜minhang\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Qibao。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客感较强，适合郊区/古镇兴趣，不适合替代核心上海路线。\n- 3. 自然备选｜佘山｜songjiang\n  - 停留建议：240 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Sheshan。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：距离市中心较远，适合 5 天以上或郊区自然主题。\n\n### Day 14 创作者复盘日：补拍、补文案、补遗憾\n- 1. 上午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 2. 下午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 傍晚可选｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 15 离开日：酒店周边、轻收尾和返程缓冲\n- 1. 上午｜南京西路｜jing_an\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：West Nanjing Road。\n  - 拍照提示：适合补一张环境图和一张细节图，给游记或短视频转场留素材。\n  - 避坑提醒：商业消费属性强，旅行价值取决于是否需要购物和餐饮。\n- 2. 中午可选｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 3. 离开前备选｜静安寺｜jing_an\n  - 停留建议：60 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Jing'an Temple。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
+  const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
+  if (TRAVELER_ROUTE_GUIDE_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('../service-worker.js').catch(() => {}); });
+  }
+  async function copyTravelerRouteGuideText(){
+    const status = document.getElementById('copy-route-guide-status');
+    const button = document.getElementById('copy-route-guide-button');
+    try {
+      await navigator.clipboard.writeText(TRAVELER_ROUTE_GUIDE_TEXT);
+      if (button) button.textContent = '已复制攻略';
+      if (status) status.textContent = '已复制，可发给同行人或保存到备忘录。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制页面内容。';
+    }
+    return TRAVELER_ROUTE_GUIDE_TEXT;
+  }
+  document.getElementById('copy-route-guide-button')?.addEventListener('click', copyTravelerRouteGuideText);
+</script>
+</body>
+</html>

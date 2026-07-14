@@ -10,6 +10,18 @@
   "content_assets": {
     "place_catalog": "place_catalog.html"
   },
+  "route_guides": {
+    "directory": "routes",
+    "count": 6,
+    "files": [
+      "routes/relaxed_2d1n_citywalk.html",
+      "routes/first_time_3d2n_balanced.html",
+      "routes/highwalk_3d2n_landmark_citywalk.html",
+      "routes/deep_5d4n_culture_citywalk.html",
+      "routes/local_life_7d6n_balanced.html",
+      "routes/longstay_15d14n_balanced.html"
+    ]
+  },
   "download_files": [
     "workbench-demo.zip",
     "miniprogram-handoff.zip",

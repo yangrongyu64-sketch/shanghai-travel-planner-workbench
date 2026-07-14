@@ -16,6 +16,12 @@ const APP_SHELL_ASSETS = [
   './README.md',
   './DEPLOYMENT.md',
   './deployment-manifest.json',
+  './routes/relaxed_2d1n_citywalk.html',
+  './routes/first_time_3d2n_balanced.html',
+  './routes/highwalk_3d2n_landmark_citywalk.html',
+  './routes/deep_5d4n_culture_citywalk.html',
+  './routes/local_life_7d6n_balanced.html',
+  './routes/longstay_15d14n_balanced.html',
   './LIVE_DEPLOYMENT.md',
   './live-deployment.json'
 ];

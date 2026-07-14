@@ -40,6 +40,12 @@
     .route-guide-stop dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 0}
     .route-guide-stop dl div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:9px}
     .route-guide-stop dt{font-size:12px;color:var(--brick);font-weight:900}.route-guide-stop dd{margin:4px 0 0;color:var(--ink);font-size:13px}
+    .route-guide-decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .route-guide-decision-grid div,.route-guide-food-item,.route-guide-execution-facts div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
+    .route-guide-decision-grid h3,.route-guide-food-item h3,.route-guide-execution h3{margin:0 0 8px;font-size:15px}
+    .route-guide-decision-grid ul,.route-guide-execution ul{margin:0;padding-left:18px;color:var(--muted)}
+    .route-guide-food{display:grid;gap:10px}.route-guide-food-item p{margin:5px 0;color:var(--muted);font-size:13px}.route-guide-food-item b{color:var(--brick)}
+    .route-guide-execution-facts{display:grid;gap:8px;margin:0 0 12px}.route-guide-execution-facts dt{font-size:12px;color:var(--brick);font-weight:900}.route-guide-execution-facts dd{margin:4px 0 0;color:var(--ink);font-size:13px}
     .route-guide-map-svg{width:100%;min-height:260px}
     .route-guide-map-svg rect{fill:#f4f0e8;stroke:#d6cdbf}
     .route-guide-map-svg polyline{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -47,7 +53,7 @@
     .route-guide-map-empty{display:grid;place-items:center;min-height:240px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
-    @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts{grid-template-columns:1fr 1fr}.route-guide-stop dl{grid-template-columns:1fr}}
+    @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
     @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-facts{grid-template-columns:1fr}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
   </style>
 </head>
@@ -78,6 +84,44 @@
           <div class="route-guide-fact"><b>静安寺 / 南京西路</b><span>建议住宿区</span></div>
         </div>
       </section>
+<section class="route-guide-card route-guide-stay">
+  <h2>住哪里</h2>
+  <p><b>静安寺 / 南京西路</b> 更适合这条路线的节奏。</p>
+  <div class="route-guide-decision-grid">
+    <div>
+      <h3>适合</h3>
+      <ul><li>city_quality</li><li>dining</li><li>shopping</li><li>balanced</li></ul>
+    </div>
+    <div>
+      <h3>住宿取舍</h3>
+      <ul><li>餐饮和购物选择好</li><li>城市质感强</li><li>地铁方便</li><li>酒店价格偏高</li><li>老上海街区肌理不如衡复明显</li></ul>
+    </div>
+  </div>
+</section>
+<section class="route-guide-card route-guide-food">
+  <h2>吃什么 / 休息补给</h2>
+<article class="route-guide-food-item">
+  <h3>静安寺 / 南京西路</h3>
+  <p>住宿区晚餐、商场兜底、购物和城市质感路线</p>
+  <p><b>吃喝类型</b>：商场正餐 / 咖啡 / 甜品 / 晚餐</p>
+  <p><b>休息策略</b>：把高确定性的晚餐和雨天休息放在商圈里，适合抵达日、返程前和长住补给。</p>
+  <p><b>避坑</b>：预算很紧或想找强烈街区烟火气时，不要把这里当唯一餐饮答案。</p>
+</article>
+<article class="route-guide-food-item">
+  <h3>人民广场 / 南京东路</h3>
+  <p>首次来上海、短途换乘、经典路线补给</p>
+  <p><b>吃喝类型</b>：商场简餐 / 本帮简餐 / 咖啡 / 甜品</p>
+  <p><b>休息策略</b>：把午餐或下午茶放在商场、地铁站周边，适合接博物馆、南京东路和外滩路线。</p>
+  <p><b>避坑</b>：不要在午晚高峰临时追热门排队店，容易打乱后续外滩或返程节奏。</p>
+</article>
+<article class="route-guide-food-item">
+  <h3>外滩 / 外滩源</h3>
+  <p>外滩夜景前后的轻食、咖啡和建筑路线停顿</p>
+  <p><b>吃喝类型</b>：咖啡 / 轻食 / 下午茶 / 简餐</p>
+  <p><b>休息策略</b>：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。</p>
+  <p><b>避坑</b>：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。</p>
+</article>
+</section>
       <section class="route-guide-card">
         <h2>行程安排</h2>
         <p>5天文化 city walk</p>
@@ -347,6 +391,16 @@
           <title>人民广场 到 人民广场</title>
         </svg>
       </section>
+<section class="route-guide-card route-guide-execution">
+  <h2>执行难度</h2>
+  <dl class="route-guide-execution-facts">
+    <div><dt>体力</dt><dd>中等：平均每天约 3.2 个停靠点，上午和下午各留一次坐下休息。</dd></div>
+    <div><dt>人流</dt><dd>中高：南京东路、外滩、武康路 周末和节假日人流更明显，拍照点不要压得太满。</dd></div>
+    <div><dt>预算倾向</dt><dd>中等偏上：住宿和咖啡、brunch 选择多，预算紧时把正餐放到商场简餐或街区轻食。</dd></div>
+  </dl>
+  <h3>每日执行提醒</h3>
+  <ul><li>Day 1：从 人民广场 开始，到 外滩 收束，至少预留 30 分钟机动。</li><li>Day 2：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。</li><li>Day 3：从 上海博物馆 开始，到 外滩源 收束，至少预留 30 分钟机动；上海博物馆、豫园 / 老城厢 停留时间较长，别被前一站挤掉。</li><li>Day 4：从 苏州河步道 开始，到 外滩 收束，至少预留 30 分钟机动。</li><li>Day 5：从 陆家嘴 开始，到 人民广场 收束，至少预留 30 分钟机动；陆家嘴 停留时间较长，别被前一站挤掉。</li></ul>
+</section>
       <section class="route-guide-card route-guide-review">
         <h2>出发前复核</h2>
         <ul><li>素材状态：需补官方信息 / 74</li><li>官方复核：已核验 0，待复核 1，未回填 11</li><li>开放、预约、票务、交通和临时闭馆出发前再查一次。</li></ul>
@@ -356,7 +410,7 @@
   </section>
 </main>
 <script>
-  const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海5天4晚文化 city walk 深度版\n\n- 天数：5天\n- 玩法：balanced\n- 住宿区：静安寺 / 南京西路\n- 适合谁：适合文化艺术、博物馆和美术馆\n- 主题：文化艺术\n\n## 行程安排\n\n### Day 1 慢抵达：人民广场到外滩夜景\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 2 衡复街区：建筑、咖啡和慢走\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n\n### Day 3 博物馆和老城厢：文化锚点\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n\n### Day 4 苏州河和外滩源：建筑边走边看\n- 1. 上午｜苏州河步道｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Tiantong Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合作为串联步行路线，不适合赶场式打卡。\n- 2. 下午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 傍晚｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 5 陆家嘴或轻收尾：保留离开缓冲\n- 1. 上午｜陆家嘴｜lujiazui\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Lujiazui。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：天际线价值高，但不要强行塞进每一天。\n- 2. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 离开前｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
+  const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海5天4晚文化 city walk 深度版\n\n- 天数：5天\n- 玩法：balanced\n- 住宿区：静安寺 / 南京西路\n- 适合谁：适合文化艺术、博物馆和美术馆\n- 主题：文化艺术\n\n## 住哪里\n- 建议住在：静安寺 / 南京西路\n- 优势：餐饮和购物选择好；城市质感强；地铁方便\n- 住宿取舍：酒店价格偏高；老上海街区肌理不如衡复明显\n\n## 吃什么 / 休息补给\n- 静安寺 / 南京西路：住宿区晚餐、商场兜底、购物和城市质感路线\n  - 吃喝类型：商场正餐 / 咖啡 / 甜品 / 晚餐\n  - 休息策略：把高确定性的晚餐和雨天休息放在商圈里，适合抵达日、返程前和长住补给。\n  - 避坑：预算很紧或想找强烈街区烟火气时，不要把这里当唯一餐饮答案。\n- 人民广场 / 南京东路：首次来上海、短途换乘、经典路线补给\n  - 吃喝类型：商场简餐 / 本帮简餐 / 咖啡 / 甜品\n  - 休息策略：把午餐或下午茶放在商场、地铁站周边，适合接博物馆、南京东路和外滩路线。\n  - 避坑：不要在午晚高峰临时追热门排队店，容易打乱后续外滩或返程节奏。\n- 外滩 / 外滩源：外滩夜景前后的轻食、咖啡和建筑路线停顿\n  - 吃喝类型：咖啡 / 轻食 / 下午茶 / 简餐\n  - 休息策略：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。\n  - 避坑：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。\n\n## 执行难度\n- 体力：中等：平均每天约 3.2 个停靠点，上午和下午各留一次坐下休息。\n- 人流：中高：南京东路、外滩、武康路 周末和节假日人流更明显，拍照点不要压得太满。\n- 预算倾向：中等偏上：住宿和咖啡、brunch 选择多，预算紧时把正餐放到商场简餐或街区轻食。\n\n### 每日执行提醒\n- Day 1：从 人民广场 开始，到 外滩 收束，至少预留 30 分钟机动。\n- Day 2：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。\n- Day 3：从 上海博物馆 开始，到 外滩源 收束，至少预留 30 分钟机动；上海博物馆、豫园 / 老城厢 停留时间较长，别被前一站挤掉。\n- Day 4：从 苏州河步道 开始，到 外滩 收束，至少预留 30 分钟机动。\n- Day 5：从 陆家嘴 开始，到 人民广场 收束，至少预留 30 分钟机动；陆家嘴 停留时间较长，别被前一站挤掉。\n\n## 行程安排\n\n### Day 1 慢抵达：人民广场到外滩夜景\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 2 衡复街区：建筑、咖啡和慢走\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n\n### Day 3 博物馆和老城厢：文化锚点\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n\n### Day 4 苏州河和外滩源：建筑边走边看\n- 1. 上午｜苏州河步道｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Tiantong Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合作为串联步行路线，不适合赶场式打卡。\n- 2. 下午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 傍晚｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 5 陆家嘴或轻收尾：保留离开缓冲\n- 1. 上午｜陆家嘴｜lujiazui\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Lujiazui。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：天际线价值高，但不要强行塞进每一天。\n- 2. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 3. 离开前｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
   const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
   if (TRAVELER_ROUTE_GUIDE_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', () => { navigator.serviceWorker.register('../service-worker.js').catch(() => {}); });

@@ -132,6 +132,7 @@
       <div class="traveler-pack-actions">
         <button type="button" class="primary" id="traveler-home-route-pack-build-button" data-traveler-home-route-pack-build>生成路线包</button>
         <button type="button" id="traveler-home-route-pack-copy-button" data-traveler-home-route-pack-copy>复制路线包</button>
+        <button type="button" id="traveler-home-route-pack-download-button" data-traveler-home-route-pack-download>下载Markdown</button>
       </div>
     </div>
     <textarea id="traveler-home-route-pack-output" readonly rows="8" aria-label="路线包内容"></textarea>
@@ -582,6 +583,9 @@
     if (status) status.textContent = `已整理 ${travelerHomeRoutePackRoutes().length} 条路线。`;
     return text;
   }
+  function travelerHomeRoutePackFilename(){
+    return 'shanghai-route-pack.md';
+  }
   async function copyTravelerHomeRoutePack(){
     const text = renderTravelerHomeRoutePack();
     const status = document.getElementById('traveler-home-route-pack-status');
@@ -592,6 +596,22 @@
       if (status) status.textContent = '复制失败，可以手动复制路线包。';
     }
     return text;
+  }
+  function downloadTravelerHomeRoutePackMarkdown(){
+    const text = renderTravelerHomeRoutePack();
+    const filename = travelerHomeRoutePackFilename();
+    const status = document.getElementById('traveler-home-route-pack-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 路线包。';
+    return {filename, text};
   }
   function travelerHomeRecommendRoute(){
     const recommendation = travelerHomeBestRecommendation();
@@ -643,6 +663,7 @@
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
+  document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();

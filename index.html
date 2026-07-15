@@ -46,6 +46,14 @@
     .traveler-recommendation-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-recommendation-actions .favorite{border-color:rgba(159,61,46,.34);color:var(--brick)}
     .traveler-recommendation-status{min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-pack{display:grid;gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
+    .traveler-pack-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .traveler-pack h2{margin:0;font-size:20px;letter-spacing:0}
+    .traveler-pack-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .traveler-pack-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-pack-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-pack textarea{width:100%;min-height:188px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fffdfa;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    .traveler-pack-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -117,6 +125,17 @@
       <p id="traveler-home-memory-status" class="traveler-home-memory-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-recommendation" class="traveler-recommendation" aria-live="polite"></div>
+  </section>
+  <section id="traveler-home-route-pack" class="traveler-pack" aria-label="我的上海路线包">
+    <div class="traveler-pack-head">
+      <h2>我的上海路线包</h2>
+      <div class="traveler-pack-actions">
+        <button type="button" class="primary" id="traveler-home-route-pack-build-button" data-traveler-home-route-pack-build>生成路线包</button>
+        <button type="button" id="traveler-home-route-pack-copy-button" data-traveler-home-route-pack-copy>复制路线包</button>
+      </div>
+    </div>
+    <textarea id="traveler-home-route-pack-output" readonly rows="8" aria-label="路线包内容"></textarea>
+    <p id="traveler-home-route-pack-status" class="traveler-pack-status" aria-live="polite"></p>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
     <div class="traveler-control"><label for="traveler-home-duration-filter">天数</label><select id="traveler-home-duration-filter" data-traveler-home-duration>
@@ -402,6 +421,9 @@
   function travelerHomeSavedFavorites(state){
     return Array.isArray(state?.favorites) ? state.favorites.filter(Boolean) : [];
   }
+  function travelerHomeRouteById(routeId){
+    return TRAVELER_HOME_ROUTES.find(route => route.tripId === routeId) || null;
+  }
   function updateTravelerHomeMemoryStatus(state, message){
     const target = document.getElementById('traveler-home-memory-status');
     if (!target) return;
@@ -419,6 +441,7 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     updateTravelerHomeMemoryStatus(state);
+    renderTravelerHomeRoutePack();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -452,6 +475,7 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     renderTravelerHomeRecommendation();
+    renderTravelerHomeRoutePack();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -516,6 +540,59 @@
       '出发前再复核开放、预约、票务、交通和临时闭馆。',
     ].join('\n');
   }
+  function travelerHomeRoutePackRoutes(){
+    const state = travelerHomeStorageRead();
+    const favoriteRoutes = travelerHomeSavedFavorites(state).map(travelerHomeRouteById).filter(Boolean);
+    if (favoriteRoutes.length) return favoriteRoutes;
+    const remembered = travelerHomeRouteById(state.lastRouteId);
+    if (remembered) return [remembered];
+    const recommendation = travelerHomeBestRecommendation();
+    return recommendation ? [recommendation.route] : [];
+  }
+  function travelerHomeRoutePackText(){
+    const routes = travelerHomeRoutePackRoutes();
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || travelerHomePreferenceInput();
+    if (!routes.length) return '我的上海路线包\n当前还没有可整理的路线。';
+    const hasFavorites = travelerHomeSavedFavorites(state).length > 0;
+    const lines = [
+      '我的上海路线包',
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      `${hasFavorites ? '收藏路线' : '当前推荐'}：${routes.length}条`,
+      '',
+      '行程清单',
+    ];
+    routes.forEach((route, index) => {
+      lines.push(`${index + 1}. ${route.scenario}｜${route.title}`);
+      lines.push(`   适合：${route.audience}`);
+      lines.push(`   重点：${route.primaryAngle}`);
+      lines.push(`   攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`);
+      lines.push(`   地图：${travelerHomeAbsoluteUrl(route.mapHref)}`);
+    });
+    lines.push('', '同行人分享', `我先选了 ${routes[0].scenario}｜${routes[0].title}，也收藏了 ${routes.length} 条备选路线。我们可以先按偏好走，出发前再确认开放、预约和交通。`);
+    lines.push('', '游记草稿', `这次上海旅行先从“${routes[0].title}”开始，不追求把所有地方塞满，而是按 ${travelerHomePreferenceLabel(preferences)} 的节奏，把路线、休息和拍照点先排顺。`);
+    lines.push('', '出发前请复核开放、预约、票务、交通和临时闭馆。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeRoutePack(){
+    const output = document.getElementById('traveler-home-route-pack-output');
+    const status = document.getElementById('traveler-home-route-pack-status');
+    const text = travelerHomeRoutePackText();
+    if (output) output.value = text;
+    if (status) status.textContent = `已整理 ${travelerHomeRoutePackRoutes().length} 条路线。`;
+    return text;
+  }
+  async function copyTravelerHomeRoutePack(){
+    const text = renderTravelerHomeRoutePack();
+    const status = document.getElementById('traveler-home-route-pack-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制路线包，可发给同行人或作为游记草稿。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制路线包。';
+    }
+    return text;
+  }
   function travelerHomeRecommendRoute(){
     const recommendation = travelerHomeBestRecommendation();
     const target = document.getElementById('traveler-home-recommendation');
@@ -564,8 +641,11 @@
     if (event.target?.closest?.('[data-traveler-home-recommendation-copy]')) copyTravelerHomeRecommendation();
   });
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
+  document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
+  document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
+  renderTravelerHomeRoutePack();
 </script>
 </body>
 </html>

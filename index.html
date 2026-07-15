@@ -35,6 +35,7 @@
     .traveler-picker-field{display:grid;gap:5px}.traveler-picker-field label{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-picker-field select{height:40px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
     .traveler-picker button{align-self:end;min-height:40px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff;font-weight:900;cursor:pointer}
+    .traveler-home-memory-status{margin:10px 0 0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-recommendation{display:grid;gap:8px;align-content:start}
     .traveler-recommendation .tagline{margin:0;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-recommendation h3{margin:0;font-size:18px;line-height:1.2}
@@ -43,6 +44,7 @@
     .traveler-recommendation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
     .traveler-recommendation-actions a,.traveler-recommendation-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
     .traveler-recommendation-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-recommendation-actions .favorite{border-color:rgba(159,61,46,.34);color:var(--brick)}
     .traveler-recommendation-status{min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
@@ -112,6 +114,7 @@
         </select></div>
         <button type="button" id="traveler-home-recommend-button">推荐路线</button>
       </div>
+      <p id="traveler-home-memory-status" class="traveler-home-memory-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-recommendation" class="traveler-recommendation" aria-live="polite"></div>
   </section>
@@ -340,6 +343,7 @@
 <script>
   const TRAVELER_HOME_ROUTES = [{"tripId": "relaxed_2d1n_citywalk", "scenario": "2日躺平", "title": "上海2天1晚躺平 city walk 版", "durationDays": 2, "style": "relaxed", "theme": "city walk", "audience": "适合短途躺平、不想太累和少换区", "primaryAngle": "2天躺平 city walk", "routeScore": 89, "guideHref": "routes/relaxed_2d1n_citywalk.html", "mapHref": "routes/relaxed_2d1n_citywalk.html#route-map"}, {"tripId": "first_time_3d2n_balanced", "scenario": "3日经典", "title": "上海3天2晚首次来均衡版", "durationDays": 3, "style": "balanced", "theme": "文化艺术", "audience": "适合首次来上海、经典均衡和少踩坑", "primaryAngle": "3天初来上海不绕路", "routeScore": 89, "guideHref": "routes/first_time_3d2n_balanced.html", "mapHref": "routes/first_time_3d2n_balanced.html#route-map"}, {"tripId": "highwalk_3d2n_landmark_citywalk", "scenario": "3日暴走", "title": "上海3天2晚暴走地标 + city walk 版", "durationDays": 3, "style": "high_walk", "theme": "地标打卡", "audience": "适合暴走党、地标打卡和高密度 city walk", "primaryAngle": "3天暴走地标线", "routeScore": 89, "guideHref": "routes/highwalk_3d2n_landmark_citywalk.html", "mapHref": "routes/highwalk_3d2n_landmark_citywalk.html#route-map"}, {"tripId": "deep_5d4n_culture_citywalk", "scenario": "5日文化艺术", "title": "上海5天4晚文化 city walk 深度版", "durationDays": 5, "style": "balanced", "theme": "文化艺术", "audience": "适合文化艺术、博物馆和美术馆", "primaryAngle": "5天文化 city walk", "routeScore": 91, "guideHref": "routes/deep_5d4n_culture_citywalk.html", "mapHref": "routes/deep_5d4n_culture_citywalk.html#route-map"}, {"tripId": "local_life_7d6n_balanced", "scenario": "7日生活感", "title": "上海7天6晚生活感均衡版", "durationDays": 7, "style": "balanced", "theme": "生活感", "audience": "适合二刷上海、生活感和街区探索", "primaryAngle": "7天生活感 city walk", "routeScore": 92, "guideHref": "routes/local_life_7d6n_balanced.html", "mapHref": "routes/local_life_7d6n_balanced.html#route-map"}, {"tripId": "longstay_15d14n_balanced", "scenario": "15日长住", "title": "上海15天14晚长住慢旅行版", "durationDays": 15, "style": "balanced", "theme": "生活感", "audience": "适合长住、慢旅行和深度体验", "primaryAngle": "15天长住慢旅行", "routeScore": 92, "guideHref": "routes/longstay_15d14n_balanced.html", "mapHref": "routes/longstay_15d14n_balanced.html#route-map"}];
   const TRAVELER_HOME_PWA_ENABLED = true;
+  const travelerHomeStorageKey = 'shanghai-traveler-home-memory-v1';
   if (TRAVELER_HOME_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(() => {}); });
   }
@@ -382,6 +386,75 @@
   function travelerHomeAbsoluteUrl(href){
     try { return new URL(href, window.location.href).href; } catch (error) { return href || ''; }
   }
+  function travelerHomeStorageRead(){
+    try {
+      const raw = localStorage.getItem(travelerHomeStorageKey);
+      const state = raw ? JSON.parse(raw) : {};
+      return state && typeof state === 'object' ? state : {};
+    } catch (error) {
+      return {};
+    }
+  }
+  function travelerHomeStorageWrite(state){
+    try { localStorage.setItem(travelerHomeStorageKey, JSON.stringify(state)); } catch (error) {}
+    return state;
+  }
+  function travelerHomeSavedFavorites(state){
+    return Array.isArray(state?.favorites) ? state.favorites.filter(Boolean) : [];
+  }
+  function updateTravelerHomeMemoryStatus(state, message){
+    const target = document.getElementById('traveler-home-memory-status');
+    if (!target) return;
+    const favorites = travelerHomeSavedFavorites(state);
+    if (message) target.textContent = message;
+    else if (favorites.length) target.textContent = `已收藏 ${favorites.length} 条路线。`;
+    else if (state?.lastRouteId) target.textContent = '已记住这次选择。';
+    else target.textContent = '';
+  }
+  function saveTravelerHomeMemory(recommendation){
+    const state = travelerHomeStorageRead();
+    state.preferences = travelerHomePreferenceInput();
+    if (recommendation?.route?.tripId) state.lastRouteId = recommendation.route.tripId;
+    state.favorites = travelerHomeSavedFavorites(state);
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    updateTravelerHomeMemoryStatus(state);
+    return state;
+  }
+  function travelerHomeSetPickerValue(id, value){
+    const element = document.getElementById(id);
+    if (!element || value === undefined || value === null) return false;
+    const allowed = !element.options || !element.options.length || Array.from(element.options).some(option => option.value === value);
+    if (!allowed) return false;
+    element.value = value;
+    return true;
+  }
+  function applyTravelerHomeMemory(){
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || {};
+    const restored = Boolean(state.lastRouteId || Object.keys(preferences).length);
+    travelerHomeSetPickerValue('traveler-home-picker-days', preferences.days);
+    travelerHomeSetPickerValue('traveler-home-picker-pace', preferences.pace);
+    travelerHomeSetPickerValue('traveler-home-picker-theme', preferences.theme);
+    travelerHomeSetPickerValue('traveler-home-picker-avoid', preferences.avoid);
+    travelerHomeRecommendRoute();
+    updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), restored ? '已恢复上次选择。' : '');
+    return state;
+  }
+  function toggleTravelerHomeFavorite(routeId){
+    const state = travelerHomeStorageRead();
+    if (!routeId) return state;
+    const favorites = travelerHomeSavedFavorites(state);
+    const isFavorite = favorites.includes(routeId);
+    state.favorites = isFavorite ? favorites.filter(id => id !== routeId) : [...favorites, routeId];
+    state.preferences = travelerHomePreferenceInput();
+    state.lastRouteId = routeId;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeRecommendation();
+    updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
+    return state;
+  }
   function travelerHomeRouteRecommendationScore(route, preferences){
     let score = Number(route.routeScore || 0) / 10;
     const reasons = [];
@@ -422,7 +495,10 @@
     if (!recommendation) return '<h2>帮我选路线</h2><p>当前没有可推荐路线。</p>';
     const route = recommendation.route;
     const reasons = recommendation.reasons.map(reason => `<li>${escapeHtml(reason)}</li>`).join('');
-    return `<p class="tagline">推荐路线</p><h3>${escapeHtml(route.scenario)}｜${escapeHtml(route.title)}</h3><p>${escapeHtml(route.audience)}</p><p>${escapeHtml(route.primaryAngle)}</p><ul>${reasons}</ul><div class="traveler-recommendation-actions"><a class="primary" data-traveler-home-recommendation-guide href="${escapeHtml(route.guideHref)}">看攻略</a><a data-traveler-home-recommendation-map href="${escapeHtml(route.mapHref)}">看地图</a><button type="button" data-traveler-home-recommendation-copy>复制推荐</button></div><p id="traveler-home-recommendation-status" class="traveler-recommendation-status" aria-live="polite"></p>`;
+    const favorites = travelerHomeSavedFavorites(travelerHomeStorageRead());
+    const isFavorite = favorites.includes(route.tripId);
+    const favoriteLabel = isFavorite ? '已收藏' : '收藏路线';
+    return `<p class="tagline">推荐路线</p><h3>${escapeHtml(route.scenario)}｜${escapeHtml(route.title)}</h3><p>${escapeHtml(route.audience)}</p><p>${escapeHtml(route.primaryAngle)}</p><ul>${reasons}</ul><div class="traveler-recommendation-actions"><a class="primary" data-traveler-home-recommendation-guide href="${escapeHtml(route.guideHref)}">看攻略</a><a data-traveler-home-recommendation-map href="${escapeHtml(route.mapHref)}">看地图</a><button type="button" data-traveler-home-recommendation-copy>复制推荐</button><button type="button" class="favorite" data-traveler-home-recommendation-favorite="${escapeHtml(route.tripId)}">${favoriteLabel}</button></div><p id="traveler-home-recommendation-status" class="traveler-recommendation-status" aria-live="polite"></p>`;
   }
   function travelerHomeRecommendationShareText(recommendation){
     if (!recommendation) recommendation = travelerHomeBestRecommendation();
@@ -444,6 +520,7 @@
     const recommendation = travelerHomeBestRecommendation();
     const target = document.getElementById('traveler-home-recommendation');
     if (target) target.innerHTML = travelerHomeRecommendationHtml(recommendation);
+    saveTravelerHomeMemory(recommendation);
     return recommendation;
   }
   function renderTravelerHomeRecommendation(){
@@ -482,11 +559,13 @@
   ['traveler-home-picker-days','traveler-home-picker-pace','traveler-home-picker-theme','traveler-home-picker-avoid'].forEach(id => document.getElementById(id)?.addEventListener('change', renderTravelerHomeRecommendation));
   document.getElementById('traveler-home-recommend-button')?.addEventListener('click', renderTravelerHomeRecommendation);
   document.getElementById('traveler-home-recommendation')?.addEventListener?.('click', event => {
+    const favoriteButton = event.target?.closest?.('[data-traveler-home-recommendation-favorite]');
+    if (favoriteButton) { toggleTravelerHomeFavorite(favoriteButton.getAttribute('data-traveler-home-recommendation-favorite')); return; }
     if (event.target?.closest?.('[data-traveler-home-recommendation-copy]')) copyTravelerHomeRecommendation();
   });
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
   applyTravelerHomeFilters();
-  renderTravelerHomeRecommendation();
+  applyTravelerHomeMemory();
 </script>
 </body>
 </html>

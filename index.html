@@ -41,8 +41,9 @@
     .traveler-recommendation p{margin:0;color:var(--muted);font-size:13px}
     .traveler-recommendation ul{margin:0;padding-left:18px;color:var(--muted);font-size:13px}
     .traveler-recommendation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-    .traveler-recommendation-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900}
+    .traveler-recommendation-actions a,.traveler-recommendation-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
     .traveler-recommendation-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-recommendation-status{min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -372,6 +373,15 @@
       avoid: travelerHomePickerValue('traveler-home-picker-avoid'),
     };
   }
+  function travelerHomePreferenceLabel(preferences){
+    const dayLabel = preferences.days === 'any' ? '不限天数' : `${preferences.days}天`;
+    const paceLabels = {any:'不限节奏', relaxed:'躺平', balanced:'均衡', high_walk:'暴走'};
+    const avoidLabels = {low_walk:'少走路', no_crowd:'少人流', none:'不限'};
+    return `${dayLabel} / ${paceLabels[preferences.pace] || preferences.pace} / ${preferences.theme === 'any' ? '不限兴趣' : preferences.theme} / ${avoidLabels[preferences.avoid] || preferences.avoid}`;
+  }
+  function travelerHomeAbsoluteUrl(href){
+    try { return new URL(href, window.location.href).href; } catch (error) { return href || ''; }
+  }
   function travelerHomeRouteRecommendationScore(route, preferences){
     let score = Number(route.routeScore || 0) / 10;
     const reasons = [];
@@ -412,7 +422,23 @@
     if (!recommendation) return '<h2>帮我选路线</h2><p>当前没有可推荐路线。</p>';
     const route = recommendation.route;
     const reasons = recommendation.reasons.map(reason => `<li>${escapeHtml(reason)}</li>`).join('');
-    return `<p class="tagline">推荐路线</p><h3>${escapeHtml(route.scenario)}｜${escapeHtml(route.title)}</h3><p>${escapeHtml(route.audience)}</p><p>${escapeHtml(route.primaryAngle)}</p><ul>${reasons}</ul><div class="traveler-recommendation-actions"><a class="primary" data-traveler-home-recommendation-guide href="${escapeHtml(route.guideHref)}">看攻略</a><a data-traveler-home-recommendation-map href="${escapeHtml(route.mapHref)}">看地图</a></div>`;
+    return `<p class="tagline">推荐路线</p><h3>${escapeHtml(route.scenario)}｜${escapeHtml(route.title)}</h3><p>${escapeHtml(route.audience)}</p><p>${escapeHtml(route.primaryAngle)}</p><ul>${reasons}</ul><div class="traveler-recommendation-actions"><a class="primary" data-traveler-home-recommendation-guide href="${escapeHtml(route.guideHref)}">看攻略</a><a data-traveler-home-recommendation-map href="${escapeHtml(route.mapHref)}">看地图</a><button type="button" data-traveler-home-recommendation-copy>复制推荐</button></div><p id="traveler-home-recommendation-status" class="traveler-recommendation-status" aria-live="polite"></p>`;
+  }
+  function travelerHomeRecommendationShareText(recommendation){
+    if (!recommendation) recommendation = travelerHomeBestRecommendation();
+    if (!recommendation) return '当前没有可推荐路线。';
+    const route = recommendation.route;
+    const preferences = travelerHomePreferenceInput();
+    return [
+      '我的上海路线推荐',
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      `推荐：${route.scenario}｜${route.title}`,
+      `适合：${route.audience}`,
+      `理由：${recommendation.reasons.join('、')}`,
+      `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`,
+      `地图：${travelerHomeAbsoluteUrl(route.mapHref)}`,
+      '出发前再复核开放、预约、票务、交通和临时闭馆。',
+    ].join('\n');
   }
   function travelerHomeRecommendRoute(){
     const recommendation = travelerHomeBestRecommendation();
@@ -422,6 +448,18 @@
   }
   function renderTravelerHomeRecommendation(){
     return travelerHomeRecommendRoute();
+  }
+  async function copyTravelerHomeRecommendation(){
+    const recommendation = travelerHomeBestRecommendation();
+    const status = document.getElementById('traveler-home-recommendation-status');
+    const text = travelerHomeRecommendationShareText(recommendation);
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制推荐，可发给同行人。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制推荐内容。';
+    }
+    return text;
   }
   function travelerHomeShareText(){
     const lines = ['上海旅行路线入口', window.location.href, `当前有 ${TRAVELER_HOME_ROUTES.length} 条路线：`];
@@ -443,6 +481,9 @@
   ['traveler-home-duration-filter','traveler-home-style-filter','traveler-home-theme-filter'].forEach(id => document.getElementById(id)?.addEventListener('change', applyTravelerHomeFilters));
   ['traveler-home-picker-days','traveler-home-picker-pace','traveler-home-picker-theme','traveler-home-picker-avoid'].forEach(id => document.getElementById(id)?.addEventListener('change', renderTravelerHomeRecommendation));
   document.getElementById('traveler-home-recommend-button')?.addEventListener('click', renderTravelerHomeRecommendation);
+  document.getElementById('traveler-home-recommendation')?.addEventListener?.('click', event => {
+    if (event.target?.closest?.('[data-traveler-home-recommendation-copy]')) copyTravelerHomeRecommendation();
+  });
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
   applyTravelerHomeFilters();
   renderTravelerHomeRecommendation();

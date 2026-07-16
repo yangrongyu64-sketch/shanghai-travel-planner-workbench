@@ -63,6 +63,7 @@
     .traveler-platform-settings label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
     .traveler-platform-settings select{height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
     .traveler-draft-overview{display:grid;gap:8px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fffdfa}
+    .traveler-draft-overview-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
     .traveler-draft-overview h4{margin:0;font-size:14px;letter-spacing:0}
     .traveler-draft-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding-top:8px;border-top:1px solid var(--line)}
     .traveler-draft-row:first-of-type{border-top:0;padding-top:0}
@@ -862,7 +863,8 @@
   function travelerHomePlatformDraftOverviewHtml(){
     const rows = travelerHomePlatformDraftOverviewRows();
     const rowHtml = rows.map(row => `<div class="traveler-draft-row"><div><b>${escapeHtml(row.label)}</b><span>${escapeHtml(row.source)} · ${row.characters}字</span><p>${escapeHtml(row.preview)}</p></div><div class="traveler-draft-actions"><button type="button" data-traveler-home-platform-draft-open="${escapeHtml(row.platform)}">编辑</button><button type="button" data-traveler-home-platform-draft-copy="${escapeHtml(row.platform)}">复制</button></div></div>`).join('');
-    return `<h4>多平台草稿总览</h4>${rowHtml}`;
+    const actions = '<div class="traveler-draft-actions"><button type="button" id="traveler-home-platform-draft-package-copy-button" data-traveler-home-platform-draft-package-copy>复制草稿包</button><button type="button" id="traveler-home-platform-draft-package-download-button" data-traveler-home-platform-draft-package-download>下载Markdown</button></div>';
+    return `<div class="traveler-draft-overview-head"><h4>多平台草稿总览</h4>${actions}</div>${rowHtml}`;
   }
   function renderTravelerHomePlatformDraftOverview(){
     const target = document.getElementById('traveler-home-platform-draft-overview');
@@ -880,6 +882,57 @@
       if (status) status.textContent = '复制失败，可以手动复制草稿。';
     }
     return row?.text || '';
+  }
+  function travelerHomePlatformDraftPackageMarkdown(){
+    const rows = travelerHomePlatformDraftOverviewRows();
+    const route = travelerHomeRoutePackRoutes()[0];
+    const settings = travelerHomePlatformCopySettings();
+    const lines = [
+      '# 上海平台草稿包',
+      '',
+      route ? `路线：${route.scenario}｜${route.title}` : '路线：当前未选择',
+      travelerHomePlatformCopyToneLine(settings),
+      travelerHomePlatformCopyLengthLine(settings),
+    ];
+    if (route) {
+      lines.push(`攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`);
+      lines.push(`地图：${travelerHomeAbsoluteUrl(route.mapHref)}`);
+    }
+    rows.forEach(row => {
+      lines.push('', `## ${row.label}`, `来源：${row.source}`, `字数：${row.characters}`, '', row.text || '');
+    });
+    lines.push('', '发布前请复核官方开放、预约、票务、交通和临时闭馆。');
+    return lines.join('\n');
+  }
+  function travelerHomePlatformDraftPackageFilename(){
+    return 'shanghai-platform-drafts.md';
+  }
+  async function copyTravelerHomePlatformDraftPackage(){
+    const text = travelerHomePlatformDraftPackageMarkdown();
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制多平台草稿包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制草稿包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomePlatformDraftPackageMarkdown(){
+    const text = travelerHomePlatformDraftPackageMarkdown();
+    const filename = travelerHomePlatformDraftPackageFilename();
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 草稿包。';
+    return {filename, text};
   }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
@@ -984,6 +1037,8 @@
   document.getElementById('traveler-home-platform-copy-button')?.addEventListener('click', () => copyTravelerHomePlatformCopy());
   document.getElementById('traveler-home-platform-copy-reset-button')?.addEventListener('click', resetTravelerHomePlatformCopyDraft);
   document.getElementById('traveler-home-platform-draft-overview')?.addEventListener('click', event => {
+    if (event.target?.closest?.('[data-traveler-home-platform-draft-package-copy]')) { copyTravelerHomePlatformDraftPackage(); return; }
+    if (event.target?.closest?.('[data-traveler-home-platform-draft-package-download]')) { downloadTravelerHomePlatformDraftPackageMarkdown(); return; }
     const openButton = event.target?.closest?.('[data-traveler-home-platform-draft-open]');
     if (openButton) { renderTravelerHomePlatformCopy(openButton.getAttribute('data-traveler-home-platform-draft-open')); return; }
     const copyButton = event.target?.closest?.('[data-traveler-home-platform-draft-copy]');

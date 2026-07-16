@@ -70,6 +70,9 @@
     .traveler-draft-row b{display:block;font-size:13px}.traveler-draft-row span{display:block;margin-top:2px;color:var(--accent);font-size:12px;font-weight:800}.traveler-draft-row p{margin:4px 0 0;color:var(--muted);font-size:12px}
     .traveler-draft-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
     .traveler-draft-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900;cursor:pointer}
+    .traveler-travelogue{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-travelogue h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-travelogue-field{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -186,6 +189,20 @@
       <textarea id="traveler-home-platform-copy-output" rows="8" aria-label="平台文案内容"></textarea>
       <p id="traveler-home-platform-copy-status" class="traveler-pack-status" aria-live="polite"></p>
       <div id="traveler-home-platform-draft-overview" class="traveler-draft-overview" aria-label="多平台草稿总览"></div>
+    </div>
+    <div id="traveler-home-travelogue" class="traveler-travelogue" aria-label="游记生成包">
+      <div class="traveler-social-card-head">
+        <h3>游记生成包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-travelogue-build-button" data-traveler-home-travelogue-build>生成游记</button>
+          <button type="button" id="traveler-home-travelogue-copy-button" data-traveler-home-travelogue-copy>复制游记</button>
+          <button type="button" id="traveler-home-travelogue-download-button" data-traveler-home-travelogue-download>下载Markdown</button>
+        </div>
+      </div>
+      <label class="traveler-travelogue-field" for="traveler-home-travelogue-fragments">旅途碎片</label>
+      <textarea id="traveler-home-travelogue-fragments" rows="4" aria-label="旅途碎片"></textarea>
+      <textarea id="traveler-home-travelogue-output" readonly rows="9" aria-label="游记内容"></textarea>
+      <p id="traveler-home-travelogue-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
@@ -531,6 +548,7 @@
     renderTravelerHomeRoutePack();
     renderTravelerHomeSocialCard();
     renderTravelerHomePlatformCopy();
+    renderTravelerHomeTravelogue();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -829,6 +847,7 @@
     travelerHomeStorageWrite(state);
     if (status) status.textContent = `已保存${travelerHomePlatformCopyLabel(target)}草稿。`;
     renderTravelerHomePlatformDraftOverview();
+    renderTravelerHomeTravelogue();
     return text;
   }
   function clearTravelerHomePlatformCopyDraft(){
@@ -934,6 +953,111 @@
     if (status) status.textContent = '已下载 Markdown 草稿包。';
     return {filename, text};
   }
+  function travelerHomeTravelogueRoute(){
+    return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || null;
+  }
+  function travelerHomeTravelogueFragmentsKey(){
+    const route = travelerHomeTravelogueRoute();
+    return route?.tripId || 'default';
+  }
+  function travelerHomeTravelogueStoredFragments(){
+    const key = travelerHomeTravelogueFragmentsKey();
+    const fragments = travelerHomeStorageRead().travelogueFragments || {};
+    return key && typeof fragments[key] === 'string' ? fragments[key] : '';
+  }
+  function applyTravelerHomeTravelogueFragments(){
+    const target = document.getElementById('traveler-home-travelogue-fragments');
+    const text = travelerHomeTravelogueStoredFragments();
+    if (target && target.id === 'traveler-home-travelogue-fragments' && !target.value && text) target.value = text;
+    return text;
+  }
+  function travelerHomeTravelogueFragmentsText(){
+    const target = document.getElementById('traveler-home-travelogue-fragments');
+    if (target && target.id === 'traveler-home-travelogue-fragments' && typeof target.value === 'string') return target.value;
+    return travelerHomeTravelogueStoredFragments();
+  }
+  function saveTravelerHomeTravelogueFragments(){
+    const key = travelerHomeTravelogueFragmentsKey();
+    const text = travelerHomeTravelogueFragmentsText();
+    const state = travelerHomeStorageRead();
+    const fragments = state.travelogueFragments && typeof state.travelogueFragments === 'object' ? state.travelogueFragments : {};
+    if (key && text.trim()) fragments[key] = text;
+    else if (key) delete fragments[key];
+    state.travelogueFragments = fragments;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    return text;
+  }
+  function travelerHomeTravelogueMarkdown(){
+    applyTravelerHomeTravelogueFragments();
+    const route = travelerHomeTravelogueRoute();
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || travelerHomePreferenceInput();
+    const fragments = travelerHomeTravelogueFragmentsText().split('\n').map(item => item.trim()).filter(Boolean);
+    const rows = travelerHomePlatformDraftOverviewRows();
+    if (!route) return '# 我的上海游记初稿\n\n当前还没有可生成的路线。';
+    const lines = [
+      '# 我的上海游记初稿',
+      '',
+      `路线：${route.scenario}｜${route.title}`,
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`,
+      `地图：${travelerHomeAbsoluteUrl(route.mapHref)}`,
+      '',
+      '## 开头',
+      `这次来上海，我先选了“${route.title}”。它不是把所有地方塞进日程，而是按 ${travelerHomePreferenceLabel(preferences)} 的节奏，把路线、休息和拍照点排顺。`,
+      '',
+      '## 行程感受',
+      `这条线最打动我的地方，是“${route.primaryAngle}”。如果同行人不想赶场，可以先把主线定下来，再把吃饭、展览和下午茶留给现场微调。`,
+    ];
+    if (fragments.length) {
+      lines.push('', '## 旅途碎片');
+      fragments.forEach(fragment => lines.push(`- ${fragment}`));
+    }
+    lines.push('', '## 平台草稿参考');
+    rows.forEach(row => lines.push(`- ${row.label}（${row.source}）：${row.preview}`));
+    lines.push('', '## 收尾', '上海适合留一点空白给临时发现。这篇游记可以先作为初稿，发布前再补照片、餐厅细节和当天真实感受。');
+    lines.push('', '发布前请复核官方开放、预约、票务、交通和临时闭馆。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeTravelogue(){
+    const output = document.getElementById('traveler-home-travelogue-output');
+    const status = document.getElementById('traveler-home-travelogue-status');
+    const text = travelerHomeTravelogueMarkdown();
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成游记初稿。';
+    return text;
+  }
+  async function copyTravelerHomeTravelogue(){
+    const text = renderTravelerHomeTravelogue();
+    const status = document.getElementById('traveler-home-travelogue-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制游记初稿。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制游记。';
+    }
+    return text;
+  }
+  function travelerHomeTravelogueFilename(){
+    return 'shanghai-travelogue-draft.md';
+  }
+  function downloadTravelerHomeTravelogueMarkdown(){
+    const text = renderTravelerHomeTravelogue();
+    const filename = travelerHomeTravelogueFilename();
+    const status = document.getElementById('traveler-home-travelogue-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 游记。';
+    return {filename, text};
+  }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
     travelerHomePlatformCopyCurrent = target;
@@ -951,6 +1075,7 @@
     if (output) output.value = text;
     if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
     renderTravelerHomePlatformDraftOverview();
+    renderTravelerHomeTravelogue();
     return text;
   }
   function resetTravelerHomePlatformCopyDraft(){
@@ -962,6 +1087,7 @@
     if (output) output.value = travelerHomePlatformCopyGeneratedText;
     if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}原文。`;
     renderTravelerHomePlatformDraftOverview();
+    renderTravelerHomeTravelogue();
     return travelerHomePlatformCopyGeneratedText;
   }
   async function copyTravelerHomePlatformCopy(platform){
@@ -1030,6 +1156,9 @@
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
   document.getElementById('traveler-home-social-card-build-button')?.addEventListener('click', renderTravelerHomeSocialCard);
   document.getElementById('traveler-home-social-card-copy-button')?.addEventListener('click', copyTravelerHomeSocialCard);
+  document.getElementById('traveler-home-travelogue-build-button')?.addEventListener('click', renderTravelerHomeTravelogue);
+  document.getElementById('traveler-home-travelogue-copy-button')?.addEventListener('click', copyTravelerHomeTravelogue);
+  document.getElementById('traveler-home-travelogue-download-button')?.addEventListener('click', downloadTravelerHomeTravelogueMarkdown);
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });
@@ -1049,11 +1178,19 @@
     saveTravelerHomePlatformCopyDraft();
     if (status) status.textContent = '草稿已手动修改并保存，复制会使用当前草稿。';
   });
+  document.getElementById('traveler-home-travelogue-fragments')?.addEventListener?.('input', () => {
+    const status = document.getElementById('traveler-home-travelogue-status');
+    saveTravelerHomeTravelogueFragments();
+    renderTravelerHomeTravelogue();
+    if (status) status.textContent = '旅途碎片已保存并更新游记。';
+  });
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
   renderTravelerHomeSocialCard();
   renderTravelerHomePlatformCopy();
+  applyTravelerHomeTravelogueFragments();
+  renderTravelerHomeTravelogue();
 </script>
 </body>
 </html>

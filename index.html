@@ -57,6 +57,8 @@
     .traveler-social-card{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-social-card-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
     .traveler-social-card h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-platform-copy{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-platform-copy h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -150,6 +152,19 @@
       </div>
       <textarea id="traveler-home-social-card-output" readonly rows="7" aria-label="个人路线卡内容"></textarea>
       <p id="traveler-home-social-card-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-platform-copy" class="traveler-platform-copy" aria-label="平台文案变体">
+      <div class="traveler-social-card-head">
+        <h3>平台文案变体</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" data-traveler-home-platform-copy="xiaohongshu">小红书</button>
+          <button type="button" data-traveler-home-platform-copy="moments">朋友圈</button>
+          <button type="button" data-traveler-home-platform-copy="group">同行群</button>
+          <button type="button" id="traveler-home-platform-copy-button">复制当前</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-platform-copy-output" readonly rows="8" aria-label="平台文案内容"></textarea>
+      <p id="traveler-home-platform-copy-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
@@ -458,6 +473,7 @@
     updateTravelerHomeMemoryStatus(state);
     renderTravelerHomeRoutePack();
     renderTravelerHomeSocialCard();
+    renderTravelerHomePlatformCopy();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -493,6 +509,7 @@
     renderTravelerHomeRecommendation();
     renderTravelerHomeRoutePack();
     renderTravelerHomeSocialCard();
+    renderTravelerHomePlatformCopy();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -670,6 +687,81 @@
     }
     return text;
   }
+  let travelerHomePlatformCopyCurrent = 'xiaohongshu';
+  function travelerHomePlatformCopyLabel(platform){
+    const labels = {xiaohongshu:'小红书笔记', moments:'朋友圈短文', group:'同行群消息'};
+    return labels[platform] || labels.xiaohongshu;
+  }
+  function travelerHomePlatformCopyTags(route){
+    const themeTag = route.theme === 'city walk' ? '#上海CityWalk' : `#${String(route.theme || '上海路线').replace(/\s+/g, '')}`;
+    const scenarioTag = `#${String(route.scenario || '上海路线').replace(/\s+/g, '')}`;
+    return `#上海旅行 ${themeTag} ${scenarioTag}`;
+  }
+  function travelerHomePlatformCopyText(platform){
+    const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const routes = travelerHomeRoutePackRoutes();
+    const route = routes[0];
+    if (!route) return `${travelerHomePlatformCopyLabel(target)}\n当前还没有可生成的平台文案。`;
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || travelerHomePreferenceInput();
+    const preferenceLabel = travelerHomePreferenceLabel(preferences);
+    const guideUrl = travelerHomeAbsoluteUrl(route.guideHref);
+    const mapUrl = travelerHomeAbsoluteUrl(route.mapHref);
+    if (target === 'moments') {
+      return [
+        '朋友圈短文',
+        `这次上海先选：${route.scenario}｜${route.title}` ,
+        `节奏：${preferenceLabel}` ,
+        `攻略：${guideUrl}` ,
+        '出发前再复核开放、预约、票务、交通和临时闭馆。',
+      ].join('\n');
+    }
+    if (target === 'group') {
+      return [
+        '同行群消息',
+        `我先选了这条上海路线：${route.scenario}｜${route.title}` ,
+        `同行偏好：${preferenceLabel}` ,
+        `重点玩法：${route.primaryAngle}` ,
+        `攻略：${guideUrl}` ,
+        `地图：${mapUrl}` ,
+        '同行提醒：先按这条线做基础方案，住宿和吃饭再按大家时间微调。',
+        '出发前复核官方开放、预约、票务、交通和临时闭馆。',
+      ].join('\n');
+    }
+    return [
+      '小红书笔记',
+      `上海路线灵感：${route.scenario}｜${route.title}` ,
+      `适合人群：${route.audience}` ,
+      `我的偏好：${preferenceLabel}` ,
+      `玩法亮点：${route.primaryAngle}` ,
+      `攻略链接：${guideUrl}` ,
+      '不想把行程排太满的话，可以先用这条路线做底稿，再把想吃的店和临时展补进去。',
+      '出发前复核开放、预约、票务、交通和临时闭馆。',
+      travelerHomePlatformCopyTags(route),
+    ].join('\n');
+  }
+  function renderTravelerHomePlatformCopy(platform){
+    const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    travelerHomePlatformCopyCurrent = target;
+    const output = document.getElementById('traveler-home-platform-copy-output');
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    const text = travelerHomePlatformCopyText(target);
+    if (output) output.value = text;
+    if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
+    return text;
+  }
+  async function copyTravelerHomePlatformCopy(platform){
+    const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const text = renderTravelerHomePlatformCopy(target);
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = `已复制${travelerHomePlatformCopyLabel(target)}。`;
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制平台文案。';
+    }
+    return text;
+  }
   function travelerHomeRecommendRoute(){
     const recommendation = travelerHomeBestRecommendation();
     const target = document.getElementById('traveler-home-recommendation');
@@ -723,10 +815,15 @@
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
   document.getElementById('traveler-home-social-card-build-button')?.addEventListener('click', renderTravelerHomeSocialCard);
   document.getElementById('traveler-home-social-card-copy-button')?.addEventListener('click', copyTravelerHomeSocialCard);
+  document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
+    button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
+  });
+  document.getElementById('traveler-home-platform-copy-button')?.addEventListener('click', () => copyTravelerHomePlatformCopy());
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
   renderTravelerHomeSocialCard();
+  renderTravelerHomePlatformCopy();
 </script>
 </body>
 </html>

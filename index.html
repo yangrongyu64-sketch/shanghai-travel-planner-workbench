@@ -164,6 +164,7 @@
           <button type="button" data-traveler-home-platform-copy="moments">朋友圈</button>
           <button type="button" data-traveler-home-platform-copy="group">同行群</button>
           <button type="button" id="traveler-home-platform-copy-button">复制当前</button>
+          <button type="button" id="traveler-home-platform-copy-reset-button">恢复原文</button>
         </div>
       </div>
       <div class="traveler-platform-settings" aria-label="平台文案参数">
@@ -174,7 +175,7 @@
           <option value="short">短版</option><option value="standard" selected>标准版</option><option value="detailed">详细版</option>
         </select></label>
       </div>
-      <textarea id="traveler-home-platform-copy-output" readonly rows="8" aria-label="平台文案内容"></textarea>
+      <textarea id="traveler-home-platform-copy-output" rows="8" aria-label="平台文案内容"></textarea>
       <p id="traveler-home-platform-copy-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
@@ -787,19 +788,35 @@
     lines.push(travelerHomePlatformCopyTags(route));
     return lines.join('\n');
   }
+  let travelerHomePlatformCopyGeneratedText = '';
+  function travelerHomePlatformCopyDraftText(){
+    const output = document.getElementById('traveler-home-platform-copy-output');
+    return output?.value || travelerHomePlatformCopyGeneratedText || travelerHomePlatformCopyText(travelerHomePlatformCopyCurrent);
+  }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
     travelerHomePlatformCopyCurrent = target;
     const output = document.getElementById('traveler-home-platform-copy-output');
     const status = document.getElementById('traveler-home-platform-copy-status');
     const text = travelerHomePlatformCopyText(target);
+    travelerHomePlatformCopyGeneratedText = text;
     if (output) output.value = text;
     if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
     return text;
   }
+  function resetTravelerHomePlatformCopyDraft(){
+    const target = travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const output = document.getElementById('traveler-home-platform-copy-output');
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    if (!travelerHomePlatformCopyGeneratedText) travelerHomePlatformCopyGeneratedText = travelerHomePlatformCopyText(target);
+    if (output) output.value = travelerHomePlatformCopyGeneratedText;
+    if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}原文。`;
+    return travelerHomePlatformCopyGeneratedText;
+  }
   async function copyTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
-    const text = renderTravelerHomePlatformCopy(target);
+    if (platform) renderTravelerHomePlatformCopy(target);
+    const text = travelerHomePlatformCopyDraftText();
     const status = document.getElementById('traveler-home-platform-copy-status');
     try {
       await navigator.clipboard.writeText(text);
@@ -867,6 +884,11 @@
   });
   ['traveler-home-platform-copy-tone','traveler-home-platform-copy-length'].forEach(id => document.getElementById(id)?.addEventListener('change', () => renderTravelerHomePlatformCopy()));
   document.getElementById('traveler-home-platform-copy-button')?.addEventListener('click', () => copyTravelerHomePlatformCopy());
+  document.getElementById('traveler-home-platform-copy-reset-button')?.addEventListener('click', resetTravelerHomePlatformCopyDraft);
+  document.getElementById('traveler-home-platform-copy-output')?.addEventListener?.('input', () => {
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    if (status) status.textContent = '草稿已手动修改，复制会使用当前草稿。';
+  });
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();

@@ -789,9 +789,48 @@
     return lines.join('\n');
   }
   let travelerHomePlatformCopyGeneratedText = '';
+  function travelerHomePlatformCopyDraftKey(platform){
+    const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const route = travelerHomeRoutePackRoutes()[0];
+    if (!route?.tripId) return '';
+    const settings = travelerHomePlatformCopySettings();
+    return `${route.tripId}|${target}|${settings.tone}|${settings.length}`;
+  }
+  function travelerHomePlatformCopySavedDraft(platform){
+    const key = travelerHomePlatformCopyDraftKey(platform);
+    const drafts = travelerHomeStorageRead().platformDrafts || {};
+    return key && typeof drafts[key] === 'string' ? drafts[key] : '';
+  }
   function travelerHomePlatformCopyDraftText(){
     const output = document.getElementById('traveler-home-platform-copy-output');
     return output?.value || travelerHomePlatformCopyGeneratedText || travelerHomePlatformCopyText(travelerHomePlatformCopyCurrent);
+  }
+  function saveTravelerHomePlatformCopyDraft(){
+    const target = travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const key = travelerHomePlatformCopyDraftKey(target);
+    const text = travelerHomePlatformCopyDraftText();
+    const status = document.getElementById('traveler-home-platform-copy-status');
+    if (!key) return text;
+    const state = travelerHomeStorageRead();
+    const drafts = state.platformDrafts && typeof state.platformDrafts === 'object' ? state.platformDrafts : {};
+    if (text && text !== travelerHomePlatformCopyGeneratedText) drafts[key] = text;
+    else delete drafts[key];
+    state.platformDrafts = drafts;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    if (status) status.textContent = `已保存${travelerHomePlatformCopyLabel(target)}草稿。`;
+    return text;
+  }
+  function clearTravelerHomePlatformCopyDraft(){
+    const target = travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const key = travelerHomePlatformCopyDraftKey(target);
+    const state = travelerHomeStorageRead();
+    const drafts = state.platformDrafts && typeof state.platformDrafts === 'object' ? state.platformDrafts : {};
+    if (key) delete drafts[key];
+    state.platformDrafts = drafts;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    return state;
   }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
@@ -800,6 +839,12 @@
     const status = document.getElementById('traveler-home-platform-copy-status');
     const text = travelerHomePlatformCopyText(target);
     travelerHomePlatformCopyGeneratedText = text;
+    const savedDraft = travelerHomePlatformCopySavedDraft(target);
+    if (savedDraft) {
+      if (output) output.value = savedDraft;
+      if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}本地草稿。`;
+      return savedDraft;
+    }
     if (output) output.value = text;
     if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
     return text;
@@ -809,6 +854,7 @@
     const output = document.getElementById('traveler-home-platform-copy-output');
     const status = document.getElementById('traveler-home-platform-copy-status');
     if (!travelerHomePlatformCopyGeneratedText) travelerHomePlatformCopyGeneratedText = travelerHomePlatformCopyText(target);
+    clearTravelerHomePlatformCopyDraft();
     if (output) output.value = travelerHomePlatformCopyGeneratedText;
     if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}原文。`;
     return travelerHomePlatformCopyGeneratedText;
@@ -887,7 +933,8 @@
   document.getElementById('traveler-home-platform-copy-reset-button')?.addEventListener('click', resetTravelerHomePlatformCopyDraft);
   document.getElementById('traveler-home-platform-copy-output')?.addEventListener?.('input', () => {
     const status = document.getElementById('traveler-home-platform-copy-status');
-    if (status) status.textContent = '草稿已手动修改，复制会使用当前草稿。';
+    saveTravelerHomePlatformCopyDraft();
+    if (status) status.textContent = '草稿已手动修改并保存，复制会使用当前草稿。';
   });
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();

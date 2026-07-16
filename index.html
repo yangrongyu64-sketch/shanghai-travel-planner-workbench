@@ -54,6 +54,9 @@
     .traveler-pack-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-pack textarea{width:100%;min-height:188px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fffdfa;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
     .traveler-pack-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-social-card{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-social-card-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .traveler-social-card h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -101,7 +104,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-15</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-16</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
   <section id="traveler-home-route-picker" class="traveler-picker" aria-label="个性化路线推荐">
     <div class="traveler-picker-panel">
@@ -137,6 +140,17 @@
     </div>
     <textarea id="traveler-home-route-pack-output" readonly rows="8" aria-label="路线包内容"></textarea>
     <p id="traveler-home-route-pack-status" class="traveler-pack-status" aria-live="polite"></p>
+    <div id="traveler-home-social-card" class="traveler-social-card" aria-label="个人路线卡">
+      <div class="traveler-social-card-head">
+        <h3>个人路线卡</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-social-card-build-button" data-traveler-home-social-card-build>生成路线卡</button>
+          <button type="button" id="traveler-home-social-card-copy-button" data-traveler-home-social-card-copy>复制路线卡</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-social-card-output" readonly rows="7" aria-label="个人路线卡内容"></textarea>
+      <p id="traveler-home-social-card-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
     <div class="traveler-control"><label for="traveler-home-duration-filter">天数</label><select id="traveler-home-duration-filter" data-traveler-home-duration>
@@ -443,6 +457,7 @@
     travelerHomeStorageWrite(state);
     updateTravelerHomeMemoryStatus(state);
     renderTravelerHomeRoutePack();
+    renderTravelerHomeSocialCard();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -477,6 +492,7 @@
     travelerHomeStorageWrite(state);
     renderTravelerHomeRecommendation();
     renderTravelerHomeRoutePack();
+    renderTravelerHomeSocialCard();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -613,6 +629,47 @@
     if (status) status.textContent = '已下载 Markdown 路线包。';
     return {filename, text};
   }
+  function travelerHomeSocialCardText(){
+    const routes = travelerHomeRoutePackRoutes();
+    const route = routes[0];
+    if (!route) return '上海路线卡\n当前还没有可生成的路线。';
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || travelerHomePreferenceInput();
+    const themeTag = route.theme === 'city walk' ? '#上海CityWalk' : `#${String(route.theme || '上海路线').replace(/\s+/g, '')}`;
+    const scenarioTag = `#${String(route.scenario || '上海路线').replace(/\s+/g, '')}`;
+    return [
+      '上海路线卡',
+      `${route.scenario}｜${route.title}`,
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      `亮点：${route.primaryAngle}`,
+      `适合：${route.audience}`,
+      '',
+      '同行人一句话',
+      `这条路线适合先轻松进入上海，把 ${route.theme} 和休息节奏排顺，不用赶场。`,
+      `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`,
+      `标签：#上海旅行 ${themeTag} ${scenarioTag}`,
+      '开放、预约、票务、交通和临时闭馆出发前再复核。',
+    ].join('\n');
+  }
+  function renderTravelerHomeSocialCard(){
+    const output = document.getElementById('traveler-home-social-card-output');
+    const status = document.getElementById('traveler-home-social-card-status');
+    const text = travelerHomeSocialCardText();
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成个人路线卡。';
+    return text;
+  }
+  async function copyTravelerHomeSocialCard(){
+    const text = renderTravelerHomeSocialCard();
+    const status = document.getElementById('traveler-home-social-card-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制个人路线卡。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制路线卡。';
+    }
+    return text;
+  }
   function travelerHomeRecommendRoute(){
     const recommendation = travelerHomeBestRecommendation();
     const target = document.getElementById('traveler-home-recommendation');
@@ -664,9 +721,12 @@
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
+  document.getElementById('traveler-home-social-card-build-button')?.addEventListener('click', renderTravelerHomeSocialCard);
+  document.getElementById('traveler-home-social-card-copy-button')?.addEventListener('click', copyTravelerHomeSocialCard);
   applyTravelerHomeFilters();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
+  renderTravelerHomeSocialCard();
 </script>
 </body>
 </html>

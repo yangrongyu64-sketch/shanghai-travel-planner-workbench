@@ -35,6 +35,19 @@
     .traveler-product-brief span{color:var(--brick);font-size:12px;font-weight:900}
     .traveler-product-brief b{font-size:14px;line-height:1.25}
     .traveler-product-brief small{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-acceptance{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
+    .traveler-acceptance-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
+    .traveler-acceptance h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
+    .traveler-acceptance small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
+    .traveler-acceptance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .traveler-acceptance-grid article{display:grid;gap:5px;min-height:86px;align-content:start;border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
+    .traveler-acceptance-grid b{font-size:14px;line-height:1.25}
+    .traveler-acceptance-grid span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-acceptance-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .traveler-acceptance-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-acceptance-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-acceptance textarea{width:100%;min-height:156px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    .traveler-acceptance-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-workflow{display:grid;gap:10px;padding:14px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-workflow-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
     .traveler-workflow h2{margin:0;font-size:18px;letter-spacing:0}
@@ -119,10 +132,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief{grid-template-columns:1fr}.traveler-product-brief-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-acceptance{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-acceptance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid{grid-template-columns:1fr}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-acceptance-grid{grid-template-columns:1fr}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -172,6 +185,47 @@
       <b>页面、路线数据、PWA 与交付包已拆分</b>
       <small>后续可迁移成微信小程序的路线页和收藏流</small>
     </article>
+  </div>
+</section>
+<section id="traveler-home-acceptance-checklist" class="traveler-acceptance" aria-label="产品验收清单">
+  <div class="traveler-acceptance-head">
+    <p>正式验收</p>
+    <h2>产品验收清单</h2>
+    <small>用这张清单判断首版是否可以交付试用，人工复核项单独保留。</small>
+  </div>
+  <div>
+    <div class="traveler-acceptance-grid">
+      <article>
+        <b>网页/PWA：可用</b>
+        <span>首页、工作台、离线包与添加到主屏幕能力已跑通</span>
+      </article>
+      <article>
+        <b>路线详情：可用</b>
+        <span>6 条路线均有独立攻略页和每日执行信息</span>
+      </article>
+      <article>
+        <b>路线地图：可用</b>
+        <span>首页路线预览、详情页路线图和 GeoJSON 文件已生成</span>
+      </article>
+      <article>
+        <b>内容生成：可用</b>
+        <span>路线包、平台文案、个人路线卡和游记初稿可生成</span>
+      </article>
+      <article>
+        <b>小程序迁移包：已生成</b>
+        <span>产品说明、页面结构、数据包和迁移验收清单已拆分</span>
+      </article>
+      <article>
+        <b>复核边界：需人工确认</b>
+        <span>开放、预约、票务、交通和临时闭馆出发前仍需复核</span>
+      </article>
+    </div>
+    <div class="traveler-acceptance-actions">
+      <button type="button" id="traveler-home-acceptance-checklist-copy-button" data-traveler-home-acceptance-checklist-copy>复制验收清单</button>
+      <button type="button" class="primary" id="traveler-home-acceptance-checklist-download-button" data-traveler-home-acceptance-checklist-download>下载验收清单</button>
+    </div>
+    <textarea id="traveler-home-acceptance-checklist-output" readonly rows="8" aria-label="产品验收清单 Markdown"></textarea>
+    <p id="traveler-home-acceptance-checklist-status" class="traveler-acceptance-status" aria-live="polite"></p>
   </div>
 </section>
   <section id="traveler-home-workflow" class="traveler-workflow" aria-label="旅行工作流">
@@ -547,6 +601,70 @@
   function travelerHomeStorageWrite(state){
     try { localStorage.setItem(travelerHomeStorageKey, JSON.stringify(state)); } catch (error) {}
     return state;
+  }
+  function travelerHomeAcceptanceChecklistMarkdown(){
+    const routeCount = TRAVELER_HOME_ROUTES.length;
+    return [
+      '# 上海攻略生成工作台首版验收清单',
+      '',
+      `路线覆盖：${routeCount} 条上海路线`,
+      '适用对象：普通游客、同行人和旅游内容创作者试用。',
+      '',
+      '## 已可用',
+      '- [x] 网页/PWA：可用',
+      '- [x] 路线详情：可用',
+      '- [x] 路线地图：可用',
+      '- [x] 内容生成：可用',
+      '- [x] 小程序迁移包：已生成',
+      '',
+      '## 需人工确认',
+      '- [ ] 复核边界：需人工确认',
+      '- [ ] 开放、预约、票务、交通和临时闭馆',
+      '- [ ] 发布前官方信息和现场调整',
+      '',
+      '## 验收判断',
+      '1. 普通游客可以从首页完成选路线、看攻略、看地图和生成分享内容。',
+      '2. 创作者可以继续进入完整工作台做平台文案、游记和交付包。',
+      '3. 出发或发布前必须复核官方开放、预约、票务、交通和临时闭馆。',
+    ].join('\n');
+  }
+  function travelerHomeAcceptanceChecklistFilename(){
+    return 'shanghai-product-acceptance-checklist.md';
+  }
+  function renderTravelerHomeAcceptanceChecklist(){
+    const text = travelerHomeAcceptanceChecklistMarkdown();
+    const output = document.getElementById('traveler-home-acceptance-checklist-output');
+    const status = document.getElementById('traveler-home-acceptance-checklist-status');
+    if (output) output.value = text;
+    if (status && !status.textContent) status.textContent = '验收清单已生成，可下载留档。';
+    return text;
+  }
+  async function copyTravelerHomeAcceptanceChecklist(){
+    const text = renderTravelerHomeAcceptanceChecklist();
+    const status = document.getElementById('traveler-home-acceptance-checklist-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制验收清单。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制验收清单。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeAcceptanceChecklistMarkdown(){
+    const text = renderTravelerHomeAcceptanceChecklist();
+    const filename = travelerHomeAcceptanceChecklistFilename();
+    const status = document.getElementById('traveler-home-acceptance-checklist-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 验收清单。';
+    return {filename, text};
   }
   function travelerHomeSavedFavorites(state){
     return Array.isArray(state?.favorites) ? state.favorites.filter(Boolean) : [];
@@ -1268,6 +1386,8 @@
     const targetId = control?.getAttribute?.('data-traveler-home-workflow-next') || control?.getAttribute?.('data-traveler-home-workflow-target');
     if (targetId) goTravelerHomeWorkflowTarget(targetId);
   });
+  document.getElementById('traveler-home-acceptance-checklist-copy-button')?.addEventListener('click', copyTravelerHomeAcceptanceChecklist);
+  document.getElementById('traveler-home-acceptance-checklist-download-button')?.addEventListener('click', downloadTravelerHomeAcceptanceChecklistMarkdown);
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
@@ -1303,6 +1423,7 @@
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
   });
   applyTravelerHomeFilters();
+  renderTravelerHomeAcceptanceChecklist();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
   renderTravelerHomeSocialCard();

@@ -62,6 +62,16 @@
     .traveler-feedback-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
     .traveler-feedback-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-feedback-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-feedback-board{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-feedback-board p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-feedback-board h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-feedback-board small{margin-top:4px}
+    .traveler-feedback-board-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-feedback-board-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-feedback-board-list{display:grid;gap:8px}
+    .traveler-feedback-board-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-feedback-board-list b{font-size:13px;line-height:1.25}
+    .traveler-feedback-board-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-workflow{display:grid;gap:10px;padding:14px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-workflow-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
     .traveler-workflow h2{margin:0;font-size:18px;letter-spacing:0}
@@ -277,6 +287,24 @@
     </div>
     <textarea id="traveler-home-feedback-output" readonly rows="8" aria-label="试用反馈包 Markdown"></textarea>
     <p id="traveler-home-feedback-status" class="traveler-feedback-status" aria-live="polite"></p>
+    <div id="traveler-home-feedback-board" class="traveler-feedback-board" aria-label="反馈汇总看板">
+      <div>
+        <p>反馈汇总</p>
+        <h3>反馈汇总看板</h3>
+        <small>粘贴多份试用反馈包，按影响程度生成处理队列。</small>
+      </div>
+      <textarea id="traveler-home-feedback-board-input" rows="6" aria-label="批量试用反馈包" placeholder="粘贴多个 # 上海攻略试用反馈包，可用 --- 分隔。"></textarea>
+      <div class="traveler-feedback-actions">
+        <button type="button" class="primary" id="traveler-home-feedback-board-import-button" data-traveler-home-feedback-board-import>导入反馈</button>
+        <button type="button" id="traveler-home-feedback-board-copy-button" data-traveler-home-feedback-board-copy>复制处理队列</button>
+        <button type="button" id="traveler-home-feedback-board-download-button" data-traveler-home-feedback-board-download>下载处理队列</button>
+        <button type="button" id="traveler-home-feedback-board-clear-button" data-traveler-home-feedback-board-clear>清空看板</button>
+      </div>
+      <div id="traveler-home-feedback-board-summary" class="traveler-feedback-board-summary" aria-live="polite"></div>
+      <div id="traveler-home-feedback-board-list" class="traveler-feedback-board-list"></div>
+      <textarea id="traveler-home-feedback-board-output" readonly rows="8" aria-label="反馈处理队列 Markdown"></textarea>
+      <p id="traveler-home-feedback-board-status" class="traveler-feedback-status" aria-live="polite"></p>
+    </div>
   </div>
 </section>
   <section id="traveler-home-workflow" class="traveler-workflow" aria-label="旅行工作流">
@@ -819,6 +847,181 @@
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载 Markdown 反馈包。';
     return {filename, text};
+  }
+  function travelerHomeFeedbackBoardSeverityRank(severity){
+    const ranks = {blocks_use:0, '阻塞使用':0, affects_experience:1, '影响体验':1, suggestion:2, '建议优化':2};
+    return Object.prototype.hasOwnProperty.call(ranks, severity) ? ranks[severity] : 3;
+  }
+  function travelerHomeFeedbackBoardRecords(){
+    const state = travelerHomeStorageRead();
+    const records = Array.isArray(state.feedbackBoardRecords) ? state.feedbackBoardRecords : [];
+    return records.filter(record => record && typeof record === 'object').map((record, index) => ({
+      id: record.id || `feedback-${index + 1}`,
+      role: record.role || '未标注',
+      route: record.route || '未关联路线',
+      type: record.type || '其他',
+      severity: record.severity || '建议优化',
+      note: record.note || '',
+      guide: record.guide || '',
+      map: record.map || '',
+      nextAction: record.nextAction || travelerHomeFeedbackNextAction('other'),
+    })).sort((a, b) => travelerHomeFeedbackBoardSeverityRank(a.severity) - travelerHomeFeedbackBoardSeverityRank(b.severity) || String(a.route).localeCompare(String(b.route), 'zh-Hans-CN') || String(a.type).localeCompare(String(b.type), 'zh-Hans-CN'));
+  }
+  function travelerHomeFeedbackBoardLineValue(lines, label){
+    const prefix = `${label}：`;
+    const line = lines.find(item => item.trim().startsWith(prefix));
+    return line ? line.trim().slice(prefix.length).trim() : '';
+  }
+  function travelerHomeFeedbackBoardSection(lines, heading){
+    const start = lines.findIndex(line => line.trim() === heading);
+    if (start < 0) return '';
+    const values = [];
+    for (let index = start + 1; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (/^##\s+/.test(line.trim())) break;
+      values.push(line);
+    }
+    return values.join('\n').trim();
+  }
+  function travelerHomeFeedbackBoardFirstLine(value){
+    return String(value || '').split('\n').map(line => line.trim()).filter(Boolean)[0] || '';
+  }
+  function travelerHomeFeedbackBoardRecordId(record, index){
+    const source = `${record.severity}-${record.type}-${record.route}-${record.note}`;
+    const slug = source.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff-]+/g, '').slice(0, 48) || `feedback-${index + 1}`;
+    return `feedback-${index + 1}-${slug}`;
+  }
+  function travelerHomeFeedbackBoardParsePackages(text){
+    const normalized = String(text || '').replace(/\r\n/g, '\n').trim();
+    if (!normalized) return [];
+    const chunks = [];
+    normalized.split(/\n\s*---\s*\n/g).forEach(part => {
+      part.split(/(?=^#\s*上海攻略试用反馈包\s*$)/m).forEach(chunk => {
+        const clean = chunk.trim();
+        if (clean && (clean.includes('反馈人：') || clean.includes('## 问题描述'))) chunks.push(clean);
+      });
+    });
+    return chunks.map((chunk, index) => {
+      const lines = chunk.split('\n').map(line => line.trimEnd());
+      const record = {
+        role: travelerHomeFeedbackBoardLineValue(lines, '反馈人') || '未标注',
+        route: travelerHomeFeedbackBoardLineValue(lines, '路线') || '未关联路线',
+        type: travelerHomeFeedbackBoardLineValue(lines, '问题类型') || '其他',
+        severity: travelerHomeFeedbackBoardLineValue(lines, '影响程度') || '建议优化',
+        note: travelerHomeFeedbackBoardSection(lines, '## 问题描述') || '未填写具体问题。',
+        guide: travelerHomeFeedbackBoardLineValue(lines, '攻略'),
+        map: travelerHomeFeedbackBoardLineValue(lines, '地图'),
+        nextAction: travelerHomeFeedbackBoardSection(lines, '## 建议处理') || travelerHomeFeedbackNextAction('other'),
+      };
+      record.id = travelerHomeFeedbackBoardRecordId(record, index);
+      return record;
+    });
+  }
+  function travelerHomeFeedbackBoardSummary(records){
+    const source = Array.isArray(records) ? records : travelerHomeFeedbackBoardRecords();
+    return source.reduce((summary, record) => {
+      summary.total += 1;
+      if (travelerHomeFeedbackBoardSeverityRank(record.severity) === 0) summary.blocksUse += 1;
+      summary.byType[record.type] = (summary.byType[record.type] || 0) + 1;
+      summary.bySeverity[record.severity] = (summary.bySeverity[record.severity] || 0) + 1;
+      return summary;
+    }, {total:0, blocksUse:0, byType:{}, bySeverity:{}});
+  }
+  function travelerHomeFeedbackBoardQueueMarkdown(){
+    const records = travelerHomeFeedbackBoardRecords();
+    const summary = travelerHomeFeedbackBoardSummary(records);
+    const lines = [
+      '# 上海攻略试用反馈处理队列',
+      '',
+      `总反馈：${summary.total}`,
+      `阻塞使用：${summary.blocksUse}`,
+      '',
+      '## 按优先级处理',
+    ];
+    if (!records.length) {
+      lines.push('暂无反馈，先从试用反馈包导入。');
+      return lines.join('\n');
+    }
+    records.forEach((record, index) => {
+      lines.push(`${index + 1}. [${record.severity}] ${record.type}｜${record.route}`);
+      lines.push(`   - 问题：${record.note}`);
+      if (record.guide) lines.push(`   - 攻略：${record.guide}`);
+      if (record.map) lines.push(`   - 地图：${record.map}`);
+      lines.push(`   - 建议：${travelerHomeFeedbackBoardFirstLine(record.nextAction)}`);
+    });
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFeedbackBoard(){
+    const records = travelerHomeFeedbackBoardRecords();
+    const summary = travelerHomeFeedbackBoardSummary(records);
+    const summaryTarget = document.getElementById('traveler-home-feedback-board-summary');
+    const listTarget = document.getElementById('traveler-home-feedback-board-list');
+    const output = document.getElementById('traveler-home-feedback-board-output');
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    const typeSummary = Object.entries(summary.byType).map(([type, count]) => `${type} ${count} 条`).join(' / ') || '暂无分类';
+    if (summaryTarget) summaryTarget.innerHTML = `<span>反馈 ${summary.total} 条</span><span>阻塞使用 ${summary.blocksUse} 条</span><span>${escapeHtml(typeSummary)}</span>`;
+    if (listTarget) listTarget.innerHTML = records.length ? records.map(record => `<article><b>${escapeHtml(record.severity)}｜${escapeHtml(record.type)}｜${escapeHtml(record.route)}</b><span>${escapeHtml(record.note)}</span></article>`).join('') : '<article><b>暂无反馈</b><span>粘贴反馈包后点击导入反馈。</span></article>';
+    const text = travelerHomeFeedbackBoardQueueMarkdown();
+    if (output) output.value = text;
+    if (status && !status.textContent) status.textContent = records.length ? '反馈处理队列已生成。' : '暂无反馈队列。';
+    return text;
+  }
+  function importTravelerHomeFeedbackBoard(){
+    const input = document.getElementById('traveler-home-feedback-board-input');
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    const records = travelerHomeFeedbackBoardParsePackages(input?.value || '');
+    if (!records.length) {
+      if (status) status.textContent = '没有识别到反馈包。';
+      renderTravelerHomeFeedbackBoard();
+      return {count:0};
+    }
+    const state = travelerHomeStorageRead();
+    state.feedbackBoardRecords = records;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeFeedbackBoard();
+    if (status) status.textContent = `已导入 ${records.length} 条反馈。`;
+    return {count:records.length};
+  }
+  function travelerHomeFeedbackBoardFilename(){
+    return 'shanghai-feedback-queue.md';
+  }
+  async function copyTravelerHomeFeedbackBoardMarkdown(){
+    const text = renderTravelerHomeFeedbackBoard();
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制反馈处理队列。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制处理队列。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFeedbackBoardMarkdown(){
+    const text = renderTravelerHomeFeedbackBoard();
+    const filename = travelerHomeFeedbackBoardFilename();
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 处理队列。';
+    return {filename, text};
+  }
+  function clearTravelerHomeFeedbackBoard(){
+    const state = travelerHomeStorageRead();
+    state.feedbackBoardRecords = [];
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeFeedbackBoard();
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    if (status) status.textContent = '已清空反馈看板。';
+    return state;
   }
   function travelerHomeSavedFavorites(state){
     return Array.isArray(state?.favorites) ? state.favorites.filter(Boolean) : [];
@@ -1547,6 +1750,10 @@
   document.getElementById('traveler-home-feedback-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackMarkdown);
   ['traveler-home-feedback-role','traveler-home-feedback-route','traveler-home-feedback-type','traveler-home-feedback-severity'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '反馈包已随选择更新。'; }));
   document.getElementById('traveler-home-feedback-note')?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '问题描述已更新。'; });
+  document.getElementById('traveler-home-feedback-board-import-button')?.addEventListener('click', importTravelerHomeFeedbackBoard);
+  document.getElementById('traveler-home-feedback-board-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackBoardMarkdown);
+  document.getElementById('traveler-home-feedback-board-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackBoardMarkdown);
+  document.getElementById('traveler-home-feedback-board-clear-button')?.addEventListener('click', clearTravelerHomeFeedbackBoard);
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
@@ -1584,6 +1791,7 @@
   applyTravelerHomeFilters();
   renderTravelerHomeAcceptanceChecklist();
   renderTravelerHomeFeedback();
+  renderTravelerHomeFeedbackBoard();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
   renderTravelerHomeSocialCard();

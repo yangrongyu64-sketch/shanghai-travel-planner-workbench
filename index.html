@@ -27,6 +27,16 @@
     .live-deployment-banner div{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .live-deployment-banner b{font-size:13px}.live-deployment-banner span{font-size:12px}
     .live-deployment-banner nav{display:flex;gap:6px;flex-wrap:wrap}.live-deployment-banner a{display:inline-flex;align-items:center;min-height:28px;padding:0 8px;border:1px solid rgba(36,87,166,.22);border-radius:8px;background:#fff;color:#173b76;font-size:12px;font-weight:800}
+    .traveler-workflow{display:grid;gap:10px;padding:14px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
+    .traveler-workflow-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .traveler-workflow h2{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-workflow-summary{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .traveler-workflow button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-weight:900;cursor:pointer}
+    .traveler-workflow-next{background:var(--accent)!important;color:#fff!important}
+    .traveler-workflow-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .traveler-workflow-step{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fbfaf7}
+    .traveler-workflow-step b{display:grid;place-items:center;width:24px;height:24px;border-radius:999px;background:#e6eee9;color:var(--accent);font-size:12px}
+    .traveler-workflow-step strong{display:block;font-size:13px}.traveler-workflow-step span{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-picker{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fff}
     .traveler-picker-panel,.traveler-recommendation{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:14px}
     .traveler-picker h2,.traveler-recommendation h2{margin:0 0 8px;font-size:20px;letter-spacing:0}
@@ -102,8 +112,8 @@
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row{grid-template-columns:1fr}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions{justify-content:flex-start}}
+    @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps{grid-template-columns:1fr}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -120,8 +130,18 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-16</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-17</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
+  <section id="traveler-home-workflow" class="traveler-workflow" aria-label="旅行工作流">
+    <div class="traveler-workflow-head">
+      <div>
+        <h2>旅行工作流</h2>
+        <p id="traveler-home-workflow-summary" class="traveler-workflow-summary" aria-live="polite">当前状态整理中。</p>
+      </div>
+      <button type="button" class="traveler-workflow-next" data-traveler-home-workflow-next="traveler-home-route-picker">下一步</button>
+    </div>
+    <div id="traveler-home-workflow-steps" class="traveler-workflow-steps"></div>
+  </section>
   <section id="traveler-home-route-picker" class="traveler-picker" aria-label="个性化路线推荐">
     <div class="traveler-picker-panel">
       <h2>帮我选路线</h2>
@@ -492,6 +512,49 @@
   function travelerHomeRouteById(routeId){
     return TRAVELER_HOME_ROUTES.find(route => route.tripId === routeId) || null;
   }
+  function travelerHomeWorkflowItems(){
+    const route = travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || null;
+    const rows = travelerHomePlatformDraftOverviewRows();
+    const hasLocalDraft = rows.some(row => row.source === '本地草稿');
+    const fragments = travelerHomeTravelogueFragmentsText().trim();
+    return [
+      {key:'route', label:'路线', detail: route ? `${route.scenario}｜${route.title}` : '待选择路线', targetId:'traveler-home-route-picker', ready:Boolean(route)},
+      {key:'pack', label:'路线包', detail: route ? '路线包已就绪' : '待生成路线包', targetId:'traveler-home-route-pack', ready:Boolean(route)},
+      {key:'platform', label:'平台草稿', detail: hasLocalDraft ? '含本地草稿' : '生成稿可用', targetId:'traveler-home-platform-copy', ready:rows.length > 0},
+      {key:'travelogue', label:'游记', detail: fragments ? '含旅途碎片' : '可先生成初稿', targetId:'traveler-home-travelogue', ready:Boolean(fragments)},
+    ];
+  }
+  function travelerHomeWorkflowNextItem(items){
+    const source = items || travelerHomeWorkflowItems();
+    return source.find(item => !item.ready) || source.find(item => item.key === 'pack') || source[0];
+  }
+  function travelerHomeWorkflowStepsHtml(items){
+    return items.map((item, index) => `<div class="traveler-workflow-step" data-workflow-step="${escapeHtml(item.key)}"><b>${index + 1}</b><div><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.detail)}</span><button type="button" data-traveler-home-workflow-target="${escapeHtml(item.targetId)}">查看</button></div></div>`).join('');
+  }
+  function travelerHomeWorkflowHtml(){
+    const items = travelerHomeWorkflowItems();
+    const next = travelerHomeWorkflowNextItem(items);
+    const current = items[0]?.detail || '待选择路线';
+    return `<div class="traveler-workflow-head"><div><h2>旅行工作流</h2><p id="traveler-home-workflow-summary" class="traveler-workflow-summary" aria-live="polite">当前：${escapeHtml(current)}</p></div><button type="button" class="traveler-workflow-next" data-traveler-home-workflow-next="${escapeHtml(next?.targetId || 'traveler-home-route-picker')}">${escapeHtml(next?.label || '下一步')}</button></div><div id="traveler-home-workflow-steps" class="traveler-workflow-steps">${travelerHomeWorkflowStepsHtml(items)}</div>`;
+  }
+  function renderTravelerHomeWorkflow(){
+    const target = document.getElementById('traveler-home-workflow');
+    const items = travelerHomeWorkflowItems();
+    const html = travelerHomeWorkflowHtml();
+    if (target) target.innerHTML = html;
+    const summary = document.getElementById('traveler-home-workflow-summary');
+    const steps = document.getElementById('traveler-home-workflow-steps');
+    if (summary) summary.textContent = `当前：${items[0]?.detail || '待选择路线'}`;
+    if (steps) steps.innerHTML = travelerHomeWorkflowStepsHtml(items);
+    return items;
+  }
+  function goTravelerHomeWorkflowTarget(targetId){
+    const target = document.getElementById(targetId);
+    if (!target) return false;
+    target.scrollIntoView?.({behavior:'smooth', block:'start'});
+    target.focus?.({preventScroll:true});
+    return true;
+  }
   function updateTravelerHomeMemoryStatus(state, message){
     const target = document.getElementById('traveler-home-memory-status');
     if (!target) return;
@@ -512,6 +575,7 @@
     renderTravelerHomeRoutePack();
     renderTravelerHomeSocialCard();
     renderTravelerHomePlatformCopy();
+    renderTravelerHomeWorkflow();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -549,6 +613,7 @@
     renderTravelerHomeSocialCard();
     renderTravelerHomePlatformCopy();
     renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -848,6 +913,7 @@
     if (status) status.textContent = `已保存${travelerHomePlatformCopyLabel(target)}草稿。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
     return text;
   }
   function clearTravelerHomePlatformCopyDraft(){
@@ -1070,12 +1136,15 @@
       if (output) output.value = savedDraft;
       if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}本地草稿。`;
       renderTravelerHomePlatformDraftOverview();
+      renderTravelerHomeTravelogue();
+      renderTravelerHomeWorkflow();
       return savedDraft;
     }
     if (output) output.value = text;
     if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
     return text;
   }
   function resetTravelerHomePlatformCopyDraft(){
@@ -1088,6 +1157,7 @@
     if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}原文。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
     return travelerHomePlatformCopyGeneratedText;
   }
   async function copyTravelerHomePlatformCopy(platform){
@@ -1151,6 +1221,11 @@
     if (event.target?.closest?.('[data-traveler-home-recommendation-copy]')) copyTravelerHomeRecommendation();
   });
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
+  document.getElementById('traveler-home-workflow')?.addEventListener('click', event => {
+    const control = event.target?.closest?.('[data-traveler-home-workflow-next],[data-traveler-home-workflow-target]');
+    const targetId = control?.getAttribute?.('data-traveler-home-workflow-next') || control?.getAttribute?.('data-traveler-home-workflow-target');
+    if (targetId) goTravelerHomeWorkflowTarget(targetId);
+  });
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
@@ -1182,6 +1257,7 @@
     const status = document.getElementById('traveler-home-travelogue-status');
     saveTravelerHomeTravelogueFragments();
     renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
   });
   applyTravelerHomeFilters();
@@ -1191,6 +1267,7 @@
   renderTravelerHomePlatformCopy();
   applyTravelerHomeTravelogueFragments();
   renderTravelerHomeTravelogue();
+  renderTravelerHomeWorkflow();
 </script>
 </body>
 </html>

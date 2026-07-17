@@ -64,6 +64,16 @@
     .route-guide-map-svg polyline{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
     .route-guide-map-svg circle{fill:#fff;stroke:var(--brick);stroke-width:1.8}.route-guide-map-svg text{font-size:5.7px;font-weight:900;fill:#332b22}
     .route-guide-map-empty{display:grid;place-items:center;min-height:240px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
+    .route-guide-amap-panel{display:grid;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+    .route-guide-amap-panel h3{margin:0;font-size:16px;letter-spacing:0}
+    .route-guide-amap-panel p{margin:0;color:var(--muted);font-size:12px}
+    .route-guide-amap-panel label{display:grid;gap:5px;color:var(--muted);font-size:12px;font-weight:800}
+    .route-guide-amap-panel input{width:100%;min-width:0;height:36px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
+    .route-guide-amap-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .route-guide-amap-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:850}
+    .route-guide-amap-actions button:first-child{background:var(--accent);border-color:var(--accent);color:#fff}
+    .route-guide-map-status{min-height:18px}
+    .route-guide-amap-live-map{display:grid;place-items:center;min-height:220px;border:1px dashed var(--line);border-radius:8px;background:#eef5f3;color:var(--muted);font-size:12px;text-align:center;padding:12px;overflow:hidden}
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
     @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
@@ -408,6 +418,21 @@
           <circle cx="52.2" cy="12.0" r="3.2"></circle><text x="56.6" y="8.4">12</text>
           <title>人民广场 到 苏州河步道</title>
         </svg>
+<div id="route-guide-amap-panel" class="route-guide-amap-panel" aria-label="真实地图增强">
+  <h3>真实地图增强</h3>
+  <p>不填 Key 时继续使用上方 SVG 示意图；填入高德 Key 后可在本页加载真实底图。</p>
+  <label for="route-guide-map-api-key-input">高德 Web Key<input id="route-guide-map-api-key-input" type="password" placeholder="可选：高德 JS API Key"></label>
+  <label for="route-guide-amap-security-code-input">高德安全密钥<input id="route-guide-amap-security-code-input" type="password" placeholder="可选：高德 JS 安全密钥"></label>
+  <div class="route-guide-amap-actions">
+    <button type="button" id="route-guide-render-amap-button">加载高德底图</button>
+    <button type="button" id="route-guide-clear-amap-button">清空底图</button>
+    <button type="button" id="route-guide-save-map-config-button">保存到本机浏览器</button>
+    <button type="button" id="route-guide-clear-map-config-button">清除本机配置</button>
+  </div>
+  <p id="route-guide-map-config-status" class="route-guide-map-status">地图 Key 只在点击保存后写入当前浏览器 localStorage，不会写入项目文件。</p>
+  <p id="route-guide-amap-status" class="route-guide-map-status" aria-live="polite">未填写高德 Key 时不会加载第三方地图。</p>
+  <div id="route-guide-amap-live-map" class="route-guide-amap-live-map"><div>填入高德 Key 后点击“加载高德底图”，这里会显示真实地图点位和路线。</div></div>
+</div>
       </section>
 <section class="route-guide-card route-guide-execution">
   <h2>执行难度</h2>
@@ -430,9 +455,129 @@
 <script>
   const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海3天2晚暴走地标 + city walk 版\n\n- 天数：3天\n- 玩法：high_walk\n- 住宿区：人民广场\n- 适合谁：适合暴走党、地标打卡和高密度 city walk\n- 主题：地标打卡\n\n## 吃住行速览\n- 住宿：人民广场\n- 补给：人民广场 / 南京东路\n- 交通：高\n- 复核：开放、预约、票务、交通和临时闭馆\n\n## 住哪里\n- 建议住在：人民广场\n- 优势：交通居中；适合经典地标路线；临时调整行程比较方便\n- 住宿取舍：人流较大；不同街区酒店品质差异明显\n\n## 吃什么 / 休息补给\n- 人民广场 / 南京东路：首次来上海、短途换乘、经典路线补给\n  - 吃喝类型：商场简餐 / 本帮简餐 / 咖啡 / 甜品\n  - 休息策略：把午餐或下午茶放在商场、地铁站周边，适合接博物馆、南京东路和外滩路线。\n  - 避坑：不要在午晚高峰临时追热门排队店，容易打乱后续外滩或返程节奏。\n- 外滩 / 外滩源：外滩夜景前后的轻食、咖啡和建筑路线停顿\n  - 吃喝类型：咖啡 / 轻食 / 下午茶 / 简餐\n  - 休息策略：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。\n  - 避坑：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。\n- 武康路 / 安福路 / 衡复：city walk、咖啡、brunch、街区内容创作\n  - 吃喝类型：咖啡 / brunch / 面包甜点 / 轻食\n  - 休息策略：只提前锁定一个咖啡或轻食点，其他跟随街区节奏，把休息点嵌进步行路线。\n  - 避坑：周末热门点排队和拍照人流明显，不要把整条路线押在单一网红店上。\n\n## 执行难度\n- 体力：高：全程约 12 个停靠点，单日切换多，建议穿适合长走的鞋。\n- 人流：中高：南京东路、外滩、陆家嘴 周末和节假日人流更明显，拍照点不要压得太满。\n- 预算倾向：中等：优先把钱花在住宿位置和必要预约上，网红排队店不用强追。\n\n### 每日执行提醒\n- Day 1：从 人民广场 开始，到 陆家嘴 收束，至少预留 30 分钟机动；陆家嘴 停留时间较长，别被前一站挤掉。\n- Day 2：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。\n- Day 3：从 上海博物馆 开始，到 苏州河步道 收束，至少预留 30 分钟机动；上海博物馆、豫园 / 老城厢 停留时间较长，别被前一站挤掉。\n\n## 行程安排\n\n### Day 1 人民广场、南京东路、外滩、陆家嘴\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：陆家嘴\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 下午｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 傍晚｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n- 4. 晚上｜陆家嘴｜lujiazui\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Lujiazui。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：天际线价值高，但不要强行塞进每一天。\n\n### Day 2 衡复深走：武康路、安福路、复兴公园、新天地\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n\n### Day 3 博物馆、豫园或外滩源、苏州河\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：苏州河步道\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 4. 傍晚｜苏州河步道｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Tiantong Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合作为串联步行路线，不适合赶场式打卡。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
   const TRAVELER_ROUTE_GUIDE_DAYS = [{"day": 1, "title": "Day 1 人民广场、南京东路、外滩、陆家嘴", "text": "### Day 1 人民广场、南京东路、外滩、陆家嘴\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：陆家嘴\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 下午｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 傍晚｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n- 4. 晚上｜陆家嘴｜lujiazui\n  - 停留建议：120 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Lujiazui。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：天际线价值高，但不要强行塞进每一天。"}, {"day": 2, "title": "Day 2 衡复深走：武康路、安福路、复兴公园、新天地", "text": "### Day 2 衡复深走：武康路、安福路、复兴公园、新天地\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。"}, {"day": 3, "title": "Day 3 博物馆、豫园或外滩源、苏州河", "text": "### Day 3 博物馆、豫园或外滩源、苏州河\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：苏州河步道\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 4. 傍晚｜苏州河步道｜suzhou_creek\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Tiantong Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合作为串联步行路线，不适合赶场式打卡。"}];
+  const TRAVELER_ROUTE_GUIDE_MAP_POINTS = [{"day": 1, "order": 1, "placeName": "人民广场", "timeBlock": "上午", "coordinate": [121.4752, 31.2304]}, {"day": 1, "order": 2, "placeName": "南京东路", "timeBlock": "下午", "coordinate": [121.4845, 31.237]}, {"day": 1, "order": 3, "placeName": "外滩", "timeBlock": "傍晚", "coordinate": [121.4903, 31.2397]}, {"day": 1, "order": 4, "placeName": "陆家嘴", "timeBlock": "晚上", "coordinate": [121.4998, 31.2397]}, {"day": 2, "order": 1, "placeName": "武康路", "timeBlock": "上午", "coordinate": [121.4416, 31.2109]}, {"day": 2, "order": 2, "placeName": "安福路", "timeBlock": "中午", "coordinate": [121.4447, 31.216]}, {"day": 2, "order": 3, "placeName": "复兴公园", "timeBlock": "下午", "coordinate": [121.4675, 31.2189]}, {"day": 2, "order": 4, "placeName": "新天地", "timeBlock": "晚上", "coordinate": [121.4755, 31.219]}, {"day": 3, "order": 1, "placeName": "上海博物馆", "timeBlock": "上午", "coordinate": [121.4756, 31.2285]}, {"day": 3, "order": 2, "placeName": "豫园 / 老城厢", "timeBlock": "下午", "coordinate": [121.492, 31.2273]}, {"day": 3, "order": 3, "placeName": "外滩源", "timeBlock": "下午备选", "coordinate": [121.488, 31.243]}, {"day": 3, "order": 4, "placeName": "苏州河步道", "timeBlock": "傍晚", "coordinate": [121.48, 31.247]}];
   const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
+  const travelerRouteGuideMapConfigStorageKey = 'shanghai-traveler-route-guide-map-config-v1';
+  let travelerRouteGuideAmapLoadPromise = null;
+  let travelerRouteGuideAmapInstance = null;
   if (TRAVELER_ROUTE_GUIDE_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', () => { navigator.serviceWorker.register('../service-worker.js').catch(() => {}); });
+  }
+  function travelerRouteGuideMapPoints(){
+    return TRAVELER_ROUTE_GUIDE_MAP_POINTS.filter(point => Number.isFinite(Number(point.coordinate?.[0])) && Number.isFinite(Number(point.coordinate?.[1])));
+  }
+  function travelerRouteGuideMapCenter(){
+    const points = travelerRouteGuideMapPoints();
+    if (!points.length) return [121.4752, 31.2304];
+    const sum = points.reduce((result, point) => [result[0] + Number(point.coordinate[0]), result[1] + Number(point.coordinate[1])], [0, 0]);
+    return [sum[0] / points.length, sum[1] / points.length];
+  }
+  function travelerRouteGuideSetAmapStatus(message, tone){
+    const status = document.getElementById('route-guide-amap-status');
+    if (!status) return;
+    status.textContent = message;
+    status.style.color = tone === 'warn' ? 'var(--brick)' : 'var(--accent)';
+  }
+  function travelerRouteGuideMapConfigFields(){
+    return {
+      apiKey: document.getElementById('route-guide-map-api-key-input'),
+      securityCode: document.getElementById('route-guide-amap-security-code-input'),
+      status: document.getElementById('route-guide-map-config-status'),
+    };
+  }
+  function loadTravelerRouteGuideMapConfig(){
+    try {
+      const raw = localStorage.getItem(travelerRouteGuideMapConfigStorageKey);
+      return raw ? JSON.parse(raw) : {};
+    } catch (error) {
+      return {};
+    }
+  }
+  function applyTravelerRouteGuideMapConfig(){
+    const config = loadTravelerRouteGuideMapConfig();
+    const fields = travelerRouteGuideMapConfigFields();
+    if (!fields.apiKey || !fields.securityCode || !fields.status) return config;
+    if (config.apiKey) fields.apiKey.value = config.apiKey;
+    if (config.securityCode) fields.securityCode.value = config.securityCode;
+    if (config.apiKey || config.securityCode) fields.status.textContent = '已从本机浏览器读取地图配置。';
+    return config;
+  }
+  function saveTravelerRouteGuideMapConfig(){
+    const fields = travelerRouteGuideMapConfigFields();
+    if (!fields.apiKey || !fields.securityCode || !fields.status) return {};
+    const payload = {provider:'amap', apiKey: fields.apiKey.value.trim(), securityCode: fields.securityCode.value.trim(), savedAt: new Date().toISOString()};
+    try {
+      localStorage.setItem(travelerRouteGuideMapConfigStorageKey, JSON.stringify(payload));
+      fields.status.textContent = '已保存到本机浏览器，不会写入项目文件。';
+      fields.status.style.color = 'var(--accent)';
+    } catch (error) {
+      fields.status.textContent = '保存失败：当前浏览器不允许 localStorage。';
+      fields.status.style.color = 'var(--brick)';
+    }
+    return payload;
+  }
+  function clearTravelerRouteGuideMapConfig(){
+    const fields = travelerRouteGuideMapConfigFields();
+    try {
+      localStorage.removeItem(travelerRouteGuideMapConfigStorageKey);
+      if (fields.apiKey) fields.apiKey.value = '';
+      if (fields.securityCode) fields.securityCode.value = '';
+      if (fields.status) fields.status.textContent = '已清除本机地图配置。';
+    } catch (error) {
+      if (fields.status) fields.status.textContent = '清除失败：当前浏览器不允许 localStorage。';
+    }
+  }
+  function travelerRouteGuideLoadAmapScript(apiKey, securityCode){
+    const key = String(apiKey || '').trim();
+    const jscode = String(securityCode || '').trim();
+    if (!key) return Promise.reject(new Error('未填写高德 Key'));
+    if (window.AMap) return Promise.resolve(window.AMap);
+    if (jscode) window._AMapSecurityConfig = {securityJsCode: jscode};
+    if (travelerRouteGuideAmapLoadPromise) return travelerRouteGuideAmapLoadPromise;
+    travelerRouteGuideAmapLoadPromise = new Promise((resolve, reject) => {
+      const callbackName = `__travelerRouteGuideAmapLoaded_${Date.now()}`;
+      window[callbackName] = () => { delete window[callbackName]; resolve(window.AMap); };
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://webapi.amap.com/maps?v=2.0&key=${encodeURIComponent(key)}&callback=${callbackName}`;
+      script.onerror = () => { delete window[callbackName]; travelerRouteGuideAmapLoadPromise = null; reject(new Error('高德底图加载失败')); };
+      document.head.appendChild(script);
+    });
+    return travelerRouteGuideAmapLoadPromise;
+  }
+  function clearTravelerRouteGuideAmap(){
+    const liveMap = document.getElementById('route-guide-amap-live-map');
+    if (travelerRouteGuideAmapInstance) {
+      travelerRouteGuideAmapInstance.destroy?.();
+      travelerRouteGuideAmapInstance = null;
+    }
+    if (liveMap) liveMap.innerHTML = '<div>高德底图已清空，SVG 示意图仍可继续使用。</div>';
+    travelerRouteGuideSetAmapStatus('已清空高德底图。');
+  }
+  async function renderTravelerRouteGuideAmap(){
+    const fields = travelerRouteGuideMapConfigFields();
+    const liveMap = document.getElementById('route-guide-amap-live-map');
+    if (!fields.apiKey || !fields.securityCode || !liveMap) return false;
+    const points = travelerRouteGuideMapPoints();
+    if (!points.length) { travelerRouteGuideSetAmapStatus('当前路线没有可渲染的经纬度点位。', 'warn'); return false; }
+    travelerRouteGuideSetAmapStatus('正在加载高德底图...');
+    try {
+      const AMap = await travelerRouteGuideLoadAmapScript(fields.apiKey.value, fields.securityCode.value);
+      if (travelerRouteGuideAmapInstance) travelerRouteGuideAmapInstance.destroy?.();
+      liveMap.innerHTML = '';
+      travelerRouteGuideAmapInstance = new AMap.Map('route-guide-amap-live-map', {zoom: 12, center: travelerRouteGuideMapCenter(), viewMode: '2D'});
+      const path = points.map(point => point.coordinate);
+      if (path.length > 1) new AMap.Polyline({map: travelerRouteGuideAmapInstance, path, strokeColor: '#0f766e', strokeWeight: 6, strokeOpacity: 0.82});
+      points.forEach(point => {
+        new AMap.Marker({map: travelerRouteGuideAmapInstance, position: point.coordinate, title: point.placeName, label: {content: `D${point.day}-${point.order} ${point.placeName}`, direction: 'top'}});
+      });
+      travelerRouteGuideAmapInstance.setFitView?.();
+      travelerRouteGuideSetAmapStatus(`高德底图已加载：${points.length} 个点位。`);
+      return true;
+    } catch (error) {
+      travelerRouteGuideSetAmapStatus(`高德底图加载失败：${error.message || '请检查 Key、安全密钥、域名白名单或网络。'}`, 'warn');
+      return false;
+    }
   }
   async function copyTravelerRouteGuideText(){
     const status = document.getElementById('copy-route-guide-status');
@@ -463,6 +608,11 @@
     }
     return day.text;
   }
+  applyTravelerRouteGuideMapConfig();
+  document.getElementById('route-guide-save-map-config-button')?.addEventListener('click', saveTravelerRouteGuideMapConfig);
+  document.getElementById('route-guide-clear-map-config-button')?.addEventListener('click', () => { clearTravelerRouteGuideMapConfig(); clearTravelerRouteGuideAmap(); });
+  document.getElementById('route-guide-render-amap-button')?.addEventListener('click', renderTravelerRouteGuideAmap);
+  document.getElementById('route-guide-clear-amap-button')?.addEventListener('click', clearTravelerRouteGuideAmap);
   document.getElementById('copy-route-guide-button')?.addEventListener('click', copyTravelerRouteGuideText);
   document.querySelectorAll('[data-route-guide-copy-day]').forEach(button => {
     button.addEventListener('click', () => copyTravelerRouteGuideDayText(button.dataset.routeGuideCopyDay));

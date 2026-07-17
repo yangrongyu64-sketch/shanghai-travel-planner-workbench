@@ -32,8 +32,14 @@
     .route-guide-fact b{display:block;font-size:18px}.route-guide-fact span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
     .route-guide-quick-brief-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     .route-guide-quick-brief-list p{margin:0;border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px;color:var(--muted);font-size:13px;font-weight:800}
+    .route-guide-day-index-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .route-guide-day-index-list a{display:grid;gap:3px;min-height:86px;border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px;color:var(--ink)}
+    .route-guide-day-index-list b{font-size:15px}.route-guide-day-index-list span{color:var(--muted);font-size:13px}.route-guide-day-index-list small{color:var(--brick);font-size:12px;font-weight:800}
     .route-guide-day{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px}
+    .route-guide-day-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
     .route-guide-day h2{margin:0 0 12px;font-size:20px}
+    .route-guide-day-heading h2{margin:0}
+    .route-guide-day-heading button{display:inline-flex;align-items:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:850}
     .route-guide-day-execution{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:12px;margin:0 0 12px}
     .route-guide-day-execution p{margin:0 0 4px;color:var(--brick);font-size:12px;font-weight:900}
     .route-guide-day-execution h3{margin:0 0 10px;font-size:16px;letter-spacing:0}
@@ -61,7 +67,7 @@
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
     @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
-    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid{grid-template-columns:1fr}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
+    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid{grid-template-columns:1fr}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
   </style>
 </head>
 <body>
@@ -135,8 +141,26 @@
         <h2>行程安排</h2>
         <p>2天躺平 city walk</p>
       </section>
-<section class="route-guide-day">
-  <h2>Day 1 慢抵达：衡复街区和咖啡</h2>
+<section id="route-guide-day-index" class="route-guide-card route-guide-day-index">
+  <h2>行程目录</h2>
+  <div class="route-guide-day-index-list">
+    <a href="#route-guide-day-1">
+      <b>Day 1</b>
+      <span>慢抵达：衡复街区和咖啡</span>
+      <small>武康路 → 新天地</small>
+    </a>
+    <a href="#route-guide-day-2">
+      <b>Day 2</b>
+      <span>轻经典：外滩源到外滩</span>
+      <small>外滩源 → 南京东路</small>
+    </a>
+  </div>
+</section>
+<section id="route-guide-day-1" class="route-guide-day">
+  <div class="route-guide-day-heading">
+    <h2>Day 1 慢抵达：衡复街区和咖啡</h2>
+    <button type="button" data-route-guide-copy-day="1">复制当天</button>
+  </div>
 <section class="route-guide-day-execution">
   <p>当天执行卡</p>
   <h3>Day 1 执行卡</h3>
@@ -191,8 +215,11 @@
   </div>
 </article>
 </section>
-<section class="route-guide-day">
-  <h2>Day 2 轻经典：外滩源到外滩</h2>
+<section id="route-guide-day-2" class="route-guide-day">
+  <div class="route-guide-day-heading">
+    <h2>Day 2 轻经典：外滩源到外滩</h2>
+    <button type="button" data-route-guide-copy-day="2">复制当天</button>
+  </div>
 <section class="route-guide-day-execution">
   <p>当天执行卡</p>
   <h3>Day 2 执行卡</h3>
@@ -283,6 +310,7 @@
 </main>
 <script>
   const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海2天1晚躺平 city walk 版\n\n- 天数：2天\n- 玩法：relaxed\n- 住宿区：淮海中路 / 衡复\n- 适合谁：适合短途躺平、不想太累和少换区\n- 主题：city walk\n\n## 吃住行速览\n- 住宿：淮海中路 / 衡复\n- 补给：武康路 / 安福路 / 衡复\n- 交通：低到中\n- 复核：开放、预约、票务、交通和临时闭馆\n\n## 住哪里\n- 建议住在：淮海中路 / 衡复\n- 优势：最适合街区漫步；咖啡和建筑内容价值高；适合博主拍摄和写作\n- 住宿取舍：部分酒店离核心换乘站较远；不适合第一次来上海还想快速打满地标的人\n\n## 吃什么 / 休息补给\n- 武康路 / 安福路 / 衡复：city walk、咖啡、brunch、街区内容创作\n  - 吃喝类型：咖啡 / brunch / 面包甜点 / 轻食\n  - 休息策略：只提前锁定一个咖啡或轻食点，其他跟随街区节奏，把休息点嵌进步行路线。\n  - 避坑：周末热门点排队和拍照人流明显，不要把整条路线押在单一网红店上。\n- 外滩 / 外滩源：外滩夜景前后的轻食、咖啡和建筑路线停顿\n  - 吃喝类型：咖啡 / 轻食 / 下午茶 / 简餐\n  - 休息策略：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。\n  - 避坑：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。\n\n## 执行难度\n- 体力：低到中：全程约 6 个停靠点，重点是慢走和留白，不建议临时加太多点。\n- 人流：中高：武康路、安福路、新天地 周末和节假日人流更明显，拍照点不要压得太满。\n- 预算倾向：中等偏上：住宿和咖啡、brunch 选择多，预算紧时把正餐放到商场简餐或街区轻食。\n\n### 每日执行提醒\n- Day 1：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。\n- Day 2：从 外滩源 开始，到 南京东路 收束，至少预留 30 分钟机动。\n\n## 行程安排\n\n### Day 1 慢抵达：衡复街区和咖啡\n\n#### Day 1 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 傍晚｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n\n### Day 2 轻经典：外滩源到外滩\n\n#### Day 2 执行卡\n- 开始：外滩源\n- 收束：南京东路\n- 补给：外滩 / 外滩源\n- 交通：同片区为主，优先步行或短途骑行，体力下降再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 2. 下午｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n- 3. 离开前可选｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
+  const TRAVELER_ROUTE_GUIDE_DAYS = [{"day": 1, "title": "Day 1 慢抵达：衡复街区和咖啡", "text": "### Day 1 慢抵达：衡复街区和咖啡\n\n#### Day 1 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 傍晚｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。"}, {"day": 2, "title": "Day 2 轻经典：外滩源到外滩", "text": "### Day 2 轻经典：外滩源到外滩\n\n#### Day 2 执行卡\n- 开始：外滩源\n- 收束：南京东路\n- 补给：外滩 / 外滩源\n- 交通：同片区为主，优先步行或短途骑行，体力下降再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n- 2. 下午｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n- 3. 离开前可选｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。"}];
   const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
   if (TRAVELER_ROUTE_GUIDE_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', () => { navigator.serviceWorker.register('../service-worker.js').catch(() => {}); });
@@ -299,7 +327,27 @@
     }
     return TRAVELER_ROUTE_GUIDE_TEXT;
   }
+  async function copyTravelerRouteGuideDayText(dayNumber){
+    const status = document.getElementById('copy-route-guide-status');
+    const day = TRAVELER_ROUTE_GUIDE_DAYS.find(day => day.day === Number(dayNumber));
+    const button = document.querySelector(`[data-route-guide-copy-day="${dayNumber}"]`);
+    if (!day) {
+      if (status) status.textContent = '没有找到这一天的攻略。';
+      return '';
+    }
+    try {
+      await navigator.clipboard.writeText(day.text);
+      if (button) button.textContent = '已复制当天';
+      if (status) status.textContent = `${day.title} 已复制，可单独发给同行人。`;
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制当天内容。';
+    }
+    return day.text;
+  }
   document.getElementById('copy-route-guide-button')?.addEventListener('click', copyTravelerRouteGuideText);
+  document.querySelectorAll('[data-route-guide-copy-day]').forEach(button => {
+    button.addEventListener('click', () => copyTravelerRouteGuideDayText(button.dataset.routeGuideCopyDay));
+  });
 </script>
 </body>
 </html>

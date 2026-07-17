@@ -105,6 +105,16 @@
     .traveler-content-intake-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
     .traveler-content-intake-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-content-intake-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-content-intake-board{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-content-intake-board p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-content-intake-board h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-content-intake-board small{margin-top:4px}
+    .traveler-content-intake-board-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-content-intake-board-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-content-intake-board-list{display:grid;gap:8px}
+    .traveler-content-intake-board-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-content-intake-board-list b{font-size:13px;line-height:1.25}
+    .traveler-content-intake-board-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-feedback{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
     .traveler-feedback-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-feedback h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -472,6 +482,24 @@
     </div>
     <textarea id="traveler-home-content-intake-output" readonly rows="9" aria-label="素材入库清单 Markdown"></textarea>
     <p id="traveler-home-content-intake-status" class="traveler-content-intake-status" aria-live="polite"></p>
+    <div id="traveler-home-content-intake-board" class="traveler-content-intake-board" aria-label="素材入库队列">
+      <div>
+        <p>素材汇总</p>
+        <h3>素材入库队列</h3>
+        <small>粘贴多份素材入库清单，按官方复核、平台素材、游记碎片生成处理队列。</small>
+      </div>
+      <textarea id="traveler-home-content-intake-board-input" rows="6" aria-label="批量素材入库清单" placeholder="粘贴多个 # 上海攻略素材入库清单，可用 --- 分隔。"></textarea>
+      <div class="traveler-content-intake-actions">
+        <button type="button" class="primary" id="traveler-home-content-intake-board-import-button" data-traveler-home-content-intake-board-import>导入素材</button>
+        <button type="button" id="traveler-home-content-intake-board-copy-button" data-traveler-home-content-intake-board-copy>复制素材队列</button>
+        <button type="button" id="traveler-home-content-intake-board-download-button" data-traveler-home-content-intake-board-download>下载素材队列</button>
+        <button type="button" id="traveler-home-content-intake-board-clear-button" data-traveler-home-content-intake-board-clear>清空素材队列</button>
+      </div>
+      <div id="traveler-home-content-intake-board-summary" class="traveler-content-intake-board-summary" aria-live="polite"></div>
+      <div id="traveler-home-content-intake-board-list" class="traveler-content-intake-board-list"></div>
+      <textarea id="traveler-home-content-intake-board-output" readonly rows="8" aria-label="素材处理队列 Markdown"></textarea>
+      <p id="traveler-home-content-intake-board-status" class="traveler-content-intake-status" aria-live="polite"></p>
+    </div>
   </div>
 </section>
 <section id="traveler-home-feedback" class="traveler-feedback" aria-label="试用反馈入口">
@@ -1272,6 +1300,187 @@
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载 Markdown 入库清单。';
     return {filename, text};
+  }
+  function travelerHomeContentIntakeBoardSourceRank(source){
+    const ranks = {official:0, '官方复核':0, xiaohongshu:1, douyin:1, '小红书':1, '抖音':1, travelogue:2, '游记碎片':2};
+    return Object.prototype.hasOwnProperty.call(ranks, source) ? ranks[source] : 3;
+  }
+  function travelerHomeContentIntakeBoardRecords(){
+    const state = travelerHomeStorageRead();
+    const records = Array.isArray(state.contentIntakeBoardRecords) ? state.contentIntakeBoardRecords : [];
+    return records.filter(record => record && typeof record === 'object').map((record, index) => ({
+      id: record.id || `content-intake-${index + 1}`,
+      source: record.source || '未标注',
+      route: record.route || '未关联路线',
+      title: record.title || '未命名素材',
+      note: record.note || '未填写素材摘要。',
+      nextStep: record.nextStep || '',
+    })).sort((a, b) => travelerHomeContentIntakeBoardSourceRank(a.source) - travelerHomeContentIntakeBoardSourceRank(b.source) || String(a.route).localeCompare(String(b.route), 'zh-Hans-CN') || String(a.title).localeCompare(String(b.title), 'zh-Hans-CN'));
+  }
+  function travelerHomeContentIntakeBoardLineValue(lines, label){
+    const prefix = `${label}：`;
+    const line = lines.find(item => item.trim().startsWith(prefix));
+    return line ? line.trim().slice(prefix.length).trim() : '';
+  }
+  function travelerHomeContentIntakeBoardSection(lines, heading){
+    const start = lines.findIndex(line => line.trim() === heading);
+    if (start < 0) return '';
+    const values = [];
+    for (let index = start + 1; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (/^##\s+/.test(line.trim())) break;
+      values.push(line);
+    }
+    return values.join('\n').trim();
+  }
+  function travelerHomeContentIntakeBoardFirstLine(value){
+    return String(value || '').split('\n').map(line => line.trim()).filter(Boolean)[0] || '';
+  }
+  function travelerHomeContentIntakeBoardRecordId(record, index){
+    const source = `${record.source}-${record.route}-${record.title}-${record.note}`;
+    const slug = source.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff-]+/g, '').slice(0, 48) || `content-intake-${index + 1}`;
+    return `content-intake-${index + 1}-${slug}`;
+  }
+  function travelerHomeContentIntakeBoardParsePackages(text){
+    const normalized = String(text || '').replace(/\r\n/g, '\n').trim();
+    if (!normalized) return [];
+    const chunks = [];
+    normalized.split(/\n\s*---\s*\n/g).forEach(part => {
+      part.split(/(?=^#\s*上海攻略素材入库清单\s*$)/m).forEach(chunk => {
+        const clean = chunk.trim();
+        if (clean && (clean.includes('素材类型：') || clean.includes('## 素材摘要'))) chunks.push(clean);
+      });
+    });
+    return chunks.map((chunk, index) => {
+      const lines = chunk.split('\n').map(line => line.trimEnd());
+      const record = {
+        source: travelerHomeContentIntakeBoardLineValue(lines, '素材类型') || '未标注',
+        route: travelerHomeContentIntakeBoardLineValue(lines, '关联路线') || '未关联路线',
+        title: travelerHomeContentIntakeBoardLineValue(lines, '素材标题') || '未命名素材',
+        note: travelerHomeContentIntakeBoardSection(lines, '## 素材摘要') || '未填写素材摘要。',
+        nextStep: travelerHomeContentIntakeBoardSection(lines, '## 下一步'),
+      };
+      record.id = travelerHomeContentIntakeBoardRecordId(record, index);
+      return record;
+    });
+  }
+  function travelerHomeContentIntakeBoardSummary(records){
+    const source = Array.isArray(records) ? records : travelerHomeContentIntakeBoardRecords();
+    return source.reduce((summary, record) => {
+      summary.total += 1;
+      if (travelerHomeContentIntakeBoardSourceRank(record.source) === 0) summary.official += 1;
+      if (travelerHomeContentIntakeBoardSourceRank(record.source) === 1) summary.platform += 1;
+      if (travelerHomeContentIntakeBoardSourceRank(record.source) === 2) summary.travelogue += 1;
+      summary.bySource[record.source] = (summary.bySource[record.source] || 0) + 1;
+      return summary;
+    }, {total:0, official:0, platform:0, travelogue:0, bySource:{}});
+  }
+  function travelerHomeContentIntakeBoardNextAction(source){
+    if (travelerHomeContentIntakeBoardSourceRank(source) === 0) return '先补开放、预约、票务、交通和临时闭馆来源。';
+    if (travelerHomeContentIntakeBoardSourceRank(source) === 1) return '先提取话题、结构、体验信号，进入 data/materials，人工改写后再发布。';
+    if (travelerHomeContentIntakeBoardSourceRank(source) === 2) return '先判断是否影响路线、地图、平台文案或游记草稿。';
+    return '先判断归属模块，再拆成路线、地图、文案或官方复核任务。';
+  }
+  function travelerHomeContentIntakeBoardQueueMarkdown(){
+    const records = travelerHomeContentIntakeBoardRecords();
+    const summary = travelerHomeContentIntakeBoardSummary(records);
+    const lines = [
+      '# 上海攻略素材处理队列',
+      '',
+      `- 总素材：${summary.total}`,
+      `- 官方复核：${summary.official}`,
+      `- 平台素材：${summary.platform}`,
+      `- 游记碎片：${summary.travelogue}`,
+      '',
+      '## 优先处理',
+    ];
+    if (!records.length) {
+      lines.push('暂无素材，先从素材入库清单导入。');
+    } else {
+      records.forEach((record, index) => {
+        lines.push(`${index + 1}. 【${record.source}】${record.title}`);
+        lines.push(`   - 关联路线：${record.route}`);
+        lines.push(`   - 摘要：${travelerHomeContentIntakeBoardFirstLine(record.note)}`);
+        lines.push(`   - 建议：${travelerHomeContentIntakeBoardNextAction(record.source)}`);
+      });
+    }
+    lines.push('', '## 入库/发布边界');
+    lines.push('- 平台素材只进入 data/materials，保留话题、结构和体验信号，不直接复用原文。');
+    lines.push('- 官方复核进入 data/official_verifications，写清开放、预约、票务、交通和临时闭馆。');
+    lines.push('- 路线/地图调整回到对应路线和 GeoJSON，发布前重新测试、构建和留档。');
+    lines.push('- 不提交 API Key、账号、Cookie 或 Authorization 信息。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeContentIntakeBoard(){
+    const records = travelerHomeContentIntakeBoardRecords();
+    const summary = travelerHomeContentIntakeBoardSummary(records);
+    const summaryTarget = document.getElementById('traveler-home-content-intake-board-summary');
+    const listTarget = document.getElementById('traveler-home-content-intake-board-list');
+    const output = document.getElementById('traveler-home-content-intake-board-output');
+    const status = document.getElementById('traveler-home-content-intake-board-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>素材 ${summary.total} 条</span><span>官方复核 ${summary.official} 条</span><span>平台素材 ${summary.platform} 条</span><span>游记碎片 ${summary.travelogue} 条</span>`;
+    if (listTarget) listTarget.innerHTML = records.length ? records.map(record => `<article><b>${escapeHtml(record.source)}｜${escapeHtml(record.title)}</b><span>${escapeHtml(record.route)}</span><span>${escapeHtml(record.note)}</span></article>`).join('') : '<article><b>暂无素材</b><span>粘贴素材入库清单后点击导入素材。</span></article>';
+    const text = travelerHomeContentIntakeBoardQueueMarkdown();
+    if (output) output.value = text;
+    if (status && !status.textContent) status.textContent = records.length ? '素材处理队列已生成。' : '暂无素材队列。';
+    return text;
+  }
+  function importTravelerHomeContentIntakeBoard(){
+    const input = document.getElementById('traveler-home-content-intake-board-input');
+    const status = document.getElementById('traveler-home-content-intake-board-status');
+    const records = travelerHomeContentIntakeBoardParsePackages(input?.value || '');
+    if (!records.length) {
+      if (status) status.textContent = '没有识别到素材入库清单。';
+      renderTravelerHomeContentIntakeBoard();
+      return {count:0};
+    }
+    const state = travelerHomeStorageRead();
+    state.contentIntakeBoardRecords = records;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeContentIntakeBoard();
+    if (status) status.textContent = `已导入 ${records.length} 条素材。`;
+    return {count:records.length};
+  }
+  function travelerHomeContentIntakeBoardFilename(){
+    return 'shanghai-content-intake-queue.md';
+  }
+  async function copyTravelerHomeContentIntakeBoardMarkdown(){
+    const text = renderTravelerHomeContentIntakeBoard();
+    const status = document.getElementById('traveler-home-content-intake-board-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制素材队列。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制素材队列。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeContentIntakeBoardMarkdown(){
+    const text = renderTravelerHomeContentIntakeBoard();
+    const filename = travelerHomeContentIntakeBoardFilename();
+    const status = document.getElementById('traveler-home-content-intake-board-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 素材队列。';
+    return {filename, text};
+  }
+  function clearTravelerHomeContentIntakeBoard(){
+    const state = travelerHomeStorageRead();
+    state.contentIntakeBoardRecords = [];
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeContentIntakeBoard();
+    const status = document.getElementById('traveler-home-content-intake-board-status');
+    if (status) status.textContent = '已清空素材看板。';
+    return state;
   }
   function travelerHomeFeedbackValue(id, fallback){
     const value = document.getElementById(id)?.value;
@@ -2284,6 +2493,10 @@
   document.getElementById('traveler-home-content-intake-download-button')?.addEventListener('click', downloadTravelerHomeContentIntakeMarkdown);
   ['traveler-home-content-intake-source','traveler-home-content-intake-route'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-content-intake-status'); renderTravelerHomeContentIntake(); if (status) status.textContent = '入库清单已随选择更新。'; }));
   ['traveler-home-content-intake-title','traveler-home-content-intake-note'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-content-intake-status'); renderTravelerHomeContentIntake(); if (status) status.textContent = '素材摘要已更新。'; }));
+  document.getElementById('traveler-home-content-intake-board-import-button')?.addEventListener('click', importTravelerHomeContentIntakeBoard);
+  document.getElementById('traveler-home-content-intake-board-copy-button')?.addEventListener('click', copyTravelerHomeContentIntakeBoardMarkdown);
+  document.getElementById('traveler-home-content-intake-board-download-button')?.addEventListener('click', downloadTravelerHomeContentIntakeBoardMarkdown);
+  document.getElementById('traveler-home-content-intake-board-clear-button')?.addEventListener('click', clearTravelerHomeContentIntakeBoard);
   document.getElementById('traveler-home-feedback-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '反馈包已更新。'; });
   document.getElementById('traveler-home-feedback-copy-button')?.addEventListener('click', copyTravelerHomeFeedback);
   document.getElementById('traveler-home-feedback-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackMarkdown);
@@ -2333,6 +2546,7 @@
   renderTravelerHomeMaintenanceCenter();
   renderTravelerHomeReleaseCenter();
   renderTravelerHomeContentIntake();
+  renderTravelerHomeContentIntakeBoard();
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
   applyTravelerHomeMemory();

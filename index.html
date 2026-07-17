@@ -500,6 +500,22 @@
       <textarea id="traveler-home-content-intake-board-output" readonly rows="8" aria-label="素材处理队列 Markdown"></textarea>
       <p id="traveler-home-content-intake-board-status" class="traveler-content-intake-status" aria-live="polite"></p>
     </div>
+    <div id="traveler-home-official-verification-flow" class="traveler-content-intake-board" aria-label="官方复核任务流">
+      <div>
+        <p>官方复核</p>
+        <h3>官方复核任务流</h3>
+        <small>把官方复核素材拆成开放时间 / 预约 / 票务 / 交通 / 临时闭馆五类任务，便于出发前逐项确认。</small>
+      </div>
+      <div class="traveler-content-intake-actions">
+        <button type="button" class="primary" id="traveler-home-official-verification-build-button" data-traveler-home-official-verification-build>生成复核任务</button>
+        <button type="button" id="traveler-home-official-verification-copy-button" data-traveler-home-official-verification-copy>复制复核任务</button>
+        <button type="button" id="traveler-home-official-verification-download-button" data-traveler-home-official-verification-download>下载复核任务</button>
+      </div>
+      <div id="traveler-home-official-verification-summary" class="traveler-content-intake-board-summary" aria-live="polite"></div>
+      <div id="traveler-home-official-verification-list" class="traveler-content-intake-board-list"></div>
+      <textarea id="traveler-home-official-verification-output" readonly rows="8" aria-label="官方复核任务 Markdown"></textarea>
+      <p id="traveler-home-official-verification-status" class="traveler-content-intake-status" aria-live="polite"></p>
+    </div>
   </div>
 </section>
 <section id="traveler-home-feedback" class="traveler-feedback" aria-label="试用反馈入口">
@@ -1439,6 +1455,7 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     renderTravelerHomeContentIntakeBoard();
+    renderTravelerHomeOfficialVerificationFlow();
     if (status) status.textContent = `已导入 ${records.length} 条素材。`;
     return {count:records.length};
   }
@@ -1478,9 +1495,118 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     renderTravelerHomeContentIntakeBoard();
+    renderTravelerHomeOfficialVerificationFlow();
     const status = document.getElementById('traveler-home-content-intake-board-status');
     if (status) status.textContent = '已清空素材看板。';
     return state;
+  }
+  function travelerHomeOfficialVerificationCategories(){
+    return [
+      {category:'开放时间', checklist:'营业/开放日期、开放时间、最后入场和节假日调整'},
+      {category:'预约规则', checklist:'预约入口、预约放票、实名要求和取消规则'},
+      {category:'票务费用', checklist:'票价、免费政策、联票和现场补票规则'},
+      {category:'交通到达', checklist:'地铁/公交/步行入口、打车落点和无障碍到达'},
+      {category:'临时闭馆', checklist:'临时闭馆、施工、展陈调整和天气影响'},
+    ];
+  }
+  function travelerHomeOfficialVerificationRecords(){
+    return travelerHomeContentIntakeBoardRecords().filter(record => travelerHomeContentIntakeBoardSourceRank(record.source) === 0);
+  }
+  function travelerHomeOfficialVerificationTasks(){
+    const categories = travelerHomeOfficialVerificationCategories();
+    return travelerHomeOfficialVerificationRecords().flatMap(record => categories.map(item => ({
+      id: `${record.id}-${item.category}`.replace(/\s+/g, '-'),
+      recordId: record.id,
+      category: item.category,
+      checklist: item.checklist,
+      route: record.route,
+      title: record.title,
+      note: record.note,
+    })));
+  }
+  function travelerHomeOfficialVerificationSummary(tasks){
+    const source = Array.isArray(tasks) ? tasks : travelerHomeOfficialVerificationTasks();
+    const recordIds = new Set();
+    return source.reduce((summary, task) => {
+      summary.tasks += 1;
+      if (task.recordId) recordIds.add(task.recordId);
+      summary.officialRecords = recordIds.size;
+      summary.byCategory[task.category] = (summary.byCategory[task.category] || 0) + 1;
+      return summary;
+    }, {officialRecords:0, tasks:0, byCategory:{}});
+  }
+  function travelerHomeOfficialVerificationMarkdown(){
+    const tasks = travelerHomeOfficialVerificationTasks();
+    const summary = travelerHomeOfficialVerificationSummary(tasks);
+    const lines = [
+      '# 上海攻略官方复核任务流',
+      '',
+      `- 官方复核素材：${summary.officialRecords}`,
+      `- 复核任务：${summary.tasks}`,
+      '',
+      '## 复核任务',
+    ];
+    if (!tasks.length) {
+      lines.push('暂无官方复核素材，先从素材入库队列导入官方复核清单。');
+    } else {
+      tasks.forEach((task, index) => {
+        lines.push(`${index + 1}. [${task.category}] ${task.title}`);
+        lines.push(`   - 路线：${task.route}`);
+        lines.push(`   - 要核对：${task.checklist}`);
+        lines.push(`   - 素材摘要：${travelerHomeContentIntakeBoardFirstLine(task.note)}`);
+        lines.push('   - 完成后：更新 data/official_verifications，并回到路线页、地图和发布记录复核。');
+      });
+    }
+    lines.push('', '## 入库/安全边界');
+    lines.push('- 官方复核结果进入 data/official_verifications。');
+    lines.push('- 每条复核必须写清来源、复核日期、开放、预约、票务、交通和临时闭馆。');
+    lines.push('- 不提交 API Key、账号、Cookie 或 Authorization 信息。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeOfficialVerificationFlow(){
+    const tasks = travelerHomeOfficialVerificationTasks();
+    const summary = travelerHomeOfficialVerificationSummary(tasks);
+    const summaryTarget = document.getElementById('traveler-home-official-verification-summary');
+    const listTarget = document.getElementById('traveler-home-official-verification-list');
+    const output = document.getElementById('traveler-home-official-verification-output');
+    const status = document.getElementById('traveler-home-official-verification-status');
+    const categorySummary = Object.entries(summary.byCategory).map(([category, count]) => `${category} ${count} 条`).join(' / ') || '暂无任务';
+    if (summaryTarget) summaryTarget.innerHTML = `<span>官方素材 ${summary.officialRecords} 条</span><span>复核任务 ${summary.tasks} 条</span><span>${escapeHtml(categorySummary)}</span>`;
+    if (listTarget) listTarget.innerHTML = tasks.length ? tasks.map(task => `<article><b>${escapeHtml(task.category)}｜${escapeHtml(task.title)}</b><span>${escapeHtml(task.route)}</span><span>${escapeHtml(task.checklist)}</span></article>`).join('') : '<article><b>暂无官方复核任务</b><span>先在素材入库队列导入官方复核素材。</span></article>';
+    const text = travelerHomeOfficialVerificationMarkdown();
+    if (output) output.value = text;
+    if (status && !status.textContent) status.textContent = tasks.length ? '官方复核任务已生成。' : '暂无官方复核任务。';
+    return text;
+  }
+  function travelerHomeOfficialVerificationFilename(){
+    return 'shanghai-official-verification-tasks.md';
+  }
+  async function copyTravelerHomeOfficialVerificationMarkdown(){
+    const text = renderTravelerHomeOfficialVerificationFlow();
+    const status = document.getElementById('traveler-home-official-verification-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制官方复核任务。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制官方复核任务。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeOfficialVerificationMarkdown(){
+    const text = renderTravelerHomeOfficialVerificationFlow();
+    const filename = travelerHomeOfficialVerificationFilename();
+    const status = document.getElementById('traveler-home-official-verification-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 官方复核任务。';
+    return {filename, text};
   }
   function travelerHomeFeedbackValue(id, fallback){
     const value = document.getElementById(id)?.value;
@@ -2497,6 +2623,9 @@
   document.getElementById('traveler-home-content-intake-board-copy-button')?.addEventListener('click', copyTravelerHomeContentIntakeBoardMarkdown);
   document.getElementById('traveler-home-content-intake-board-download-button')?.addEventListener('click', downloadTravelerHomeContentIntakeBoardMarkdown);
   document.getElementById('traveler-home-content-intake-board-clear-button')?.addEventListener('click', clearTravelerHomeContentIntakeBoard);
+  document.getElementById('traveler-home-official-verification-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-official-verification-status'); renderTravelerHomeOfficialVerificationFlow(); if (status) status.textContent = '官方复核任务已更新。'; });
+  document.getElementById('traveler-home-official-verification-copy-button')?.addEventListener('click', copyTravelerHomeOfficialVerificationMarkdown);
+  document.getElementById('traveler-home-official-verification-download-button')?.addEventListener('click', downloadTravelerHomeOfficialVerificationMarkdown);
   document.getElementById('traveler-home-feedback-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '反馈包已更新。'; });
   document.getElementById('traveler-home-feedback-copy-button')?.addEventListener('click', copyTravelerHomeFeedback);
   document.getElementById('traveler-home-feedback-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackMarkdown);
@@ -2547,6 +2676,7 @@
   renderTravelerHomeReleaseCenter();
   renderTravelerHomeContentIntake();
   renderTravelerHomeContentIntakeBoard();
+  renderTravelerHomeOfficialVerificationFlow();
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
   applyTravelerHomeMemory();

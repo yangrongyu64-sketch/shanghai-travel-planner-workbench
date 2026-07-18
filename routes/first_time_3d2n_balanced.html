@@ -129,6 +129,7 @@
       <button type="button" id="copy-route-progress-button">复制进度</button>
       <button type="button" id="download-route-progress-button">下载进度</button>
       <button type="button" id="copy-route-travelogue-button">复制游记</button>
+      <button type="button" id="download-route-travelogue-button">下载游记</button>
     </nav>
   </header>
 <nav id="route-guide-start-nav" class="route-guide-start-nav" aria-label="出发阅读顺序">
@@ -934,6 +935,9 @@
       '可继续补：天气、排队、人流、花费和最喜欢的一站。',
     ].join('\n');
   }
+  function travelerRouteGuideTravelogueDraftFileName(){
+    return `shanghai-travelogue-draft-${TRAVELER_ROUTE_GUIDE_ROUTE_ID}.md`;
+  }
   function updateTravelerRouteGuideStopStatusUi(items){
     const activeItems = items || currentTravelerRouteGuideStopStatusItems();
     const counts = {want: 0, done: 0, skip: 0};
@@ -1150,6 +1154,23 @@
     }
     return draft;
   }
+  function downloadTravelerRouteGuideTravelogueDraftMarkdown(){
+    const status = document.getElementById('copy-route-guide-status');
+    const button = document.getElementById('download-route-travelogue-button');
+    const markdown = travelerRouteGuideTravelogueDraftText();
+    const blob = new Blob([markdown], {type: 'text/markdown;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = travelerRouteGuideTravelogueDraftFileName();
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    if (button) button.textContent = '已下载游记';
+    if (status) status.textContent = '游记草稿 Markdown 已下载，可继续改成发布稿。';
+    return markdown;
+  }
   async function copyTravelerRouteGuideDayText(dayNumber){
     const status = document.getElementById('copy-route-guide-status');
     const day = TRAVELER_ROUTE_GUIDE_DAYS.find(day => day.day === Number(dayNumber));
@@ -1179,6 +1200,7 @@
   document.getElementById('copy-route-progress-button')?.addEventListener('click', copyTravelerRouteGuideProgressText);
   document.getElementById('download-route-progress-button')?.addEventListener('click', downloadTravelerRouteGuideProgressMarkdown);
   document.getElementById('copy-route-travelogue-button')?.addEventListener('click', copyTravelerRouteGuideTravelogueDraft);
+  document.getElementById('download-route-travelogue-button')?.addEventListener('click', downloadTravelerRouteGuideTravelogueDraftMarkdown);
   document.querySelectorAll('[data-route-guide-copy-day]').forEach(button => {
     button.addEventListener('click', () => copyTravelerRouteGuideDayText(button.dataset.routeGuideCopyDay));
   });

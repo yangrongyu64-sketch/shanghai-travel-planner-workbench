@@ -23,6 +23,12 @@
     .route-guide-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-content:start}
     .route-guide-actions a,.route-guide-actions button{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:850}
     .route-guide-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .route-guide-start-nav{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:12px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
+    .route-guide-start-nav p{margin:0;color:var(--brick);font-size:13px;font-weight:900}
+    .route-guide-start-nav-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+    .route-guide-start-nav-list a{display:grid;gap:2px;min-height:58px;border:1px solid var(--line);border-radius:8px;background:#fffdfa;padding:9px;color:var(--ink)}
+    .route-guide-start-nav-list b{font-size:14px;line-height:1.2}
+    .route-guide-start-nav-list span{color:var(--muted);font-size:12px;line-height:1.25}
     .route-guide-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);gap:16px;padding:18px clamp(16px,4vw,44px) 36px}
     .route-guide-main,.route-guide-side{display:grid;gap:14px;align-content:start}
     .route-guide-card{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px}
@@ -76,8 +82,8 @@
     .route-guide-amap-live-map{display:grid;place-items:center;min-height:220px;border:1px dashed var(--line);border-radius:8px;background:#eef5f3;color:var(--muted);font-size:12px;text-align:center;padding:12px;overflow:hidden}
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
-    @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
-    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid{grid-template-columns:1fr}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
+    @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-start-nav{grid-template-columns:1fr}.route-guide-start-nav-list{grid-template-columns:repeat(2,minmax(0,1fr))}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
+    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-start-nav-list,.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid{grid-template-columns:1fr}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
   </style>
 </head>
 <body>
@@ -96,6 +102,31 @@
       <button type="button" id="copy-route-guide-button">复制攻略</button>
     </nav>
   </header>
+<nav id="route-guide-start-nav" class="route-guide-start-nav" aria-label="出发阅读顺序">
+  <p>出发先看</p>
+  <div class="route-guide-start-nav-list">
+    <a href="#route-guide-quick-brief">
+      <b>速览</b>
+      <span>先定吃住行</span>
+    </a>
+    <a href="#route-guide-stay">
+      <b>住宿</b>
+      <span>再看住哪里</span>
+    </a>
+    <a href="#route-guide-food">
+      <b>补给</b>
+      <span>安排休息补给</span>
+    </a>
+    <a href="#route-guide-day-index">
+      <b>行程</b>
+      <span>按天执行</span>
+    </a>
+    <a href="#route-map">
+      <b>地图</b>
+      <span>最后核地图</span>
+    </a>
+  </div>
+</nav>
   <section class="route-guide-layout">
     <div class="route-guide-main">
       <section class="route-guide-card">
@@ -116,7 +147,7 @@
     <p>复核：开放、预约、票务、交通和临时闭馆</p>
   </div>
 </section>
-<section class="route-guide-card route-guide-stay">
+<section id="route-guide-stay" class="route-guide-card route-guide-stay">
   <h2>住哪里</h2>
   <p><b>静安寺 / 南京西路</b> 更适合这条路线的节奏。</p>
   <div class="route-guide-decision-grid">
@@ -130,7 +161,7 @@
     </div>
   </div>
 </section>
-<section class="route-guide-card route-guide-food">
+<section id="route-guide-food" class="route-guide-card route-guide-food">
   <h2>吃什么 / 休息补给</h2>
 <article class="route-guide-food-item">
   <h3>静安寺 / 南京西路</h3>

@@ -4,7 +4,7 @@
   "workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
   "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
   "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
-  "published_at": "2026-07-18",
+  "published_at": "2026-07-19",
   "smoke_checks": [
     "首页返回 200 并显示上海旅行路线",
     "游客首页可打开攻略和路线图",

@@ -269,6 +269,10 @@
     .traveler-travelogue-field{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-handoff h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+    .traveler-handoff-import label{font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-handoff-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .traveler-handoff-import input[type=file]{min-height:36px;max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px;color:var(--ink)}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -300,7 +304,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -317,7 +321,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-18</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-19</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
 <section id="traveler-home-product-brief" class="traveler-product-brief" aria-label="产品说明">
   <div>
@@ -895,6 +899,14 @@
         </div>
       </div>
       <textarea id="traveler-home-handoff-output" readonly rows="8" aria-label="个人行程交接 JSON"></textarea>
+      <div class="traveler-handoff-import">
+        <label for="traveler-home-handoff-import-input">导入交接 JSON</label>
+        <textarea id="traveler-home-handoff-import-input" rows="5" aria-label="导入个人行程交接 JSON"></textarea>
+        <div class="traveler-handoff-import-actions">
+          <input id="traveler-home-handoff-import-file" type="file" accept="application/json,.json" aria-label="选择个人行程交接 JSON 文件">
+          <button type="button" class="primary" id="traveler-home-handoff-import-button" data-traveler-home-handoff-import>导入JSON</button>
+        </div>
+      </div>
       <p id="traveler-home-handoff-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
@@ -3187,7 +3199,9 @@
       routes: routeItems,
       outputs: {
         route_pack_markdown: travelerHomeRoutePackText(),
+        platform_settings: travelerHomePlatformCopySettings(),
         platform_drafts: platformDrafts,
+        travelogue_fragments: state.travelogueFragments && typeof state.travelogueFragments === 'object' ? state.travelogueFragments : {},
         travelogue_markdown: travelerHomeTravelogueMarkdown(),
       },
       privacy_boundary: '只包含当前浏览器里的行程偏好、收藏路线、草稿和游记碎片；不包含地图 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
@@ -3258,6 +3272,143 @@
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载 JSON 行程交接包。';
     return {filename, text};
+  }
+  function travelerHomeHandoffSupportedPayload(payload){
+    return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_traveler_personal_handoff' && Number(payload.version) === 1);
+  }
+  function travelerHomeValidPreferenceValue(id, value, fallback){
+    const element = document.getElementById(id);
+    if (!value) return fallback;
+    if (!element?.options?.length) return value;
+    return Array.from(element.options).some(option => option.value === value) ? value : fallback;
+  }
+  function travelerHomeNormalizeImportedPreferences(preferences){
+    const source = preferences && typeof preferences === 'object' ? preferences : {};
+    return {
+      days: travelerHomeValidPreferenceValue('traveler-home-picker-days', source.days, 'any'),
+      pace: travelerHomeValidPreferenceValue('traveler-home-picker-pace', source.pace, 'any'),
+      theme: travelerHomeValidPreferenceValue('traveler-home-picker-theme', source.theme, 'any'),
+      avoid: travelerHomeValidPreferenceValue('traveler-home-picker-avoid', source.avoid, 'none'),
+    };
+  }
+  function travelerHomeImportedRouteIds(payload){
+    const selection = payload.selection && typeof payload.selection === 'object' ? payload.selection : {};
+    const directIds = Array.isArray(selection.route_ids) ? selection.route_ids : [];
+    const routeIds = Array.isArray(payload.routes) ? payload.routes.map(route => route?.trip_id) : [];
+    return [...directIds, ...routeIds].filter(id => travelerHomeRouteById(id));
+  }
+  function travelerHomeUniqueIds(ids){
+    return Array.from(new Set((Array.isArray(ids) ? ids : []).filter(Boolean)));
+  }
+  function travelerHomeDefaultImportedRouteId(payload){
+    const selection = payload.selection && typeof payload.selection === 'object' ? payload.selection : {};
+    if (travelerHomeRouteById(selection.last_route_id)) return selection.last_route_id;
+    return travelerHomeImportedRouteIds(payload)[0] || travelerHomeBestRecommendation()?.route?.tripId || '';
+  }
+  function travelerHomeNormalizeImportedPlatformSettings(payload){
+    const settings = payload.outputs?.platform_settings && typeof payload.outputs.platform_settings === 'object' ? payload.outputs.platform_settings : {};
+    const tone = travelerHomeValidPreferenceValue('traveler-home-platform-copy-tone', settings.tone, document.getElementById('traveler-home-platform-copy-tone')?.value || 'practical');
+    const length = travelerHomeValidPreferenceValue('traveler-home-platform-copy-length', settings.length, document.getElementById('traveler-home-platform-copy-length')?.value || 'standard');
+    return {tone, length};
+  }
+  function travelerHomeSetPlatformSettings(settings){
+    travelerHomeSetPickerValue('traveler-home-platform-copy-tone', settings?.tone);
+    travelerHomeSetPickerValue('traveler-home-platform-copy-length', settings?.length);
+    return travelerHomePlatformCopySettings();
+  }
+  function travelerHomePlatformDraftKeyForRoute(routeId, platform, settings){
+    if (!routeId || !platform || !settings) return '';
+    return `${routeId}|${platform}|${settings.tone}|${settings.length}`;
+  }
+  function travelerHomeImportedPlatformDrafts(payload, routeId, settings){
+    const rows = Array.isArray(payload.outputs?.platform_drafts) ? payload.outputs.platform_drafts : [];
+    return rows.reduce((drafts, row) => {
+      const platform = row?.platform;
+      const text = typeof row?.text === 'string' ? row.text : '';
+      const key = travelerHomePlatformDraftKeyForRoute(routeId, platform, settings);
+      if (key && text && row?.source === '本地草稿') drafts[key] = text;
+      return drafts;
+    }, {});
+  }
+  function travelerHomeFragmentsFromMarkdown(markdown){
+    if (typeof markdown !== 'string' || !markdown.includes('## 旅途碎片')) return '';
+    const afterHeading = markdown.split('## 旅途碎片')[1] || '';
+    return afterHeading.split('\n').map(line => line.trim()).filter(line => line.startsWith('- ')).map(line => line.slice(2).trim()).filter(Boolean).join('\n');
+  }
+  function travelerHomeImportedTravelogueFragments(payload, routeId){
+    const fragments = payload.outputs?.travelogue_fragments;
+    if (fragments && typeof fragments === 'object' && !Array.isArray(fragments)) {
+      return Object.fromEntries(Object.entries(fragments).filter(([key, value]) => travelerHomeRouteById(key) && typeof value === 'string' && value.trim()));
+    }
+    const text = travelerHomeFragmentsFromMarkdown(payload.outputs?.travelogue_markdown);
+    return routeId && text ? {[routeId]: text} : {};
+  }
+  function refreshTravelerHomeAfterImport(message){
+    travelerHomeSetPickerValue('traveler-home-picker-days', travelerHomeStorageRead().preferences?.days);
+    travelerHomeSetPickerValue('traveler-home-picker-pace', travelerHomeStorageRead().preferences?.pace);
+    travelerHomeSetPickerValue('traveler-home-picker-theme', travelerHomeStorageRead().preferences?.theme);
+    travelerHomeSetPickerValue('traveler-home-picker-avoid', travelerHomeStorageRead().preferences?.avoid);
+    const recommendationTarget = document.getElementById('traveler-home-recommendation');
+    if (recommendationTarget) recommendationTarget.innerHTML = travelerHomeRecommendationHtml(travelerHomeBestRecommendation());
+    renderTravelerHomeRoutePack();
+    renderTravelerHomeSocialCard();
+    renderTravelerHomePlatformCopy('group');
+    const fragments = document.getElementById('traveler-home-travelogue-fragments');
+    if (fragments) fragments.value = travelerHomeTravelogueStoredFragments();
+    renderTravelerHomeTravelogue();
+    renderTravelerHomeWorkflow();
+    renderTravelerHomeHandoff({silent:true});
+    updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), message || '已恢复导入的行程交接包。');
+  }
+  function restoreTravelerHomeHandoffPayload(payload){
+    const status = document.getElementById('traveler-home-handoff-status');
+    if (!travelerHomeHandoffSupportedPayload(payload)) {
+      if (status) status.textContent = '导入失败：请选择上海个人行程交接 JSON。';
+      return {ok:false, reason:'unsupported_payload'};
+    }
+    const previousState = travelerHomeStorageRead();
+    const preferences = travelerHomeNormalizeImportedPreferences(payload.preferences);
+    const settings = travelerHomeNormalizeImportedPlatformSettings(payload);
+    travelerHomeSetPlatformSettings(settings);
+    const routeId = travelerHomeDefaultImportedRouteId(payload);
+    const favoriteIds = travelerHomeUniqueIds(payload.selection?.favorite_route_ids).filter(id => travelerHomeRouteById(id));
+    const selectedFavorites = favoriteIds;
+    const platformDrafts = travelerHomeImportedPlatformDrafts(payload, routeId, settings);
+    const travelogueFragments = travelerHomeImportedTravelogueFragments(payload, routeId);
+    const nextState = {...previousState, preferences, lastRouteId: routeId, favorites: selectedFavorites, platformDrafts, travelogueFragments, updatedAt: new Date().toISOString()};
+    travelerHomeStorageWrite(nextState);
+    refreshTravelerHomeAfterImport('已恢复导入的行程交接包。');
+    const result = {ok:true, route_count: travelerHomeRoutePackRoutes().length, favorite_count: selectedFavorites.length, draft_count: Object.keys(platformDrafts).length};
+    if (status) status.textContent = `已导入个人行程交接包：${result.route_count}条路线、${result.favorite_count}条收藏、${result.draft_count}条本地草稿。`;
+    return result;
+  }
+  function importTravelerHomeHandoffJsonText(text){
+    const status = document.getElementById('traveler-home-handoff-status');
+    let payload = null;
+    try { payload = JSON.parse(String(text || '')); }
+    catch (error) {
+      if (status) status.textContent = '导入失败：JSON 格式不正确。';
+      return {ok:false, reason:'invalid_json'};
+    }
+    return restoreTravelerHomeHandoffPayload(payload);
+  }
+  function importTravelerHomeHandoffFromInput(){
+    const input = document.getElementById('traveler-home-handoff-import-input');
+    return importTravelerHomeHandoffJsonText(input?.value || '');
+  }
+  async function importTravelerHomeHandoffFile(event){
+    const file = event?.target?.files?.[0];
+    const status = document.getElementById('traveler-home-handoff-status');
+    if (!file) return {ok:false, reason:'missing_file'};
+    try {
+      const text = await file.text();
+      const input = document.getElementById('traveler-home-handoff-import-input');
+      if (input) input.value = text;
+      return importTravelerHomeHandoffJsonText(text);
+    } catch (error) {
+      if (status) status.textContent = '导入失败：无法读取这个 JSON 文件。';
+      return {ok:false, reason:'file_read_failed'};
+    }
   }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
@@ -3420,6 +3571,8 @@
   document.getElementById('traveler-home-travelogue-download-button')?.addEventListener('click', downloadTravelerHomeTravelogueMarkdown);
   document.getElementById('traveler-home-handoff-copy-button')?.addEventListener('click', copyTravelerHomeHandoffSummary);
   document.getElementById('traveler-home-handoff-download-button')?.addEventListener('click', downloadTravelerHomeHandoffJson);
+  document.getElementById('traveler-home-handoff-import-button')?.addEventListener('click', importTravelerHomeHandoffFromInput);
+  document.getElementById('traveler-home-handoff-import-file')?.addEventListener('change', importTravelerHomeHandoffFile);
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });

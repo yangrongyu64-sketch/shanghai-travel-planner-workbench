@@ -128,6 +128,7 @@
       <button type="button" id="copy-route-guide-button">复制攻略</button>
       <button type="button" id="copy-route-progress-button">复制进度</button>
       <button type="button" id="download-route-progress-button">下载进度</button>
+      <button type="button" id="copy-route-travelogue-button">复制游记</button>
     </nav>
   </header>
 <nav id="route-guide-start-nav" class="route-guide-start-nav" aria-label="出发阅读顺序">
@@ -1402,6 +1403,47 @@
   function travelerRouteGuideProgressFileName(){
     return `shanghai-route-progress-${TRAVELER_ROUTE_GUIDE_ROUTE_ID}.md`;
   }
+  function travelerRouteGuidePlaceNamesByStatus(day, status, items){
+    const activeItems = items || currentTravelerRouteGuideStopStatusItems();
+    const stops = Array.isArray(day?.stops) ? day.stops : [];
+    return stops.filter(stop => normalizeTravelerRouteGuideStopStatus(activeItems[stop.key]) === status).map(stop => stop.placeName);
+  }
+  function travelerRouteGuideTravelogueDraftText(){
+    const activeItems = currentTravelerRouteGuideStopStatusItems();
+    const done = [];
+    const skipped = [];
+    const pending = [];
+    const dayReviews = TRAVELER_ROUTE_GUIDE_DAYS.map(day => {
+      const dayDone = travelerRouteGuidePlaceNamesByStatus(day, 'done', activeItems);
+      const daySkipped = travelerRouteGuidePlaceNamesByStatus(day, 'skip', activeItems);
+      const dayPending = (Array.isArray(day.stops) ? day.stops : []).filter(stop => normalizeTravelerRouteGuideStopStatus(activeItems[stop.key]) === 'none').map(stop => stop.placeName);
+      done.push(...dayDone);
+      skipped.push(...daySkipped);
+      pending.push(...dayPending);
+      const parts = [];
+      if (dayDone.length) parts.push(`完成 ${dayDone.join('、')}`);
+      if (daySkipped.length) parts.push(`跳过 ${daySkipped.join('、')}`);
+      if (dayPending.length) parts.push(`待补 ${dayPending.join('、')}`);
+      return `${day.title}：${parts.length ? parts.join('；') : '还没开始执行。'}。`;
+    });
+    const totalStops = TRAVELER_ROUTE_GUIDE_DAYS.reduce((sum, day) => sum + (Array.isArray(day.stops) ? day.stops.length : 0), 0);
+    return [
+      `# ${TRAVELER_ROUTE_GUIDE_ROUTE_TITLE} 游记草稿`,
+      `标题备选：${TRAVELER_ROUTE_GUIDE_ROUTE_TITLE}，我走完后的真实感受`,
+      '',
+      '## 正文草稿',
+      `这次路线已经完成 ${done.length}/${totalStops} 个点位。整体感受可以先写成：节奏、体力、人流和最值得停留的一站。`,
+      `真正走过：${done.length ? done.join('、') : '还没标记已完成点位'}`,
+      `临时跳过：${skipped.length ? skipped.join('、') : '暂无'}`,
+      `还可以补去：${pending.length ? pending.join('、') : '暂无'}`,
+      '',
+      '## 按天复盘',
+      ...dayReviews,
+      '',
+      '## 待补素材',
+      '可继续补：天气、排队、人流、花费和最喜欢的一站。',
+    ].join('\n');
+  }
   function updateTravelerRouteGuideStopStatusUi(items){
     const activeItems = items || currentTravelerRouteGuideStopStatusItems();
     const counts = {want: 0, done: 0, skip: 0};
@@ -1605,6 +1647,19 @@
     if (status) status.textContent = '当前进度 Markdown 已下载，可保存或继续改成游记。';
     return markdown;
   }
+  async function copyTravelerRouteGuideTravelogueDraft(){
+    const status = document.getElementById('copy-route-guide-status');
+    const button = document.getElementById('copy-route-travelogue-button');
+    const draft = travelerRouteGuideTravelogueDraftText();
+    try {
+      await navigator.clipboard.writeText(draft);
+      if (button) button.textContent = '已复制游记';
+      if (status) status.textContent = '游记草稿已复制，可继续改成小红书、公众号或朋友圈。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制游记草稿。';
+    }
+    return draft;
+  }
   async function copyTravelerRouteGuideDayText(dayNumber){
     const status = document.getElementById('copy-route-guide-status');
     const day = TRAVELER_ROUTE_GUIDE_DAYS.find(day => day.day === Number(dayNumber));
@@ -1633,6 +1688,7 @@
   document.getElementById('copy-route-guide-button')?.addEventListener('click', copyTravelerRouteGuideText);
   document.getElementById('copy-route-progress-button')?.addEventListener('click', copyTravelerRouteGuideProgressText);
   document.getElementById('download-route-progress-button')?.addEventListener('click', downloadTravelerRouteGuideProgressMarkdown);
+  document.getElementById('copy-route-travelogue-button')?.addEventListener('click', copyTravelerRouteGuideTravelogueDraft);
   document.querySelectorAll('[data-route-guide-copy-day]').forEach(button => {
     button.addEventListener('click', () => copyTravelerRouteGuideDayText(button.dataset.routeGuideCopyDay));
   });

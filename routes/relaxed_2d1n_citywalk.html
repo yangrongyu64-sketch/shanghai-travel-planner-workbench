@@ -46,6 +46,9 @@
     .route-guide-day h2{margin:0 0 12px;font-size:20px}
     .route-guide-day-heading h2{margin:0}
     .route-guide-day-heading button{display:inline-flex;align-items:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:850}
+    .route-guide-day-progress{display:grid;gap:5px;border:1px solid var(--line);border-radius:8px;background:#eef5f3;padding:10px;margin:0 0 12px}
+    .route-guide-day-progress p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .route-guide-day-progress span{color:var(--accent);font-size:14px;font-weight:900}
     .route-guide-day-execution{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:12px;margin:0 0 12px}
     .route-guide-day-execution p{margin:0 0 4px;color:var(--brick);font-size:12px;font-weight:900}
     .route-guide-day-execution h3{margin:0 0 10px;font-size:16px;letter-spacing:0}
@@ -284,6 +287,10 @@
     <h2>Day 1 慢抵达：衡复街区和咖啡</h2>
     <button type="button" data-route-guide-copy-day="1">复制当天</button>
   </div>
+  <section class="route-guide-day-progress" data-route-guide-day-progress="1">
+    <p>当天进度</p>
+    <span data-route-guide-day-progress-label data-route-guide-day="1" data-route-guide-day-stop-total="3">Day 1 进度：已完成 0/3，想去 0，跳过 0，剩余 3</span>
+  </section>
 <section class="route-guide-day-execution">
   <p>当天执行卡</p>
   <h3>Day 1 执行卡</h3>
@@ -367,6 +374,10 @@
     <h2>Day 2 轻经典：外滩源到外滩</h2>
     <button type="button" data-route-guide-copy-day="2">复制当天</button>
   </div>
+  <section class="route-guide-day-progress" data-route-guide-day-progress="2">
+    <p>当天进度</p>
+    <span data-route-guide-day-progress-label data-route-guide-day="2" data-route-guide-day-stop-total="3">Day 2 进度：已完成 0/3，想去 0，跳过 0，剩余 3</span>
+  </section>
 <section class="route-guide-day-execution">
   <p>当天执行卡</p>
   <h3>Day 2 执行卡</h3>
@@ -629,6 +640,9 @@
   function travelerRouteGuideStopStatusLabels(){
     return Array.from(document.querySelectorAll('[data-route-guide-stop-status-label]'));
   }
+  function travelerRouteGuideDayProgressLabels(){
+    return Array.from(document.querySelectorAll('[data-route-guide-day-progress-label]'));
+  }
   function travelerRouteGuideStopStatusText(status){
     return {want:'想去', done:'已完成', skip:'跳过'}[status] || '未标记';
   }
@@ -648,6 +662,29 @@
     const state = loadTravelerRouteGuideStopStatusState();
     return state && state.items && typeof state.items === 'object' ? {...state.items} : {};
   }
+  function updateTravelerRouteGuideDayProgress(items){
+    const activeItems = items || currentTravelerRouteGuideStopStatusItems();
+    const dayCounts = {};
+    Object.entries(activeItems).forEach(([stopKey, status]) => {
+      const match = String(stopKey).match(/^day-(\d+)-stop-/);
+      if (!match) return;
+      const normalized = normalizeTravelerRouteGuideStopStatus(status);
+      if (normalized === 'none') return;
+      const day = match[1];
+      dayCounts[day] = dayCounts[day] || {want: 0, done: 0, skip: 0};
+      dayCounts[day][normalized] += 1;
+    });
+    const summaries = {};
+    travelerRouteGuideDayProgressLabels().forEach(label => {
+      const day = label.dataset.routeGuideDay;
+      const total = Number(label.dataset.routeGuideDayStopTotal || 0);
+      const counts = {...{want: 0, done: 0, skip: 0}, ...(dayCounts[day] || {})};
+      const remaining = Math.max(total - counts.done - counts.want - counts.skip, 0);
+      label.textContent = `Day ${day} 进度：已完成 ${counts.done}/${total}，想去 ${counts.want}，跳过 ${counts.skip}，剩余 ${remaining}`;
+      summaries[day] = {...counts, total, remaining};
+    });
+    return summaries;
+  }
   function updateTravelerRouteGuideStopStatusUi(items){
     const activeItems = items || currentTravelerRouteGuideStopStatusItems();
     const counts = {want: 0, done: 0, skip: 0};
@@ -666,6 +703,7 @@
       const activeStatus = normalizeTravelerRouteGuideStopStatus(activeItems[label.dataset.routeGuideStopKey]);
       label.textContent = `点位状态：${travelerRouteGuideStopStatusText(activeStatus)}`;
     });
+    updateTravelerRouteGuideDayProgress(activeItems);
     return counts;
   }
   function saveTravelerRouteGuideStopStatusItems(items){

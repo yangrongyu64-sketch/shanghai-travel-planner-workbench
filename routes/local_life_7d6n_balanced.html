@@ -59,6 +59,11 @@
     .route-guide-stop dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 0}
     .route-guide-stop dl div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:9px}
     .route-guide-stop dt{font-size:12px;color:var(--brick);font-weight:900}.route-guide-stop dd{margin:4px 0 0;color:var(--ink);font-size:13px}
+    .route-guide-stop-status{display:grid;gap:8px;margin-top:10px;border:1px solid var(--line);border-radius:8px;background:#fffdfa;padding:9px}
+    .route-guide-stop-status p{margin:0;color:var(--accent);font-size:13px;font-weight:900}
+    .route-guide-stop-status-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .route-guide-stop-status-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:850}
+    .route-guide-stop-status-actions button.is-active{background:var(--accent);border-color:var(--accent);color:#fff}
     .route-guide-decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .route-guide-decision-grid div,.route-guide-food-item,.route-guide-execution-facts div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
     .route-guide-decision-grid h3,.route-guide-food-item h3,.route-guide-execution h3{margin:0 0 8px;font-size:15px}
@@ -101,7 +106,7 @@
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
     @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-start-nav{grid-template-columns:1fr}.route-guide-start-nav-list{grid-template-columns:repeat(2,minmax(0,1fr))}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
-    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-start-nav-list,.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid,.route-guide-departure-checklist-actions{grid-template-columns:1fr}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button,.route-guide-departure-checklist-actions button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
+    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-start-nav-list,.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid,.route-guide-departure-checklist-actions{grid-template-columns:1fr}.route-guide-stop-status-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button,.route-guide-departure-checklist-actions button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
   </style>
 </head>
 <body>
@@ -427,7 +432,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-1-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>下午</p>
@@ -439,9 +444,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>周边商业密度高，适合顺路看，不宜和安静古寺期待混淆。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-1-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-1-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="静安寺 点位状态">
+        <button type="button" data-route-guide-stop-key="day-1-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-1-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>傍晚</p>
@@ -453,9 +466,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-1-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-1-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="南京西路 点位状态">
+        <button type="button" data-route-guide-stop-key="day-1-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-1-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>雨天备选</p>
@@ -467,6 +488,14 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>亲子客流明显，票务和开放信息出发前需要官网确认。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-1-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-1-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="上海自然博物馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-1-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-1-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -486,7 +515,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-2-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -498,9 +527,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>周末热门拍照点人多，不要只挤在武康大楼门口。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-2-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-2-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="武康路 点位状态">
+        <button type="button" data-route-guide-stop-key="day-2-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-2-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>中午</p>
@@ -512,9 +549,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合生活方式内容，不适合只想看大地标的游客。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-2-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-2-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="安福路 点位状态">
+        <button type="button" data-route-guide-stop-key="day-2-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-2-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>下午</p>
@@ -526,9 +571,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合与复兴公园、新天地串联，不适合只拍一张照离开。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-2-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-2-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="思南公馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-2-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-2-stop-4">
   <div class="route-guide-stop-index">4</div>
   <div class="route-guide-stop-body">
     <p>傍晚</p>
@@ -540,6 +593,14 @@
       <div><dt>拍照提示</dt><dd>适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。</dd></div>
       <div><dt>避坑提醒</dt><dd>更适合作为路线中的休息点，不建议单独为它跨城前往。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-2-stop-4">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-2-stop-4">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="复兴公园 点位状态">
+        <button type="button" data-route-guide-stop-key="day-2-stop-4" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-4" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-2-stop-4" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -559,7 +620,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-3-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -571,9 +632,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>预约方式和开放时间出发前必须以官网为准。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-3-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-3-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="上海博物馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-3-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-3-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>下午</p>
@@ -585,9 +654,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合作为上海历史背景补充，开放信息需出发前确认。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-3-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-3-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="上海市历史博物馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-3-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-3-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>下午备选</p>
@@ -599,6 +676,14 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合城市规划兴趣人群，不适合只想拍照打卡的人。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-3-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-3-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="上海城市规划展示馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-3-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-3-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -618,7 +703,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-4-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -630,9 +715,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>户外路段多，夏季暴晒或雨天体验会下降。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-4-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-4-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="西岸滨江 点位状态">
+        <button type="button" data-route-guide-stop-key="day-4-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-4-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>下午</p>
@@ -644,9 +737,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>展览和票务变化大，必须出发前确认。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-4-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-4-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="龙美术馆西岸馆 点位状态">
+        <button type="button" data-route-guide-stop-key="day-4-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-4-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>下午备选</p>
@@ -658,9 +759,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合和西岸一起走，单独跨城前往要看展览质量。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-4-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-4-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="油罐艺术中心 点位状态">
+        <button type="button" data-route-guide-stop-key="day-4-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-4-stop-4">
   <div class="route-guide-stop-index">4</div>
   <div class="route-guide-stop-body">
     <p>傍晚</p>
@@ -672,6 +781,14 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>户外路段多，雨天或高温天应缩短停留。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-4-stop-4">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-4-stop-4">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="徐汇滨江 点位状态">
+        <button type="button" data-route-guide-stop-key="day-4-stop-4" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-4" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-4-stop-4" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -691,7 +808,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-5-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -703,9 +820,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-5-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-5-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="外滩源 点位状态">
+        <button type="button" data-route-guide-stop-key="day-5-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-5-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>下午</p>
@@ -717,9 +842,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。</dd></div>
       <div><dt>避坑提醒</dt><dd>适合作为串联步行路线，不适合赶场式打卡。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-5-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-5-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="苏州河步道 点位状态">
+        <button type="button" data-route-guide-stop-key="day-5-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-5-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>下午备选</p>
@@ -731,9 +864,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>展览和店铺开放不稳定，适合作为苏州河路线补充。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-5-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-5-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="M50 创意园 点位状态">
+        <button type="button" data-route-guide-stop-key="day-5-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-5-stop-4">
   <div class="route-guide-stop-index">4</div>
   <div class="route-guide-stop-body">
     <p>傍晚</p>
@@ -745,6 +886,14 @@
       <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
       <div><dt>避坑提醒</dt><dd>风大或天气差时体验明显下降，适合作为外滩视角补充。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-5-stop-4">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-5-stop-4">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="北外滩 点位状态">
+        <button type="button" data-route-guide-stop-key="day-5-stop-4" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-4" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-5-stop-4" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -764,7 +913,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-6-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -776,9 +925,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>户外为主，夏季和雨天要调整停留时间。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-6-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-6-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="世纪公园 点位状态">
+        <button type="button" data-route-guide-stop-key="day-6-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-6-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>全天备选</p>
@@ -790,9 +947,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>离核心市区较远，更适合 5 天以上或亲子自然主题。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-6-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-6-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="共青森林公园 点位状态">
+        <button type="button" data-route-guide-stop-key="day-6-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-6-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>晚上可选</p>
@@ -804,6 +969,14 @@
       <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
       <div><dt>避坑提醒</dt><dd>天际线价值高，但不要强行塞进每一天。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-6-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-6-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="陆家嘴 点位状态">
+        <button type="button" data-route-guide-stop-key="day-6-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-6-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -823,7 +996,7 @@
     <span>机动：至少预留 30 分钟，长停留点不要被前一站挤掉。</span>
   </div>
 </section>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-7-stop-1">
   <div class="route-guide-stop-index">1</div>
   <div class="route-guide-stop-body">
     <p>上午</p>
@@ -835,9 +1008,17 @@
       <div><dt>拍照提示</dt><dd>适合补一张环境图和一张细节图，给游记或短视频转场留素材。</dd></div>
       <div><dt>避坑提醒</dt><dd>商业消费属性强，旅行价值取决于是否需要购物和餐饮。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-7-stop-1">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-7-stop-1">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="南京西路 点位状态">
+        <button type="button" data-route-guide-stop-key="day-7-stop-1" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-1" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-1" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-7-stop-2">
   <div class="route-guide-stop-index">2</div>
   <div class="route-guide-stop-body">
     <p>中午</p>
@@ -849,9 +1030,17 @@
       <div><dt>拍照提示</dt><dd>适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。</dd></div>
       <div><dt>避坑提醒</dt><dd>大型换乘站，尽量避开早晚高峰。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-7-stop-2">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-7-stop-2">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="人民广场 点位状态">
+        <button type="button" data-route-guide-stop-key="day-7-stop-2" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-2" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-2" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
-<article class="route-guide-stop">
+<article class="route-guide-stop" data-route-guide-stop-card="day-7-stop-3">
   <div class="route-guide-stop-index">3</div>
   <div class="route-guide-stop-body">
     <p>离开前备选</p>
@@ -863,6 +1052,14 @@
       <div><dt>拍照提示</dt><dd>适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。</dd></div>
       <div><dt>避坑提醒</dt><dd>夜景价值高，但晚间人流压力也高。</dd></div>
     </dl>
+    <div class="route-guide-stop-status" data-route-guide-stop-status="day-7-stop-3">
+      <p data-route-guide-stop-status-label data-route-guide-stop-key="day-7-stop-3">点位状态：未标记</p>
+      <div class="route-guide-stop-status-actions" aria-label="外滩 点位状态">
+        <button type="button" data-route-guide-stop-key="day-7-stop-3" data-route-guide-stop-status-button="want" aria-pressed="false">想去</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-3" data-route-guide-stop-status-button="done" aria-pressed="false">已完成</button>
+        <button type="button" data-route-guide-stop-key="day-7-stop-3" data-route-guide-stop-status-button="skip" aria-pressed="false">跳过</button>
+      </div>
+    </div>
   </div>
 </article>
 </section>
@@ -1059,6 +1256,78 @@
     });
     document.getElementById('route-guide-reset-checklist-button')?.addEventListener('click', clearTravelerRouteGuideChecklistState);
   }
+  function travelerRouteGuideStopStatusStorageKey(){
+    return `shanghai-traveler-route-guide-stop-status-v1:${TRAVELER_ROUTE_GUIDE_ROUTE_ID}`;
+  }
+  function travelerRouteGuideStopStatusButtons(){
+    return Array.from(document.querySelectorAll('[data-route-guide-stop-status-button]'));
+  }
+  function travelerRouteGuideStopStatusLabels(){
+    return Array.from(document.querySelectorAll('[data-route-guide-stop-status-label]'));
+  }
+  function travelerRouteGuideStopStatusText(status){
+    return {want:'想去', done:'已完成', skip:'跳过'}[status] || '未标记';
+  }
+  function normalizeTravelerRouteGuideStopStatus(status){
+    return ['want', 'done', 'skip'].includes(status) ? status : 'none';
+  }
+  function loadTravelerRouteGuideStopStatusState(){
+    try {
+      const raw = localStorage.getItem(travelerRouteGuideStopStatusStorageKey());
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+  function currentTravelerRouteGuideStopStatusItems(){
+    const state = loadTravelerRouteGuideStopStatusState();
+    return state && state.items && typeof state.items === 'object' ? {...state.items} : {};
+  }
+  function updateTravelerRouteGuideStopStatusUi(items){
+    const activeItems = items || currentTravelerRouteGuideStopStatusItems();
+    const counts = {want: 0, done: 0, skip: 0};
+    Object.values(activeItems).forEach(status => {
+      const normalized = normalizeTravelerRouteGuideStopStatus(status);
+      if (normalized !== 'none') counts[normalized] += 1;
+    });
+    travelerRouteGuideStopStatusButtons().forEach(button => {
+      const stopKey = button.dataset.routeGuideStopKey;
+      const activeStatus = normalizeTravelerRouteGuideStopStatus(activeItems[stopKey]);
+      const isActive = activeStatus === button.dataset.routeGuideStopStatusButton;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    travelerRouteGuideStopStatusLabels().forEach(label => {
+      const activeStatus = normalizeTravelerRouteGuideStopStatus(activeItems[label.dataset.routeGuideStopKey]);
+      label.textContent = `点位状态：${travelerRouteGuideStopStatusText(activeStatus)}`;
+    });
+    return counts;
+  }
+  function saveTravelerRouteGuideStopStatusItems(items){
+    const payload = {routeId: TRAVELER_ROUTE_GUIDE_ROUTE_ID, items, savedAt: new Date().toISOString()};
+    try {
+      localStorage.setItem(travelerRouteGuideStopStatusStorageKey(), JSON.stringify(payload));
+    } catch (error) {}
+    updateTravelerRouteGuideStopStatusUi(items);
+    return payload;
+  }
+  function setTravelerRouteGuideStopStatus(stopKey, status){
+    const items = currentTravelerRouteGuideStopStatusItems();
+    const normalized = normalizeTravelerRouteGuideStopStatus(status);
+    if (normalized === 'none') delete items[stopKey];
+    else items[stopKey] = normalized;
+    return saveTravelerRouteGuideStopStatusItems(items);
+  }
+  function applyTravelerRouteGuideStopStatusState(){
+    return updateTravelerRouteGuideStopStatusUi(currentTravelerRouteGuideStopStatusItems());
+  }
+  function initializeTravelerRouteGuideStopStatus(){
+    applyTravelerRouteGuideStopStatusState();
+    travelerRouteGuideStopStatusButtons().forEach(button => {
+      button.addEventListener('click', () => setTravelerRouteGuideStopStatus(button.dataset.routeGuideStopKey, button.dataset.routeGuideStopStatusButton));
+    });
+  }
   function travelerRouteGuideMapPoints(){
     return TRAVELER_ROUTE_GUIDE_MAP_POINTS.filter(point => Number.isFinite(Number(point.coordinate?.[0])) && Number.isFinite(Number(point.coordinate?.[1])));
   }
@@ -1205,6 +1474,7 @@
     return day.text;
   }
   initializeTravelerRouteGuideChecklist();
+  initializeTravelerRouteGuideStopStatus();
   applyTravelerRouteGuideMapConfig();
   document.getElementById('route-guide-save-map-config-button')?.addEventListener('click', saveTravelerRouteGuideMapConfig);
   document.getElementById('route-guide-clear-map-config-button')?.addEventListener('click', () => { clearTravelerRouteGuideMapConfig(); clearTravelerRouteGuideAmap(); });

@@ -267,6 +267,8 @@
     .traveler-travelogue{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-travelogue h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-travelogue-field{font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-handoff{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-handoff h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7;position:sticky;top:0;z-index:2}
     .traveler-control{display:grid;gap:5px}
     .traveler-control label{font-size:12px;color:var(--muted);font-weight:800}
@@ -883,6 +885,17 @@
       <textarea id="traveler-home-travelogue-fragments" rows="4" aria-label="旅途碎片"></textarea>
       <textarea id="traveler-home-travelogue-output" readonly rows="9" aria-label="游记内容"></textarea>
       <p id="traveler-home-travelogue-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-handoff" class="traveler-handoff" aria-label="个人行程交接包">
+      <div class="traveler-social-card-head">
+        <h3>个人行程交接包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-handoff-copy-button" data-traveler-home-handoff-copy>复制摘要</button>
+          <button type="button" class="primary" id="traveler-home-handoff-download-button" data-traveler-home-handoff-download>下载JSON</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-handoff-output" readonly rows="8" aria-label="个人行程交接 JSON"></textarea>
+      <p id="traveler-home-handoff-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
@@ -2712,6 +2725,7 @@
     const text = travelerHomeRoutePackText();
     if (output) output.value = text;
     if (status) status.textContent = `已整理 ${travelerHomeRoutePackRoutes().length} 条路线。`;
+    refreshTravelerHomeHandoff();
     return text;
   }
   function travelerHomeRoutePackFilename(){
@@ -2743,6 +2757,10 @@
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载 Markdown 路线包。';
     return {filename, text};
+  }
+  function refreshTravelerHomeHandoff(){
+    if (typeof renderTravelerHomeHandoff !== 'function') return '';
+    return renderTravelerHomeHandoff({silent:true});
   }
   function travelerHomeSocialCardText(){
     const routes = travelerHomeRoutePackRoutes();
@@ -3118,6 +3136,129 @@
     if (status) status.textContent = '已下载 Markdown 游记。';
     return {filename, text};
   }
+  let travelerHomeHandoffGeneratedAt = '';
+  function travelerHomeHandoffTimestamp(){
+    if (!travelerHomeHandoffGeneratedAt) travelerHomeHandoffGeneratedAt = new Date().toISOString();
+    return travelerHomeHandoffGeneratedAt;
+  }
+  function travelerHomeHandoffSourceUrl(){
+    return window.location?.href || '';
+  }
+  function travelerHomeHandoffPayload(){
+    const state = travelerHomeStorageRead();
+    const preferences = state.preferences || travelerHomePreferenceInput();
+    const routes = travelerHomeRoutePackRoutes();
+    const favoriteIds = travelerHomeSavedFavorites(state);
+    const routeItems = routes.map(route => ({
+      trip_id: route.tripId,
+      scenario: route.scenario,
+      title: route.title,
+      duration_days: route.durationDays,
+      style: route.style,
+      theme: route.theme,
+      audience: route.audience,
+      primary_angle: route.primaryAngle,
+      route_score: route.routeScore,
+      guide_url: travelerHomeAbsoluteUrl(route.guideHref),
+      map_url: travelerHomeAbsoluteUrl(route.mapHref),
+    }));
+    const platformDrafts = travelerHomePlatformDraftOverviewRows().map(row => ({
+      platform: row.platform,
+      label: row.label,
+      source: row.source,
+      characters: row.characters,
+      preview: row.preview,
+      text: row.text,
+    }));
+    return {
+      kind: 'shanghai_traveler_personal_handoff',
+      version: 1,
+      generated_at: travelerHomeHandoffTimestamp(),
+      source_url: travelerHomeHandoffSourceUrl(),
+      preference_label: travelerHomePreferenceLabel(preferences),
+      preferences,
+      selection: {
+        mode: favoriteIds.length ? 'favorites' : (state.lastRouteId ? 'last_route' : 'recommendation'),
+        route_count: routes.length,
+        route_ids: routeItems.map(route => route.trip_id),
+        favorite_route_ids: favoriteIds,
+        last_route_id: state.lastRouteId || '',
+      },
+      routes: routeItems,
+      outputs: {
+        route_pack_markdown: travelerHomeRoutePackText(),
+        platform_drafts: platformDrafts,
+        travelogue_markdown: travelerHomeTravelogueMarkdown(),
+      },
+      privacy_boundary: '只包含当前浏览器里的行程偏好、收藏路线、草稿和游记碎片；不包含地图 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: [
+        '同行人先确认路线和节奏。',
+        '出发前复核开放、预约、票务、交通和临时闭馆。',
+        '如果迁移到小程序，可把本 JSON 作为用户行程草稿导入。',
+      ],
+    };
+  }
+  function travelerHomeHandoffJson(){
+    return JSON.stringify(travelerHomeHandoffPayload(), null, 2);
+  }
+  function renderTravelerHomeHandoff(options){
+    const text = travelerHomeHandoffJson();
+    const output = document.getElementById('traveler-home-handoff-output');
+    const status = document.getElementById('traveler-home-handoff-status');
+    if (output) output.value = text;
+    if (status && !options?.silent) status.textContent = '已生成个人行程交接 JSON。';
+    return text;
+  }
+  function travelerHomeHandoffSummary(){
+    const payload = travelerHomeHandoffPayload();
+    const scopeLabel = payload.selection.mode === 'favorites' ? `收藏路线：${payload.selection.route_count}条` : `当前路线：${payload.selection.route_count}条`;
+    const lines = [
+      '上海行程交接摘要',
+      `偏好：${payload.preference_label}`,
+      scopeLabel,
+      '',
+      '路线清单',
+    ];
+    payload.routes.forEach((route, index) => {
+      lines.push(`${index + 1}. ${route.scenario}｜${route.title}`);
+      lines.push(`   攻略：${route.guide_url}`);
+      lines.push(`   地图：${route.map_url}`);
+    });
+    lines.push('', '完整机器可读文件：shanghai-traveler-handoff.json');
+    lines.push('出发前请复核官方开放、预约、票务、交通和临时闭馆。');
+    return lines.join('\n');
+  }
+  async function copyTravelerHomeHandoffSummary(){
+    const text = travelerHomeHandoffSummary();
+    const status = document.getElementById('traveler-home-handoff-status');
+    renderTravelerHomeHandoff({silent:true});
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制行程交接摘要。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制交接摘要。';
+    }
+    return text;
+  }
+  function travelerHomeHandoffFilename(){
+    return 'shanghai-traveler-handoff.json';
+  }
+  function downloadTravelerHomeHandoffJson(){
+    const text = renderTravelerHomeHandoff({silent:true});
+    const filename = travelerHomeHandoffFilename();
+    const status = document.getElementById('traveler-home-handoff-status');
+    const blob = new Blob([text], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 JSON 行程交接包。';
+    return {filename, text};
+  }
   function renderTravelerHomePlatformCopy(platform){
     const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
     travelerHomePlatformCopyCurrent = target;
@@ -3277,6 +3418,8 @@
   document.getElementById('traveler-home-travelogue-build-button')?.addEventListener('click', renderTravelerHomeTravelogue);
   document.getElementById('traveler-home-travelogue-copy-button')?.addEventListener('click', copyTravelerHomeTravelogue);
   document.getElementById('traveler-home-travelogue-download-button')?.addEventListener('click', downloadTravelerHomeTravelogueMarkdown);
+  document.getElementById('traveler-home-handoff-copy-button')?.addEventListener('click', copyTravelerHomeHandoffSummary);
+  document.getElementById('traveler-home-handoff-download-button')?.addEventListener('click', downloadTravelerHomeHandoffJson);
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });
@@ -3294,6 +3437,7 @@
   document.getElementById('traveler-home-platform-copy-output')?.addEventListener?.('input', () => {
     const status = document.getElementById('traveler-home-platform-copy-status');
     saveTravelerHomePlatformCopyDraft();
+    refreshTravelerHomeHandoff();
     if (status) status.textContent = '草稿已手动修改并保存，复制会使用当前草稿。';
   });
   document.getElementById('traveler-home-travelogue-fragments')?.addEventListener?.('input', () => {
@@ -3301,6 +3445,7 @@
     saveTravelerHomeTravelogueFragments();
     renderTravelerHomeTravelogue();
     renderTravelerHomeWorkflow();
+    refreshTravelerHomeHandoff();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
   });
   applyTravelerHomeFilters();
@@ -3322,6 +3467,7 @@
   renderTravelerHomePlatformCopy();
   applyTravelerHomeTravelogueFragments();
   renderTravelerHomeTravelogue();
+  renderTravelerHomeHandoff({silent:true});
   renderTravelerHomeWorkflow();
 </script>
 </body>

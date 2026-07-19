@@ -764,6 +764,7 @@
       <textarea id="traveler-home-content-update-package-json-import-input" rows="5" aria-label="导入内容更新发布包 JSON"></textarea>
       <div class="traveler-content-package-import-actions">
         <input id="traveler-home-content-update-package-json-import-file" type="file" accept="application/json,.json" aria-label="选择内容更新发布包 JSON 文件">
+        <button type="button" id="traveler-home-content-update-package-json-sample-button" data-traveler-home-content-update-package-json-sample>填入示例</button>
         <button type="button" class="primary" id="traveler-home-content-update-package-json-import-button" data-traveler-home-content-update-package-json-import>导入JSON</button>
       </div>
     </div>
@@ -2332,6 +2333,64 @@
   function travelerHomeContentUpdatePackageSupportedPayload(payload){
     return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_content_update_package' && Number(payload.version) === 1);
   }
+  function travelerHomeContentUpdatePackageSamplePayload(){
+    return {
+      kind: 'shanghai_content_update_package',
+      version: 1,
+      generated_at: '2026-07-19T00:00:00.000Z',
+      source_url: window.location?.href || '',
+      materials: [
+        {
+          id: 'sample-official-museum-east',
+          source: '官方复核',
+          route: '3日经典｜上海3天2晚经典城市初访版',
+          title: '上海博物馆东馆预约与开放时间复核',
+          note: '示例：出发前复核上海博物馆东馆开放时间、预约入口、实名要求、临时闭馆和交通到达，正式发布时用官方渠道替换示例摘要。',
+          nextStep: '补 data/official_verifications 中的开放、预约、票务、交通和临时闭馆字段。',
+        },
+        {
+          id: 'sample-xhs-wukang-anfutrip',
+          source: '小红书',
+          route: '2日躺平｜上海2天1晚躺平 city walk 版',
+          title: '武康路-安福路松弛 city walk 热点信号',
+          note: '示例：保留话题结构和体验信号，重点关注下午茶排队、梧桐街景封面、少换区动线，不复用原文。',
+          nextStep: '进入 data/materials 后人工改写小红书标题、封面提示和备选点位。',
+        },
+        {
+          id: 'sample-douyin-bund-night',
+          source: '抖音',
+          route: '3日暴走｜上海3天2晚高强度地标打卡版',
+          title: '外滩夜景短视频开场信号',
+          note: '示例：保留短视频节奏、开场钩子和镜头顺序信号，用于生成原创抖音脚本，不抓取账号私密数据。',
+          nextStep: '补一版 15 秒开场、3 个镜头和结尾行动提示。',
+        },
+      ],
+      feedback: [
+        {
+          id: 'sample-feedback-map-bund-origin',
+          role: '内容创作者',
+          route: '2日躺平｜上海2天1晚躺平 city walk 版',
+          type: '地图点位/动线问题',
+          severity: '阻塞使用',
+          note: '外滩到外滩源方向容易看反，路线图需要明确从南京东路一侧进入，避免用户逆向绕路。',
+          guide: 'routes/relaxed_2d1n_citywalk.html',
+          map: 'routes/relaxed_2d1n_citywalk.html#route-map',
+          nextAction: '优先复核地图点位、顺序、步行方向和 GeoJSON。',
+        },
+        {
+          id: 'sample-feedback-culture-backup',
+          role: '普通游客',
+          route: '5日文化艺术｜上海5天4晚文化 city walk 深度版',
+          type: '开放预约票务复核',
+          severity: '建议优化',
+          note: '展览与咖啡备选需要按闭馆日重排，最好增加一个雨天/闭馆日替代动线。',
+          guide: 'routes/deep_5d4n_culture_citywalk.html',
+          map: 'routes/deep_5d4n_culture_citywalk.html#route-map',
+          nextAction: '补官方开放信息，并在路线页增加闭馆日备选。',
+        },
+      ],
+    };
+  }
   function travelerHomeNormalizeImportedContentUpdateMaterials(materials){
     return (Array.isArray(materials) ? materials : []).filter(record => record && typeof record === 'object').map((record, index) => ({
       id: record.id || `import-material-${index + 1}`,
@@ -2394,6 +2453,15 @@
   function importTravelerHomeContentUpdatePackageFromInput(){
     const input = document.getElementById('traveler-home-content-update-package-json-import-input');
     return importTravelerHomeContentUpdatePackageJsonText(input?.value || '');
+  }
+  function loadTravelerHomeContentUpdatePackageSampleJson(){
+    const input = document.getElementById('traveler-home-content-update-package-json-import-input');
+    const payload = travelerHomeContentUpdatePackageSamplePayload();
+    if (input) input.value = JSON.stringify(payload, null, 2);
+    const result = restoreTravelerHomeContentUpdatePackagePayload(payload);
+    const status = document.getElementById('traveler-home-content-update-package-status');
+    if (status && result?.ok) status.textContent = `已导入示例内容更新 JSON：${result.materials}条素材、${result.feedback}条反馈、${result.officialTasks}条官方复核任务。`;
+    return result;
   }
   async function importTravelerHomeContentUpdatePackageFile(event){
     const file = event?.target?.files?.[0];
@@ -3705,6 +3773,7 @@
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-json-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageJson);
+  document.getElementById('traveler-home-content-update-package-json-sample-button')?.addEventListener('click', loadTravelerHomeContentUpdatePackageSampleJson);
   document.getElementById('traveler-home-content-update-package-json-import-button')?.addEventListener('click', importTravelerHomeContentUpdatePackageFromInput);
   document.getElementById('traveler-home-content-update-package-json-import-file')?.addEventListener('change', importTravelerHomeContentUpdatePackageFile);
   document.getElementById('traveler-home-release-regression-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-release-regression-status'); renderTravelerHomeReleaseRegressionCenter(); if (status) status.textContent = '发布后回归清单已更新。'; });

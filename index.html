@@ -177,6 +177,10 @@
     .traveler-content-package-list b{font-size:13px;line-height:1.25}
     .traveler-content-package-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-content-package textarea{width:100%;min-height:210px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    .traveler-content-package-import{display:grid;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+    .traveler-content-package-import label{font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-content-package-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .traveler-content-package-import-actions input[type=file]{min-height:36px;max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px;color:var(--ink)}
     .traveler-content-package-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-release-regression{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-release-regression-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
@@ -304,7 +308,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -755,6 +759,14 @@
     <div id="traveler-home-content-update-package-summary" class="traveler-content-package-summary" aria-live="polite"></div>
     <div id="traveler-home-content-update-package-list" class="traveler-content-package-list"></div>
     <textarea id="traveler-home-content-update-package-output" readonly rows="10" aria-label="内容更新发布包 Markdown"></textarea>
+    <div class="traveler-content-package-import">
+      <label for="traveler-home-content-update-package-json-import-input">导入内容更新 JSON</label>
+      <textarea id="traveler-home-content-update-package-json-import-input" rows="5" aria-label="导入内容更新发布包 JSON"></textarea>
+      <div class="traveler-content-package-import-actions">
+        <input id="traveler-home-content-update-package-json-import-file" type="file" accept="application/json,.json" aria-label="选择内容更新发布包 JSON 文件">
+        <button type="button" class="primary" id="traveler-home-content-update-package-json-import-button" data-traveler-home-content-update-package-json-import>导入JSON</button>
+      </div>
+    </div>
     <p id="traveler-home-content-update-package-status" class="traveler-content-package-status" aria-live="polite"></p>
   </div>
 </section>
@@ -2317,6 +2329,86 @@
     if (status) status.textContent = '已下载 JSON 内容更新发布包。';
     return {filename, payload};
   }
+  function travelerHomeContentUpdatePackageSupportedPayload(payload){
+    return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_content_update_package' && Number(payload.version) === 1);
+  }
+  function travelerHomeNormalizeImportedContentUpdateMaterials(materials){
+    return (Array.isArray(materials) ? materials : []).filter(record => record && typeof record === 'object').map((record, index) => ({
+      id: record.id || `import-material-${index + 1}`,
+      source: record.source || '未标注',
+      route: record.route || '未关联路线',
+      title: record.title || '未命名素材',
+      note: record.note || '未填写素材摘要。',
+      nextStep: record.nextStep || '',
+    }));
+  }
+  function travelerHomeNormalizeImportedContentUpdateFeedback(feedback){
+    return (Array.isArray(feedback) ? feedback : []).filter(record => record && typeof record === 'object').map((record, index) => ({
+      id: record.id || `import-feedback-${index + 1}`,
+      role: record.role || '未标注',
+      route: record.route || '未关联路线',
+      type: record.type || '其他',
+      severity: record.severity || '建议优化',
+      note: record.note || '未填写具体问题。',
+      guide: record.guide || '',
+      map: record.map || '',
+      nextAction: record.nextAction || travelerHomeFeedbackNextAction('other'),
+    }));
+  }
+  function refreshTravelerHomeContentUpdatePackageImport(){
+    renderTravelerHomeContentIntakeBoard();
+    renderTravelerHomeOfficialVerificationFlow();
+    renderTravelerHomeFeedbackBoard();
+    renderTravelerHomeContentUpdatePackage();
+    renderTravelerHomeReleaseRegressionCenter();
+    renderTravelerHomeReleaseAuditPackage();
+  }
+  function restoreTravelerHomeContentUpdatePackagePayload(payload){
+    const status = document.getElementById('traveler-home-content-update-package-status');
+    if (!travelerHomeContentUpdatePackageSupportedPayload(payload)) {
+      if (status) status.textContent = '导入失败：请选择上海内容更新发布包 JSON。';
+      return {ok:false, reason:'unsupported_payload'};
+    }
+    const materials = travelerHomeNormalizeImportedContentUpdateMaterials(payload.materials);
+    const feedback = travelerHomeNormalizeImportedContentUpdateFeedback(payload.feedback);
+    const state = travelerHomeStorageRead();
+    state.contentIntakeBoardRecords = materials;
+    state.feedbackBoardRecords = feedback;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    refreshTravelerHomeContentUpdatePackageImport();
+    const result = {ok:true, materials: materials.length, feedback: feedback.length, officialTasks: travelerHomeOfficialVerificationTasks().length};
+    if (status) status.textContent = `已导入内容更新 JSON：${result.materials}条素材、${result.feedback}条反馈、${result.officialTasks}条官方复核任务。`;
+    return result;
+  }
+  function importTravelerHomeContentUpdatePackageJsonText(text){
+    const status = document.getElementById('traveler-home-content-update-package-status');
+    let payload = null;
+    try { payload = JSON.parse(String(text || '')); }
+    catch (error) {
+      if (status) status.textContent = '导入失败：JSON 格式无法解析。';
+      return {ok:false, reason:'invalid_json'};
+    }
+    return restoreTravelerHomeContentUpdatePackagePayload(payload);
+  }
+  function importTravelerHomeContentUpdatePackageFromInput(){
+    const input = document.getElementById('traveler-home-content-update-package-json-import-input');
+    return importTravelerHomeContentUpdatePackageJsonText(input?.value || '');
+  }
+  async function importTravelerHomeContentUpdatePackageFile(event){
+    const file = event?.target?.files?.[0];
+    const status = document.getElementById('traveler-home-content-update-package-status');
+    if (!file) return {ok:false, reason:'missing_file'};
+    try {
+      const text = await file.text();
+      const input = document.getElementById('traveler-home-content-update-package-json-import-input');
+      if (input) input.value = text;
+      return importTravelerHomeContentUpdatePackageJsonText(text);
+    } catch (error) {
+      if (status) status.textContent = '导入失败：无法读取 JSON 文件。';
+      return {ok:false, reason:'read_failed'};
+    }
+  }
   function travelerHomeReleaseRegressionRiskLevel(summary){
     if ((summary.blockingFeedback || 0) > 0 || (summary.officialTasks || 0) > 0) return '需复核后发布';
     if ((summary.materials || 0) > 0 || (summary.feedback || 0) > 0) return '可发布后观察';
@@ -3613,6 +3705,8 @@
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-json-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageJson);
+  document.getElementById('traveler-home-content-update-package-json-import-button')?.addEventListener('click', importTravelerHomeContentUpdatePackageFromInput);
+  document.getElementById('traveler-home-content-update-package-json-import-file')?.addEventListener('change', importTravelerHomeContentUpdatePackageFile);
   document.getElementById('traveler-home-release-regression-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-release-regression-status'); renderTravelerHomeReleaseRegressionCenter(); if (status) status.textContent = '发布后回归清单已更新。'; });
   document.getElementById('traveler-home-release-regression-copy-button')?.addEventListener('click', copyTravelerHomeReleaseRegressionMarkdown);
   document.getElementById('traveler-home-release-regression-download-button')?.addEventListener('click', downloadTravelerHomeReleaseRegressionMarkdown);

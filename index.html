@@ -315,6 +315,8 @@
     .traveler-risk-plan h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-departure-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-departure-review h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-pretrip-toolkit{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-pretrip-toolkit h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
     .traveler-handoff-import label{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -1068,6 +1070,17 @@
       </div>
       <textarea id="traveler-home-departure-review-output" readonly rows="8" aria-label="出发前复核包内容"></textarea>
       <p id="traveler-home-departure-review-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-pretrip-toolkit" class="traveler-pretrip-toolkit" aria-label="一键行前工具包">
+      <div class="traveler-social-card-head">
+        <h3>一键行前工具包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-pretrip-toolkit-copy-button" data-traveler-home-pretrip-toolkit-copy>复制工具包</button>
+          <button type="button" class="primary" id="traveler-home-pretrip-toolkit-download-button" data-traveler-home-pretrip-toolkit-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-pretrip-toolkit-output" readonly rows="10" aria-label="一键行前工具包内容"></textarea>
+      <p id="traveler-home-pretrip-toolkit-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
@@ -3154,6 +3167,7 @@
     renderTravelerHomeRiskPlan();
     renderTravelerHomeWorkflow();
     renderTravelerHomeDepartureReview();
+    renderTravelerHomePretripToolkit();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -3302,6 +3316,7 @@
     renderTravelerHomeFoodSupply();
     renderTravelerHomeRiskPlan();
     renderTravelerHomeDepartureReview();
+    renderTravelerHomePretripToolkit();
     renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
     if (status) status.textContent = '首次试跑已完成：已选 2日躺平路线，并生成路线包、路线卡、平台文案、游记和交接包。';
     return {ok:true, routeId: recommendation?.route?.tripId || route?.tripId || '', handoffText};
@@ -3326,6 +3341,7 @@
     renderTravelerHomeRiskPlan();
     renderTravelerHomeWorkflow();
     renderTravelerHomeDepartureReview();
+    renderTravelerHomePretripToolkit();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -3435,6 +3451,7 @@
     renderTravelerHomeFoodSupply();
     renderTravelerHomeRiskPlan();
     renderTravelerHomeDepartureReview();
+    renderTravelerHomePretripToolkit();
     return text;
   }
   function travelerHomeRoutePackFilename(){
@@ -4312,6 +4329,91 @@
     if (status) status.textContent = '已下载出发前复核包。';
     return {filename, text};
   }
+  function travelerHomePretripToolkitRoute(){
+    return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || travelerHomeFirstTimeGuideRoute();
+  }
+  function travelerHomePretripToolkitMarkdown(){
+    const route = travelerHomePretripToolkitRoute();
+    const preferences = travelerHomeStorageRead().preferences || travelerHomePreferenceInput();
+    const routePack = travelerHomeRoutePackText();
+    const stayDecision = travelerHomeStayDecisionMarkdown();
+    const foodSupply = travelerHomeFoodSupplyMarkdown();
+    const riskPlan = travelerHomeRiskPlanMarkdown();
+    const departureReview = travelerHomeDepartureReviewMarkdown();
+    const lines = [
+      '# 上海行前工具包',
+      '',
+      route ? `路线：${route.scenario}｜${route.title}` : '路线：当前未选择',
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      route ? `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}` : '',
+      route ? `地图：${travelerHomeAbsoluteUrl(route.mapHref)}` : '',
+      '',
+      '## 使用顺序',
+      '1. 路线包：先确认主线、攻略和地图入口。',
+      '2. 住宿决策包：按首日第一站、地铁和行李动线订房。',
+      '3. 吃喝休息补给包：每天只锁定一个高确定性补给点。',
+      '4. 天气体力人流风险包：出发前按天气、体力和人流删减。',
+      '5. 出发前复核包：最后核对官方信息、地图和文案真实性。',
+      '',
+      '## 路线包',
+      routePack,
+      '',
+      '## 住宿决策',
+      stayDecision,
+      '',
+      '## 吃喝休息',
+      foodSupply,
+      '',
+      '## 天气体力人流',
+      riskPlan,
+      '',
+      '## 出发前复核',
+      departureReview,
+      '',
+      '## 出发前最后确认',
+      '- 开放、预约、票务和临时闭馆：以官方渠道和现场信息为准。',
+      '- 交通和天气：出发当天用地图 App 和天气 App 二次确认。',
+      '- 同行人状态：低体力时先删减，不临时加点。',
+      '- 内容发布：平台文案只做草稿，发布前改成真实体验口吻。',
+    ];
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomePretripToolkit(){
+    const output = document.getElementById('traveler-home-pretrip-toolkit-output');
+    const text = travelerHomePretripToolkitMarkdown();
+    if (output) output.value = text;
+    return text;
+  }
+  async function copyTravelerHomePretripToolkitMarkdown(){
+    const text = renderTravelerHomePretripToolkit();
+    const status = document.getElementById('traveler-home-pretrip-toolkit-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制行前工具包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制工具包。';
+    }
+    return text;
+  }
+  function travelerHomePretripToolkitFilename(){
+    return 'shanghai-pretrip-toolkit.md';
+  }
+  function downloadTravelerHomePretripToolkitMarkdown(){
+    const text = renderTravelerHomePretripToolkit();
+    const filename = travelerHomePretripToolkitFilename();
+    const status = document.getElementById('traveler-home-pretrip-toolkit-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载行前工具包。';
+    return {filename, text};
+  }
   function travelerHomeHandoffSupportedPayload(payload){
     return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_traveler_personal_handoff' && Number(payload.version) === 1);
   }
@@ -4401,6 +4503,7 @@
     renderTravelerHomeWorkflow();
     renderTravelerHomeDepartureReview();
     renderTravelerHomeHandoff({silent:true});
+    renderTravelerHomePretripToolkit();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), message || '已恢复导入的行程交接包。');
   }
   function restoreTravelerHomeHandoffPayload(payload){
@@ -4633,6 +4736,8 @@
   document.getElementById('traveler-home-handoff-import-file')?.addEventListener('change', importTravelerHomeHandoffFile);
   document.getElementById('traveler-home-departure-review-copy-button')?.addEventListener('click', copyTravelerHomeDepartureReviewMarkdown);
   document.getElementById('traveler-home-departure-review-download-button')?.addEventListener('click', downloadTravelerHomeDepartureReviewMarkdown);
+  document.getElementById('traveler-home-pretrip-toolkit-copy-button')?.addEventListener('click', copyTravelerHomePretripToolkitMarkdown);
+  document.getElementById('traveler-home-pretrip-toolkit-download-button')?.addEventListener('click', downloadTravelerHomePretripToolkitMarkdown);
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });
@@ -4688,6 +4793,7 @@
   renderTravelerHomeFoodSupply();
   renderTravelerHomeRiskPlan();
   renderTravelerHomeDepartureReview();
+  renderTravelerHomePretripToolkit();
   renderTravelerHomeWorkflow();
 </script>
 </body>

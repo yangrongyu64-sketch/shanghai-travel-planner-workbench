@@ -307,6 +307,8 @@
     .traveler-travelogue-field{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-handoff h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-departure-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-departure-review h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
     .traveler-handoff-import label{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -1017,6 +1019,17 @@
       </div>
       <p id="traveler-home-handoff-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
+    <div id="traveler-home-departure-review" class="traveler-departure-review" aria-label="出发前复核包">
+      <div class="traveler-social-card-head">
+        <h3>出发前复核包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-departure-review-copy-button" data-traveler-home-departure-review-copy>复制复核包</button>
+          <button type="button" class="primary" id="traveler-home-departure-review-download-button" data-traveler-home-departure-review-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-departure-review-output" readonly rows="8" aria-label="出发前复核包内容"></textarea>
+      <p id="traveler-home-departure-review-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
     <div class="traveler-control"><label for="traveler-home-duration-filter">天数</label><select id="traveler-home-duration-filter" data-traveler-home-duration>
@@ -1241,7 +1254,7 @@
   </footer>
 </main>
 <script>
-  const TRAVELER_HOME_ROUTES = [{"tripId": "relaxed_2d1n_citywalk", "scenario": "2日躺平", "title": "上海2天1晚躺平 city walk 版", "durationDays": 2, "style": "relaxed", "theme": "city walk", "audience": "适合短途躺平、不想太累和少换区", "primaryAngle": "2天躺平 city walk", "routeScore": 89, "guideHref": "routes/relaxed_2d1n_citywalk.html", "mapHref": "routes/relaxed_2d1n_citywalk.html#route-map"}, {"tripId": "first_time_3d2n_balanced", "scenario": "3日经典", "title": "上海3天2晚首次来均衡版", "durationDays": 3, "style": "balanced", "theme": "文化艺术", "audience": "适合首次来上海、经典均衡和少踩坑", "primaryAngle": "3天初来上海不绕路", "routeScore": 89, "guideHref": "routes/first_time_3d2n_balanced.html", "mapHref": "routes/first_time_3d2n_balanced.html#route-map"}, {"tripId": "highwalk_3d2n_landmark_citywalk", "scenario": "3日暴走", "title": "上海3天2晚暴走地标 + city walk 版", "durationDays": 3, "style": "high_walk", "theme": "地标打卡", "audience": "适合暴走党、地标打卡和高密度 city walk", "primaryAngle": "3天暴走地标线", "routeScore": 89, "guideHref": "routes/highwalk_3d2n_landmark_citywalk.html", "mapHref": "routes/highwalk_3d2n_landmark_citywalk.html#route-map"}, {"tripId": "deep_5d4n_culture_citywalk", "scenario": "5日文化艺术", "title": "上海5天4晚文化 city walk 深度版", "durationDays": 5, "style": "balanced", "theme": "文化艺术", "audience": "适合文化艺术、博物馆和美术馆", "primaryAngle": "5天文化 city walk", "routeScore": 91, "guideHref": "routes/deep_5d4n_culture_citywalk.html", "mapHref": "routes/deep_5d4n_culture_citywalk.html#route-map"}, {"tripId": "local_life_7d6n_balanced", "scenario": "7日生活感", "title": "上海7天6晚生活感均衡版", "durationDays": 7, "style": "balanced", "theme": "生活感", "audience": "适合二刷上海、生活感和街区探索", "primaryAngle": "7天生活感 city walk", "routeScore": 92, "guideHref": "routes/local_life_7d6n_balanced.html", "mapHref": "routes/local_life_7d6n_balanced.html#route-map"}, {"tripId": "longstay_15d14n_balanced", "scenario": "15日长住", "title": "上海15天14晚长住慢旅行版", "durationDays": 15, "style": "balanced", "theme": "生活感", "audience": "适合长住、慢旅行和深度体验", "primaryAngle": "15天长住慢旅行", "routeScore": 92, "guideHref": "routes/longstay_15d14n_balanced.html", "mapHref": "routes/longstay_15d14n_balanced.html#route-map"}];
+  const TRAVELER_HOME_ROUTES = [{"tripId": "relaxed_2d1n_citywalk", "scenario": "2日躺平", "title": "上海2天1晚躺平 city walk 版", "durationDays": 2, "style": "relaxed", "theme": "city walk", "audience": "适合短途躺平、不想太累和少换区", "primaryAngle": "2天躺平 city walk", "routeScore": 89, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 6, "verifiedCount": 0, "pendingCount": 0, "missingCount": 6, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "新天地", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "外滩源", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "外滩", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京东路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "新天地", "nearestMetro": "Xintiandi", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。"}]}, {"day": 2, "stops": [{"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "南京东路", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/relaxed_2d1n_citywalk.html", "mapHref": "routes/relaxed_2d1n_citywalk.html#route-map"}, {"tripId": "first_time_3d2n_balanced", "scenario": "3日经典", "title": "上海3天2晚首次来均衡版", "durationDays": 3, "style": "balanced", "theme": "文化艺术", "audience": "适合首次来上海、经典均衡和少踩坑", "primaryAngle": "3天初来上海不绕路", "routeScore": 89, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 10, "verifiedCount": 0, "pendingCount": 1, "missingCount": 9, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "人民广场", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京东路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "外滩", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "复兴公园", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "新天地", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "上海博物馆", "verificationStatus": "待人工复核", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.shanghaimuseum.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "人民广场", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "南京东路", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}, {"day": 2, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "复兴公园", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}, {"placeName": "新天地", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}]}, {"day": 3, "stops": [{"placeName": "上海博物馆", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "豫园 / 老城厢", "nearestMetro": "Yuyuan Garden", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/first_time_3d2n_balanced.html", "mapHref": "routes/first_time_3d2n_balanced.html#route-map"}, {"tripId": "highwalk_3d2n_landmark_citywalk", "scenario": "3日暴走", "title": "上海3天2晚暴走地标 + city walk 版", "durationDays": 3, "style": "high_walk", "theme": "地标打卡", "audience": "适合暴走党、地标打卡和高密度 city walk", "primaryAngle": "3天暴走地标线", "routeScore": 89, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 12, "verifiedCount": 0, "pendingCount": 1, "missingCount": 11, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "人民广场", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京东路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "外滩", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "陆家嘴", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "复兴公园", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "新天地", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "人民广场", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "南京东路", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "陆家嘴", "nearestMetro": "Lujiazui", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Lujiazui。"}]}, {"day": 2, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "复兴公园", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}, {"placeName": "新天地", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}]}, {"day": 3, "stops": [{"placeName": "上海博物馆", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "豫园 / 老城厢", "nearestMetro": "Yuyuan Garden", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "苏州河步道", "nearestMetro": "Tiantong Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Tiantong Road。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/highwalk_3d2n_landmark_citywalk.html", "mapHref": "routes/highwalk_3d2n_landmark_citywalk.html#route-map"}, {"tripId": "deep_5d4n_culture_citywalk", "scenario": "5日文化艺术", "title": "上海5天4晚文化 city walk 深度版", "durationDays": 5, "style": "balanced", "theme": "文化艺术", "audience": "适合文化艺术、博物馆和美术馆", "primaryAngle": "5天文化 city walk", "routeScore": 91, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 12, "verifiedCount": 0, "pendingCount": 1, "missingCount": 11, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "人民广场", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京东路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "外滩", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "复兴公园", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "新天地", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "上海博物馆", "verificationStatus": "待人工复核", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.shanghaimuseum.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "人民广场", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "南京东路", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}, {"day": 2, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "复兴公园", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}, {"placeName": "新天地", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}]}, {"day": 3, "stops": [{"placeName": "上海博物馆", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "豫园 / 老城厢", "nearestMetro": "Yuyuan Garden", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}, {"day": 4, "stops": [{"placeName": "苏州河步道", "nearestMetro": "Tiantong Road", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Tiantong Road。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}, {"day": 5, "stops": [{"placeName": "陆家嘴", "nearestMetro": "Lujiazui", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Lujiazui。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：East Nanjing Road。"}, {"placeName": "人民广场", "nearestMetro": "People's Square", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：People's Square。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/deep_5d4n_culture_citywalk.html", "mapHref": "routes/deep_5d4n_culture_citywalk.html#route-map"}, {"tripId": "local_life_7d6n_balanced", "scenario": "7日生活感", "title": "上海7天6晚生活感均衡版", "durationDays": 7, "style": "balanced", "theme": "生活感", "audience": "适合二刷上海、生活感和街区探索", "primaryAngle": "7天生活感 city walk", "routeScore": 92, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 23, "verifiedCount": 0, "pendingCount": 3, "missingCount": 20, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "静安寺", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京西路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "上海自然博物馆", "verificationStatus": "待人工复核", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.snhm.org.cn/"}, {"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "思南公馆", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "复兴公园", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "上海博物馆", "verificationStatus": "待人工复核", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.shanghaimuseum.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "静安寺", "nearestMetro": "Jing'an Temple", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Jing'an Temple。"}, {"placeName": "南京西路", "nearestMetro": "West Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：West Nanjing Road。"}, {"placeName": "上海自然博物馆", "nearestMetro": "Shanghai Natural History Museum", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。"}]}, {"day": 2, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "思南公馆", "nearestMetro": "Xintiandi", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。"}, {"placeName": "复兴公园", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}]}, {"day": 3, "stops": [{"placeName": "上海博物馆", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "上海市历史博物馆", "nearestMetro": "People's Square", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。"}, {"placeName": "上海城市规划展示馆", "nearestMetro": "People's Square", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。"}]}, {"day": 4, "stops": [{"placeName": "西岸滨江", "nearestMetro": "Longyao Road", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Longyao Road。"}, {"placeName": "龙美术馆西岸馆", "nearestMetro": "Middle Longhua Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Middle Longhua Road。"}, {"placeName": "油罐艺术中心", "nearestMetro": "Longyao Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longyao Road。"}, {"placeName": "徐汇滨江", "nearestMetro": "Longhua Middle Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Longhua Middle Road。"}]}, {"day": 5, "stops": [{"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：East Nanjing Road。"}, {"placeName": "苏州河步道", "nearestMetro": "Tiantong Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Tiantong Road。"}, {"placeName": "M50 创意园", "nearestMetro": "Jiangning Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Jiangning Road。"}, {"placeName": "北外滩", "nearestMetro": "International Cruise Terminal", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：International Cruise Terminal。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/local_life_7d6n_balanced.html", "mapHref": "routes/local_life_7d6n_balanced.html#route-map"}, {"tripId": "longstay_15d14n_balanced", "scenario": "15日长住", "title": "上海15天14晚长住慢旅行版", "durationDays": 15, "style": "balanced", "theme": "生活感", "audience": "适合长住、慢旅行和深度体验", "primaryAngle": "15天长住慢旅行", "routeScore": 92, "officialSummary": {"statusLabel": "可继续回填", "totalCount": 34, "verifiedCount": 0, "pendingCount": 3, "missingCount": 31, "validationWarningCount": 35, "validationErrorCount": 0}, "officialItems": [{"placeName": "静安寺", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "南京西路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "上海自然博物馆", "verificationStatus": "待人工复核", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.snhm.org.cn/"}, {"placeName": "武康路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "安福路", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "思南公馆", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "复兴公园", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}, {"placeName": "人民广场", "verificationStatus": "未回填", "openingStatus": "待查官网开放信息", "reservationStatus": "待查官网预约规则", "sourceUrl": "https://www.meet-in-shanghai.net/"}], "mapDays": [{"day": 1, "stops": [{"placeName": "静安寺", "nearestMetro": "Jing'an Temple", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Jing'an Temple。"}, {"placeName": "南京西路", "nearestMetro": "West Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：West Nanjing Road。"}, {"placeName": "上海自然博物馆", "nearestMetro": "Shanghai Natural History Museum", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Shanghai Natural History Museum。"}]}, {"day": 2, "stops": [{"placeName": "武康路", "nearestMetro": "Shanghai Library", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。"}, {"placeName": "安福路", "nearestMetro": "Changshu Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。"}, {"placeName": "思南公馆", "nearestMetro": "Xintiandi", "transportHint": "跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Xintiandi。"}, {"placeName": "复兴公园", "nearestMetro": "Xintiandi", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。"}]}, {"day": 3, "stops": [{"placeName": "人民广场", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "南京东路", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}, {"day": 4, "stops": [{"placeName": "上海博物馆", "nearestMetro": "People's Square", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。"}, {"placeName": "上海市历史博物馆", "nearestMetro": "People's Square", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。"}, {"placeName": "上海城市规划展示馆", "nearestMetro": "People's Square", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：People's Square。"}]}, {"day": 5, "stops": [{"placeName": "豫园 / 老城厢", "nearestMetro": "Yuyuan Garden", "transportHint": "第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Yuyuan Garden。"}, {"placeName": "外滩源", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}, {"placeName": "外滩美术馆", "nearestMetro": "East Nanjing Road", "transportHint": "与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。"}]}], "materialQuality": {"status": "需补官方信息", "score": 74, "checklist": ["补一条官方开放、预约、交通或场馆信息来源。", "C级平台素材只用于结构和体验信号，不直接当事实依据。", "发布前逐条复核避坑信号，避免写成实时结论。"]}, "guideHref": "routes/longstay_15d14n_balanced.html", "mapHref": "routes/longstay_15d14n_balanced.html#route-map"}];
   const TRAVELER_HOME_PWA_ENABLED = true;
   const travelerHomeStorageKey = 'shanghai-traveler-home-memory-v1';
   if (TRAVELER_HOME_PWA_ENABLED && 'serviceWorker' in navigator && window.location.protocol !== 'file:') {
@@ -3098,6 +3111,7 @@
     renderTravelerHomeSocialCard();
     renderTravelerHomePlatformCopy();
     renderTravelerHomeWorkflow();
+    renderTravelerHomeDepartureReview();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -3242,6 +3256,7 @@
     const handoffText = renderTravelerHomeHandoff({silent:true});
     renderTravelerHomeWorkflow();
     renderTravelerHomeFirstTimeGuideDelivery();
+    renderTravelerHomeDepartureReview();
     renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
     if (status) status.textContent = '首次试跑已完成：已选 2日躺平路线，并生成路线包、路线卡、平台文案、游记和交接包。';
     return {ok:true, routeId: recommendation?.route?.tripId || route?.tripId || '', handoffText};
@@ -3262,6 +3277,7 @@
     renderTravelerHomePlatformCopy();
     renderTravelerHomeTravelogue();
     renderTravelerHomeWorkflow();
+    renderTravelerHomeDepartureReview();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -3367,6 +3383,7 @@
     if (output) output.value = text;
     if (status) status.textContent = `已整理 ${travelerHomeRoutePackRoutes().length} 条路线。`;
     refreshTravelerHomeHandoff();
+    renderTravelerHomeDepartureReview();
     return text;
   }
   function travelerHomeRoutePackFilename(){
@@ -3902,6 +3919,79 @@
     if (status) status.textContent = '已下载 JSON 行程交接包。';
     return {filename, text};
   }
+  function travelerHomeDepartureReviewRoute(){
+    return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || travelerHomeFirstTimeGuideRoute();
+  }
+  function travelerHomeDepartureReviewMarkdown(){
+    const route = travelerHomeDepartureReviewRoute();
+    if (!route) return '# 上海出发前复核包\n\n当前还没有可复核的路线。';
+    const official = route.officialSummary || {};
+    const officialItems = Array.isArray(route.officialItems) ? route.officialItems : [];
+    const mapDays = Array.isArray(route.mapDays) ? route.mapDays : [];
+    const quality = route.materialQuality || {};
+    const lines = [
+      '# 上海出发前复核包',
+      '',
+      `路线：${route.scenario}｜${route.title}`,
+      `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`,
+      `地图：${travelerHomeAbsoluteUrl(route.mapHref)}`,
+      '',
+      '## 官方信息复核',
+      `- 官方复核状态：${official.statusLabel || '待复核'}` ,
+      `- 待复核点位：${Number(official.missingCount || 0) + Number(official.pendingCount || 0)} / ${official.totalCount || officialItems.length || 0}` ,
+      `- 校验提醒：${official.validationErrorCount || 0} 个错误 / ${official.validationWarningCount || 0} 个提醒` ,
+    ];
+    officialItems.slice(0, 5).forEach(item => lines.push(`- ${item.placeName || '未命名点位'}：${item.verificationStatus || '待复核'} / ${item.openingStatus || '开放待查'} / ${item.reservationStatus || '预约待查'}`));
+    lines.push('', '## 地图和交通复核', `- 路线图：${travelerHomeAbsoluteUrl(route.mapHref)}`);
+    mapDays.forEach(day => {
+      const stops = (day.stops || []).map(stop => `${stop.placeName}${stop.nearestMetro ? `（近 ${stop.nearestMetro}）` : ''}`).join(' → ');
+      lines.push(`- Day ${day.day}：${stops || '待补路线点位'}`);
+    });
+    lines.push('', '## 文案真实性复核');
+    lines.push(`- 平台素材质量：${quality.status || '待复核'}${quality.score !== undefined ? ` / ${quality.score}分` : ''}`);
+    (Array.isArray(quality.checklist) ? quality.checklist : []).forEach(item => lines.push(`- ${item}`));
+    lines.push('', '## 出发前最后动作');
+    lines.push('1. 先复核官方开放、预约、票务和临时闭馆。');
+    lines.push('2. 再确认路线地图、地铁换乘和步行强度。');
+    lines.push('3. 最后把平台文案改成真实体验口吻，避免把平台素材当事实。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeDepartureReview(){
+    const output = document.getElementById('traveler-home-departure-review-output');
+    const text = travelerHomeDepartureReviewMarkdown();
+    if (output) output.value = text;
+    return text;
+  }
+  async function copyTravelerHomeDepartureReviewMarkdown(){
+    const text = renderTravelerHomeDepartureReview();
+    const status = document.getElementById('traveler-home-departure-review-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制出发前复核包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制复核包。';
+    }
+    return text;
+  }
+  function travelerHomeDepartureReviewFilename(){
+    return 'shanghai-departure-review.md';
+  }
+  function downloadTravelerHomeDepartureReviewMarkdown(){
+    const text = renderTravelerHomeDepartureReview();
+    const filename = travelerHomeDepartureReviewFilename();
+    const status = document.getElementById('traveler-home-departure-review-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载出发前复核包。';
+    return {filename, text};
+  }
   function travelerHomeHandoffSupportedPayload(payload){
     return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_traveler_personal_handoff' && Number(payload.version) === 1);
   }
@@ -4211,6 +4301,8 @@
   document.getElementById('traveler-home-handoff-download-button')?.addEventListener('click', downloadTravelerHomeHandoffJson);
   document.getElementById('traveler-home-handoff-import-button')?.addEventListener('click', importTravelerHomeHandoffFromInput);
   document.getElementById('traveler-home-handoff-import-file')?.addEventListener('change', importTravelerHomeHandoffFile);
+  document.getElementById('traveler-home-departure-review-copy-button')?.addEventListener('click', copyTravelerHomeDepartureReviewMarkdown);
+  document.getElementById('traveler-home-departure-review-download-button')?.addEventListener('click', downloadTravelerHomeDepartureReviewMarkdown);
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });
@@ -4262,6 +4354,7 @@
   applyTravelerHomeTravelogueFragments();
   renderTravelerHomeTravelogue();
   renderTravelerHomeHandoff({silent:true});
+  renderTravelerHomeDepartureReview();
   renderTravelerHomeWorkflow();
 </script>
 </body>

@@ -1984,6 +1984,13 @@
     const line = lines.find(item => item.trim().startsWith(prefix));
     return line ? line.trim().slice(prefix.length).trim() : '';
   }
+  function travelerHomeFeedbackBoardLineAnyValue(lines, labels){
+    for (const label of labels) {
+      const value = travelerHomeFeedbackBoardLineValue(lines, label);
+      if (value) return value;
+    }
+    return '';
+  }
   function travelerHomeFeedbackBoardSection(lines, heading){
     const start = lines.findIndex(line => line.trim() === heading);
     if (start < 0) return '';
@@ -2016,10 +2023,10 @@
     return chunks.map((chunk, index) => {
       const lines = chunk.split('\n').map(line => line.trimEnd());
       const record = {
-        role: travelerHomeFeedbackBoardLineValue(lines, '反馈人') || '未标注',
-        route: travelerHomeFeedbackBoardLineValue(lines, '路线') || '未关联路线',
+        role: travelerHomeFeedbackBoardLineAnyValue(lines, ['反馈人','反馈角色']) || '未标注',
+        route: travelerHomeFeedbackBoardLineAnyValue(lines, ['路线','关联路线']) || '未关联路线',
         type: travelerHomeFeedbackBoardLineValue(lines, '问题类型') || '其他',
-        severity: travelerHomeFeedbackBoardLineValue(lines, '影响程度') || '建议优化',
+        severity: travelerHomeFeedbackBoardLineAnyValue(lines, ['影响程度','严重程度']) || '建议优化',
         note: travelerHomeFeedbackBoardSection(lines, '## 问题描述') || '未填写具体问题。',
         guide: travelerHomeFeedbackBoardLineValue(lines, '攻略'),
         map: travelerHomeFeedbackBoardLineValue(lines, '地图'),

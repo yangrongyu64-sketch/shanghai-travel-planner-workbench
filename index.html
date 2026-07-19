@@ -39,11 +39,18 @@
     .traveler-trial-guide-head p{margin:0 0 6px;color:var(--accent);font-size:13px;font-weight:900}
     .traveler-trial-guide h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
     .traveler-trial-guide small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
+    .traveler-trial-guide-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .traveler-trial-guide-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 12px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-actions .primary{background:var(--accent);color:#fff}
     .traveler-trial-guide-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     .traveler-trial-guide article{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;min-height:132px;border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
     .traveler-trial-guide article span{display:grid;place-items:center;width:26px;height:26px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:900}
     .traveler-trial-guide article b{font-size:14px;line-height:1.25}
     .traveler-trial-guide article button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-progress{grid-column:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .traveler-trial-guide-progress article{min-height:74px;background:#fff;border-style:dashed}
+    .traveler-trial-guide-progress article.is-complete{border-style:solid;background:#eef7f0}
+    .traveler-trial-guide-progress article.is-complete span{background:var(--accent);color:#fff}
     .traveler-trial-guide-status{grid-column:2;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-operator-tools{border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-operator-tools summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:16px clamp(16px,4vw,44px);cursor:pointer;list-style:none}
@@ -384,6 +391,9 @@
     <p>普通游客主线</p>
     <h2>开始上海行程</h2>
     <small>先走这四步，后面的发布、审计和维护工具可以晚一点再看。</small>
+    <div class="traveler-trial-guide-actions">
+      <button type="button" class="primary" id="traveler-home-trial-guide-run-button" data-traveler-home-trial-guide-run>一键试跑</button>
+    </div>
   </div>
   <div class="traveler-trial-guide-grid">
     <article>
@@ -411,6 +421,7 @@
       <button type="button" data-traveler-home-trial-guide-target="traveler-home-feedback">回传问题</button>
     </article>
   </div>
+  <div id="traveler-home-trial-guide-progress" class="traveler-trial-guide-progress" aria-live="polite"></div>
   <p id="traveler-home-trial-guide-status" class="traveler-trial-guide-status" aria-live="polite"></p>
 </section>
 <details id="traveler-home-operator-tools" class="traveler-operator-tools">
@@ -2929,16 +2940,23 @@
     const rows = travelerHomePlatformDraftOverviewRows();
     const hasLocalDraft = rows.some(row => row.source === '本地草稿');
     const fragments = travelerHomeTravelogueFragmentsText().trim();
+    const travelogueOutput = document.getElementById('traveler-home-travelogue-output')?.value?.trim() || '';
+    const hasGeneratedTravelogue = Boolean(fragments || travelogueOutput || travelerHomeStorageRead().firstTimeGuide?.completed);
     return [
       {key:'route', label:'路线', detail: route ? `${route.scenario}｜${route.title}` : '待选择路线', targetId:'traveler-home-route-picker', ready:Boolean(route)},
       {key:'pack', label:'路线包', detail: route ? '路线包已就绪' : '待生成路线包', targetId:'traveler-home-route-pack', ready:Boolean(route)},
       {key:'platform', label:'平台草稿', detail: hasLocalDraft ? '含本地草稿' : '生成稿可用', targetId:'traveler-home-platform-copy', ready:rows.length > 0},
-      {key:'travelogue', label:'游记', detail: fragments ? '含旅途碎片' : '可先生成初稿', targetId:'traveler-home-travelogue', ready:Boolean(fragments)},
+      {key:'travelogue', label:'游记', detail: fragments ? '含旅途碎片' : (hasGeneratedTravelogue ? '已生成游记初稿' : '可先生成初稿'), targetId:'traveler-home-travelogue', ready:hasGeneratedTravelogue},
     ];
   }
   function travelerHomeWorkflowNextItem(items){
     const source = items || travelerHomeWorkflowItems();
     return source.find(item => !item.ready) || source.find(item => item.key === 'pack') || source[0];
+  }
+  function travelerHomeWorkflowSummaryText(items){
+    const source = items || travelerHomeWorkflowItems();
+    const readyCount = source.filter(item => item.ready).length;
+    return `已完成 ${readyCount}/${source.length}｜当前：${source[0]?.detail || '待选择路线'}`;
   }
   function travelerHomeWorkflowStepsHtml(items){
     return items.map((item, index) => `<div class="traveler-workflow-step" data-workflow-step="${escapeHtml(item.key)}"><b>${index + 1}</b><div><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.detail)}</span><button type="button" data-traveler-home-workflow-target="${escapeHtml(item.targetId)}">查看</button></div></div>`).join('');
@@ -2946,8 +2964,7 @@
   function travelerHomeWorkflowHtml(){
     const items = travelerHomeWorkflowItems();
     const next = travelerHomeWorkflowNextItem(items);
-    const current = items[0]?.detail || '待选择路线';
-    return `<div class="traveler-workflow-head"><div><h2>旅行工作流</h2><p id="traveler-home-workflow-summary" class="traveler-workflow-summary" aria-live="polite">当前：${escapeHtml(current)}</p></div><button type="button" class="traveler-workflow-next" data-traveler-home-workflow-next="${escapeHtml(next?.targetId || 'traveler-home-route-picker')}">${escapeHtml(next?.label || '下一步')}</button></div><div id="traveler-home-workflow-steps" class="traveler-workflow-steps">${travelerHomeWorkflowStepsHtml(items)}</div>`;
+    return `<div class="traveler-workflow-head"><div><h2>旅行工作流</h2><p id="traveler-home-workflow-summary" class="traveler-workflow-summary" aria-live="polite">${escapeHtml(travelerHomeWorkflowSummaryText(items))}</p></div><button type="button" class="traveler-workflow-next" data-traveler-home-workflow-next="${escapeHtml(next?.targetId || 'traveler-home-route-picker')}">${escapeHtml(next?.label || '下一步')}</button></div><div id="traveler-home-workflow-steps" class="traveler-workflow-steps">${travelerHomeWorkflowStepsHtml(items)}</div>`;
   }
   function renderTravelerHomeWorkflow(){
     const target = document.getElementById('traveler-home-workflow');
@@ -2956,7 +2973,7 @@
     if (target) target.innerHTML = html;
     const summary = document.getElementById('traveler-home-workflow-summary');
     const steps = document.getElementById('traveler-home-workflow-steps');
-    if (summary) summary.textContent = `当前：${items[0]?.detail || '待选择路线'}`;
+    if (summary) summary.textContent = travelerHomeWorkflowSummaryText(items);
     if (steps) steps.innerHTML = travelerHomeWorkflowStepsHtml(items);
     return items;
   }
@@ -3007,6 +3024,25 @@
       'traveler-home-feedback': '回传问题',
     };
     return labels[targetId] || '对应入口';
+  }
+  function travelerHomeTrialGuideProgressItems(){
+    return [
+      {key:'route', label:'选路线', detail:'2日躺平 city walk'},
+      {key:'map', label:'看地图', detail:'攻略和路线图就绪'},
+      {key:'content', label:'生成内容', detail:'路线包、路线卡、平台文案和游记'},
+      {key:'handoff', label:'保存交接', detail:'个人行程 JSON'},
+    ];
+  }
+  function renderTravelerHomeTrialGuideProgress(completedKeys){
+    const target = document.getElementById('traveler-home-trial-guide-progress');
+    const completed = new Set(Array.isArray(completedKeys) ? completedKeys : []);
+    const items = travelerHomeTrialGuideProgressItems();
+    const count = items.filter(item => completed.has(item.key)).length;
+    if (target) {
+      const cards = items.map((item, index) => `<article class="${completed.has(item.key) ? 'is-complete' : ''}"><span>${completed.has(item.key) ? '✓' : index + 1}</span><b>${escapeHtml(item.label)}</b><small>${escapeHtml(item.detail)}</small></article>`).join('');
+      target.innerHTML = `<p>已完成 ${count}/${items.length}</p>${cards}`;
+    }
+    return {count, total: items.length, keys: Array.from(completed)};
   }
   function goTravelerHomeTrialGuideTarget(targetId){
     const status = document.getElementById('traveler-home-trial-guide-status');
@@ -3063,6 +3099,55 @@
     travelerHomeRecommendRoute();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), restored ? '已恢复上次选择。' : '');
     return state;
+  }
+  function travelerHomeFirstTimeGuidePreferences(){
+    return {days:'2', pace:'relaxed', theme:'city walk', avoid:'low_walk'};
+  }
+  function travelerHomeFirstTimeGuideRoute(){
+    return travelerHomeRouteById('relaxed_2d1n_citywalk') || travelerHomeBestRecommendation()?.route || TRAVELER_HOME_ROUTES[0] || null;
+  }
+  function applyTravelerHomeFirstTimeGuidePreferences(){
+    const preferences = travelerHomeFirstTimeGuidePreferences();
+    travelerHomeSetPickerValue('traveler-home-picker-days', preferences.days);
+    travelerHomeSetPickerValue('traveler-home-picker-pace', preferences.pace);
+    travelerHomeSetPickerValue('traveler-home-picker-theme', preferences.theme);
+    travelerHomeSetPickerValue('traveler-home-picker-avoid', preferences.avoid);
+    travelerHomeSetPickerValue('traveler-home-platform-copy-tone', 'practical');
+    travelerHomeSetPickerValue('traveler-home-platform-copy-length', 'standard');
+    return preferences;
+  }
+  function saveTravelerHomeFirstTimeGuideRoute(route, preferences){
+    const state = travelerHomeStorageRead();
+    state.preferences = preferences || travelerHomeFirstTimeGuidePreferences();
+    state.lastRouteId = route?.tripId || state.lastRouteId || '';
+    state.favorites = travelerHomeSavedFavorites(state);
+    state.firstTimeGuide = {completed:true, routeId:state.lastRouteId, completedAt:new Date().toISOString()};
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    updateTravelerHomeMemoryStatus(state, '已保存首次试跑路线。');
+    return state;
+  }
+  function runTravelerHomeFirstTimeGuide(){
+    const status = document.getElementById('traveler-home-trial-guide-status');
+    renderTravelerHomeTrialGuideProgress(['route']);
+    const preferences = applyTravelerHomeFirstTimeGuidePreferences();
+    const route = travelerHomeFirstTimeGuideRoute();
+    const recommendation = route ? {route, score:Number(route.routeScore || 0), reasons:['首次试跑默认路线']} : travelerHomeBestRecommendation();
+    const recommendationTarget = document.getElementById('traveler-home-recommendation');
+    if (recommendationTarget) recommendationTarget.innerHTML = travelerHomeRecommendationHtml(recommendation);
+    saveTravelerHomeFirstTimeGuideRoute(recommendation?.route || route, preferences);
+    renderTravelerHomeTrialGuideProgress(['route','map']);
+    renderTravelerHomeRoutePack();
+    renderTravelerHomeSocialCard();
+    renderTravelerHomePlatformCopy('xiaohongshu');
+    renderTravelerHomePlatformDraftOverview();
+    renderTravelerHomeTravelogue();
+    renderTravelerHomeTrialGuideProgress(['route','map','content']);
+    const handoffText = renderTravelerHomeHandoff({silent:true});
+    renderTravelerHomeWorkflow();
+    renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
+    if (status) status.textContent = '首次试跑已完成：已选 2日躺平路线，并生成路线包、路线卡、平台文案、游记和交接包。';
+    return {ok:true, routeId: recommendation?.route?.tripId || route?.tripId || '', handoffText};
   }
   function toggleTravelerHomeFavorite(routeId){
     const state = travelerHomeStorageRead();
@@ -3955,6 +4040,7 @@
   });
   document.getElementById('copy-traveler-home-share-button')?.addEventListener('click', copyTravelerHomeShareText);
   document.getElementById('traveler-home-trial-guide')?.addEventListener('click', event => {
+    if (event.target?.closest?.('[data-traveler-home-trial-guide-run]')) { runTravelerHomeFirstTimeGuide(); return; }
     const control = event.target?.closest?.('[data-traveler-home-trial-guide-target]');
     const targetId = control?.getAttribute?.('data-traveler-home-trial-guide-target');
     if (targetId) goTravelerHomeTrialGuideTarget(targetId);
@@ -4054,6 +4140,7 @@
     refreshTravelerHomeHandoff();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
   });
+  renderTravelerHomeTrialGuideProgress();
   applyTravelerHomeFilters();
   renderTravelerHomeAcceptanceChecklist();
   renderTravelerHomeApiStatus();

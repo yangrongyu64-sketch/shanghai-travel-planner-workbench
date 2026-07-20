@@ -633,6 +633,19 @@
     </div>
     <textarea id="traveler-home-maintenance-output" readonly rows="10" aria-label="运营维护清单 Markdown"></textarea>
     <p id="traveler-home-maintenance-status" class="traveler-maintenance-status" aria-live="polite"></p>
+    <div id="traveler-home-freshness-radar" class="traveler-content-intake-board" aria-label="数据保鲜复核雷达">
+      <p>动态保鲜</p>
+      <h3>数据保鲜复核雷达</h3>
+      <small>按官方待补、素材质量、素材入库和试用反馈判断优先复核路线，适合每次发布或出发前先看。</small>
+      <div id="traveler-home-freshness-radar-summary" class="traveler-content-intake-board-summary" aria-live="polite"></div>
+      <div id="traveler-home-freshness-radar-list" class="traveler-content-intake-board-list"></div>
+      <div class="traveler-maintenance-actions">
+        <button type="button" id="traveler-home-freshness-radar-copy-button" data-traveler-home-freshness-radar-copy>复制保鲜雷达</button>
+        <button type="button" class="primary" id="traveler-home-freshness-radar-download-button" data-traveler-home-freshness-radar-download>下载保鲜雷达</button>
+      </div>
+      <textarea id="traveler-home-freshness-radar-output" readonly rows="9" aria-label="数据保鲜复核雷达 Markdown"></textarea>
+      <p id="traveler-home-freshness-radar-status" class="traveler-maintenance-status" aria-live="polite"></p>
+    </div>
   </div>
 </section>
 <section id="traveler-home-release-center" class="traveler-release" aria-label="版本发布中心">
@@ -1597,6 +1610,157 @@
     if (status) status.textContent = '已下载 Markdown 维护清单。';
     return {filename, text};
   }
+  function travelerHomeFreshnessRouteMatches(record, route){
+    const routeText = String(record?.route || '');
+    return Boolean(route && (routeText.includes(route.tripId) || routeText.includes(route.title) || routeText.includes(route.scenario)));
+  }
+  function travelerHomeFreshnessRelatedRecords(records, route){
+    return (Array.isArray(records) ? records : []).filter(record => travelerHomeFreshnessRouteMatches(record, route));
+  }
+  function travelerHomeFreshnessLevel(score){
+    if (score >= 8) return '高优先级';
+    if (score >= 4) return '中优先级';
+    return '常规巡检';
+  }
+  function travelerHomeFreshnessRadarItems(){
+    const materials = travelerHomeContentIntakeBoardRecords();
+    const feedback = travelerHomeFeedbackBoardRecords();
+    return TRAVELER_HOME_ROUTES.map((route, index) => {
+      const official = route.officialSummary || {};
+      const quality = route.materialQuality || {};
+      const officialMissing = Number(official.missingCount || 0);
+      const officialPending = Number(official.pendingCount || 0);
+      const officialWarnings = Number(official.validationWarningCount || 0);
+      const qualityScore = Number(quality.score || 0);
+      const checklist = Array.isArray(quality.checklist) ? quality.checklist : [];
+      const relatedMaterials = travelerHomeFreshnessRelatedRecords(materials, route);
+      const relatedFeedback = travelerHomeFreshnessRelatedRecords(feedback, route);
+      const officialSignals = relatedMaterials.filter(record => travelerHomeContentIntakeBoardSourceRank(record.source) === 0);
+      const platformSignals = relatedMaterials.filter(record => travelerHomeContentIntakeBoardSourceRank(record.source) === 1);
+      const blockingFeedback = relatedFeedback.filter(record => travelerHomeFeedbackBoardSeverityRank(record.severity) === 0).length;
+      const score = officialMissing * 2 + officialPending * 2 + blockingFeedback * 4 + officialSignals.length * 2 + platformSignals.length + (qualityScore < 80 ? 2 : 0) + (officialWarnings > 0 ? 1 : 0);
+      return {
+        index,
+        routeId: route.tripId,
+        routeTitle: `${route.scenario}｜${route.title}`,
+        level: travelerHomeFreshnessLevel(score),
+        score,
+        officialMissing,
+        officialPending,
+        officialWarnings,
+        materialStatus: quality.status || '待复核',
+        materialScore: qualityScore,
+        checklist,
+        officialSignals,
+        platformSignals,
+        blockingFeedback,
+        feedback: relatedFeedback,
+        guideHref: route.guideHref,
+        mapHref: route.mapHref,
+      };
+    });
+  }
+  function travelerHomeFreshnessRadarSummary(items){
+    const source = Array.isArray(items) ? items : travelerHomeFreshnessRadarItems();
+    return source.reduce((summary, item) => {
+      summary.total += 1;
+      if (item.level === '高优先级') summary.high += 1;
+      else if (item.level === '中优先级') summary.medium += 1;
+      else summary.normal += 1;
+      summary.officialMissing += item.officialMissing;
+      summary.blockingFeedback += item.blockingFeedback;
+      summary.materialSignals += item.officialSignals.length + item.platformSignals.length;
+      return summary;
+    }, {total:0, high:0, medium:0, normal:0, officialMissing:0, blockingFeedback:0, materialSignals:0});
+  }
+  function travelerHomeFreshnessRadarMarkdown(){
+    const items = travelerHomeFreshnessRadarItems();
+    const summary = travelerHomeFreshnessRadarSummary(items);
+    const highItems = items.filter(item => item.level === '高优先级');
+    const lines = [
+      '# 上海数据保鲜复核雷达',
+      '',
+      `路线覆盖：${summary.total} 条上海路线`,
+      `高优先级：${summary.high} 条`,
+      `官方待补：${summary.officialMissing}` ,
+      `阻塞反馈：${summary.blockingFeedback}` ,
+      `素材信号：${summary.materialSignals}` ,
+      '',
+      '## 高优先级路线',
+    ];
+    if (!highItems.length) lines.push('- 暂无高优先级路线，按常规周更新巡检。');
+    highItems.forEach(item => {
+      lines.push(`- ${item.routeTitle}`);
+      lines.push(`  - 官方待补：${item.officialMissing}；待确认：${item.officialPending}；校验提醒：${item.officialWarnings}`);
+      lines.push(`  - 素材状态：${item.materialStatus} / ${item.materialScore}分`);
+      lines.push(`  - 素材信号：官方 ${item.officialSignals.length} / 平台 ${item.platformSignals.length}；阻塞反馈：${item.blockingFeedback}`);
+      item.checklist.slice(0, 2).forEach(text => lines.push(`  - ${text}`));
+      item.officialSignals.slice(0, 2).forEach(record => lines.push(`  - 官方复核素材：${record.title}`));
+      item.platformSignals.slice(0, 2).forEach(record => lines.push(`  - 平台素材信号：${record.title}`));
+      item.feedback.slice(0, 2).forEach(record => lines.push(`  - 反馈：${record.severity}｜${record.type}｜${travelerHomeFeedbackBoardFirstLine(record.note)}`));
+    });
+    lines.push('', '## 路线复核队列');
+    items.forEach((item, index) => {
+      lines.push(`${index + 1}. [${item.level}] ${item.routeTitle}`);
+      lines.push(`   - 优先分：${item.score}；官方待补 ${item.officialMissing}；阻塞反馈 ${item.blockingFeedback}`);
+      lines.push(`   - 攻略：${travelerHomeAbsoluteUrl(item.guideHref)}`);
+      lines.push(`   - 地图：${travelerHomeAbsoluteUrl(item.mapHref)}`);
+    });
+    lines.push('', '## 下一次更新动作');
+    lines.push('1. 先处理高优先级路线里的开放、预约、票务和临时闭馆。');
+    lines.push('2. 再把官方复核素材回填到 data/official_verifications，把平台和游记信号回填到 data/materials。');
+    lines.push('3. C级平台素材只用于结构和体验信号，不直接当事实依据。');
+    lines.push('4. 更新后重新生成站点、跑回归、做 390px 移动端截图和线上控制台验收。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；实时信息以官方渠道和现场信息为准。');
+    return lines.join('\n');
+  }
+  function travelerHomeFreshnessRadarFilename(){
+    return 'shanghai-freshness-radar.md';
+  }
+  function renderTravelerHomeFreshnessRadar(){
+    const items = travelerHomeFreshnessRadarItems();
+    const summary = travelerHomeFreshnessRadarSummary(items);
+    const summaryTarget = document.getElementById('traveler-home-freshness-radar-summary');
+    const listTarget = document.getElementById('traveler-home-freshness-radar-list');
+    const output = document.getElementById('traveler-home-freshness-radar-output');
+    const status = document.getElementById('traveler-home-freshness-radar-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>路线 ${summary.total} 条</span><span>高优先级 ${summary.high} 条</span><span>官方待补 ${summary.officialMissing}</span><span>阻塞反馈 ${summary.blockingFeedback}</span>`;
+    if (listTarget) listTarget.innerHTML = items.map(item => {
+      const signals = [...item.officialSignals, ...item.platformSignals].map(record => record.title).filter(Boolean).slice(0, 3).join(' / ') || '暂无新增素材信号';
+      return `<article><b>${escapeHtml(item.level)}｜${escapeHtml(item.routeTitle)}</b><span>官方待补 ${item.officialMissing} / 素材 ${escapeHtml(item.materialStatus)} / 阻塞反馈 ${item.blockingFeedback}</span><span>${escapeHtml(signals)}</span></article>`;
+    }).join('');
+    const text = travelerHomeFreshnessRadarMarkdown();
+    if (output) output.value = text;
+    if (status && !status.textContent) status.textContent = '数据保鲜复核雷达已生成。';
+    return text;
+  }
+  async function copyTravelerHomeFreshnessRadarMarkdown(){
+    const text = renderTravelerHomeFreshnessRadar();
+    const status = document.getElementById('traveler-home-freshness-radar-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制数据保鲜复核雷达。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制保鲜雷达。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFreshnessRadarMarkdown(){
+    const text = renderTravelerHomeFreshnessRadar();
+    const filename = travelerHomeFreshnessRadarFilename();
+    const status = document.getElementById('traveler-home-freshness-radar-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载数据保鲜复核雷达。';
+    return {filename, text};
+  }
   function travelerHomeReleaseDeployId(){
     try {
       const params = new URLSearchParams(window.location.search || '');
@@ -2066,6 +2230,7 @@
     if (!records.length) {
       if (status) status.textContent = '没有识别到素材入库清单。';
       renderTravelerHomeContentIntakeBoard();
+      renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
     const state = travelerHomeStorageRead();
@@ -2076,6 +2241,7 @@
     renderTravelerHomeOfficialVerificationFlow();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
+    renderTravelerHomeFreshnessRadar();
     if (status) status.textContent = `已导入 ${records.length} 条素材。`;
     return {count:records.length};
   }
@@ -2118,6 +2284,7 @@
     renderTravelerHomeOfficialVerificationFlow();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
+    renderTravelerHomeFreshnessRadar();
     const status = document.getElementById('traveler-home-content-intake-board-status');
     if (status) status.textContent = '已清空素材看板。';
     return state;
@@ -2465,6 +2632,7 @@
     if (!records.length) {
       if (status) status.textContent = '没有识别到反馈包。';
       renderTravelerHomeFeedbackBoard();
+      renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
     const state = travelerHomeStorageRead();
@@ -2475,6 +2643,7 @@
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
+    renderTravelerHomeFreshnessRadar();
     if (status) status.textContent = `已导入 ${records.length} 条反馈。`;
     return {count:records.length};
   }
@@ -2517,6 +2686,7 @@
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
+    renderTravelerHomeFreshnessRadar();
     const status = document.getElementById('traveler-home-feedback-board-status');
     if (status) status.textContent = '已清空反馈看板。';
     return state;
@@ -4964,6 +5134,8 @@
   document.getElementById('traveler-home-api-status-download-button')?.addEventListener('click', downloadTravelerHomeApiStatusMarkdown);
   document.getElementById('traveler-home-maintenance-copy-button')?.addEventListener('click', copyTravelerHomeMaintenanceMarkdown);
   document.getElementById('traveler-home-maintenance-download-button')?.addEventListener('click', downloadTravelerHomeMaintenanceMarkdown);
+  document.getElementById('traveler-home-freshness-radar-copy-button')?.addEventListener('click', copyTravelerHomeFreshnessRadarMarkdown);
+  document.getElementById('traveler-home-freshness-radar-download-button')?.addEventListener('click', downloadTravelerHomeFreshnessRadarMarkdown);
   document.getElementById('traveler-home-release-copy-button')?.addEventListener('click', copyTravelerHomeReleaseNotesMarkdown);
   document.getElementById('traveler-home-release-download-button')?.addEventListener('click', downloadTravelerHomeReleaseNotesMarkdown);
   document.getElementById('traveler-home-content-template-library-copy-button')?.addEventListener('click', copyTravelerHomeContentTemplateLibraryMarkdown);
@@ -5064,6 +5236,7 @@
   renderTravelerHomeAcceptanceChecklist();
   renderTravelerHomeApiStatus();
   renderTravelerHomeMaintenanceCenter();
+  renderTravelerHomeFreshnessRadar();
   renderTravelerHomeReleaseCenter();
   renderTravelerHomeContentTemplateLibrary();
   renderTravelerHomeContentIntake();

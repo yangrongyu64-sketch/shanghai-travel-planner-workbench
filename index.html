@@ -59,6 +59,20 @@
     .traveler-trial-guide-delivery-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-trial-guide-delivery textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
     .traveler-trial-guide-delivery-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-trial-guide-checklist{grid-column:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f4f7f4}
+    .traveler-trial-guide-checklist b{display:block;font-size:14px;line-height:1.25}
+    .traveler-trial-guide-checklist small{margin-top:4px}
+    .traveler-trial-guide-checklist-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .traveler-trial-guide-checklist-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-checklist-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-trial-guide-checklist-summary{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;min-height:28px}
+    .traveler-trial-guide-checklist-summary span{display:inline-flex;align-items:center;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-trial-guide-checklist-list{grid-column:1/-1;display:grid;gap:8px}
+    .traveler-trial-guide-checklist-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px}
+    .traveler-trial-guide-checklist-list b{font-size:13px;line-height:1.25}
+    .traveler-trial-guide-checklist-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-trial-guide-checklist textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+    .traveler-trial-guide-checklist-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-trial-guide-status{grid-column:2;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-operator-tools{border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-operator-tools summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:16px clamp(16px,4vw,44px);cursor:pointer;list-style:none}
@@ -374,10 +388,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -476,6 +490,22 @@
     </div>
     <textarea id="traveler-home-trial-guide-delivery-output" readonly rows="7" aria-label="首次试跑交付包内容"></textarea>
     <p id="traveler-home-trial-guide-delivery-status" class="traveler-trial-guide-delivery-status" aria-live="polite"></p>
+  </div>
+  <div id="traveler-home-trial-guide-checklist" class="traveler-trial-guide-checklist" aria-label="首次试用任务单">
+    <div>
+      <b>首次试用任务单</b>
+      <small>把第一次使用拆成可完成的动作，便于游客照着走，也便于后续迁移到小程序。</small>
+    </div>
+    <div class="traveler-trial-guide-checklist-actions">
+      <button type="button" id="traveler-home-trial-guide-checklist-copy-button" data-traveler-home-trial-guide-checklist-copy>复制任务单</button>
+      <button type="button" id="traveler-home-trial-guide-checklist-download-button" data-traveler-home-trial-guide-checklist-download>下载Markdown</button>
+      <button type="button" class="primary" id="traveler-home-trial-guide-checklist-json-download-button" data-traveler-home-trial-guide-checklist-json-download>下载JSON</button>
+    </div>
+    <div id="traveler-home-trial-guide-checklist-summary" class="traveler-trial-guide-checklist-summary" aria-live="polite"></div>
+    <div id="traveler-home-trial-guide-checklist-list" class="traveler-trial-guide-checklist-list"></div>
+    <textarea id="traveler-home-trial-guide-checklist-output" readonly rows="8" aria-label="首次试用任务单 Markdown"></textarea>
+    <textarea id="traveler-home-trial-guide-checklist-json-output" readonly rows="7" aria-label="首次试用任务单 JSON"></textarea>
+    <p id="traveler-home-trial-guide-checklist-status" class="traveler-trial-guide-checklist-status" aria-live="polite"></p>
   </div>
   <p id="traveler-home-trial-guide-status" class="traveler-trial-guide-status" aria-live="polite"></p>
 </section>
@@ -4397,6 +4427,160 @@
     if (status) status.textContent = '已下载首次试跑交付包。';
     return {filename, text};
   }
+  let travelerHomeFirstUseChecklistGeneratedAt = '';
+  function travelerHomeFirstUseChecklistTimestamp(){
+    if (!travelerHomeFirstUseChecklistGeneratedAt) travelerHomeFirstUseChecklistGeneratedAt = new Date().toISOString();
+    return travelerHomeFirstUseChecklistGeneratedAt;
+  }
+  function travelerHomeFirstUseChecklistStatus(done, next){
+    if (done) return 'done';
+    if (next) return 'next';
+    return 'ready';
+  }
+  function travelerHomeFirstUseChecklistPayload(){
+    const state = travelerHomeStorageRead();
+    const route = travelerHomeRoutePackRoutes()[0] || travelerHomeFirstTimeGuideRoute();
+    const routeTitle = route ? `${route.scenario}｜${route.title}` : '待选择路线';
+    const firstTimeCompleted = Boolean(state.firstTimeGuide?.completed);
+    const routePackReady = Boolean((document.getElementById('traveler-home-route-pack-output')?.value || '').trim());
+    const deliveryReady = Boolean((document.getElementById('traveler-home-trial-guide-delivery-output')?.value || '').trim());
+    const guideUrl = route ? travelerHomeAbsoluteUrl(route.guideHref) : '';
+    const mapUrl = route ? travelerHomeAbsoluteUrl(route.mapHref) : '';
+    const steps = [
+      {key:'choose_route', label:'选好路线', status: travelerHomeFirstUseChecklistStatus(Boolean(route && state.lastRouteId), false), target_id:'traveler-home-route-picker', action:'确认路线偏好', detail:route ? routeTitle : '先选择天数、节奏和主题。'},
+      {key:'guide_and_map', label:'看攻略和地图', status: travelerHomeFirstUseChecklistStatus(firstTimeCompleted, Boolean(route)), target_id:'traveler-home-routes', action:'打开攻略和地图', detail:route ? `${guideUrl} / ${mapUrl}` : '先选路线，再看攻略和路线图。'},
+      {key:'route_pack', label:'下载路线包', status: travelerHomeFirstUseChecklistStatus(routePackReady, Boolean(route)), target_id:'traveler-home-route-pack', action:'复制或下载路线包', detail:routePackReady ? '路线包已生成，可分享给同行人。' : '生成路线包后再发给同行人。'},
+      {key:'delivery_package', label:'保存交付包', status: travelerHomeFirstUseChecklistStatus(deliveryReady, routePackReady), target_id:'traveler-home-trial-guide-delivery', action:'下载首次试跑交付包', detail:deliveryReady ? '交付包已生成，含路线、地图、内容和复核提醒。' : '先完成一键试跑。'},
+      {key:'feedback', label:'回传问题', status:firstTimeCompleted ? 'next' : 'ready', target_id:'traveler-home-feedback', action:'把地图或开放预约问题写回来', detail:'试用后把路线、地图、开放预约、票务或文案问题回传。'},
+    ];
+    const doneCount = steps.filter(step => step.status === 'done').length;
+    const nextStep = steps.find(step => step.status === 'next') || steps.find(step => step.status !== 'done') || null;
+    return {
+      kind: 'shanghai_first_use_trial_checklist',
+      version: 1,
+      generated_at: travelerHomeFirstUseChecklistTimestamp(),
+      source_url: window.location?.href || '',
+      summary: {
+        route_id: route?.tripId || '',
+        route_title: routeTitle,
+        step_count: steps.length,
+        done_count: doneCount,
+        next_step: nextStep?.label || '已完成',
+        ready_to_travel: Boolean(route && route.mapHref && doneCount >= 4),
+      },
+      preferences: state.preferences || travelerHomeFirstTimeGuidePreferences(),
+      targets: {
+        guide_url: guideUrl,
+        map_url: mapUrl,
+        route_pack_target: 'traveler-home-route-pack',
+        delivery_target: 'traveler-home-trial-guide-delivery',
+        feedback_target: 'traveler-home-feedback',
+      },
+      steps,
+      privacy_boundary: '只保存路线选择、试用步骤和本地交付状态；不包含 API Key、账号、Cookie 或 Authorization 信息。',
+      next_actions: [
+        '按任务单打开攻略和地图。',
+        '下载路线包和首次试跑交付包。',
+        '试用后回传地图、开放预约、票务或文案问题。',
+      ],
+    };
+  }
+  function travelerHomeFirstUseChecklistMarkdown(){
+    const payload = travelerHomeFirstUseChecklistPayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海首次试用任务单',
+      '',
+      `路线：${summary.route_title}` ,
+      `完成度：${summary.done_count}/${summary.step_count}` ,
+      `下一步：${summary.next_step}` ,
+      payload.targets.guide_url ? `攻略：${payload.targets.guide_url}` : '攻略：待选择路线',
+      payload.targets.map_url ? `地图：${payload.targets.map_url}` : '地图：待选择路线',
+      '',
+      '## 今天怎么用',
+      '1. 先打开攻略和地图，确认当天动线。',
+      '2. 下载路线包，发给同行人确认节奏。',
+      '3. 试用后把地图、开放预约、票务或文案问题回传。',
+      '',
+      '## 已完成',
+    ];
+    payload.steps.forEach(step => {
+      const marker = step.status === 'done' ? '[x]' : (step.status === 'next' ? '[>]' : '[ ]');
+      lines.push(`- ${marker} ${step.label}：${step.action}`);
+      lines.push(`  - ${step.detail}`);
+    });
+    lines.push('', '## 下一步');
+    lines.push(`- ${summary.next_step}：${(payload.steps.find(step => step.label === summary.next_step) || payload.steps[payload.steps.length - 1]).detail}`);
+    lines.push('- 出发前再复核开放、预约、票务、交通和临时闭馆。');
+    lines.push('- 小红书/抖音/游记内容发布前保留个人真实体验，不直接复用未授权原文。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFirstUseChecklist(){
+    const payload = travelerHomeFirstUseChecklistPayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-trial-guide-checklist-summary');
+    const listTarget = document.getElementById('traveler-home-trial-guide-checklist-list');
+    const output = document.getElementById('traveler-home-trial-guide-checklist-output');
+    const jsonOutput = document.getElementById('traveler-home-trial-guide-checklist-json-output');
+    const status = document.getElementById('traveler-home-trial-guide-checklist-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>完成 ${summary.done_count}/${summary.step_count}</span><span>路线 ${escapeHtml(summary.route_id || '待选择')}</span><span>下一步：${escapeHtml(summary.next_step)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.steps.map(step => `<article><b>${escapeHtml(step.label)}｜${escapeHtml(step.status)}</b><span>${escapeHtml(step.action)}</span><span>${escapeHtml(step.detail)}</span></article>`).join('');
+    const text = travelerHomeFirstUseChecklistMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = `首次试用任务单已生成：完成 ${summary.done_count}/${summary.step_count}。`;
+    return text;
+  }
+  function travelerHomeFirstUseChecklistFilename(){
+    return 'shanghai-first-use-trial-checklist.md';
+  }
+  function travelerHomeFirstUseChecklistJsonFilename(){
+    return 'shanghai-first-use-trial-checklist.json';
+  }
+  async function copyTravelerHomeFirstUseChecklistMarkdown(){
+    const text = renderTravelerHomeFirstUseChecklist();
+    const status = document.getElementById('traveler-home-trial-guide-checklist-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制首次试用任务单。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制首次试用任务单。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFirstUseChecklistMarkdown(){
+    const text = renderTravelerHomeFirstUseChecklist();
+    const filename = travelerHomeFirstUseChecklistFilename();
+    const status = document.getElementById('traveler-home-trial-guide-checklist-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载首次试用任务单。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeFirstUseChecklistJson(){
+    renderTravelerHomeFirstUseChecklist();
+    const payload = travelerHomeFirstUseChecklistPayload();
+    const filename = travelerHomeFirstUseChecklistJsonFilename();
+    const status = document.getElementById('traveler-home-trial-guide-checklist-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载首次试用任务单 JSON。';
+    return {filename, payload};
+  }
   function runTravelerHomeFirstTimeGuide(){
     const status = document.getElementById('traveler-home-trial-guide-status');
     renderTravelerHomeTrialGuideProgress(['route']);
@@ -4416,6 +4600,7 @@
     const handoffText = renderTravelerHomeHandoff({silent:true});
     renderTravelerHomeWorkflow();
     renderTravelerHomeFirstTimeGuideDelivery();
+    renderTravelerHomeFirstUseChecklist();
     renderTravelerHomeStayDecision();
     renderTravelerHomeFoodSupply();
     renderTravelerHomeRiskPlan();
@@ -6009,6 +6194,9 @@
     if (event.target?.closest?.('[data-traveler-home-trial-guide-run]')) { runTravelerHomeFirstTimeGuide(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-guide-delivery-copy]')) { copyTravelerHomeFirstTimeGuideDeliveryMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-guide-delivery-download]')) { downloadTravelerHomeFirstTimeGuideDeliveryMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-copy]')) { copyTravelerHomeFirstUseChecklistMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-download]')) { downloadTravelerHomeFirstUseChecklistMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-json-download]')) { downloadTravelerHomeFirstUseChecklistJson(); return; }
     const control = event.target?.closest?.('[data-traveler-home-trial-guide-target]');
     const targetId = control?.getAttribute?.('data-traveler-home-trial-guide-target');
     if (targetId) goTravelerHomeTrialGuideTarget(targetId);
@@ -6140,6 +6328,7 @@
   });
   renderTravelerHomeTrialGuideProgress();
   renderTravelerHomeFirstTimeGuideDelivery();
+  renderTravelerHomeFirstUseChecklist();
   applyTravelerHomeFilters();
   renderTravelerHomeAcceptanceChecklist();
   renderTravelerHomeApiStatus();

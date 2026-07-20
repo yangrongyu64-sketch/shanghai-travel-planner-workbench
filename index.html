@@ -360,6 +360,25 @@
     .traveler-release-audit-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-release-audit textarea{width:100%;min-height:230px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
     .traveler-release-audit-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-online-health-check{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
+    .traveler-online-health-check-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
+    .traveler-online-health-check h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
+    .traveler-online-health-check small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
+    .traveler-online-health-check-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .traveler-online-health-check-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-online-health-check-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-online-health-check-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;margin-top:10px}
+    .traveler-online-health-check-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-online-health-check-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    .traveler-online-health-check-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-online-health-check-list article.failed{border-color:rgba(159,61,46,.48);background:#fff8f6}
+    .traveler-online-health-check-list article.healthy b{color:var(--accent)}
+    .traveler-online-health-check-list article.failed b{color:var(--brick)}
+    .traveler-online-health-check-list b{font-size:13px;line-height:1.25}
+    .traveler-online-health-check-list span{color:var(--muted);font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+    .traveler-online-health-check textarea{width:100%;min-height:210px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    #traveler-home-online-health-check-json-output{min-height:172px}
+    .traveler-online-health-check-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-workflow{display:grid;gap:10px;padding:14px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-workflow-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
     .traveler-workflow h2{margin:0;font-size:18px;letter-spacing:0}
@@ -467,10 +486,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-product-completion-overview-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-product-completion-overview-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -656,6 +675,11 @@
       <b>发布审计</b>
       <small>最终留档包</small>
       <button type="button" data-traveler-home-operator-tool-target="traveler-home-release-audit-package">进入</button>
+    </article>
+    <article class="traveler-operator-tool-card">
+      <b>线上巡检</b>
+      <small>公开链接一键检查</small>
+      <button type="button" data-traveler-home-operator-tool-target="traveler-home-online-health-check">进入</button>
     </article>
   </div>
   <p id="traveler-home-operator-tools-status" class="traveler-operator-tools-status" aria-live="polite"></p>
@@ -1268,6 +1292,26 @@
     <div id="traveler-home-release-audit-list" class="traveler-release-audit-list"></div>
     <textarea id="traveler-home-release-audit-output" readonly rows="11" aria-label="发布审计包 Markdown"></textarea>
     <p id="traveler-home-release-audit-status" class="traveler-release-audit-status" aria-live="polite"></p>
+  </div>
+</section>
+<section id="traveler-home-online-health-check" class="traveler-online-health-check" aria-label="线上健康巡检入口">
+  <div class="traveler-online-health-check-head">
+    <p>线上自检</p>
+    <h2>线上健康巡检入口</h2>
+    <small>发布后直接检查公开页面、路线页、PWA 文件和下载包，生成 Markdown / JSON 留档。</small>
+  </div>
+  <div>
+    <div class="traveler-online-health-check-actions">
+      <button type="button" class="primary" id="traveler-home-online-health-check-run-button" data-traveler-home-online-health-check-run>运行巡检</button>
+      <button type="button" id="traveler-home-online-health-check-copy-button" data-traveler-home-online-health-check-copy>复制巡检报告</button>
+      <button type="button" id="traveler-home-online-health-check-download-button" data-traveler-home-online-health-check-download>下载 Markdown</button>
+      <button type="button" id="traveler-home-online-health-check-json-download-button" data-traveler-home-online-health-check-json-download>下载 JSON</button>
+    </div>
+    <div id="traveler-home-online-health-check-summary" class="traveler-online-health-check-summary" aria-live="polite"></div>
+    <div id="traveler-home-online-health-check-list" class="traveler-online-health-check-list"></div>
+    <textarea id="traveler-home-online-health-check-output" readonly rows="11" aria-label="线上健康巡检报告 Markdown"></textarea>
+    <textarea id="traveler-home-online-health-check-json-output" readonly rows="9" aria-label="线上健康巡检报告 JSON"></textarea>
+    <p id="traveler-home-online-health-check-status" class="traveler-online-health-check-status" aria-live="polite"></p>
   </div>
 </section>
 </details>
@@ -5618,6 +5662,206 @@
     if (status) status.textContent = '已下载 Markdown 发布审计包。';
     return {filename, text};
   }
+  let travelerHomeOnlineHealthCheckLastPayload = null;
+  function travelerHomeOnlineHealthCheckTargets(){
+    const baseTargets = [
+      {name:'首页', href:'index.html', group:'page'},
+      {name:'完整工作台', href:'workbench.html', group:'page'},
+      {name:'点位库', href:'place_catalog.html', group:'page'},
+      {name:'PWA manifest', href:'manifest.webmanifest', group:'pwa'},
+      {name:'Service Worker', href:'service-worker.js', group:'pwa'},
+      {name:'部署清单', href:'deployment-manifest.json', group:'report'},
+      {name:'维护健康报告', href:'maintenance/health-report.json', group:'report'},
+      {name:'离线体验包', href:'workbench-demo.zip', group:'package'},
+      {name:'产品交付包', href:'product-delivery.zip', group:'package'},
+      {name:'验收报告包', href:'acceptance-report.zip', group:'package'},
+      {name:'小程序交接包', href:'miniprogram-handoff.zip', group:'package'},
+      {name:'平台刷新包', href:'platform-refresh.zip', group:'package'},
+      {name:'维护报告包', href:'maintenance-report.zip', group:'package'},
+    ];
+    const routeTargets = TRAVELER_HOME_ROUTES.map(route => ({
+      name: `${route.scenario}｜${route.title}`,
+      href: route.guideHref || `routes/${route.tripId}.html`,
+      group: 'route',
+      route_id: route.tripId,
+    }));
+    return baseTargets.concat(routeTargets);
+  }
+  function travelerHomeOnlineHealthCheckSummary(targets){
+    const source = Array.isArray(targets) ? targets : [];
+    return {
+      deploy_id: travelerHomeReleaseDeployId(),
+      checked_count: source.filter(target => target.status !== 'pending').length,
+      healthy_count: source.filter(target => target.status === 'healthy').length,
+      failed_count: source.filter(target => target.status === 'failed').length,
+    };
+  }
+  function travelerHomeOnlineHealthCheckPendingPayload(){
+    const targets = travelerHomeOnlineHealthCheckTargets().map(target => ({...target, absolute_url: travelerHomeAbsoluteUrl(target.href), status:'pending', http_status:null, status_text:'未运行', checked_at:''}));
+    return {
+      kind: 'shanghai_online_health_check',
+      version: 1,
+      generated_at: '',
+      source_url: window.location?.href || '',
+      summary: travelerHomeOnlineHealthCheckSummary(targets),
+      targets,
+      next_actions: [
+        '点击运行巡检，检查公开页面、路线页、PWA 文件和下载包。',
+        '若出现 failed 资源，先检查 outputs/workbench/site 是否生成，再检查部署仓库同步和 GitHub Pages 状态。',
+      ],
+    };
+  }
+  function travelerHomeOnlineHealthCheckPayload(results){
+    const targets = Array.isArray(results) ? results : [];
+    return {
+      kind: 'shanghai_online_health_check',
+      version: 1,
+      generated_at: new Date().toISOString(),
+      source_url: window.location?.href || '',
+      summary: travelerHomeOnlineHealthCheckSummary(targets),
+      targets,
+      next_actions: [
+        '优先修复 failed 资源：确认本地构建、部署仓库同步、GitHub Pages 发布和文件名大小写。',
+        '全部 healthy 后，把 Markdown / JSON 报告下载到本次发布验收证据中。',
+        '出发或商用发布前，继续人工复核开放、预约、票务、交通和临时闭馆。',
+      ],
+    };
+  }
+  function travelerHomeOnlineHealthCheckCurrentPayload(payload){
+    return payload || travelerHomeOnlineHealthCheckLastPayload || travelerHomeOnlineHealthCheckPendingPayload();
+  }
+  function travelerHomeOnlineHealthCheckHttpText(target){
+    if (target?.http_status) return `${target.http_status} ${target.status_text || ''}`.trim();
+    return target?.status_text || '未运行';
+  }
+  async function travelerHomeCheckOnlineTarget(target){
+    const checkedAt = new Date().toISOString();
+    try {
+      if (typeof fetch !== 'function') throw new Error('当前环境不支持 fetch');
+      const response = await fetch(target.href, {method:'GET', cache:'no-store'});
+      const ok = Boolean(response && response.ok);
+      return {
+        ...target,
+        absolute_url: travelerHomeAbsoluteUrl(target.href),
+        status: ok ? 'healthy' : 'failed',
+        http_status: Number(response?.status || (ok ? 200 : 0)),
+        status_text: response?.statusText || (ok ? 'OK' : '请求失败'),
+        checked_at: checkedAt,
+      };
+    } catch (error) {
+      return {
+        ...target,
+        absolute_url: travelerHomeAbsoluteUrl(target.href),
+        status: 'failed',
+        http_status: 0,
+        status_text: error?.message || '请求失败',
+        checked_at: checkedAt,
+      };
+    }
+  }
+  async function travelerHomeRunOnlineHealthCheck(){
+    const status = document.getElementById('traveler-home-online-health-check-status');
+    if (status) status.textContent = '线上健康巡检运行中。';
+    const results = await Promise.all(travelerHomeOnlineHealthCheckTargets().map(target => travelerHomeCheckOnlineTarget(target)));
+    const payload = travelerHomeOnlineHealthCheckPayload(results);
+    travelerHomeOnlineHealthCheckLastPayload = payload;
+    renderTravelerHomeOnlineHealthCheck(payload);
+    if (status) status.textContent = payload.summary.failed_count ? `线上健康巡检完成：失败 ${payload.summary.failed_count} 项。` : '线上健康巡检完成：全部资源可用。';
+    return payload;
+  }
+  function travelerHomeOnlineHealthCheckMarkdown(payload){
+    const report = travelerHomeOnlineHealthCheckCurrentPayload(payload);
+    const summary = report.summary || {};
+    const checkedCount = summary.checked_count || report.targets.length;
+    const lines = [
+      '# 上海攻略线上健康巡检报告',
+      '',
+      `Deploy 参数：${summary.deploy_id || travelerHomeReleaseDeployId()}`,
+      `来源页面：${report.source_url || window.location?.href || ''}`,
+      `巡检结果：${summary.healthy_count || 0}/${checkedCount} 可用，失败 ${summary.failed_count || 0} 项`,
+      '',
+      '## 巡检结果',
+    ];
+    report.targets.forEach(target => {
+      const mark = target.status === 'healthy' ? 'x' : ' ';
+      lines.push(`- [${mark}] ${target.name}：${target.href}（${travelerHomeOnlineHealthCheckHttpText(target)}）`);
+    });
+    lines.push('', '## 后续动作');
+    (report.next_actions || []).forEach((item, index) => lines.push(`${index + 1}. ${item}`));
+    lines.push('', '安全边界：本巡检只请求当前静态站点公开资源，不读取 API Key、账号、Cookie 或 Authorization 信息。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeOnlineHealthCheck(payload){
+    const report = travelerHomeOnlineHealthCheckCurrentPayload(payload);
+    travelerHomeOnlineHealthCheckLastPayload = report;
+    const summary = report.summary || {};
+    const summaryTarget = document.getElementById('traveler-home-online-health-check-summary');
+    const listTarget = document.getElementById('traveler-home-online-health-check-list');
+    const output = document.getElementById('traveler-home-online-health-check-output');
+    const jsonOutput = document.getElementById('traveler-home-online-health-check-json-output');
+    const status = document.getElementById('traveler-home-online-health-check-status');
+    const totalCount = summary.checked_count || report.targets.length;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>Deploy ${escapeHtml(summary.deploy_id || travelerHomeReleaseDeployId())}</span><span>检查 ${totalCount} 项</span><span>健康 ${summary.healthy_count || 0}</span><span>失败 ${summary.failed_count || 0}</span>`;
+    if (listTarget) listTarget.innerHTML = report.targets.map(target => {
+      const state = target.status || 'pending';
+      return `<article class="${escapeHtml(state)}"><b>${escapeHtml(target.name)}</b><span>${escapeHtml(state)}｜${escapeHtml(travelerHomeOnlineHealthCheckHttpText(target))}</span><span>${escapeHtml(target.href)}</span></article>`;
+    }).join('');
+    const text = travelerHomeOnlineHealthCheckMarkdown(report);
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(report, null, 2);
+    if (status && !status.textContent) status.textContent = '待运行线上健康巡检。';
+    return text;
+  }
+  function travelerHomeOnlineHealthCheckFilename(){
+    return 'shanghai-online-health-check.md';
+  }
+  function travelerHomeOnlineHealthCheckJsonFilename(){
+    return 'shanghai-online-health-check.json';
+  }
+  async function copyTravelerHomeOnlineHealthCheckMarkdown(payload){
+    const text = renderTravelerHomeOnlineHealthCheck(payload);
+    const status = document.getElementById('traveler-home-online-health-check-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制线上健康巡检报告。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制线上健康巡检报告。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeOnlineHealthCheckMarkdown(payload){
+    const text = renderTravelerHomeOnlineHealthCheck(payload);
+    const filename = travelerHomeOnlineHealthCheckFilename();
+    const status = document.getElementById('traveler-home-online-health-check-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 线上健康巡检报告。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeOnlineHealthCheckJson(payload){
+    const report = travelerHomeOnlineHealthCheckCurrentPayload(payload);
+    renderTravelerHomeOnlineHealthCheck(report);
+    const filename = travelerHomeOnlineHealthCheckJsonFilename();
+    const status = document.getElementById('traveler-home-online-health-check-status');
+    const blob = new Blob([JSON.stringify(report, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 JSON 线上健康巡检报告。';
+    return {filename, payload: report};
+  }
   function travelerHomeSavedFavorites(state){
     return Array.isArray(state?.favorites) ? state.favorites.filter(Boolean) : [];
   }
@@ -5685,11 +5929,14 @@
       'traveler-home-api-status': 'API 状态',
       'traveler-home-maintenance-center': '运营维护',
       'traveler-home-release-center': '版本发布',
+      'traveler-home-content-template-library': '模板库',
       'traveler-home-content-intake': '素材入库',
       'traveler-home-feedback': '试用反馈',
       'traveler-home-content-update-package': '更新发布包',
+      'traveler-home-prepublish-data-gate': '发布闸口',
       'traveler-home-release-regression': '发布回归',
       'traveler-home-release-audit-package': '发布审计',
+      'traveler-home-online-health-check': '线上巡检',
     };
     return labels[targetId] || '对应运营工具';
   }
@@ -7765,6 +8012,10 @@
   document.getElementById('traveler-home-release-audit-copy-button')?.addEventListener('click', copyTravelerHomeReleaseAuditPackageMarkdown);
   document.getElementById('traveler-home-release-audit-download-button')?.addEventListener('click', downloadTravelerHomeReleaseAuditPackageMarkdown);
   ['traveler-home-release-audit-test-result','traveler-home-release-audit-evidence'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布审计证据已更新。'; }));
+  document.getElementById('traveler-home-online-health-check-run-button')?.addEventListener('click', travelerHomeRunOnlineHealthCheck);
+  document.getElementById('traveler-home-online-health-check-copy-button')?.addEventListener('click', () => copyTravelerHomeOnlineHealthCheckMarkdown());
+  document.getElementById('traveler-home-online-health-check-download-button')?.addEventListener('click', () => downloadTravelerHomeOnlineHealthCheckMarkdown());
+  document.getElementById('traveler-home-online-health-check-json-download-button')?.addEventListener('click', () => downloadTravelerHomeOnlineHealthCheckJson());
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
@@ -7849,6 +8100,7 @@
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();
   renderTravelerHomeReleaseAuditPackage();
+  renderTravelerHomeOnlineHealthCheck();
   applyTravelerHomeMemory();
   renderTravelerHomeRoutePack();
   renderTravelerHomeSocialCard();

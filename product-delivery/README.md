@@ -17,3 +17,9 @@
 3. 需要离线转发时使用 `workbench-demo.zip`。
 4. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
 5. 后续维护按 `usage-and-maintenance.md` 执行。
+
+## 快速验收
+
+1. 打开公开链接或 `index.html`，确认首页能看到上海路线、完成度和交付包入口。
+2. 下载并解压 `product-delivery.zip`，确认 5 个交付文件都存在。
+3. 对照 `acceptance-checklist.md`，确认 API 边界、人工复核边界和下载包都清楚。

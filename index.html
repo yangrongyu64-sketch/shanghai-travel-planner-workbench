@@ -223,6 +223,16 @@
     .traveler-feedback-revision-plan-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
     .traveler-feedback-revision-plan-list b{font-size:13px;line-height:1.25}
     .traveler-feedback-revision-plan-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-feedback-draft-candidate{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+    .traveler-feedback-draft-candidate p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-feedback-draft-candidate h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-feedback-draft-candidate small{margin-top:4px}
+    .traveler-feedback-draft-candidate-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-feedback-draft-candidate-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-feedback-draft-candidate-list{display:grid;gap:8px}
+    .traveler-feedback-draft-candidate-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-feedback-draft-candidate-list b{font-size:13px;line-height:1.25}
+    .traveler-feedback-draft-candidate-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-content-package{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-content-package-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-content-package h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -980,6 +990,23 @@
         <textarea id="traveler-home-feedback-revision-plan-output" readonly rows="8" aria-label="下一版修改建议 Markdown"></textarea>
         <textarea id="traveler-home-feedback-revision-plan-json-output" readonly rows="7" aria-label="下一版修改建议 JSON"></textarea>
         <p id="traveler-home-feedback-revision-plan-status" class="traveler-feedback-status" aria-live="polite"></p>
+      </div>
+      <div id="traveler-home-feedback-draft-candidate" class="traveler-feedback-draft-candidate" aria-label="候选改稿草案">
+        <div>
+          <p>候选草案</p>
+          <h3>候选改稿草案</h3>
+          <small>把下一版修改建议翻成可人工确认的草案，不自动覆盖正式攻略、路线图或平台文案。</small>
+        </div>
+        <div class="traveler-feedback-actions">
+          <button type="button" id="traveler-home-feedback-draft-candidate-copy-button" data-traveler-home-feedback-draft-candidate-copy>复制候选草案</button>
+          <button type="button" id="traveler-home-feedback-draft-candidate-download-button" data-traveler-home-feedback-draft-candidate-download>下载Markdown</button>
+          <button type="button" class="primary" id="traveler-home-feedback-draft-candidate-json-download-button" data-traveler-home-feedback-draft-candidate-json-download>下载JSON</button>
+        </div>
+        <div id="traveler-home-feedback-draft-candidate-summary" class="traveler-feedback-draft-candidate-summary" aria-live="polite"></div>
+        <div id="traveler-home-feedback-draft-candidate-list" class="traveler-feedback-draft-candidate-list"></div>
+        <textarea id="traveler-home-feedback-draft-candidate-output" readonly rows="8" aria-label="候选改稿草案 Markdown"></textarea>
+        <textarea id="traveler-home-feedback-draft-candidate-json-output" readonly rows="7" aria-label="候选改稿草案 JSON"></textarea>
+        <p id="traveler-home-feedback-draft-candidate-status" class="traveler-feedback-status" aria-live="polite"></p>
       </div>
     </div>
   </div>
@@ -3363,6 +3390,7 @@
       if (status) status.textContent = '没有识别到反馈包。';
       renderTravelerHomeFeedbackBoard();
       renderTravelerHomeFeedbackRevisionPlan();
+      renderTravelerHomeFeedbackDraftCandidate();
       renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
@@ -3372,6 +3400,7 @@
     travelerHomeStorageWrite(state);
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeFeedbackRevisionPlan();
+    renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3416,6 +3445,7 @@
     travelerHomeStorageWrite(state);
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeFeedbackRevisionPlan();
+    renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3638,6 +3668,168 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载下一版修改建议 JSON。';
+    return {filename, payload};
+  }
+  function travelerHomeFeedbackDraftCandidateChannel(item){
+    const category = item?.category || travelerHomeFeedbackRevisionPlanCategory(item);
+    const channels = {official:'官方复核提醒', map:'路线图说明', content:'平台文案草案', miniprogram:'小程序迁移草案', route:'路线正文草案', other:'综合体验草案'};
+    return channels[category] || channels.other;
+  }
+  function travelerHomeFeedbackDraftCandidateText(item){
+    const routeTitle = item?.route_title || item?.route || '这条路线';
+    const note = item?.note || '待补充反馈内容。';
+    if (item?.category === 'official') return `${routeTitle}：发布前请补充并人工确认官方信息。反馈指出：${note}。候选写法：本路线涉及开放、预约、票务、交通或临时闭馆信息，出发前请以官方渠道为准；发布前维护者需完成复核。`;
+    if (item?.category === 'map') return `${routeTitle}：地图和路线说明需要补清。反馈指出：${note}。候选写法：到达该段前先确认点位顺序、步行/骑行方向、换乘提示和容易走错的位置，必要时用地图 App 再核对。`;
+    if (item?.category === 'content') return `${routeTitle}：平台表达需要更像真人分享。反馈指出：${note}。候选写法：把标题、开头和口播语气改成第一人称体验表达，保留真实取舍，不复制第三方原文。`;
+    if (item?.category === 'miniprogram') return `${routeTitle}：小程序迁移需要补交互说明。反馈指出：${note}。候选写法：把收藏、路线包、导出 JSON 和回传入口作为独立字段交接，迁移前人工确认页面流。`;
+    if (item?.category === 'route') return `${routeTitle}：路线正文需要补节奏说明。反馈指出：${note}。候选写法：明确每日顺序、停留时间、跨区成本、休息补给和备用删减点。`;
+    return `${routeTitle}：先作为综合体验问题记录。反馈指出：${note}。候选写法：确认归属模块后，再进入路线、地图、文案或官方复核修改。`;
+  }
+  function travelerHomeFeedbackDraftCandidateItems(){
+    return travelerHomeFeedbackRevisionPlanItems().map(item => ({
+      feedback_id: item.feedback_id,
+      route_id: item.route_id || '',
+      route_title: item.route_title || item.route || '未关联路线',
+      priority: item.priority || 'P3',
+      target_surface: item.target_surface || '综合体验',
+      draft_channel: travelerHomeFeedbackDraftCandidateChannel(item),
+      candidate_title: `${travelerHomeFeedbackDraftCandidateChannel(item)}｜${item.route_title || item.route || '未关联路线'}`,
+      candidate_draft: travelerHomeFeedbackDraftCandidateText(item),
+      source_note: item.note || '',
+      revision_action: item.revision_action || '',
+      acceptance_check: item.acceptance_check || '人工确认后再进入正式发布版。',
+      status: '待人工确认',
+    }));
+  }
+  function travelerHomeFeedbackDraftCandidateSummary(items){
+    const source = Array.isArray(items) ? items : travelerHomeFeedbackDraftCandidateItems();
+    const routeKeys = new Set(source.map(item => item.route_id || item.route_title).filter(Boolean));
+    const channelCounts = source.reduce((counts, item) => { counts[item.draft_channel] = (counts[item.draft_channel] || 0) + 1; return counts; }, {});
+    return {
+      candidate_count: source.length,
+      route_count: routeKeys.size,
+      channel_counts: channelCounts,
+      manual_review_required: true,
+      next_step: source.length ? '人工确认候选草案' : '等待试用反馈',
+    };
+  }
+  let travelerHomeFeedbackDraftCandidateGeneratedAt = '';
+  function travelerHomeFeedbackDraftCandidateTimestamp(){
+    if (!travelerHomeFeedbackDraftCandidateGeneratedAt) travelerHomeFeedbackDraftCandidateGeneratedAt = new Date().toISOString();
+    return travelerHomeFeedbackDraftCandidateGeneratedAt;
+  }
+  function travelerHomeFeedbackDraftCandidatePayload(){
+    const items = travelerHomeFeedbackDraftCandidateItems();
+    const summary = travelerHomeFeedbackDraftCandidateSummary(items);
+    return {
+      kind: 'shanghai_trial_feedback_draft_candidates',
+      version: 1,
+      generated_at: travelerHomeFeedbackDraftCandidateTimestamp(),
+      source_url: window.location?.href || '',
+      summary,
+      items,
+      privacy_boundary: '只包含候选改稿草案和人工确认清单；不会自动覆盖正式攻略、路线图或平台文案；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: ['人工确认候选草案是否采纳。', '采纳后再进入正式应用清单。', '发布前复核官方开放、预约、票务、交通和临时闭馆。'],
+    };
+  }
+  function travelerHomeFeedbackDraftCandidateMarkdown(){
+    const payload = travelerHomeFeedbackDraftCandidatePayload();
+    const summary = payload.summary;
+    const items = payload.items;
+    const lines = [
+      '# 上海试用反馈候选改稿草案',
+      '',
+      '## 总结论',
+      `- 候选草案：${summary.candidate_count} 条`,
+      `- 涉及路线：${summary.route_count} 条`,
+      `- 下一步：${summary.next_step}`,
+      '- 状态：待人工确认',
+      '',
+      '## 候选草案',
+    ];
+    if (!items.length) {
+      lines.push('- 暂无候选草案，先导入试用反馈并生成下一版修改建议。');
+    } else {
+      items.forEach((item, index) => {
+        lines.push(`${index + 1}. [${item.priority}/${item.status}] ${item.draft_channel}｜${item.route_title}`);
+        lines.push(`   - 反馈：${item.source_note}`);
+        lines.push(`   - 草案：${item.candidate_draft}`);
+        lines.push(`   - 验收：${item.acceptance_check}`);
+        lines.push(`   - 反馈 ID：${item.feedback_id}`);
+      });
+    }
+    lines.push('', '## 人工确认清单');
+    lines.push('- 只作为候选草案，不自动覆盖正式攻略、路线图或平台文案。');
+    lines.push('- 人工确认采纳、改写或丢弃后，再进入正式应用清单。');
+    lines.push('- 官方开放、预约、票务、交通和临时闭馆仍以官方渠道复核为准。');
+    lines.push('- 平台表达必须人工审稿，不复制第三方平台原文。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；候选草案只用于人工确认。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFeedbackDraftCandidate(){
+    const payload = travelerHomeFeedbackDraftCandidatePayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-feedback-draft-candidate-summary');
+    const listTarget = document.getElementById('traveler-home-feedback-draft-candidate-list');
+    const output = document.getElementById('traveler-home-feedback-draft-candidate-output');
+    const jsonOutput = document.getElementById('traveler-home-feedback-draft-candidate-json-output');
+    const status = document.getElementById('traveler-home-feedback-draft-candidate-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>候选 ${summary.candidate_count} 条</span><span>路线 ${summary.route_count} 条</span><span>待人工确认</span><span>${escapeHtml(summary.next_step)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.items.length ? payload.items.map(item => `<article><b>${escapeHtml(item.priority)}｜${escapeHtml(item.draft_channel)}｜${escapeHtml(item.route_title)}</b><span>${escapeHtml(item.status)}｜${escapeHtml(item.target_surface)}</span><span>${escapeHtml(item.candidate_draft)}</span></article>`).join('') : '<article><b>暂无候选草案</b><span>导入试用反馈后自动生成候选改稿草案。</span></article>';
+    const text = travelerHomeFeedbackDraftCandidateMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.items.length ? '候选改稿草案已生成。' : '暂无候选改稿草案。';
+    return text;
+  }
+  function travelerHomeFeedbackDraftCandidateFilename(){
+    return 'shanghai-trial-feedback-draft-candidates.md';
+  }
+  function travelerHomeFeedbackDraftCandidateJsonFilename(){
+    return 'shanghai-trial-feedback-draft-candidates.json';
+  }
+  async function copyTravelerHomeFeedbackDraftCandidateMarkdown(){
+    const text = renderTravelerHomeFeedbackDraftCandidate();
+    const status = document.getElementById('traveler-home-feedback-draft-candidate-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制候选改稿草案。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制候选改稿草案。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFeedbackDraftCandidateMarkdown(){
+    const text = renderTravelerHomeFeedbackDraftCandidate();
+    const filename = travelerHomeFeedbackDraftCandidateFilename();
+    const status = document.getElementById('traveler-home-feedback-draft-candidate-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载候选改稿草案 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeFeedbackDraftCandidateJson(){
+    renderTravelerHomeFeedbackDraftCandidate();
+    const payload = travelerHomeFeedbackDraftCandidatePayload();
+    const filename = travelerHomeFeedbackDraftCandidateJsonFilename();
+    const status = document.getElementById('traveler-home-feedback-draft-candidate-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载候选改稿草案 JSON。';
     return {filename, payload};
   }
   function travelerHomeContentUpdatePackageSummary(){
@@ -3901,6 +4093,7 @@
     renderTravelerHomeOfficialVerificationFlow();
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeFeedbackRevisionPlan();
+    renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
@@ -6503,6 +6696,9 @@
   document.getElementById('traveler-home-feedback-revision-plan-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackRevisionPlanMarkdown);
   document.getElementById('traveler-home-feedback-revision-plan-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackRevisionPlanMarkdown);
   document.getElementById('traveler-home-feedback-revision-plan-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackRevisionPlanJson);
+  document.getElementById('traveler-home-feedback-draft-candidate-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackDraftCandidateMarkdown);
+  document.getElementById('traveler-home-feedback-draft-candidate-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackDraftCandidateMarkdown);
+  document.getElementById('traveler-home-feedback-draft-candidate-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackDraftCandidateJson);
   document.getElementById('traveler-home-content-update-package-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-content-update-package-status'); renderTravelerHomeContentUpdatePackage(); if (status) status.textContent = '内容更新发布包已更新。'; });
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
@@ -6595,6 +6791,7 @@
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
   renderTravelerHomeFeedbackRevisionPlan();
+  renderTravelerHomeFeedbackDraftCandidate();
   renderTravelerHomeContentUpdatePackage();
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();

@@ -837,6 +837,15 @@
         <div id="traveler-home-official-fillback-preview-summary" class="traveler-content-intake-board-summary" aria-live="polite"></div>
         <div id="traveler-home-official-fillback-preview-list" class="traveler-content-intake-board-list"></div>
         <textarea id="traveler-home-official-fillback-preview-output" readonly rows="8" aria-label="官方复核合并预览 Markdown"></textarea>
+        <div id="traveler-home-official-fillback-merge-summary" class="traveler-content-intake-board-summary" aria-live="polite"></div>
+        <div id="traveler-home-official-fillback-merge-list" class="traveler-content-intake-board-list"></div>
+        <div class="traveler-content-intake-actions">
+          <button type="button" id="traveler-home-official-fillback-merge-copy-button" data-traveler-home-official-fillback-merge-copy>复制合并结果</button>
+          <button type="button" id="traveler-home-official-fillback-merge-download-button" data-traveler-home-official-fillback-merge-download>下载差异摘要</button>
+          <button type="button" class="primary" id="traveler-home-official-fillback-merge-json-download-button" data-traveler-home-official-fillback-merge-json-download>下载合并 JSON</button>
+        </div>
+        <textarea id="traveler-home-official-fillback-merge-output" readonly rows="8" aria-label="官方复核合并结果 Markdown"></textarea>
+        <textarea id="traveler-home-official-fillback-merge-json-output" readonly rows="8" aria-label="合并后的 place_verifications JSON"></textarea>
         <p id="traveler-home-official-fillback-status" class="traveler-content-intake-status" aria-live="polite"></p>
       </div>
     </div>
@@ -2704,6 +2713,219 @@
       return summary;
     }, {records:0, mergeable:0, unknown:0, incomplete:0});
   }
+  function travelerHomeOfficialFillbackCurrentRecords(){
+    const records = new Map();
+    TRAVELER_HOME_ROUTES.forEach(route => (route.officialItems || []).forEach(item => {
+      const placeId = String(item.placeId || item.place_id || '').trim();
+      if (!placeId || records.has(placeId)) return;
+      records.set(placeId, {
+        place_id: placeId,
+        status: item.verificationStatus || item.status || '未回填',
+        verified_at: item.verifiedAt || item.verified_at || '',
+        official_url: item.officialUrl || item.sourceUrl || item.official_url || '',
+        opening_status: item.openingStatus || item.opening_status || '待查官网开放信息',
+        reservation_status: item.reservationStatus || item.reservation_status || '待查官网预约规则',
+        ticket_status: item.ticketStatus || item.ticket_status || '待查官网票务规则',
+        transport_status: item.transportStatus || item.transport_status || '待查官方交通和到达方式',
+        publish_note: item.publishNote || item.publish_note || '发布前人工确认开放、预约、票务和交通。',
+      });
+    }));
+    return Array.from(records.values()).sort((left, right) => left.place_id.localeCompare(right.place_id, 'en'));
+  }
+  function travelerHomeOfficialFillbackImportedRecords(){
+    return travelerHomeOfficialFillbackNormalizePayload(travelerHomeOfficialFillbackPreviewPayload())?.official_verifications || [];
+  }
+  function travelerHomeOfficialFillbackMergeStats(){
+    const currentRecords = travelerHomeOfficialFillbackCurrentRecords();
+    const importedRecords = travelerHomeOfficialFillbackImportedRecords();
+    const placeIndex = travelerHomeOfficialFillbackPlaceIndex();
+    const currentById = new Map(currentRecords.map(record => [record.place_id, record]));
+    const updated = [];
+    const skippedUnknown = [];
+    const skippedIncomplete = [];
+    importedRecords.forEach(record => {
+      const placeId = String(record.place_id || record.placeId || '').trim();
+      if (!placeIndex.has(placeId)) {
+        skippedUnknown.push(placeId || '未标注 place_id');
+        return;
+      }
+      const missingFields = travelerHomeOfficialFillbackRecordMissingFields(record);
+      if (missingFields.length) {
+        skippedIncomplete.push({placeId, missingFields});
+        return;
+      }
+      const merged = {
+        place_id: placeId,
+        status: record.status || '已人工核验',
+        verified_at: record.verified_at || '',
+        official_url: record.official_url || '',
+        opening_status: record.opening_status || '',
+        reservation_status: record.reservation_status || '',
+        ticket_status: record.ticket_status || '',
+        transport_status: record.transport_status || '',
+        publish_note: record.publish_note || '',
+      };
+      currentById.set(placeId, merged);
+      updated.push({placeId, placeName: placeIndex.get(placeId)?.placeName || placeId, record: merged});
+    });
+    const mergedRecords = Array.from(currentById.values()).sort((left, right) => left.place_id.localeCompare(right.place_id, 'en'));
+    return {
+      currentRecords,
+      importedRecords,
+      mergedRecords,
+      updated,
+      skippedUnknown,
+      skippedIncomplete,
+      unchanged: Math.max(0, mergedRecords.length - updated.length),
+    };
+  }
+  let travelerHomeOfficialFillbackMergeGeneratedAt = '';
+  function travelerHomeOfficialFillbackMergeTimestamp(){
+    if (!travelerHomeOfficialFillbackMergeGeneratedAt) travelerHomeOfficialFillbackMergeGeneratedAt = new Date().toISOString();
+    return travelerHomeOfficialFillbackMergeGeneratedAt;
+  }
+  function travelerHomeOfficialFillbackMergedJson(){
+    const stats = travelerHomeOfficialFillbackMergeStats();
+    return {
+      kind: 'shanghai_official_verifications_merged',
+      version: 1,
+      generated_at: travelerHomeOfficialFillbackMergeTimestamp(),
+      source_url: window.location?.href || '',
+      target_file: 'data/official_verifications/place_verifications.json',
+      manual_replace_required: true,
+      summary: {
+        current: stats.currentRecords.length,
+        imported: stats.importedRecords.length,
+        output: stats.mergedRecords.length,
+        updated: stats.updated.length,
+        skipped_unknown: stats.skippedUnknown.length,
+        skipped_incomplete: stats.skippedIncomplete.length,
+        unchanged: stats.unchanged,
+      },
+      skipped_unknown_place_ids: stats.skippedUnknown,
+      skipped_incomplete: stats.skippedIncomplete,
+      place_verifications: stats.mergedRecords,
+      next_actions: [
+        '人工确认差异摘要。',
+        '确认无误后再替换 data/official_verifications/place_verifications.json。',
+        '运行官方校验、重建站点并做线上验收。',
+      ],
+      privacy_boundary: '不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+    };
+  }
+  function travelerHomeOfficialFillbackMergeDiffMarkdown(){
+    const payload = travelerHomeOfficialFillbackMergedJson();
+    const stats = travelerHomeOfficialFillbackMergeStats();
+    const lines = [
+      '# 上海官方复核合并结果',
+      '',
+      `- 当前基础记录：${payload.summary.current} 条`,
+      `- 导入记录：${payload.summary.imported} 条`,
+      `- 输出记录：${payload.summary.output} 条`,
+      `- 已合并更新：${payload.summary.updated} 条`,
+      `- 跳过未知点位：${payload.summary.skipped_unknown} 条`,
+      `- 跳过字段不完整：${payload.summary.skipped_incomplete} 条`,
+      '- 目标文件：data/official_verifications/place_verifications.json',
+      '- 合并边界：只生成合并结果，不自动覆盖真实数据；人工确认后再替换目标文件。',
+      '',
+      '## 已合并更新',
+    ];
+    if (!stats.updated.length) {
+      lines.push('- 暂无可合并更新。');
+    } else {
+      stats.updated.forEach(item => {
+        lines.push(`- ${item.placeName}（${item.placeId}）`);
+        lines.push(`  - 状态：${item.record.status}；核验日期：${item.record.verified_at}`);
+        lines.push(`  - 官方来源：${item.record.official_url}`);
+        lines.push(`  - 发布备注：${item.record.publish_note}`);
+      });
+    }
+    lines.push('', '## 跳过记录');
+    if (!stats.skippedUnknown.length && !stats.skippedIncomplete.length) {
+      lines.push('- 无跳过记录。');
+    }
+    stats.skippedUnknown.forEach(placeId => lines.push(`- 未知点位：${placeId}`));
+    stats.skippedIncomplete.forEach(item => lines.push(`- 字段不完整：${item.placeId}｜缺失 ${item.missingFields.join('、')}`));
+    lines.push('', '## 使用方式');
+    lines.push('1. 下载 place_verifications.merged.json。');
+    lines.push('2. 人工确认后再替换目标文件 data/official_verifications/place_verifications.json。');
+    lines.push('3. 不把未知点位直接写入主数据；先确认是否新增地点。');
+    lines.push('4. 合并后运行官方校验、重建站点并做线上验收。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；实时信息以官方渠道和现场信息为准。');
+    return lines.join('\n');
+  }
+  function travelerHomeOfficialFillbackMergeFilename(){
+    return 'shanghai-official-fillback-merge-diff.md';
+  }
+  function travelerHomeOfficialFillbackMergedJsonFilename(){
+    return 'place_verifications.merged.json';
+  }
+  function renderTravelerHomeOfficialFillbackMergeResult(){
+    const payload = travelerHomeOfficialFillbackMergedJson();
+    const stats = travelerHomeOfficialFillbackMergeStats();
+    const summaryTarget = document.getElementById('traveler-home-official-fillback-merge-summary');
+    const listTarget = document.getElementById('traveler-home-official-fillback-merge-list');
+    const output = document.getElementById('traveler-home-official-fillback-merge-output');
+    const jsonOutput = document.getElementById('traveler-home-official-fillback-merge-json-output');
+    const status = document.getElementById('traveler-home-official-fillback-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>合并结果 ${payload.summary.updated} 条更新</span><span>跳过未知 ${payload.summary.skipped_unknown} 条</span><span>字段不完整 ${payload.summary.skipped_incomplete} 条</span><span>输出 ${payload.summary.output} 条</span>`;
+    if (listTarget) {
+      const rows = [];
+      stats.updated.forEach(item => rows.push(`<article><b>已合并｜${escapeHtml(item.placeName)}</b><span>${escapeHtml(item.placeId)}｜${escapeHtml(item.record.verified_at)}</span><span>${escapeHtml(item.record.publish_note)}</span></article>`));
+      stats.skippedUnknown.forEach(placeId => rows.push(`<article><b>跳过未知｜${escapeHtml(placeId)}</b><span>未匹配到现有路线点位</span><span>先确认是否新增地点。</span></article>`));
+      stats.skippedIncomplete.forEach(item => rows.push(`<article><b>字段不完整｜${escapeHtml(item.placeId)}</b><span>缺失：${escapeHtml(item.missingFields.join('、'))}</span><span>补齐后再合并。</span></article>`));
+      listTarget.innerHTML = rows.length ? rows.join('') : '<article><b>暂无合并结果</b><span>先导入回填 JSON 并预览合并。</span></article>';
+    }
+    const text = travelerHomeOfficialFillbackMergeDiffMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.summary.imported ? '官方复核合并结果已生成。' : '暂无官方复核合并结果。';
+    return text;
+  }
+  async function copyTravelerHomeOfficialFillbackMergeMarkdown(){
+    const text = renderTravelerHomeOfficialFillbackMergeResult();
+    const status = document.getElementById('traveler-home-official-fillback-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制官方复核合并结果。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制官方复核合并结果。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeOfficialFillbackMergeMarkdown(){
+    const text = renderTravelerHomeOfficialFillbackMergeResult();
+    const filename = travelerHomeOfficialFillbackMergeFilename();
+    const status = document.getElementById('traveler-home-official-fillback-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载官方复核合并差异摘要。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeOfficialFillbackMergedJson(){
+    renderTravelerHomeOfficialFillbackMergeResult();
+    const payload = travelerHomeOfficialFillbackMergedJson();
+    const filename = travelerHomeOfficialFillbackMergedJsonFilename();
+    const status = document.getElementById('traveler-home-official-fillback-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载合并后的 place_verifications JSON。';
+    return {filename, payload};
+  }
   function travelerHomeOfficialFillbackMergePreviewMarkdown(){
     const items = travelerHomeOfficialFillbackMergePreviewItems();
     const summary = travelerHomeOfficialFillbackMergePreviewSummary(items);
@@ -2763,12 +2985,14 @@
       state.updatedAt = new Date().toISOString();
       travelerHomeStorageWrite(state);
       renderTravelerHomeOfficialFillbackMergePreview();
+      renderTravelerHomeOfficialFillbackMergeResult();
       const summary = travelerHomeOfficialFillbackMergePreviewSummary();
       if (status) status.textContent = `已导入 ${summary.records} 条官方复核回填记录，已生成合并预览。`;
       return {ok:true, records:summary.records, mergeable:summary.mergeable, unknown:summary.unknown, incomplete:summary.incomplete};
     } catch (error) {
       if (status) status.textContent = '导入失败：请粘贴有效的 shanghai-official-fillback.json。';
       renderTravelerHomeOfficialFillbackMergePreview();
+      renderTravelerHomeOfficialFillbackMergeResult();
       return {ok:false, error:String(error?.message || error)};
     }
   }
@@ -2798,6 +3022,7 @@
     const input = document.getElementById('traveler-home-official-fillback-import-input');
     if (input) input.value = '';
     renderTravelerHomeOfficialFillbackMergePreview();
+    renderTravelerHomeOfficialFillbackMergeResult();
     const status = document.getElementById('traveler-home-official-fillback-status');
     if (status) status.textContent = '已清空官方复核合并预览。';
     return {ok:true};
@@ -5563,6 +5788,9 @@
   document.getElementById('traveler-home-official-fillback-import-button')?.addEventListener('click', importTravelerHomeOfficialFillbackFromInput);
   document.getElementById('traveler-home-official-fillback-clear-button')?.addEventListener('click', clearTravelerHomeOfficialFillbackImportPreview);
   document.getElementById('traveler-home-official-fillback-import-file')?.addEventListener('change', importTravelerHomeOfficialFillbackFile);
+  document.getElementById('traveler-home-official-fillback-merge-copy-button')?.addEventListener('click', copyTravelerHomeOfficialFillbackMergeMarkdown);
+  document.getElementById('traveler-home-official-fillback-merge-download-button')?.addEventListener('click', downloadTravelerHomeOfficialFillbackMergeMarkdown);
+  document.getElementById('traveler-home-official-fillback-merge-json-download-button')?.addEventListener('click', downloadTravelerHomeOfficialFillbackMergedJson);
   document.getElementById('traveler-home-feedback-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '反馈包已更新。'; });
   document.getElementById('traveler-home-feedback-copy-button')?.addEventListener('click', copyTravelerHomeFeedback);
   document.getElementById('traveler-home-feedback-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackMarkdown);
@@ -5655,6 +5883,7 @@
   renderTravelerHomeOfficialVerificationFlow();
   renderTravelerHomeOfficialFillbackPackage();
   renderTravelerHomeOfficialFillbackMergePreview();
+  renderTravelerHomeOfficialFillbackMergeResult();
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
   renderTravelerHomeContentUpdatePackage();

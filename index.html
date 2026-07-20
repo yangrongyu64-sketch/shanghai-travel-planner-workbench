@@ -213,6 +213,16 @@
     .traveler-feedback-board-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
     .traveler-feedback-board-list b{font-size:13px;line-height:1.25}
     .traveler-feedback-board-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-feedback-revision-plan{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+    .traveler-feedback-revision-plan p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-feedback-revision-plan h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-feedback-revision-plan small{margin-top:4px}
+    .traveler-feedback-revision-plan-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-feedback-revision-plan-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-feedback-revision-plan-list{display:grid;gap:8px}
+    .traveler-feedback-revision-plan-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-feedback-revision-plan-list b{font-size:13px;line-height:1.25}
+    .traveler-feedback-revision-plan-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-content-package{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-content-package-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-content-package h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -954,6 +964,23 @@
       <div id="traveler-home-feedback-board-list" class="traveler-feedback-board-list"></div>
       <textarea id="traveler-home-feedback-board-output" readonly rows="8" aria-label="反馈处理队列 Markdown"></textarea>
       <p id="traveler-home-feedback-board-status" class="traveler-feedback-status" aria-live="polite"></p>
+      <div id="traveler-home-feedback-revision-plan" class="traveler-feedback-revision-plan" aria-label="下一版修改建议">
+        <div>
+          <p>下一版</p>
+          <h3>下一版修改建议</h3>
+          <small>把导入的真实试用反馈转成路线、地图、官方复核、平台文案的处理建议，先给人工编辑确认。</small>
+        </div>
+        <div class="traveler-feedback-actions">
+          <button type="button" id="traveler-home-feedback-revision-plan-copy-button" data-traveler-home-feedback-revision-plan-copy>复制修改建议</button>
+          <button type="button" id="traveler-home-feedback-revision-plan-download-button" data-traveler-home-feedback-revision-plan-download>下载Markdown</button>
+          <button type="button" class="primary" id="traveler-home-feedback-revision-plan-json-download-button" data-traveler-home-feedback-revision-plan-json-download>下载JSON</button>
+        </div>
+        <div id="traveler-home-feedback-revision-plan-summary" class="traveler-feedback-revision-plan-summary" aria-live="polite"></div>
+        <div id="traveler-home-feedback-revision-plan-list" class="traveler-feedback-revision-plan-list"></div>
+        <textarea id="traveler-home-feedback-revision-plan-output" readonly rows="8" aria-label="下一版修改建议 Markdown"></textarea>
+        <textarea id="traveler-home-feedback-revision-plan-json-output" readonly rows="7" aria-label="下一版修改建议 JSON"></textarea>
+        <p id="traveler-home-feedback-revision-plan-status" class="traveler-feedback-status" aria-live="polite"></p>
+      </div>
     </div>
   </div>
 </section>
@@ -3335,6 +3362,7 @@
     if (!records.length) {
       if (status) status.textContent = '没有识别到反馈包。';
       renderTravelerHomeFeedbackBoard();
+      renderTravelerHomeFeedbackRevisionPlan();
       renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
@@ -3343,6 +3371,7 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     renderTravelerHomeFeedbackBoard();
+    renderTravelerHomeFeedbackRevisionPlan();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3386,6 +3415,7 @@
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
     renderTravelerHomeFeedbackBoard();
+    renderTravelerHomeFeedbackRevisionPlan();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3393,6 +3423,222 @@
     const status = document.getElementById('traveler-home-feedback-board-status');
     if (status) status.textContent = '已清空反馈看板。';
     return state;
+  }
+  function travelerHomeFeedbackRevisionPlanCategory(record){
+    const text = [record?.type, record?.note, record?.nextAction].map(value => String(value || '')).join(' ').toLowerCase();
+    if (text.includes('开放') || text.includes('预约') || text.includes('票务') || text.includes('闭馆') || text.includes('official') || text.includes('官方')) return 'official';
+    if (text.includes('地图') || text.includes('点位') || text.includes('动线') || text.includes('步行') || text.includes('骑行') || text.includes('geojson') || text.includes('map')) return 'map';
+    if (text.includes('文案') || text.includes('小红书') || text.includes('抖音') || text.includes('口播') || text.includes('标题') || text.includes('游记') || text.includes('content') || text.includes('copy')) return 'content';
+    if (text.includes('小程序') || text.includes('迁移') || text.includes('收藏') || text.includes('miniprogram') || text.includes('ux')) return 'miniprogram';
+    if (text.includes('路线') || text.includes('节奏') || text.includes('停留') || text.includes('跨区') || text.includes('route')) return 'route';
+    return 'other';
+  }
+  function travelerHomeFeedbackRevisionPlanRoute(record){
+    const routeText = String(record?.route || '');
+    return TRAVELER_HOME_ROUTES.find(route => routeText.includes(route.tripId) || routeText.includes(route.title) || routeText.includes(route.scenario)) || null;
+  }
+  function travelerHomeFeedbackRevisionPlanPriority(record){
+    const rank = travelerHomeFeedbackBoardSeverityRank(record?.severity);
+    if (rank === 0) return 'P1';
+    if (rank === 1) return 'P2';
+    if (rank === 2) return 'P3';
+    return 'P4';
+  }
+  function travelerHomeFeedbackRevisionPlanTargetSurface(category){
+    const targets = {official:'官方复核', map:'路线图', content:'平台文案', miniprogram:'小程序迁移', route:'路线正文', other:'综合体验'};
+    return targets[category] || targets.other;
+  }
+  function travelerHomeFeedbackRevisionPlanAction(category){
+    const actions = {
+      official:'补官方开放、预约、票务、交通和临时闭馆来源，并加入发布前复核提醒。',
+      map:'补清点位顺序、步行/骑行方向、换乘提示和容易走错的位置。',
+      content:'重写标题、开头、口播/笔记表达和发布提示，保留人工润色。',
+      miniprogram:'整理字段、收藏流和页面迁移建议，进入小程序交接包。',
+      route:'调整每日顺序、停留时间、跨区成本和休息补给。',
+      other:'先判断归属模块，再拆成路线、地图、文案或复核任务。',
+    };
+    return actions[category] || actions.other;
+  }
+  function travelerHomeFeedbackRevisionPlanAcceptance(category){
+    const checks = {
+      official:'发布前人工复核官方开放、预约、票务、交通和临时闭馆。',
+      map:'桌面和移动端打开地图，核对点位顺序、步行方向、跨区交通和无横向溢出。',
+      content:'人工审稿确认平台语气，不复制第三方平台原文。',
+      miniprogram:'小程序迁移前核对字段、收藏流、导出 JSON 和页面入口。',
+      route:'人工走查每日顺序、停留时间、交通成本和备用方案。',
+      other:'人工确认问题归属、修改位置和发布前验收步骤。',
+    };
+    return checks[category] || checks.other;
+  }
+  function travelerHomeFeedbackRevisionPlanItems(){
+    return travelerHomeFeedbackBoardRecords().map(record => {
+      const category = travelerHomeFeedbackRevisionPlanCategory(record);
+      const route = travelerHomeFeedbackRevisionPlanRoute(record);
+      const routeTitle = route ? `${route.scenario}｜${route.title}` : (record.route || '未关联路线');
+      const note = travelerHomeFeedbackBoardFirstLine(record.note) || '待补充具体体验。';
+      return {
+        feedback_id: record.id,
+        route_id: route?.tripId || '',
+        route_title: routeTitle,
+        route: record.route || routeTitle,
+        type: record.type || '其他',
+        severity: record.severity || '建议优化',
+        priority: travelerHomeFeedbackRevisionPlanPriority(record),
+        category,
+        target_surface: travelerHomeFeedbackRevisionPlanTargetSurface(category),
+        revision_action: travelerHomeFeedbackRevisionPlanAction(category),
+        acceptance_check: travelerHomeFeedbackRevisionPlanAcceptance(category),
+        note,
+        source_note: record.note || '',
+        guide_url: record.guide || '',
+        map_url: record.map || '',
+      };
+    }).sort((left, right) => travelerHomeFeedbackBoardSeverityRank(left.severity) - travelerHomeFeedbackBoardSeverityRank(right.severity) || String(left.route_title).localeCompare(String(right.route_title), 'zh-Hans-CN') || String(left.target_surface).localeCompare(String(right.target_surface), 'zh-Hans-CN'));
+  }
+  function travelerHomeFeedbackRevisionPlanSummary(items){
+    const source = Array.isArray(items) ? items : travelerHomeFeedbackRevisionPlanItems();
+    const routeKeys = new Set(source.map(item => item.route_id || item.route_title || item.route).filter(Boolean));
+    const targetCounts = source.reduce((counts, item) => { counts[item.target_surface] = (counts[item.target_surface] || 0) + 1; return counts; }, {});
+    const priorityCounts = source.reduce((counts, item) => { counts[item.priority] = (counts[item.priority] || 0) + 1; return counts; }, {});
+    const blockingCount = source.filter(item => travelerHomeFeedbackBoardSeverityRank(item.severity) === 0).length;
+    return {
+      feedback_count: source.length,
+      blocking_count: blockingCount,
+      route_count: routeKeys.size,
+      target_counts: targetCounts,
+      priority_counts: priorityCounts,
+      next_version_priority: blockingCount ? '先处理阻塞反馈' : (source.length ? '按影响程度处理' : '等待试用反馈'),
+    };
+  }
+  let travelerHomeFeedbackRevisionPlanGeneratedAt = '';
+  function travelerHomeFeedbackRevisionPlanTimestamp(){
+    if (!travelerHomeFeedbackRevisionPlanGeneratedAt) travelerHomeFeedbackRevisionPlanGeneratedAt = new Date().toISOString();
+    return travelerHomeFeedbackRevisionPlanGeneratedAt;
+  }
+  function travelerHomeFeedbackRevisionPlanPayload(){
+    const items = travelerHomeFeedbackRevisionPlanItems();
+    const summary = travelerHomeFeedbackRevisionPlanSummary(items);
+    return {
+      kind: 'shanghai_trial_feedback_revision_plan',
+      version: 1,
+      generated_at: travelerHomeFeedbackRevisionPlanTimestamp(),
+      source_url: window.location?.href || '',
+      summary,
+      items,
+      targets: {route:'traveler.md', map:'route-map.html / route-map.geojson', official:'official_checklist.html', content:'xiaohongshu.md / douyin.md / essay.md', miniprogram:'miniprogram-handoff.zip'},
+      privacy_boundary: '只包含试用反馈摘要、处理建议和验收标准；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: ['先处理 P1 阻塞反馈。', '修改后重新生成工作台并跑回归测试。', '发布前人工复核官方开放、预约、票务、交通和临时闭馆。'],
+    };
+  }
+  function travelerHomeFeedbackRevisionPlanMarkdown(){
+    const payload = travelerHomeFeedbackRevisionPlanPayload();
+    const summary = payload.summary;
+    const items = payload.items;
+    const lines = [
+      '# 上海试用反馈下一版修改建议',
+      '',
+      '## 总结论',
+      `- 反馈：${summary.feedback_count} 条`,
+      `- 阻塞：${summary.blocking_count} 条`,
+      `- 涉及路线：${summary.route_count} 条`,
+      `- 下一版优先级：${summary.next_version_priority}`,
+      '',
+      '## 优先处理',
+    ];
+    const priorityItems = items.filter(item => item.priority === 'P1' || item.priority === 'P2');
+    if (!priorityItems.length) {
+      lines.push(items.length ? '- 暂无 P1/P2，按建议优化顺序处理。' : '- 暂无反馈，先导入试用反馈包。');
+    } else {
+      priorityItems.forEach((item, index) => lines.push(`${index + 1}. [${item.priority}/${item.severity}] ${item.target_surface}｜${item.route_title}｜${item.note}｜动作：${item.revision_action}`));
+    }
+    lines.push('', '## 分模块修改');
+    if (!items.length) {
+      lines.push('- 暂无分模块修改。');
+    } else {
+      Array.from(new Set(items.map(item => item.target_surface))).forEach(target => {
+        lines.push(`### ${target}`);
+        items.filter(item => item.target_surface === target).forEach(item => {
+          lines.push(`- [${item.priority}] ${item.route_title}`);
+          lines.push(`  - 问题：${item.note}`);
+          lines.push(`  - 修改：${item.revision_action}`);
+          lines.push(`  - 验收：${item.acceptance_check}`);
+          lines.push(`  - 反馈 ID：${item.feedback_id}`);
+        });
+      });
+    }
+    lines.push('', '## 验收标准');
+    const checks = Array.from(new Set(items.map(item => item.acceptance_check))).filter(Boolean);
+    if (!checks.length) lines.push('- 导入反馈后再生成验收标准。');
+    else checks.forEach(check => lines.push(`- ${check}`));
+    lines.push('- 修改后重新生成工作台，跑测试、构建、移动端和控制台验收。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；官方开放、预约、票务、交通和临时闭馆仍需人工复核。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFeedbackRevisionPlan(){
+    const payload = travelerHomeFeedbackRevisionPlanPayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-feedback-revision-plan-summary');
+    const listTarget = document.getElementById('traveler-home-feedback-revision-plan-list');
+    const output = document.getElementById('traveler-home-feedback-revision-plan-output');
+    const jsonOutput = document.getElementById('traveler-home-feedback-revision-plan-json-output');
+    const status = document.getElementById('traveler-home-feedback-revision-plan-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>反馈 ${summary.feedback_count} 条</span><span>阻塞 ${summary.blocking_count} 条</span><span>路线 ${summary.route_count} 条</span><span>${escapeHtml(summary.next_version_priority)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.items.length ? payload.items.map(item => `<article><b>${escapeHtml(item.priority)}｜${escapeHtml(item.target_surface)}｜${escapeHtml(item.route_title)}</b><span>${escapeHtml(item.type)}｜${escapeHtml(item.severity)}</span><span>${escapeHtml(item.note)}</span><span>${escapeHtml(item.revision_action)}</span></article>`).join('') : '<article><b>暂无修改建议</b><span>导入试用反馈包后自动生成下一版处理建议。</span></article>';
+    const text = travelerHomeFeedbackRevisionPlanMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.items.length ? '下一版修改建议已生成。' : '暂无下一版修改建议。';
+    return text;
+  }
+  function travelerHomeFeedbackRevisionPlanFilename(){
+    return 'shanghai-trial-feedback-revision-plan.md';
+  }
+  function travelerHomeFeedbackRevisionPlanJsonFilename(){
+    return 'shanghai-trial-feedback-revision-plan.json';
+  }
+  async function copyTravelerHomeFeedbackRevisionPlanMarkdown(){
+    const text = renderTravelerHomeFeedbackRevisionPlan();
+    const status = document.getElementById('traveler-home-feedback-revision-plan-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制下一版修改建议。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制下一版修改建议。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFeedbackRevisionPlanMarkdown(){
+    const text = renderTravelerHomeFeedbackRevisionPlan();
+    const filename = travelerHomeFeedbackRevisionPlanFilename();
+    const status = document.getElementById('traveler-home-feedback-revision-plan-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载下一版修改建议 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeFeedbackRevisionPlanJson(){
+    renderTravelerHomeFeedbackRevisionPlan();
+    const payload = travelerHomeFeedbackRevisionPlanPayload();
+    const filename = travelerHomeFeedbackRevisionPlanJsonFilename();
+    const status = document.getElementById('traveler-home-feedback-revision-plan-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载下一版修改建议 JSON。';
+    return {filename, payload};
   }
   function travelerHomeContentUpdatePackageSummary(){
     const materials = travelerHomeContentIntakeBoardRecords();
@@ -3654,6 +3900,7 @@
     renderTravelerHomeContentIntakeBoard();
     renderTravelerHomeOfficialVerificationFlow();
     renderTravelerHomeFeedbackBoard();
+    renderTravelerHomeFeedbackRevisionPlan();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
@@ -6253,6 +6500,9 @@
   document.getElementById('traveler-home-feedback-board-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackBoardMarkdown);
   document.getElementById('traveler-home-feedback-board-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackBoardMarkdown);
   document.getElementById('traveler-home-feedback-board-clear-button')?.addEventListener('click', clearTravelerHomeFeedbackBoard);
+  document.getElementById('traveler-home-feedback-revision-plan-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackRevisionPlanMarkdown);
+  document.getElementById('traveler-home-feedback-revision-plan-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackRevisionPlanMarkdown);
+  document.getElementById('traveler-home-feedback-revision-plan-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackRevisionPlanJson);
   document.getElementById('traveler-home-content-update-package-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-content-update-package-status'); renderTravelerHomeContentUpdatePackage(); if (status) status.textContent = '内容更新发布包已更新。'; });
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
@@ -6344,6 +6594,7 @@
   renderTravelerHomeOfficialFillbackMergeResult();
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
+  renderTravelerHomeFeedbackRevisionPlan();
   renderTravelerHomeContentUpdatePackage();
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();

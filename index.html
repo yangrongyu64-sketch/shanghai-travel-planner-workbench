@@ -5734,35 +5734,76 @@
     if (target?.http_status) return `${target.http_status} ${target.status_text || ''}`.trim();
     return target?.status_text || '未运行';
   }
-  async function travelerHomeCheckOnlineTarget(target){
-    const checkedAt = new Date().toISOString();
+  function travelerHomeOnlineHealthCheckDelay(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  async function travelerHomeFetchWithTimeout(href, options, timeoutMs){
+    if (typeof AbortController === 'undefined') return fetch(href, options);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      if (typeof fetch !== 'function') throw new Error('当前环境不支持 fetch');
-      const response = await fetch(target.href, {method:'GET', cache:'no-store'});
-      const ok = Boolean(response && response.ok);
-      return {
-        ...target,
-        absolute_url: travelerHomeAbsoluteUrl(target.href),
-        status: ok ? 'healthy' : 'failed',
-        http_status: Number(response?.status || (ok ? 200 : 0)),
-        status_text: response?.statusText || (ok ? 'OK' : '请求失败'),
-        checked_at: checkedAt,
-      };
-    } catch (error) {
-      return {
-        ...target,
-        absolute_url: travelerHomeAbsoluteUrl(target.href),
-        status: 'failed',
-        http_status: 0,
-        status_text: error?.message || '请求失败',
-        checked_at: checkedAt,
-      };
+      return await fetch(href, {...options, signal: controller.signal});
+    } finally {
+      clearTimeout(timer);
     }
+  }
+  function travelerHomeOnlineHealthCheckShouldRetry(response, error){
+    if (error) return true;
+    const status = Number(response?.status || 0);
+    return status === 0 || status === 408 || status === 429 || status >= 500;
+  }
+  async function travelerHomeCheckOnlineTarget(target){
+    const maxAttempts = 2;
+    let lastError = '';
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const checkedAt = new Date().toISOString();
+      try {
+        if (typeof fetch !== 'function') throw new Error('当前环境不支持 fetch');
+        const response = await travelerHomeFetchWithTimeout(target.href, {method:'GET', cache:'no-store'}, 12000);
+        const ok = Boolean(response && response.ok);
+        const statusText = response?.statusText || (ok ? 'OK' : '请求失败');
+        if (ok || attempt === maxAttempts || !travelerHomeOnlineHealthCheckShouldRetry(response, null)) {
+          return {
+            ...target,
+            absolute_url: travelerHomeAbsoluteUrl(target.href),
+            status: ok ? 'healthy' : 'failed',
+            http_status: Number(response?.status || (ok ? 200 : 0)),
+            status_text: statusText,
+            checked_at: checkedAt,
+            attempt_count: attempt,
+            last_error: ok ? lastError : `${response?.status || 0} ${statusText}`.trim(),
+          };
+        }
+        lastError = `${response?.status || 0} ${statusText}`.trim();
+      } catch (error) {
+        lastError = error?.message || '请求失败';
+        if (attempt === maxAttempts || !travelerHomeOnlineHealthCheckShouldRetry(null, error)) {
+          return {
+            ...target,
+            absolute_url: travelerHomeAbsoluteUrl(target.href),
+            status: 'failed',
+            http_status: 0,
+            status_text: lastError,
+            checked_at: checkedAt,
+            attempt_count: attempt,
+            last_error: lastError,
+          };
+        }
+      }
+      await travelerHomeOnlineHealthCheckDelay(160 * attempt);
+    }
+    return {...target, absolute_url: travelerHomeAbsoluteUrl(target.href), status:'failed', http_status:0, status_text:lastError || '请求失败', checked_at:new Date().toISOString(), attempt_count:maxAttempts, last_error:lastError || '请求失败'};
   }
   async function travelerHomeRunOnlineHealthCheck(){
     const status = document.getElementById('traveler-home-online-health-check-status');
     if (status) status.textContent = '线上健康巡检运行中。';
-    const results = await Promise.all(travelerHomeOnlineHealthCheckTargets().map(target => travelerHomeCheckOnlineTarget(target)));
+    const targets = travelerHomeOnlineHealthCheckTargets();
+    const results = [];
+    for (const target of targets) {
+      const result = await travelerHomeCheckOnlineTarget(target);
+      results.push(result);
+      if (status) status.textContent = `线上健康巡检运行中：${results.length}/${targets.length}`;
+    }
     const payload = travelerHomeOnlineHealthCheckPayload(results);
     travelerHomeOnlineHealthCheckLastPayload = payload;
     renderTravelerHomeOnlineHealthCheck(payload);

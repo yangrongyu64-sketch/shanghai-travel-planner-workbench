@@ -16,7 +16,7 @@
 - [ ] `deployment-manifest.json` 能看到 `maintenance` 节点。
 - [ ] `maintenance/health-report.json` 的 `status` 为 `healthy`。
 - [ ] `route_count` 仍为 6，且包含 2/3/5/7/15 天路线。
-- [ ] `workbench-demo.zip`、`miniprogram-handoff.zip`、`maintenance-report.zip` 都能解压。
+- [ ] `workbench-demo.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`maintenance-report.zip` 都能解压。
 - [ ] `service-worker.js` 包含 `maintenance-report.zip` 和核心 HTML/PWA 文件。
 - [ ] 正式公网发布时传入 `--published-url`，并检查 `live_deployment` 为 `healthy`。
 
@@ -24,5 +24,6 @@
 
 - [ ] 首页返回 200，创作者工作台 `workbench.html` 返回 200。
 - [ ] `maintenance/health-report.json` 返回 200。
+- [ ] `acceptance-report.zip` 返回 200。
 - [ ] `maintenance-report.zip` 返回 200。
 - [ ] `LIVE_DEPLOYMENT.md` 返回 200，且发布时间、仓库地址正确。

@@ -1,0 +1,36 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "workbench_acceptance_test_summary",
+  "route_count": 6,
+  "completion_percent": 99.8,
+  "api_required": false,
+  "manual_review_required": true,
+  "tests": {
+    "product_delivery_package": {
+      "command": ".venv/bin/python -m pytest tests/test_web_workbench.py::test_cli_run_web_workbench_writes_index_and_demo_html -q",
+      "expected_result": "1 passed"
+    },
+    "related_package_suite": {
+      "command": ".venv/bin/python -m pytest tests/test_web_workbench.py::test_cli_run_web_workbench_writes_installable_pwa_shell tests/test_web_workbench.py::test_cli_run_web_workbench_writes_miniprogram_handoff_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_platform_refresh_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_maintenance_health_package tests/test_web_workbench.py::test_cli_run_web_workbench_embeds_live_deployment_record -q",
+      "expected_result": "5 passed"
+    },
+    "web_workbench_regression": {
+      "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest tests/test_web_workbench.py -q",
+      "expected_result": "234 passed"
+    },
+    "full_regression": {
+      "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest -q",
+      "expected_result": "330 passed"
+    }
+  },
+  "online_acceptance": [
+    "首页显示上海旅行路线，并能看到下载交付包和下载验收报告入口。",
+    "deployment-manifest.json 包含 acceptance-report.zip 和 acceptance_report 节点。",
+    "service-worker.js 缓存 acceptance-report.zip 和 acceptance-report/acceptance-manifest.json。",
+    "acceptance-report.zip 可下载、可解压，且包内 5 个文件完整。",
+    "手机视口无横向溢出，浏览器控制台无报错。"
+  ],
+  "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+  "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+  "published_at": "2026-07-20"
+}

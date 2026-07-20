@@ -160,6 +160,19 @@
       "missing": [],
       "route_count": 6
     },
+    "acceptance_report": {
+      "status": "healthy",
+      "files": [
+        "acceptance-report/README.md",
+        "acceptance-report/test-summary.json",
+        "acceptance-report/release-summary.md",
+        "acceptance-report/online-acceptance-checklist.md",
+        "acceptance-report/acceptance-manifest.json",
+        "acceptance-report.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "pwa": {
       "status": "healthy",
       "files": [
@@ -176,6 +189,8 @@
           "workbench-demo.zip",
           "product-delivery.zip",
           "product-delivery/delivery-manifest.json",
+          "acceptance-report.zip",
+          "acceptance-report/acceptance-manifest.json",
           "miniprogram-handoff.zip",
           "maintenance-report.zip",
           "maintenance/health-report.json",

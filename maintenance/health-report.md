@@ -9,6 +9,7 @@
 - static_site：healthy
 - offline_demo：healthy
 - product_delivery：healthy
+- acceptance_report：healthy
 - pwa：healthy
 - miniprogram_handoff：healthy
 - platform_refresh：healthy

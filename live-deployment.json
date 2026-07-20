@@ -3,12 +3,15 @@
   "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
   "workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
   "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
+  "product_delivery_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip",
+  "acceptance_report_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/acceptance-report.zip",
   "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
   "published_at": "2026-07-20",
   "smoke_checks": [
     "首页返回 200 并显示上海旅行路线",
     "游客首页可打开攻略和路线图",
     "workbench.html 创作者工作台可访问",
-    "workbench-demo.zip 可下载并解压"
+    "workbench-demo.zip 可下载并解压",
+    "acceptance-report.zip 可下载并解压"
   ]
 }

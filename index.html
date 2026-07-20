@@ -263,6 +263,16 @@
     .traveler-feedback-publish-adoption-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
     .traveler-feedback-publish-adoption-list b{font-size:13px;line-height:1.25}
     .traveler-feedback-publish-adoption-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-feedback-cycle-package{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+    .traveler-feedback-cycle-package p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-feedback-cycle-package h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-feedback-cycle-package small{margin-top:4px}
+    .traveler-feedback-cycle-package-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-feedback-cycle-package-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-feedback-cycle-package-list{display:grid;gap:8px}
+    .traveler-feedback-cycle-package-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-feedback-cycle-package-list b{font-size:13px;line-height:1.25}
+    .traveler-feedback-cycle-package-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-content-package{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-content-package-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-content-package h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -1088,6 +1098,23 @@
         <textarea id="traveler-home-feedback-publish-adoption-output" readonly rows="8" aria-label="发布采纳包 Markdown"></textarea>
         <textarea id="traveler-home-feedback-publish-adoption-json-output" readonly rows="7" aria-label="发布采纳包 JSON"></textarea>
         <p id="traveler-home-feedback-publish-adoption-status" class="traveler-feedback-status" aria-live="polite"></p>
+      </div>
+      <div id="traveler-home-feedback-cycle-package" class="traveler-feedback-cycle-package" aria-label="反馈闭环总包">
+        <div>
+          <p>闭环总包</p>
+          <h3>反馈闭环总包</h3>
+          <small>汇总从试用反馈导入到发布采纳包的全链路状态，给维护者做发布执行和留档。</small>
+        </div>
+        <div class="traveler-feedback-actions">
+          <button type="button" id="traveler-home-feedback-cycle-package-copy-button" data-traveler-home-feedback-cycle-package-copy>复制闭环总包</button>
+          <button type="button" id="traveler-home-feedback-cycle-package-download-button" data-traveler-home-feedback-cycle-package-download>下载Markdown</button>
+          <button type="button" class="primary" id="traveler-home-feedback-cycle-package-json-download-button" data-traveler-home-feedback-cycle-package-json-download>下载JSON</button>
+        </div>
+        <div id="traveler-home-feedback-cycle-package-summary" class="traveler-feedback-cycle-package-summary" aria-live="polite"></div>
+        <div id="traveler-home-feedback-cycle-package-list" class="traveler-feedback-cycle-package-list"></div>
+        <textarea id="traveler-home-feedback-cycle-package-output" readonly rows="8" aria-label="反馈闭环总包 Markdown"></textarea>
+        <textarea id="traveler-home-feedback-cycle-package-json-output" readonly rows="7" aria-label="反馈闭环总包 JSON"></textarea>
+        <p id="traveler-home-feedback-cycle-package-status" class="traveler-feedback-status" aria-live="polite"></p>
       </div>
     </div>
   </div>
@@ -3475,6 +3502,7 @@
       renderTravelerHomeFeedbackApplicationPackage();
       renderTravelerHomeFeedbackApplyPreview();
       renderTravelerHomeFeedbackPublishAdoption();
+      renderTravelerHomeFeedbackCyclePackage();
       renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
@@ -3488,6 +3516,7 @@
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
     renderTravelerHomeFeedbackPublishAdoption();
+    renderTravelerHomeFeedbackCyclePackage();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3536,6 +3565,7 @@
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
     renderTravelerHomeFeedbackPublishAdoption();
+    renderTravelerHomeFeedbackCyclePackage();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -4447,6 +4477,166 @@
     if (status) status.textContent = '已下载发布采纳包 JSON。';
     return {filename, payload};
   }
+  function travelerHomeFeedbackCyclePackageStages(){
+    const feedback = travelerHomeFeedbackBoardRecords();
+    const revision = travelerHomeFeedbackRevisionPlanPayload();
+    const drafts = travelerHomeFeedbackDraftCandidatePayload();
+    const applications = travelerHomeFeedbackApplicationPackagePayload();
+    const previews = travelerHomeFeedbackApplyPreviewPayload();
+    const adoption = travelerHomeFeedbackPublishAdoptionPayload();
+    return [
+      {stage_key:'feedback_import', stage_name:'反馈导入', item_count: feedback.length, status: feedback.length ? '已生成' : '待导入', evidence: `${feedback.length} 条反馈已进入处理队列。`, next_action: feedback.length ? '继续复核修改建议。' : '先导入试用反馈包。'},
+      {stage_key:'revision_plan', stage_name:'下一版修改建议', item_count: revision.summary.feedback_count || 0, status: revision.summary.feedback_count ? '已生成' : '待生成', evidence: `覆盖 ${revision.summary.route_count || 0} 条路线，优先级：${revision.summary.next_version_priority || '待判断'}。`, next_action: '人工确认路线、地图、官方复核、平台文案的修改方向。'},
+      {stage_key:'draft_candidates', stage_name:'候选改稿草案', item_count: drafts.summary.candidate_count || 0, status: drafts.summary.candidate_count ? '已生成' : '待生成', evidence: `${drafts.summary.candidate_count || 0} 条候选草案待人工审稿。`, next_action: '确认哪些草案进入应用清单。'},
+      {stage_key:'application_package', stage_name:'确认应用清单', item_count: applications.summary.application_count || 0, status: applications.summary.application_count ? '已生成' : '待生成', evidence: `${applications.summary.pending_count || 0} 条待确认应用，${applications.summary.accepted_count || 0} 条已采纳。`, next_action: '人工确认每条应用项。'},
+      {stage_key:'apply_preview', stage_name:'确认后应用预览', item_count: previews.summary.preview_count || 0, status: previews.summary.preview_count ? '已生成' : '待生成', evidence: `${previews.summary.pending_confirmation_count || 0} 条差异待确认，正式内容未自动变更。`, next_action: '确认差异后交给维护者执行。'},
+      {stage_key:'publish_adoption', stage_name:'发布采纳包', item_count: adoption.summary.adoption_count || 0, status: adoption.summary.adoption_count ? '已生成' : '待生成', evidence: `${adoption.summary.pending_publish_count || 0} 条待发布采纳，按维护通道交接。`, next_action: '维护者按清单人工采纳并发布留档。'},
+    ];
+  }
+  function travelerHomeFeedbackCyclePackageSummary(stages){
+    const source = Array.isArray(stages) ? stages : travelerHomeFeedbackCyclePackageStages();
+    const feedbackSummary = travelerHomeFeedbackBoardSummary(travelerHomeFeedbackBoardRecords());
+    const adoptionPayload = travelerHomeFeedbackPublishAdoptionPayload();
+    const completeStageCount = source.filter(stage => stage.status === '已生成').length;
+    return {
+      feedback_count: feedbackSummary.total,
+      route_count: adoptionPayload.summary.route_count || 0,
+      stage_count: source.length,
+      complete_stage_count: completeStageCount,
+      publish_adoption_count: adoptionPayload.summary.adoption_count || 0,
+      formal_content_changed: false,
+      auto_publish_enabled: false,
+      handoff_ready: Boolean(adoptionPayload.summary.handoff_ready),
+      overall_status: completeStageCount === source.length && feedbackSummary.total ? '反馈到发布采纳闭环已跑通' : '反馈闭环待补齐',
+      next_step: adoptionPayload.summary.handoff_ready ? '维护者按闭环总包执行发布采纳并留档' : '先补齐反馈闭环产物',
+    };
+  }
+  let travelerHomeFeedbackCyclePackageGeneratedAt = '';
+  function travelerHomeFeedbackCyclePackageTimestamp(){
+    if (!travelerHomeFeedbackCyclePackageGeneratedAt) travelerHomeFeedbackCyclePackageGeneratedAt = new Date().toISOString();
+    return travelerHomeFeedbackCyclePackageGeneratedAt;
+  }
+  function travelerHomeFeedbackCyclePackagePayload(){
+    const stages = travelerHomeFeedbackCyclePackageStages();
+    const summary = travelerHomeFeedbackCyclePackageSummary(stages);
+    const publishAdoptionPayload = travelerHomeFeedbackPublishAdoptionPayload();
+    return {
+      kind: 'shanghai_trial_feedback_cycle_package',
+      version: 1,
+      generated_at: travelerHomeFeedbackCyclePackageTimestamp(),
+      source_url: window.location?.href || '',
+      summary,
+      stages,
+      publish_adoption_items: publishAdoptionPayload.items,
+      safety_boundary: '闭环总包只汇总和交接；不会自动发布或覆盖正式内容；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: ['维护者按闭环总包逐项执行发布采纳。', '采纳前完成官方复核、移动端检查、平台审稿和回退留档。', '采纳后重新构建并跑测试、线上截图和控制台验收。'],
+    };
+  }
+  function travelerHomeFeedbackCyclePackageMarkdown(){
+    const payload = travelerHomeFeedbackCyclePackagePayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海试用反馈闭环总包',
+      '',
+      '## 总结论',
+      `- 总体状态：${summary.overall_status}`,
+      `- 闭环阶段：${summary.complete_stage_count}/${summary.stage_count}`,
+      `- 反馈数量：${summary.feedback_count} 条`,
+      `- 发布采纳：${summary.publish_adoption_count} 条`,
+      `- 正式内容变更：${summary.formal_content_changed ? '是' : '否'}`,
+      `- 下一步：${summary.next_step}`,
+      '',
+      '## 阶段总览',
+    ];
+    payload.stages.forEach((stage, index) => {
+      lines.push(`${index + 1}. [${stage.status}] ${stage.stage_name}：${stage.item_count} 条`);
+      lines.push(`   - 证据：${stage.evidence}`);
+      lines.push(`   - 下一步：${stage.next_action}`);
+    });
+    lines.push('', '## 发布采纳摘要');
+    if (!payload.publish_adoption_items.length) {
+      lines.push('- 暂无发布采纳项，先补齐确认后应用预览。');
+    } else {
+      payload.publish_adoption_items.forEach((item, index) => {
+        lines.push(`${index + 1}. ${item.publish_channel}｜${item.route_title}｜${item.publish_status}`);
+        lines.push(`   - 采纳动作：${item.publish_action}`);
+        lines.push(`   - 发布前检查：${item.publish_check}`);
+      });
+    }
+    lines.push('', '## 闭环边界');
+    lines.push('- 闭环总包只汇总和交接，不会自动发布或覆盖正式内容。');
+    lines.push('- 人工采纳、复核、测试通过后再进入正式发布。');
+    lines.push('- 官方开放、预约、票务、交通和临时闭馆仍以官方渠道复核为准。');
+    lines.push('- 平台表达必须人工审稿，不复制第三方平台原文。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；闭环总包只作为维护者执行和留档依据。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFeedbackCyclePackage(){
+    const payload = travelerHomeFeedbackCyclePackagePayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-feedback-cycle-package-summary');
+    const listTarget = document.getElementById('traveler-home-feedback-cycle-package-list');
+    const output = document.getElementById('traveler-home-feedback-cycle-package-output');
+    const jsonOutput = document.getElementById('traveler-home-feedback-cycle-package-json-output');
+    const status = document.getElementById('traveler-home-feedback-cycle-package-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>闭环 ${summary.complete_stage_count}/${summary.stage_count}</span><span>反馈 ${summary.feedback_count} 条</span><span>采纳 ${summary.publish_adoption_count} 条</span><span>${summary.handoff_ready ? '可交接' : '待补齐'}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.stages.map(stage => `<article><b>${escapeHtml(stage.status)}｜${escapeHtml(stage.stage_name)}｜${escapeHtml(String(stage.item_count))} 条</b><span>${escapeHtml(stage.evidence)}</span><span>${escapeHtml(stage.next_action)}</span></article>`).join('') + (payload.publish_adoption_items.length ? payload.publish_adoption_items.map(item => `<article><b>${escapeHtml(item.publish_channel)}｜${escapeHtml(item.route_title)}</b><span>${escapeHtml(item.publish_status)}</span><span>${escapeHtml(item.publish_action)}</span></article>`).join('') : '');
+    const text = travelerHomeFeedbackCyclePackageMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.summary.handoff_ready ? '反馈闭环总包已生成。' : '反馈闭环总包待补齐。';
+    return text;
+  }
+  function travelerHomeFeedbackCyclePackageFilename(){
+    return 'shanghai-trial-feedback-cycle-package.md';
+  }
+  function travelerHomeFeedbackCyclePackageJsonFilename(){
+    return 'shanghai-trial-feedback-cycle-package.json';
+  }
+  async function copyTravelerHomeFeedbackCyclePackageMarkdown(){
+    const text = renderTravelerHomeFeedbackCyclePackage();
+    const status = document.getElementById('traveler-home-feedback-cycle-package-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制反馈闭环总包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制反馈闭环总包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFeedbackCyclePackageMarkdown(){
+    const text = renderTravelerHomeFeedbackCyclePackage();
+    const filename = travelerHomeFeedbackCyclePackageFilename();
+    const status = document.getElementById('traveler-home-feedback-cycle-package-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载反馈闭环总包 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeFeedbackCyclePackageJson(){
+    renderTravelerHomeFeedbackCyclePackage();
+    const payload = travelerHomeFeedbackCyclePackagePayload();
+    const filename = travelerHomeFeedbackCyclePackageJsonFilename();
+    const status = document.getElementById('traveler-home-feedback-cycle-package-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载反馈闭环总包 JSON。';
+    return {filename, payload};
+  }
   function travelerHomeContentUpdatePackageSummary(){
     const materials = travelerHomeContentIntakeBoardRecords();
     const officialTasks = travelerHomeOfficialVerificationTasks();
@@ -4712,6 +4902,7 @@
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
     renderTravelerHomeFeedbackPublishAdoption();
+    renderTravelerHomeFeedbackCyclePackage();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
@@ -7326,6 +7517,9 @@
   document.getElementById('traveler-home-feedback-publish-adoption-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackPublishAdoptionMarkdown);
   document.getElementById('traveler-home-feedback-publish-adoption-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackPublishAdoptionMarkdown);
   document.getElementById('traveler-home-feedback-publish-adoption-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackPublishAdoptionJson);
+  document.getElementById('traveler-home-feedback-cycle-package-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackCyclePackageMarkdown);
+  document.getElementById('traveler-home-feedback-cycle-package-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackCyclePackageMarkdown);
+  document.getElementById('traveler-home-feedback-cycle-package-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackCyclePackageJson);
   document.getElementById('traveler-home-content-update-package-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-content-update-package-status'); renderTravelerHomeContentUpdatePackage(); if (status) status.textContent = '内容更新发布包已更新。'; });
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
@@ -7422,6 +7616,7 @@
   renderTravelerHomeFeedbackApplicationPackage();
   renderTravelerHomeFeedbackApplyPreview();
   renderTravelerHomeFeedbackPublishAdoption();
+  renderTravelerHomeFeedbackCyclePackage();
   renderTravelerHomeContentUpdatePackage();
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();

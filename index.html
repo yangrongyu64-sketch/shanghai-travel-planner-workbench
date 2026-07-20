@@ -253,6 +253,16 @@
     .traveler-feedback-apply-preview-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
     .traveler-feedback-apply-preview-list b{font-size:13px;line-height:1.25}
     .traveler-feedback-apply-preview-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-feedback-publish-adoption{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+    .traveler-feedback-publish-adoption p{margin:0;color:var(--brick);font-size:12px;font-weight:900}
+    .traveler-feedback-publish-adoption h3{margin:2px 0 0;font-size:18px;line-height:1.2;letter-spacing:0}
+    .traveler-feedback-publish-adoption small{margin-top:4px}
+    .traveler-feedback-publish-adoption-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+    .traveler-feedback-publish-adoption-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-feedback-publish-adoption-list{display:grid;gap:8px}
+    .traveler-feedback-publish-adoption-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-feedback-publish-adoption-list b{font-size:13px;line-height:1.25}
+    .traveler-feedback-publish-adoption-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-content-package{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-content-package-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-content-package h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -1061,6 +1071,23 @@
         <textarea id="traveler-home-feedback-apply-preview-output" readonly rows="8" aria-label="确认后应用预览 Markdown"></textarea>
         <textarea id="traveler-home-feedback-apply-preview-json-output" readonly rows="7" aria-label="确认后应用预览 JSON"></textarea>
         <p id="traveler-home-feedback-apply-preview-status" class="traveler-feedback-status" aria-live="polite"></p>
+      </div>
+      <div id="traveler-home-feedback-publish-adoption" class="traveler-feedback-publish-adoption" aria-label="发布采纳包">
+        <div>
+          <p>发布采纳</p>
+          <h3>发布采纳包</h3>
+          <small>把确认后的差异预览整理成维护者执行清单，人工采纳、复核、测试通过后再进入正式发布。</small>
+        </div>
+        <div class="traveler-feedback-actions">
+          <button type="button" id="traveler-home-feedback-publish-adoption-copy-button" data-traveler-home-feedback-publish-adoption-copy>复制采纳包</button>
+          <button type="button" id="traveler-home-feedback-publish-adoption-download-button" data-traveler-home-feedback-publish-adoption-download>下载Markdown</button>
+          <button type="button" class="primary" id="traveler-home-feedback-publish-adoption-json-download-button" data-traveler-home-feedback-publish-adoption-json-download>下载JSON</button>
+        </div>
+        <div id="traveler-home-feedback-publish-adoption-summary" class="traveler-feedback-publish-adoption-summary" aria-live="polite"></div>
+        <div id="traveler-home-feedback-publish-adoption-list" class="traveler-feedback-publish-adoption-list"></div>
+        <textarea id="traveler-home-feedback-publish-adoption-output" readonly rows="8" aria-label="发布采纳包 Markdown"></textarea>
+        <textarea id="traveler-home-feedback-publish-adoption-json-output" readonly rows="7" aria-label="发布采纳包 JSON"></textarea>
+        <p id="traveler-home-feedback-publish-adoption-status" class="traveler-feedback-status" aria-live="polite"></p>
       </div>
     </div>
   </div>
@@ -3447,6 +3474,7 @@
       renderTravelerHomeFeedbackDraftCandidate();
       renderTravelerHomeFeedbackApplicationPackage();
       renderTravelerHomeFeedbackApplyPreview();
+      renderTravelerHomeFeedbackPublishAdoption();
       renderTravelerHomeFreshnessRadar();
       return {count:0};
     }
@@ -3459,6 +3487,7 @@
     renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
+    renderTravelerHomeFeedbackPublishAdoption();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -3506,6 +3535,7 @@
     renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
+    renderTravelerHomeFeedbackPublishAdoption();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
@@ -4235,6 +4265,188 @@
     if (status) status.textContent = '已下载确认后应用预览 JSON。';
     return {filename, payload};
   }
+  function travelerHomeFeedbackPublishAdoptionChannel(item){
+    const target = String(item?.target_area || '').trim();
+    if (target === '路线图') return '地图维护';
+    if (target === '官方复核') return '官方复核';
+    if (target === '平台文案') return '平台发布';
+    if (target === '小程序迁移') return '小程序交接';
+    if (target === '路线正文') return '路线维护';
+    return '工作台维护';
+  }
+  function travelerHomeFeedbackPublishAdoptionOwner(item){
+    const channel = travelerHomeFeedbackPublishAdoptionChannel(item);
+    if (channel === '地图维护') return '路线地图维护者';
+    if (channel === '官方复核') return '官方信息复核者';
+    if (channel === '平台发布') return '内容发布维护者';
+    if (channel === '小程序交接') return '小程序交接维护者';
+    if (channel === '路线维护') return '路线内容维护者';
+    return '工作台维护者';
+  }
+  function travelerHomeFeedbackPublishAdoptionCheck(item){
+    const channel = travelerHomeFeedbackPublishAdoptionChannel(item);
+    if (channel === '地图维护') return '确认点位顺序、步行/骑行方向、换乘提示和移动端地图展示。';
+    if (channel === '官方复核') return '确认官方开放、预约、票务、交通和临时闭馆，再写入发布说明。';
+    if (channel === '平台发布') return '人工审稿，确认表达像真人分享且不复制第三方平台原文。';
+    if (channel === '小程序交接') return '确认字段、页面入口、交互和验收截图后再交接开发。';
+    if (channel === '路线维护') return '确认路线节奏、备用方案和同行提示后再发布。';
+    return '确认归属模块、发布位置、复核证据和回退方式。';
+  }
+  function travelerHomeFeedbackPublishAdoptionItems(){
+    return travelerHomeFeedbackApplyPreviewItems().map(item => ({
+      feedback_id: item.feedback_id,
+      route_id: item.route_id || '',
+      route_title: item.route_title || '未关联路线',
+      priority: item.priority || 'P3',
+      target_area: item.target_area || '综合体验',
+      publish_channel: travelerHomeFeedbackPublishAdoptionChannel(item),
+      publish_owner: travelerHomeFeedbackPublishAdoptionOwner(item),
+      publish_status: '待发布采纳',
+      source_preview_status: item.preview_status || '待人工确认',
+      formal_content_changed: false,
+      publish_action: item.after_preview || '暂无确认后预览，需人工补齐后再采纳。',
+      publish_check: travelerHomeFeedbackPublishAdoptionCheck(item),
+      evidence_required: '发布前保留确认截图、测试结果、来源复核日期和回退说明。',
+      rollback_note: item.rollback_note || `如发布后反馈不佳，按反馈 ID ${item.feedback_id || '未标注'} 回退到确认前正式内容。`,
+    }));
+  }
+  function travelerHomeFeedbackPublishAdoptionSummary(items){
+    const source = Array.isArray(items) ? items : travelerHomeFeedbackPublishAdoptionItems();
+    const routeKeys = new Set(source.map(item => item.route_id || item.route_title).filter(Boolean));
+    const channelCounts = source.reduce((counts, item) => { counts[item.publish_channel] = (counts[item.publish_channel] || 0) + 1; return counts; }, {});
+    const pendingPublishCount = source.filter(item => item.publish_status === '待发布采纳').length;
+    return {
+      adoption_count: source.length,
+      route_count: routeKeys.size,
+      pending_publish_count: pendingPublishCount,
+      channel_counts: channelCounts,
+      formal_content_changed: false,
+      auto_publish_enabled: false,
+      handoff_ready: source.length > 0,
+      next_step: source.length ? '维护者按清单人工采纳并发布留档' : '等待确认后应用预览',
+    };
+  }
+  let travelerHomeFeedbackPublishAdoptionGeneratedAt = '';
+  function travelerHomeFeedbackPublishAdoptionTimestamp(){
+    if (!travelerHomeFeedbackPublishAdoptionGeneratedAt) travelerHomeFeedbackPublishAdoptionGeneratedAt = new Date().toISOString();
+    return travelerHomeFeedbackPublishAdoptionGeneratedAt;
+  }
+  function travelerHomeFeedbackPublishAdoptionPayload(){
+    const items = travelerHomeFeedbackPublishAdoptionItems();
+    const summary = travelerHomeFeedbackPublishAdoptionSummary(items);
+    return {
+      kind: 'shanghai_trial_feedback_publish_adoption_package',
+      version: 1,
+      generated_at: travelerHomeFeedbackPublishAdoptionTimestamp(),
+      source_url: window.location?.href || '',
+      summary,
+      items,
+      safety_boundary: '发布采纳包只生成执行清单；不会自动发布或覆盖正式内容；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: ['维护者逐条人工采纳。', '采纳前完成官方复核、移动端检查、平台审稿和回退留档。', '采纳后重新构建并跑测试、线上截图和控制台验收。'],
+    };
+  }
+  function travelerHomeFeedbackPublishAdoptionMarkdown(){
+    const payload = travelerHomeFeedbackPublishAdoptionPayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海试用反馈发布采纳包',
+      '',
+      '## 总结论',
+      `- 待采纳发布：${summary.adoption_count} 条`,
+      `- 待发布处理：${summary.pending_publish_count} 条`,
+      `- 涉及路线：${summary.route_count} 条`,
+      `- 可交接：${summary.handoff_ready ? '是' : '否'}`,
+      `- 正式内容变更：${summary.formal_content_changed ? '是' : '否'}`,
+      `- 下一步：${summary.next_step}`,
+      '',
+      '## 发布采纳清单',
+    ];
+    if (!payload.items.length) {
+      lines.push('- 暂无发布采纳项，先导入反馈并生成确认后应用预览。');
+    } else {
+      payload.items.forEach((item, index) => {
+        lines.push(`${index + 1}. [${item.priority}/${item.publish_status}] ${item.publish_channel}｜${item.route_title}`);
+        lines.push(`   - 负责人：${item.publish_owner}`);
+        lines.push(`   - 采纳动作：${item.publish_action}`);
+        lines.push(`   - 发布前检查：${item.publish_check}`);
+        lines.push(`   - 证据要求：${item.evidence_required}`);
+        lines.push(`   - 回退说明：${item.rollback_note}`);
+      });
+    }
+    lines.push('', '## 发布执行边界');
+    lines.push('- 人工采纳、复核、测试通过后再进入正式发布。');
+    lines.push('- 发布采纳包只生成执行清单，不会自动发布或覆盖正式内容。');
+    lines.push('- 官方开放、预约、票务、交通和临时闭馆仍以官方渠道复核为准。');
+    lines.push('- 平台表达必须人工审稿，不复制第三方平台原文。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；发布采纳包只作为维护者执行依据。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeFeedbackPublishAdoption(){
+    const payload = travelerHomeFeedbackPublishAdoptionPayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-feedback-publish-adoption-summary');
+    const listTarget = document.getElementById('traveler-home-feedback-publish-adoption-list');
+    const output = document.getElementById('traveler-home-feedback-publish-adoption-output');
+    const jsonOutput = document.getElementById('traveler-home-feedback-publish-adoption-json-output');
+    const status = document.getElementById('traveler-home-feedback-publish-adoption-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>采纳 ${summary.adoption_count} 条</span><span>待发布 ${summary.pending_publish_count} 条</span><span>路线 ${summary.route_count} 条</span><span>${summary.handoff_ready ? '可交接' : '待预览'}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.items.length ? payload.items.map(item => `<article><b>${escapeHtml(item.priority)}｜${escapeHtml(item.publish_channel)}｜${escapeHtml(item.route_title)}</b><span>${escapeHtml(item.publish_status)}｜${escapeHtml(item.publish_owner)}</span><span>${escapeHtml(item.publish_action)}</span><span>${escapeHtml(item.publish_check)}</span><span>${escapeHtml(item.evidence_required)}</span></article>`).join('') : '<article><b>暂无发布采纳项</b><span>生成确认后应用预览后自动整理维护者执行清单。</span></article>';
+    const text = travelerHomeFeedbackPublishAdoptionMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.items.length ? '发布采纳包已生成。' : '暂无发布采纳包。';
+    return text;
+  }
+  function travelerHomeFeedbackPublishAdoptionFilename(){
+    return 'shanghai-trial-feedback-publish-adoption.md';
+  }
+  function travelerHomeFeedbackPublishAdoptionJsonFilename(){
+    return 'shanghai-trial-feedback-publish-adoption.json';
+  }
+  async function copyTravelerHomeFeedbackPublishAdoptionMarkdown(){
+    const text = renderTravelerHomeFeedbackPublishAdoption();
+    const status = document.getElementById('traveler-home-feedback-publish-adoption-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制发布采纳包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制发布采纳包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeFeedbackPublishAdoptionMarkdown(){
+    const text = renderTravelerHomeFeedbackPublishAdoption();
+    const filename = travelerHomeFeedbackPublishAdoptionFilename();
+    const status = document.getElementById('traveler-home-feedback-publish-adoption-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载发布采纳包 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeFeedbackPublishAdoptionJson(){
+    renderTravelerHomeFeedbackPublishAdoption();
+    const payload = travelerHomeFeedbackPublishAdoptionPayload();
+    const filename = travelerHomeFeedbackPublishAdoptionJsonFilename();
+    const status = document.getElementById('traveler-home-feedback-publish-adoption-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载发布采纳包 JSON。';
+    return {filename, payload};
+  }
   function travelerHomeContentUpdatePackageSummary(){
     const materials = travelerHomeContentIntakeBoardRecords();
     const officialTasks = travelerHomeOfficialVerificationTasks();
@@ -4499,6 +4711,7 @@
     renderTravelerHomeFeedbackDraftCandidate();
     renderTravelerHomeFeedbackApplicationPackage();
     renderTravelerHomeFeedbackApplyPreview();
+    renderTravelerHomeFeedbackPublishAdoption();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
@@ -7110,6 +7323,9 @@
   document.getElementById('traveler-home-feedback-apply-preview-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackApplyPreviewMarkdown);
   document.getElementById('traveler-home-feedback-apply-preview-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackApplyPreviewMarkdown);
   document.getElementById('traveler-home-feedback-apply-preview-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackApplyPreviewJson);
+  document.getElementById('traveler-home-feedback-publish-adoption-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackPublishAdoptionMarkdown);
+  document.getElementById('traveler-home-feedback-publish-adoption-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackPublishAdoptionMarkdown);
+  document.getElementById('traveler-home-feedback-publish-adoption-json-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackPublishAdoptionJson);
   document.getElementById('traveler-home-content-update-package-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-content-update-package-status'); renderTravelerHomeContentUpdatePackage(); if (status) status.textContent = '内容更新发布包已更新。'; });
   document.getElementById('traveler-home-content-update-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdatePackageMarkdown);
   document.getElementById('traveler-home-content-update-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdatePackageMarkdown);
@@ -7205,6 +7421,7 @@
   renderTravelerHomeFeedbackDraftCandidate();
   renderTravelerHomeFeedbackApplicationPackage();
   renderTravelerHomeFeedbackApplyPreview();
+  renderTravelerHomeFeedbackPublishAdoption();
   renderTravelerHomeContentUpdatePackage();
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();

@@ -322,6 +322,8 @@
     .traveler-day-execution-controls{display:grid;grid-template-columns:repeat(2,minmax(0,180px));gap:8px}
     .traveler-day-execution-controls label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
     .traveler-day-execution-controls select{height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
+    .traveler-post-trip-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-post-trip-review h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
     .traveler-handoff-import label{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -1103,6 +1105,17 @@
       </div>
       <textarea id="traveler-home-day-execution-output" readonly rows="10" aria-label="行中执行简报内容"></textarea>
       <p id="traveler-home-day-execution-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-post-trip-review" class="traveler-post-trip-review" aria-label="旅行后复盘包">
+      <div class="traveler-social-card-head">
+        <h3>旅行后复盘包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-post-trip-review-copy-button" data-traveler-home-post-trip-review-copy>复制复盘包</button>
+          <button type="button" class="primary" id="traveler-home-post-trip-review-download-button" data-traveler-home-post-trip-review-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-post-trip-review-output" readonly rows="10" aria-label="旅行后复盘包内容"></textarea>
+      <p id="traveler-home-post-trip-review-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
   </section>
   <section class="traveler-controls" aria-label="路线筛选">
@@ -2461,6 +2474,7 @@
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
+    renderTravelerHomePostTripReview();
     if (status) status.textContent = `已导入 ${records.length} 条反馈。`;
     return {count:records.length};
   }
@@ -2502,6 +2516,7 @@
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeContentUpdatePackage();
     renderTravelerHomeReleaseRegressionCenter();
+    renderTravelerHomePostTripReview();
     const status = document.getElementById('traveler-home-feedback-board-status');
     if (status) status.textContent = '已清空反馈看板。';
     return state;
@@ -3191,6 +3206,7 @@
     renderTravelerHomeDepartureReview();
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
+    renderTravelerHomePostTripReview();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -3341,6 +3357,7 @@
     renderTravelerHomeDepartureReview();
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
+    renderTravelerHomePostTripReview();
     renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
     if (status) status.textContent = '首次试跑已完成：已选 2日躺平路线，并生成路线包、路线卡、平台文案、游记和交接包。';
     return {ok:true, routeId: recommendation?.route?.tripId || route?.tripId || '', handoffText};
@@ -3367,6 +3384,7 @@
     renderTravelerHomeDepartureReview();
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
+    renderTravelerHomePostTripReview();
     updateTravelerHomeMemoryStatus(state, isFavorite ? '已取消收藏。' : '已收藏这条路线。');
     return state;
   }
@@ -3478,6 +3496,7 @@
     renderTravelerHomeDepartureReview();
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
+    renderTravelerHomePostTripReview();
     return text;
   }
   function travelerHomeRoutePackFilename(){
@@ -3945,6 +3964,7 @@
     if (status) status.textContent = `已保存${travelerHomePlatformCopyLabel(target)}草稿。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomePostTripReview();
     renderTravelerHomeWorkflow();
     return text;
   }
@@ -4124,6 +4144,7 @@
     const text = travelerHomeTravelogueMarkdown();
     if (output) output.value = text;
     if (status) status.textContent = '已生成游记初稿。';
+    renderTravelerHomePostTripReview();
     return text;
   }
   async function copyTravelerHomeTravelogue(){
@@ -4539,6 +4560,7 @@
     const output = document.getElementById('traveler-home-day-execution-output');
     const text = travelerHomeDayExecutionMarkdown();
     if (output) output.value = text;
+    renderTravelerHomePostTripReview();
     return text;
   }
   async function copyTravelerHomeDayExecutionMarkdown(){
@@ -4569,6 +4591,109 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载行中执行简报。';
+    return {filename, text};
+  }
+  function travelerHomePostTripReviewRoute(){
+    return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || travelerHomeFirstTimeGuideRoute();
+  }
+  function travelerHomePostTripReviewFragments(){
+    applyTravelerHomeTravelogueFragments();
+    return travelerHomeTravelogueFragmentsText().split('\n').map(item => item.trim()).filter(Boolean);
+  }
+  function travelerHomePostTripReviewStops(route){
+    const selectedDay = travelerHomeDayExecutionSelectedDay(route);
+    const selectedStops = travelerHomeDayExecutionStopNames(selectedDay);
+    const allStops = travelerHomeDayExecutionDays(route).flatMap(day => travelerHomeDayExecutionStopNames(day));
+    const uniqueStops = Array.from(new Set((selectedStops.length ? selectedStops : allStops).filter(Boolean)));
+    return {selectedDay, selectedStops, allStops: Array.from(new Set(allStops.filter(Boolean))), uniqueStops};
+  }
+  function travelerHomePostTripReviewFeedbackLine(record){
+    const note = travelerHomeFeedbackBoardFirstLine(record.note) || '待补充具体体验。';
+    const nextAction = travelerHomeFeedbackBoardFirstLine(record.nextAction) || '回到路线、地图和文案复核。';
+    return `- [${record.severity}] ${record.type}：${note}；下一步：${nextAction}`;
+  }
+  function travelerHomePostTripReviewMarkdown(){
+    const route = travelerHomePostTripReviewRoute();
+    if (!route) return '# 上海旅行后复盘包\n\n当前还没有可复盘的路线。';
+    const preferences = travelerHomeStorageRead().preferences || travelerHomePreferenceInput();
+    const dayExecution = travelerHomeDayExecutionMarkdown();
+    const fragments = travelerHomePostTripReviewFragments();
+    const drafts = travelerHomePlatformDraftOverviewRows();
+    const feedback = travelerHomeFeedbackBoardRecords();
+    const feedbackSummary = travelerHomeFeedbackBoardSummary(feedback);
+    const stopState = travelerHomePostTripReviewStops(route);
+    const travelogue = document.getElementById('traveler-home-travelogue-output')?.value || travelerHomeTravelogueMarkdown();
+    const traveloguePreview = travelogue.split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#') && !line.startsWith('路线：') && !line.startsWith('偏好：') && !line.startsWith('攻略：') && !line.startsWith('地图：'))[0] || '游记初稿已生成，发布前补照片和真实感受。';
+    const lines = [
+      '# 上海旅行后复盘包',
+      '',
+      `路线：${route.scenario}｜${route.title}`,
+      `偏好：${travelerHomePreferenceLabel(preferences)}`,
+      `攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`,
+      `地图：${travelerHomeAbsoluteUrl(route.mapHref)}`,
+      '',
+      '## 实际体验回收',
+      `- 复盘日：Day ${stopState.selectedDay?.day || 1}` ,
+      `- 当天主线：${(stopState.selectedStops.length ? stopState.selectedStops : stopState.uniqueStops.slice(0, 4)).join(' → ') || '待补当天实际路线'}` ,
+      `- 行中简报：${travelerHomeDayExecutionStateLabel(travelerHomeDayExecutionState())}状态下已生成，可作为现场记录底稿。` ,
+      `- 反馈回收：${feedbackSummary.total} 条；阻塞使用 ${feedbackSummary.blocksUse} 条。` ,
+    ];
+    if (fragments.length) fragments.forEach(fragment => lines.push(`- 碎片：${fragment}`));
+    else lines.push('- 碎片：补当天最真实的天气、排队、好拍位置、踩坑和同行人状态。');
+    lines.push('', '## 游记素材');
+    lines.push(`- 可写点位：${(stopState.allStops.length ? stopState.allStops : stopState.uniqueStops).slice(0, 8).join(' / ') || '待补点位'}`);
+    lines.push(`- 情绪开头：${traveloguePreview}`);
+    fragments.slice(0, 5).forEach(fragment => lines.push(`- 现场句子：${fragment}`));
+    lines.push(`- 行程判断：这条路线的核心价值是“${route.primaryAngle}”，复盘时把好走/不好走、好拍/不好拍、值得/不值得写清楚。`);
+    lines.push('', '## 路线改进点');
+    lines.push('- 官方复核：开放、预约、票务和临时闭馆仍要回到官方渠道更新。');
+    lines.push('- 地图复核：把实际绕路、排队、封路、打车上车点和地铁口补回路线地图。');
+    lines.push('- 节奏复核：把低体力删减、雨天/高温替代、补给点是否够用写入下一版路线。');
+    if (feedback.length) feedback.slice(0, 4).forEach(record => lines.push(travelerHomePostTripReviewFeedbackLine(record)));
+    else lines.push('- 试用反馈：暂无反馈队列，下一次可用反馈包导入具体问题。');
+    lines.push('', '## 可发布内容');
+    drafts.forEach(row => lines.push(`- ${row.label}（${row.source}，${row.characters}字）：${row.preview}`));
+    lines.push('- 游记初稿：可从“游记生成包”继续补照片、餐厅细节和真实体验。');
+    lines.push('- 复盘短文：适合写成“这条路线哪些值得保留、哪些下次会删掉”的内容。');
+    lines.push('', '## 行中简报摘录');
+    dayExecution.split('\n').filter(line => line.trim() && !line.startsWith('#')).slice(0, 8).forEach(line => lines.push(`- ${line}`));
+    lines.push('', '发布前请复核开放、预约、票务和临时闭馆；平台文案必须改成真实体验口吻。');
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomePostTripReview(){
+    const output = document.getElementById('traveler-home-post-trip-review-output');
+    const text = travelerHomePostTripReviewMarkdown();
+    if (output) output.value = text;
+    return text;
+  }
+  async function copyTravelerHomePostTripReviewMarkdown(){
+    const text = renderTravelerHomePostTripReview();
+    const status = document.getElementById('traveler-home-post-trip-review-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制旅行后复盘包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制复盘包。';
+    }
+    return text;
+  }
+  function travelerHomePostTripReviewFilename(){
+    return 'shanghai-post-trip-review.md';
+  }
+  function downloadTravelerHomePostTripReviewMarkdown(){
+    const text = renderTravelerHomePostTripReview();
+    const filename = travelerHomePostTripReviewFilename();
+    const status = document.getElementById('traveler-home-post-trip-review-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载旅行后复盘包。';
     return {filename, text};
   }
   function travelerHomeHandoffSupportedPayload(payload){
@@ -4662,6 +4787,7 @@
     renderTravelerHomeHandoff({silent:true});
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
+    renderTravelerHomePostTripReview();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), message || '已恢复导入的行程交接包。');
   }
   function restoreTravelerHomeHandoffPayload(payload){
@@ -4727,6 +4853,7 @@
       if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}本地草稿。`;
       renderTravelerHomePlatformDraftOverview();
       renderTravelerHomeTravelogue();
+      renderTravelerHomePostTripReview();
       renderTravelerHomeWorkflow();
       return savedDraft;
     }
@@ -4734,6 +4861,7 @@
     if (status) status.textContent = `已生成${travelerHomePlatformCopyLabel(target)}。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomePostTripReview();
     renderTravelerHomeWorkflow();
     return text;
   }
@@ -4747,6 +4875,7 @@
     if (status) status.textContent = `已恢复${travelerHomePlatformCopyLabel(target)}原文。`;
     renderTravelerHomePlatformDraftOverview();
     renderTravelerHomeTravelogue();
+    renderTravelerHomePostTripReview();
     renderTravelerHomeWorkflow();
     return travelerHomePlatformCopyGeneratedText;
   }
@@ -4898,6 +5027,8 @@
   document.getElementById('traveler-home-pretrip-toolkit-download-button')?.addEventListener('click', downloadTravelerHomePretripToolkitMarkdown);
   document.getElementById('traveler-home-day-execution-copy-button')?.addEventListener('click', copyTravelerHomeDayExecutionMarkdown);
   document.getElementById('traveler-home-day-execution-download-button')?.addEventListener('click', downloadTravelerHomeDayExecutionMarkdown);
+  document.getElementById('traveler-home-post-trip-review-copy-button')?.addEventListener('click', copyTravelerHomePostTripReviewMarkdown);
+  document.getElementById('traveler-home-post-trip-review-download-button')?.addEventListener('click', downloadTravelerHomePostTripReviewMarkdown);
   ['traveler-home-day-execution-day','traveler-home-day-execution-state'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-day-execution-status'); renderTravelerHomeDayExecution(); if (status) status.textContent = '行中执行简报已随现场状态更新。'; }));
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
@@ -4956,6 +5087,7 @@
   renderTravelerHomeDepartureReview();
   renderTravelerHomePretripToolkit();
   renderTravelerHomeDayExecution();
+  renderTravelerHomePostTripReview();
   renderTravelerHomeWorkflow();
 </script>
 </body>

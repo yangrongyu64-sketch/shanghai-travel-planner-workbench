@@ -218,6 +218,22 @@
     .traveler-content-package-import-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .traveler-content-package-import-actions input[type=file]{min-height:36px;max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px;color:var(--ink)}
     .traveler-content-package-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-prepublish-gate{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
+    .traveler-prepublish-gate-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
+    .traveler-prepublish-gate h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
+    .traveler-prepublish-gate small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
+    .traveler-prepublish-gate-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .traveler-prepublish-gate-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-prepublish-gate-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-prepublish-gate-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;margin-top:10px}
+    .traveler-prepublish-gate-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-prepublish-gate-list{display:grid;gap:8px;margin-top:8px}
+    .traveler-prepublish-gate-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-prepublish-gate-list b{font-size:13px;line-height:1.25}
+    .traveler-prepublish-gate-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-prepublish-gate textarea{width:100%;min-height:210px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    #traveler-home-prepublish-data-gate-json-output{min-height:172px}
+    .traveler-prepublish-gate-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-release-regression{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-release-regression-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-release-regression h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -358,7 +374,7 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
     @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions{justify-content:flex-start}}
@@ -509,6 +525,11 @@
       <b>更新发布包</b>
       <small>把素材和反馈合并</small>
       <button type="button" data-traveler-home-operator-tool-target="traveler-home-content-update-package">进入</button>
+    </article>
+    <article class="traveler-operator-tool-card">
+      <b>发布闸口</b>
+      <small>上线前总判断</small>
+      <button type="button" data-traveler-home-operator-tool-target="traveler-home-prepublish-data-gate">进入</button>
     </article>
     <article class="traveler-operator-tool-card">
       <b>发布回归</b>
@@ -932,6 +953,26 @@
       </div>
     </div>
     <p id="traveler-home-content-update-package-status" class="traveler-content-package-status" aria-live="polite"></p>
+  </div>
+</section>
+<section id="traveler-home-prepublish-data-gate" class="traveler-prepublish-gate" aria-label="发布前数据更新总闸口">
+  <div class="traveler-prepublish-gate-head">
+    <p>发布闸口</p>
+    <h2>发布前数据更新总闸口</h2>
+    <small>把官方复核合并、素材队列、试用反馈、地图准备度、发布回归和留档目标汇总成一次上线判断。</small>
+  </div>
+  <div>
+    <div class="traveler-prepublish-gate-actions">
+      <button type="button" class="primary" id="traveler-home-prepublish-data-gate-build-button" data-traveler-home-prepublish-data-gate-build>生成总闸口</button>
+      <button type="button" id="traveler-home-prepublish-data-gate-copy-button" data-traveler-home-prepublish-data-gate-copy>复制总闸口</button>
+      <button type="button" id="traveler-home-prepublish-data-gate-download-button" data-traveler-home-prepublish-data-gate-download>下载 Markdown</button>
+      <button type="button" id="traveler-home-prepublish-data-gate-json-download-button" data-traveler-home-prepublish-data-gate-json-download>下载 JSON</button>
+    </div>
+    <div id="traveler-home-prepublish-data-gate-summary" class="traveler-prepublish-gate-summary" aria-live="polite"></div>
+    <div id="traveler-home-prepublish-data-gate-list" class="traveler-prepublish-gate-list"></div>
+    <textarea id="traveler-home-prepublish-data-gate-output" readonly rows="11" aria-label="发布前数据更新总闸口 Markdown"></textarea>
+    <textarea id="traveler-home-prepublish-data-gate-json-output" readonly rows="9" aria-label="发布前数据更新总闸口 JSON"></textarea>
+    <p id="traveler-home-prepublish-data-gate-status" class="traveler-prepublish-gate-status" aria-live="polite"></p>
   </div>
 </section>
 <section id="traveler-home-release-regression" class="traveler-release-regression" aria-label="发布后回归中心">
@@ -2986,6 +3027,7 @@
       travelerHomeStorageWrite(state);
       renderTravelerHomeOfficialFillbackMergePreview();
       renderTravelerHomeOfficialFillbackMergeResult();
+      renderTravelerHomePrepublishDataGate();
       const summary = travelerHomeOfficialFillbackMergePreviewSummary();
       if (status) status.textContent = `已导入 ${summary.records} 条官方复核回填记录，已生成合并预览。`;
       return {ok:true, records:summary.records, mergeable:summary.mergeable, unknown:summary.unknown, incomplete:summary.incomplete};
@@ -3023,6 +3065,7 @@
     if (input) input.value = '';
     renderTravelerHomeOfficialFillbackMergePreview();
     renderTravelerHomeOfficialFillbackMergeResult();
+    renderTravelerHomePrepublishDataGate();
     const status = document.getElementById('traveler-home-official-fillback-status');
     if (status) status.textContent = '已清空官方复核合并预览。';
     return {ok:true};
@@ -3438,6 +3481,7 @@
     const text = travelerHomeContentUpdatePackageMarkdown();
     if (output) output.value = text;
     if (status && !status.textContent) status.textContent = summary.materials || summary.feedback ? '内容更新发布包已生成。' : '暂无内容更新发布包。';
+    renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomeReleaseAuditPackage();
     return text;
@@ -3581,6 +3625,7 @@
     renderTravelerHomeOfficialVerificationFlow();
     renderTravelerHomeFeedbackBoard();
     renderTravelerHomeContentUpdatePackage();
+    renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomeReleaseAuditPackage();
   }
@@ -3638,6 +3683,226 @@
       if (status) status.textContent = '导入失败：无法读取 JSON 文件。';
       return {ok:false, reason:'read_failed'};
     }
+  }
+  function travelerHomePrepublishDataGateMapSummary(){
+    const readyRoutes = TRAVELER_HOME_ROUTES.filter(route => Array.isArray(route.mapDays) && route.mapDays.length && route.mapHref);
+    const missingRoutes = TRAVELER_HOME_ROUTES.filter(route => !Array.isArray(route.mapDays) || !route.mapDays.length || !route.mapHref);
+    return {
+      ready: readyRoutes.length,
+      missing: missingRoutes.length,
+      ready_routes: readyRoutes.map(route => ({route_id: route.tripId, route_title: `${route.scenario}｜${route.title}`, map_href: route.mapHref, day_count: route.mapDays.length})),
+      missing_routes: missingRoutes.map(route => ({route_id: route.tripId, route_title: `${route.scenario}｜${route.title}`, map_href: route.mapHref || '', day_count: Array.isArray(route.mapDays) ? route.mapDays.length : 0})),
+    };
+  }
+  function travelerHomePrepublishDataGateVerdict(summary){
+    if ((summary.blocking_feedback || 0) > 0 || (summary.official_skipped_unknown || 0) > 0 || (summary.official_skipped_incomplete || 0) > 0 || (summary.map_missing || 0) > 0) return '需处理后发布';
+    if ((summary.official_updated || 0) > 0 || (summary.materials || 0) > 0 || (summary.feedback || 0) > 0) return '可发布前复核';
+    return '基础可发布';
+  }
+  let travelerHomePrepublishDataGateGeneratedAt = '';
+  function travelerHomePrepublishDataGateTimestamp(){
+    if (!travelerHomePrepublishDataGateGeneratedAt) travelerHomePrepublishDataGateGeneratedAt = new Date().toISOString();
+    return travelerHomePrepublishDataGateGeneratedAt;
+  }
+  function travelerHomePrepublishDataGateSummary(){
+    const officialMerge = travelerHomeOfficialFillbackMergedJson();
+    const officialSummary = officialMerge.summary || {};
+    const materialSummary = travelerHomeContentIntakeBoardSummary();
+    const packageSummary = travelerHomeContentUpdatePackageSummary();
+    const feedbackSummary = travelerHomeFeedbackBoardSummary();
+    const freshnessSummary = travelerHomeFreshnessRadarSummary();
+    const mapSummary = travelerHomePrepublishDataGateMapSummary();
+    const regressionSummary = travelerHomeReleaseRegressionSummary();
+    const auditSummary = travelerHomeReleaseAuditPackageSummary();
+    const summary = {
+      deploy_id: travelerHomeReleaseDeployId(),
+      route_count: TRAVELER_HOME_ROUTES.length,
+      official_current: Number(officialSummary.current || 0),
+      official_imported: Number(officialSummary.imported || 0),
+      official_output: Number(officialSummary.output || 0),
+      official_updated: Number(officialSummary.updated || 0),
+      official_skipped_unknown: Number(officialSummary.skipped_unknown || 0),
+      official_skipped_incomplete: Number(officialSummary.skipped_incomplete || 0),
+      materials: materialSummary.total,
+      official_materials: materialSummary.official,
+      platform_materials: materialSummary.platform,
+      travelogue_materials: materialSummary.travelogue,
+      official_tasks: packageSummary.officialTasks,
+      feedback: feedbackSummary.total,
+      blocking_feedback: feedbackSummary.blocksUse,
+      map_ready: mapSummary.ready,
+      map_missing: mapSummary.missing,
+      freshness_high: freshnessSummary.high,
+      release_risk: regressionSummary.riskLevel,
+      test_result: auditSummary.testResult,
+      evidence: auditSummary.evidence,
+    };
+    summary.verdict = travelerHomePrepublishDataGateVerdict(summary);
+    return summary;
+  }
+  function travelerHomePrepublishDataGateChecks(summary){
+    const source = summary || travelerHomePrepublishDataGateSummary();
+    return [
+      {key:'official_merge', label:'官方复核合并', status: source.official_skipped_unknown || source.official_skipped_incomplete ? 'block' : (source.official_updated ? 'review' : 'pass'), detail:`更新 ${source.official_updated} 条；未知 ${source.official_skipped_unknown} 条；字段不完整 ${source.official_skipped_incomplete} 条。`},
+      {key:'materials', label:'内容素材', status: source.materials ? 'review' : 'pass', detail:`素材 ${source.materials} 条；官方 ${source.official_materials} 条；平台 ${source.platform_materials} 条；游记 ${source.travelogue_materials} 条。`},
+      {key:'feedback', label:'试用反馈', status: source.blocking_feedback ? 'block' : (source.feedback ? 'review' : 'pass'), detail:`反馈 ${source.feedback} 条；阻塞 ${source.blocking_feedback} 条。`},
+      {key:'map', label:'地图与路线', status: source.map_missing ? 'block' : 'pass', detail:`地图准备 ${source.map_ready}/${source.route_count} 条。`},
+      {key:'release', label:'发布回归与留档', status: source.test_result.includes('待填写') ? 'review' : 'pass', detail:`回归风险：${source.release_risk}；测试：${source.test_result}；证据：${source.evidence}。`},
+    ];
+  }
+  function travelerHomePrepublishDataGatePayload(){
+    const summary = travelerHomePrepublishDataGateSummary();
+    const officialMerge = travelerHomeOfficialFillbackMergedJson();
+    const mapSummary = travelerHomePrepublishDataGateMapSummary();
+    return {
+      kind: 'shanghai_prepublish_data_gate',
+      version: 1,
+      generated_at: travelerHomePrepublishDataGateTimestamp(),
+      source_url: window.location?.href || '',
+      summary,
+      checks: travelerHomePrepublishDataGateChecks(summary),
+      official_merge: {summary: officialMerge.summary, skipped_unknown_place_ids: officialMerge.skipped_unknown_place_ids || [], skipped_incomplete: officialMerge.skipped_incomplete || [], target_file: officialMerge.target_file},
+      materials: travelerHomeContentIntakeBoardRecords(),
+      feedback: travelerHomeFeedbackBoardRecords(),
+      map: mapSummary,
+      targets: {
+        official_verifications: 'data/official_verifications/place_verifications.json',
+        materials: 'data/materials',
+        site: 'outputs/workbench/site',
+        deploy_repo: 'work/deploy-pages',
+      },
+      artifacts: [
+        'place_verifications.merged.json',
+        'shanghai-official-fillback-merge-diff.md',
+        'shanghai-content-update-package.md',
+        'shanghai-release-regression-checklist.md',
+        'shanghai-release-audit-package.md',
+      ],
+      privacy_boundary: '只汇总本地结构化素材、反馈、地图和发布检查；不提交 API Key、账号、Cookie 或 Authorization 信息。',
+      next_actions: [
+        '处理阻塞反馈、未知点位和字段不完整的官方复核记录。',
+        '人工确认 place_verifications.merged.json 后再替换 data/official_verifications/place_verifications.json。',
+        '运行测试、重建 outputs/workbench/site，并同步到 work/deploy-pages。',
+        '发布后检查 shanghai-release-regression-checklist.md、移动端、控制台、复制下载和地图入口。',
+      ],
+    };
+  }
+  function travelerHomePrepublishDataGateMarkdown(){
+    const payload = travelerHomePrepublishDataGatePayload();
+    const summary = payload.summary;
+    const official = payload.official_merge || {};
+    const lines = [
+      '# 上海发布前数据更新总闸口',
+      '',
+      '## 总结论',
+      `- 发布判断：${summary.verdict}`,
+      `- Deploy 参数：${summary.deploy_id}`,
+      `- 路线覆盖：${summary.route_count} 条；地图准备：${summary.map_ready}/${summary.route_count}`,
+      `- 素材：${summary.materials} 条；反馈：${summary.feedback} 条；阻塞反馈：${summary.blocking_feedback} 条`,
+      '',
+      '## 官方复核合并',
+      `- 当前基础记录：${summary.official_current} 条；导入记录：${summary.official_imported} 条；输出记录：${summary.official_output} 条`,
+      `- 已合并更新：${summary.official_updated} 条；跳过未知点位：${summary.official_skipped_unknown} 条；字段不完整：${summary.official_skipped_incomplete} 条`,
+      '- 合并产物：place_verifications.merged.json',
+      '- 差异摘要：shanghai-official-fillback-merge-diff.md',
+      '- 目标文件：data/official_verifications/place_verifications.json',
+    ];
+    if ((official.skipped_unknown_place_ids || []).length) lines.push(`- 未知点位：${official.skipped_unknown_place_ids.join('、')}`);
+    if ((official.skipped_incomplete || []).length) official.skipped_incomplete.forEach(item => lines.push(`- 字段不完整：${item.placeId}｜${item.missingFields.join('、')}`));
+    lines.push('', '## 内容素材与反馈');
+    lines.push(`- 内容更新发布包：shanghai-content-update-package.md`);
+    lines.push(`- 素材队列：${summary.materials} 条（官方 ${summary.official_materials} / 平台 ${summary.platform_materials} / 游记 ${summary.travelogue_materials}）`);
+    lines.push(`- 官方复核任务：${summary.official_tasks} 条`);
+    lines.push(`- 反馈处理队列：${summary.feedback} 条；阻塞 ${summary.blocking_feedback} 条`);
+    payload.materials.slice(0, 4).forEach(record => lines.push(`- 素材：${record.source}｜${record.title}`));
+    payload.feedback.slice(0, 4).forEach(record => lines.push(`- 反馈：${record.severity}｜${record.type}｜${travelerHomeFeedbackBoardFirstLine(record.note)}`));
+    lines.push('', '## 地图与路线检查');
+    lines.push(`- 地图准备：${summary.map_ready}/${summary.route_count} 条`);
+    if (payload.map.missing_routes.length) payload.map.missing_routes.forEach(route => lines.push(`- 待补地图：${route.route_title}`));
+    else lines.push('- 所有路线已有路线图入口和地图日程数据。');
+    lines.push('', '## 发布前动作');
+    lines.push('- 运行测试：PATH="/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH" .venv/bin/python -m pytest -q');
+    lines.push('- 重建站点：.venv/bin/python -m shanghai_planner.cli --web-workbench ...');
+    lines.push('- 构建产物：outputs/workbench/site');
+    lines.push('- 部署目录：work/deploy-pages');
+    lines.push('- 回归留档：shanghai-release-regression-checklist.md / shanghai-release-audit-package.md');
+    lines.push('- 发布后验收：移动端、控制台、复制下载、地图入口和核心路线。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；平台素材只保留结构、话题和体验信号，实时信息以官方渠道和现场为准。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomePrepublishDataGate(){
+    const payload = travelerHomePrepublishDataGatePayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-prepublish-data-gate-summary');
+    const listTarget = document.getElementById('traveler-home-prepublish-data-gate-list');
+    const output = document.getElementById('traveler-home-prepublish-data-gate-output');
+    const jsonOutput = document.getElementById('traveler-home-prepublish-data-gate-json-output');
+    const status = document.getElementById('traveler-home-prepublish-data-gate-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.verdict)}</span><span>路线 ${summary.route_count} 条</span><span>官方更新 ${summary.official_updated} 条</span><span>地图 ${summary.map_ready}/${summary.route_count}</span><span>阻塞反馈 ${summary.blocking_feedback} 条</span>`;
+    if (listTarget) {
+      const unknown = (payload.official_merge.skipped_unknown_place_ids || []).join('、') || '无';
+      const rows = [
+        `<article><b>官方复核合并</b><span>place_verifications.merged.json：更新 ${summary.official_updated} / 未知 ${summary.official_skipped_unknown} / 字段不完整 ${summary.official_skipped_incomplete}</span><span>未知点位：${escapeHtml(unknown)}</span></article>`,
+        `<article><b>内容素材与反馈</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方任务 ${summary.official_tasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blocking_feedback}</span></article>`,
+        `<article><b>地图与路线</b><span>地图准备 ${summary.map_ready}/${summary.route_count}；待补 ${summary.map_missing} 条。</span></article>`,
+        `<article><b>发布动作</b><span>构建 outputs/workbench/site，同步 work/deploy-pages，发布后按 shanghai-release-regression-checklist.md 验收。</span></article>`,
+      ];
+      listTarget.innerHTML = rows.join('');
+    }
+    const text = travelerHomePrepublishDataGateMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = `发布前数据更新总闸口已生成：${summary.verdict}。`;
+    return text;
+  }
+  function travelerHomePrepublishDataGateFilename(){
+    return 'shanghai-prepublish-data-gate.md';
+  }
+  function travelerHomePrepublishDataGateJsonFilename(){
+    return 'shanghai-prepublish-data-gate.json';
+  }
+  async function copyTravelerHomePrepublishDataGateMarkdown(){
+    const text = renderTravelerHomePrepublishDataGate();
+    const status = document.getElementById('traveler-home-prepublish-data-gate-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制发布前数据更新总闸口。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制发布前数据更新总闸口。';
+    }
+    return text;
+  }
+  function downloadTravelerHomePrepublishDataGateMarkdown(){
+    const text = renderTravelerHomePrepublishDataGate();
+    const filename = travelerHomePrepublishDataGateFilename();
+    const status = document.getElementById('traveler-home-prepublish-data-gate-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 发布前数据更新总闸口。';
+    return {filename, text};
+  }
+  function downloadTravelerHomePrepublishDataGateJson(){
+    const payload = travelerHomePrepublishDataGatePayload();
+    const filename = travelerHomePrepublishDataGateJsonFilename();
+    const status = document.getElementById('traveler-home-prepublish-data-gate-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 JSON 发布前数据更新总闸口。';
+    return {filename, payload};
   }
   function travelerHomeReleaseRegressionRiskLevel(summary){
     if ((summary.blockingFeedback || 0) > 0 || (summary.officialTasks || 0) > 0) return '需复核后发布';
@@ -5807,13 +6072,17 @@
   document.getElementById('traveler-home-content-update-package-json-sample-button')?.addEventListener('click', loadTravelerHomeContentUpdatePackageSampleJson);
   document.getElementById('traveler-home-content-update-package-json-import-button')?.addEventListener('click', importTravelerHomeContentUpdatePackageFromInput);
   document.getElementById('traveler-home-content-update-package-json-import-file')?.addEventListener('change', importTravelerHomeContentUpdatePackageFile);
+  document.getElementById('traveler-home-prepublish-data-gate-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-prepublish-data-gate-status'); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布前数据更新总闸口已更新。'; });
+  document.getElementById('traveler-home-prepublish-data-gate-copy-button')?.addEventListener('click', copyTravelerHomePrepublishDataGateMarkdown);
+  document.getElementById('traveler-home-prepublish-data-gate-download-button')?.addEventListener('click', downloadTravelerHomePrepublishDataGateMarkdown);
+  document.getElementById('traveler-home-prepublish-data-gate-json-download-button')?.addEventListener('click', downloadTravelerHomePrepublishDataGateJson);
   document.getElementById('traveler-home-release-regression-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-release-regression-status'); renderTravelerHomeReleaseRegressionCenter(); if (status) status.textContent = '发布后回归清单已更新。'; });
   document.getElementById('traveler-home-release-regression-copy-button')?.addEventListener('click', copyTravelerHomeReleaseRegressionMarkdown);
   document.getElementById('traveler-home-release-regression-download-button')?.addEventListener('click', downloadTravelerHomeReleaseRegressionMarkdown);
   document.getElementById('traveler-home-release-audit-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); if (status) status.textContent = '发布审计包已更新。'; });
   document.getElementById('traveler-home-release-audit-copy-button')?.addEventListener('click', copyTravelerHomeReleaseAuditPackageMarkdown);
   document.getElementById('traveler-home-release-audit-download-button')?.addEventListener('click', downloadTravelerHomeReleaseAuditPackageMarkdown);
-  ['traveler-home-release-audit-test-result','traveler-home-release-audit-evidence'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); if (status) status.textContent = '发布审计证据已更新。'; }));
+  ['traveler-home-release-audit-test-result','traveler-home-release-audit-evidence'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布审计证据已更新。'; }));
   document.getElementById('traveler-home-route-pack-build-button')?.addEventListener('click', renderTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-copy-button')?.addEventListener('click', copyTravelerHomeRoutePack);
   document.getElementById('traveler-home-route-pack-download-button')?.addEventListener('click', downloadTravelerHomeRoutePackMarkdown);
@@ -5887,6 +6156,7 @@
   renderTravelerHomeFeedback();
   renderTravelerHomeFeedbackBoard();
   renderTravelerHomeContentUpdatePackage();
+  renderTravelerHomePrepublishDataGate();
   renderTravelerHomeReleaseRegressionCenter();
   renderTravelerHomeReleaseAuditPackage();
   applyTravelerHomeMemory();

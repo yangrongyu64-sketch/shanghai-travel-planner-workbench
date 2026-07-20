@@ -3675,9 +3675,12 @@
     const channels = {official:'官方复核提醒', map:'路线图说明', content:'平台文案草案', miniprogram:'小程序迁移草案', route:'路线正文草案', other:'综合体验草案'};
     return channels[category] || channels.other;
   }
+  function travelerHomeFeedbackDraftCandidateCleanNote(value){
+    return String(value || '待补充反馈内容').trim().replace(/[。！？.!?]+$/g, '') || '待补充反馈内容';
+  }
   function travelerHomeFeedbackDraftCandidateText(item){
     const routeTitle = item?.route_title || item?.route || '这条路线';
-    const note = item?.note || '待补充反馈内容。';
+    const note = travelerHomeFeedbackDraftCandidateCleanNote(item?.note);
     if (item?.category === 'official') return `${routeTitle}：发布前请补充并人工确认官方信息。反馈指出：${note}。候选写法：本路线涉及开放、预约、票务、交通或临时闭馆信息，出发前请以官方渠道为准；发布前维护者需完成复核。`;
     if (item?.category === 'map') return `${routeTitle}：地图和路线说明需要补清。反馈指出：${note}。候选写法：到达该段前先确认点位顺序、步行/骑行方向、换乘提示和容易走错的位置，必要时用地图 App 再核对。`;
     if (item?.category === 'content') return `${routeTitle}：平台表达需要更像真人分享。反馈指出：${note}。候选写法：把标题、开头和口播语气改成第一人称体验表达，保留真实取舍，不复制第三方原文。`;

@@ -24,6 +24,7 @@
   },
   "download_files": [
     "workbench-demo.zip",
+    "product-delivery.zip",
     "miniprogram-handoff.zip",
     "platform-refresh.zip",
     "maintenance-report.zip"
@@ -38,6 +39,12 @@
     "directory": "miniprogram-handoff",
     "archive": "miniprogram-handoff.zip",
     "target": "微信小程序 / 移动端壳"
+  },
+  "product_delivery": {
+    "directory": "product-delivery",
+    "archive": "product-delivery.zip",
+    "manifest": "product-delivery/delivery-manifest.json",
+    "target": "正式交付 / 未来维护者接手"
   },
   "platform_refresh": {
     "directory": "platform-refresh",
@@ -65,6 +72,7 @@
     "创作者工作台入口 workbench.html 可访问",
     "点位库 place_catalog.html 可访问",
     "离线演示包 workbench-demo.zip 可下载",
+    "正式交付包 product-delivery.zip 可下载",
     "平台素材刷新包 platform-refresh.zip 可下载",
     "维护健康包 maintenance-report.zip 可下载",
     "PWA manifest 可访问且 service worker 可注册"

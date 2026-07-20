@@ -9,6 +9,7 @@
 - `workbench.html`：创作者工作台入口，适合真实填写、本机状态管理、平台文案和交付发布。
 - `place_catalog.html`：上海点位库，按地标、博物馆、美术馆、公园、滨江、街区和深度补充分组。
 - `workbench-demo.zip`：可下载转发的离线演示包。
+- `product-delivery.zip`：正式交付包，包含使用说明、维护步骤、验收清单和路线清单。
 - `miniprogram-handoff.zip`：小程序迁移包，给后续微信小程序或移动端壳开发使用。
 - `platform-refresh.zip`：平台素材刷新包，给小红书、抖音、旅游网站素材导入和人工复核使用。
 - `maintenance-report.zip`：站点健康和发布刷新包，用于检查关键文件、路线数和部署状态。

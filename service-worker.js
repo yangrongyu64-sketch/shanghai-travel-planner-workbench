@@ -4,6 +4,8 @@ const APP_SHELL_ASSETS = [
   './workbench.html',
   './place_catalog.html',
   './workbench-demo.zip',
+  './product-delivery.zip',
+  './product-delivery/delivery-manifest.json',
   './miniprogram-handoff.zip',
   './platform-refresh.zip',
   './platform-refresh/intake-template.json',

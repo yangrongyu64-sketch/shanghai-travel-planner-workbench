@@ -8,6 +8,7 @@
 
 - static_site：healthy
 - offline_demo：healthy
+- product_delivery：healthy
 - pwa：healthy
 - miniprogram_handoff：healthy
 - platform_refresh：healthy

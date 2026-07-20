@@ -147,6 +147,19 @@
       ],
       "missing": []
     },
+    "product_delivery": {
+      "status": "healthy",
+      "files": [
+        "product-delivery/README.md",
+        "product-delivery/usage-and-maintenance.md",
+        "product-delivery/acceptance-checklist.md",
+        "product-delivery/route-inventory.json",
+        "product-delivery/delivery-manifest.json",
+        "product-delivery.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "pwa": {
       "status": "healthy",
       "files": [
@@ -161,6 +174,8 @@
           "workbench.html",
           "place_catalog.html",
           "workbench-demo.zip",
+          "product-delivery.zip",
+          "product-delivery/delivery-manifest.json",
           "miniprogram-handoff.zip",
           "maintenance-report.zip",
           "maintenance/health-report.json",

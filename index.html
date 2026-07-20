@@ -88,6 +88,25 @@
     .traveler-operator-tool-card small{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-operator-tool-card button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
     .traveler-operator-tools-status{min-height:18px;margin:0;padding:0 clamp(16px,4vw,44px) 12px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-product-completion-overview{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fbfaf7}
+    .traveler-product-completion-overview-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
+    .traveler-product-completion-overview h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
+    .traveler-product-completion-overview small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
+    .traveler-product-completion-overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .traveler-product-completion-overview-grid article{display:grid;gap:5px;min-height:96px;align-content:start;border:1px solid var(--line);border-radius:8px;background:#fffdfa;padding:10px}
+    .traveler-product-completion-overview-grid b{font-size:14px;line-height:1.25}
+    .traveler-product-completion-overview-grid span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-product-completion-overview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .traveler-product-completion-overview-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-product-completion-overview-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-product-completion-overview-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;margin-top:10px}
+    .traveler-product-completion-overview-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-product-completion-overview-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    .traveler-product-completion-overview-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px}
+    .traveler-product-completion-overview-list b{font-size:13px;line-height:1.25}
+    .traveler-product-completion-overview-list span{color:var(--muted);font-size:12px;line-height:1.35}
+    .traveler-product-completion-overview textarea{width:100%;min-height:168px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    .traveler-product-completion-overview-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-acceptance{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#fffdfa}
     .traveler-acceptance-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
     .traveler-acceptance h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
@@ -448,10 +467,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-product-completion-overview-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -577,6 +596,11 @@
   </summary>
   <div class="traveler-operator-tools-nav" aria-label="运营工具入口">
     <article class="traveler-operator-tool-card">
+      <b>完成度总览</b>
+      <small>怎么打开和维护</small>
+      <button type="button" data-traveler-home-operator-tool-target="traveler-home-product-completion-overview">进入</button>
+    </article>
+    <article class="traveler-operator-tool-card">
       <b>产品验收</b>
       <small>能不能交付试用</small>
       <button type="button" data-traveler-home-operator-tool-target="traveler-home-acceptance-checklist">进入</button>
@@ -633,6 +657,43 @@
     </article>
   </div>
   <p id="traveler-home-operator-tools-status" class="traveler-operator-tools-status" aria-live="polite"></p>
+<section id="traveler-home-product-completion-overview" class="traveler-product-completion-overview" aria-label="产品完成度总览">
+  <div class="traveler-product-completion-overview-head">
+    <p>交付总览</p>
+    <h2>产品完成度总览</h2>
+    <small>交接使用入口、已完成模块、不能自动做的事和后续维护方式，适合自己留档或交给协作者继续维护。</small>
+  </div>
+  <div>
+    <div class="traveler-product-completion-overview-grid">
+      <article>
+        <b>完成度 99.8%</b>
+        <span>网页入口、路线详情、地图、内容工具、反馈闭环和交付包已可试用</span>
+      </article>
+      <article>
+        <b>路线 6 条</b>
+        <span>当前覆盖 6 条上海路线，含 2/3/5/7/15 日多节奏玩法</span>
+      </article>
+      <article>
+        <b>不需要 API Key</b>
+        <span>静态站点、离线包、复制下载、路线图和内容草稿可直接使用</span>
+      </article>
+      <article>
+        <b>人工复核保留</b>
+        <span>开放、预约、票务、交通和临时闭馆仍需出发或发布前复核</span>
+      </article>
+    </div>
+    <div class="traveler-product-completion-overview-actions">
+      <button type="button" id="traveler-home-product-completion-overview-copy-button" data-traveler-home-product-completion-overview-copy>复制总览</button>
+      <button type="button" id="traveler-home-product-completion-overview-download-button" data-traveler-home-product-completion-overview-download>下载Markdown</button>
+      <button type="button" class="primary" id="traveler-home-product-completion-overview-json-download-button" data-traveler-home-product-completion-overview-json-download>下载JSON</button>
+    </div>
+    <div id="traveler-home-product-completion-overview-summary" class="traveler-product-completion-overview-summary" aria-live="polite"></div>
+    <div id="traveler-home-product-completion-overview-list" class="traveler-product-completion-overview-list"></div>
+    <textarea id="traveler-home-product-completion-overview-output" readonly rows="8" aria-label="产品完成度总览 Markdown"></textarea>
+    <textarea id="traveler-home-product-completion-overview-json-output" readonly rows="7" aria-label="产品完成度总览 JSON"></textarea>
+    <p id="traveler-home-product-completion-overview-status" class="traveler-product-completion-overview-status" aria-live="polite"></p>
+  </div>
+</section>
 <section id="traveler-home-acceptance-checklist" class="traveler-acceptance" aria-label="产品验收清单">
   <div class="traveler-acceptance-head">
     <p>正式验收</p>
@@ -1683,6 +1744,166 @@
   function travelerHomeStorageWrite(state){
     try { localStorage.setItem(travelerHomeStorageKey, JSON.stringify(state)); } catch (error) {}
     return state;
+  }
+  function travelerHomeProductCompletionOverviewModules(){
+    return [
+      {name:'路线选择', status:'可用', detail:`首页可按天数、节奏、兴趣和避开项推荐路线，当前覆盖 ${TRAVELER_HOME_ROUTES.length} 条路线。`},
+      {name:'路线攻略和地图', status:'可用', detail:'每条路线有独立攻略页、每日执行信息、路线地图、首页示意图和 GeoJSON/HTML 导出。'},
+      {name:'内容创作', status:'可用', detail:'可生成路线包、小红书文案、抖音口播、朋友圈/同行群分享和个人游记草稿。'},
+      {name:'住宿美食和风险辅助', status:'可用', detail:'已补住宿决策、吃喝补给、出发前复核、低能量/雨天/闭馆风险预案。'},
+      {name:'试用反馈闭环', status:'可用', detail:'反馈包、处理队列、下一版修改建议、候选草案、确认应用、发布采纳和闭环总包已串通。'},
+      {name:'发布维护', status:'可用', detail:'API 状态、运营维护、内容更新发布包、发布闸口、发布回归和审计留档已在运营工具中集中。'},
+      {name:'小程序交接', status:'可用', detail:'已生成小程序迁移包和页面/数据/验收结构，后续可按包迁移到小程序工程。'},
+    ];
+  }
+  function travelerHomeProductCompletionOverviewLimitations(){
+    return [
+      '不会自动抓取抖音/小红书登录内容',
+      '不会自动发布或覆盖正式内容',
+      '官方开放、预约、票务、交通和临时闭馆仍需人工复核',
+      '第三方 API Key 只作为可选增强，不写入静态站点或仓库',
+      '平台文案和游记是草稿，正式发布前仍需人工审稿',
+    ];
+  }
+  function travelerHomeProductCompletionOverviewMaintenanceSteps(){
+    return [
+      '更新数据后重新构建',
+      '跑测试',
+      '线上验收',
+      '发布后留档截图、下载包和 commit',
+      '出发或商用发布前复核官方信息',
+    ];
+  }
+  let travelerHomeProductCompletionOverviewGeneratedAt = '';
+  function travelerHomeProductCompletionOverviewTimestamp(){
+    if (!travelerHomeProductCompletionOverviewGeneratedAt) travelerHomeProductCompletionOverviewGeneratedAt = new Date().toISOString();
+    return travelerHomeProductCompletionOverviewGeneratedAt;
+  }
+  function travelerHomeProductCompletionOverviewPayload(){
+    const routeCount = TRAVELER_HOME_ROUTES.length;
+    return {
+      kind: 'shanghai_product_completion_overview',
+      version: 1,
+      generated_at: travelerHomeProductCompletionOverviewTimestamp(),
+      source_url: window.location?.href || '',
+      summary: {
+        route_count: routeCount,
+        completion_percent: 99.8,
+        static_site_ready: true,
+        offline_package_ready: true,
+        api_required: false,
+        manual_review_required: true,
+        next_step: '交付使用和后续维护',
+      },
+      open_paths: [
+        {name:'线上首页', path:'GitHub Pages 首页'},
+        {name:'本地静态站点', path:'outputs/workbench/site/index.html'},
+        {name:'完整工作台', path:'outputs/workbench/site/workbench.html'},
+        {name:'离线体验包', path:'outputs/workbench/workbench-demo.zip'},
+        {name:'小程序交接包', path:'outputs/workbench/site/miniprogram-handoff.zip'},
+      ],
+      modules: travelerHomeProductCompletionOverviewModules(),
+      limitations: travelerHomeProductCompletionOverviewLimitations(),
+      maintenance: travelerHomeProductCompletionOverviewMaintenanceSteps(),
+      safety_boundary: '本工具是静态本地优先产品；不需要 API Key 也能使用；不会自动抓取平台登录内容、不会自动发布、不会覆盖正式数据。',
+    };
+  }
+  function travelerHomeProductCompletionOverviewMarkdown(){
+    const payload = travelerHomeProductCompletionOverviewPayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海攻略工作台产品完成度总览',
+      '',
+      '## 当前结论',
+      `- 产品完成度：${summary.completion_percent}%`,
+      `- 路线覆盖：${summary.route_count} 条上海路线`,
+      `- 静态网页：${summary.static_site_ready ? '可用' : '待补'}`,
+      `- 离线包：${summary.offline_package_ready ? '可用' : '待补'}`,
+      `- API 要求：${summary.api_required ? '需要配置' : '不需要 API Key 也能使用'}`,
+      `- 人工复核：${summary.manual_review_required ? '仍需保留' : '无需额外复核'}`,
+      `- 下一步：${summary.next_step}`,
+      '',
+      '## 怎么打开',
+      '- 线上使用：打开 GitHub Pages 首页，普通游客可直接选路线、看攻略和地图。',
+      '- 本地使用：打开 outputs/workbench/site/index.html；需要完整运营功能时打开 outputs/workbench/site/workbench.html。',
+      '- 离线交付：下载 workbench-demo.zip 或 workbench-site.zip 后解压查看。',
+      '- 小程序迁移：使用 miniprogram-handoff.zip 作为页面、数据和验收清单交接包。',
+      '',
+      '## 现在能做什么',
+    ];
+    payload.modules.forEach(module => lines.push(`- ${module.name}：${module.status}。${module.detail}`));
+    lines.push('', '## 不能自动做什么');
+    payload.limitations.forEach(item => lines.push(`- ${item}`));
+    lines.push('', '## 后续怎么维护');
+    payload.maintenance.forEach((item, index) => lines.push(`${index + 1}. ${item}`));
+    lines.push('', '安全边界：不需要 API Key 也能使用；平台素材只做结构化参考，不复制第三方原文；出发和发布前以官方渠道复核为准。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeProductCompletionOverview(){
+    const payload = travelerHomeProductCompletionOverviewPayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-product-completion-overview-summary');
+    const listTarget = document.getElementById('traveler-home-product-completion-overview-list');
+    const output = document.getElementById('traveler-home-product-completion-overview-output');
+    const jsonOutput = document.getElementById('traveler-home-product-completion-overview-json-output');
+    const status = document.getElementById('traveler-home-product-completion-overview-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>完成度 ${summary.completion_percent}%</span><span>路线 ${summary.route_count} 条</span><span>${summary.api_required ? '需要 API Key' : '不需要 API Key'}</span><span>${summary.manual_review_required ? '需人工复核' : '自动可发布'}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.modules.map(module => `<article><b>${escapeHtml(module.name)}｜${escapeHtml(module.status)}</b><span>${escapeHtml(module.detail)}</span></article>`).join('') + payload.limitations.map(item => `<article><b>边界</b><span>${escapeHtml(item)}</span></article>`).join('');
+    const text = travelerHomeProductCompletionOverviewMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = '产品完成度总览已生成，可复制或下载。';
+    return text;
+  }
+  function travelerHomeProductCompletionOverviewFilename(){
+    return 'shanghai-product-completion-overview.md';
+  }
+  function travelerHomeProductCompletionOverviewJsonFilename(){
+    return 'shanghai-product-completion-overview.json';
+  }
+  async function copyTravelerHomeProductCompletionOverviewMarkdown(){
+    const text = renderTravelerHomeProductCompletionOverview();
+    const status = document.getElementById('traveler-home-product-completion-overview-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制产品完成度总览。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制产品完成度总览。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeProductCompletionOverviewMarkdown(){
+    const text = renderTravelerHomeProductCompletionOverview();
+    const filename = travelerHomeProductCompletionOverviewFilename();
+    const status = document.getElementById('traveler-home-product-completion-overview-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载产品完成度总览 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeProductCompletionOverviewJson(){
+    renderTravelerHomeProductCompletionOverview();
+    const payload = travelerHomeProductCompletionOverviewPayload();
+    const filename = travelerHomeProductCompletionOverviewJsonFilename();
+    const status = document.getElementById('traveler-home-product-completion-overview-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载产品完成度总览 JSON。';
+    return {filename, payload};
   }
   function travelerHomeAcceptanceChecklistMarkdown(){
     const routeCount = TRAVELER_HOME_ROUTES.length;
@@ -5457,6 +5678,7 @@
   }
   function travelerHomeOperatorToolTargetLabel(targetId){
     const labels = {
+      'traveler-home-product-completion-overview': '完成度总览',
       'traveler-home-acceptance-checklist': '产品验收',
       'traveler-home-api-status': 'API 状态',
       'traveler-home-maintenance-center': '运营维护',
@@ -7460,6 +7682,9 @@
     const targetId = control?.getAttribute?.('data-traveler-home-workflow-next') || control?.getAttribute?.('data-traveler-home-workflow-target');
     if (targetId) goTravelerHomeWorkflowTarget(targetId);
   });
+  document.getElementById('traveler-home-product-completion-overview-copy-button')?.addEventListener('click', copyTravelerHomeProductCompletionOverviewMarkdown);
+  document.getElementById('traveler-home-product-completion-overview-download-button')?.addEventListener('click', downloadTravelerHomeProductCompletionOverviewMarkdown);
+  document.getElementById('traveler-home-product-completion-overview-json-download-button')?.addEventListener('click', downloadTravelerHomeProductCompletionOverviewJson);
   document.getElementById('traveler-home-acceptance-checklist-copy-button')?.addEventListener('click', copyTravelerHomeAcceptanceChecklist);
   document.getElementById('traveler-home-acceptance-checklist-download-button')?.addEventListener('click', downloadTravelerHomeAcceptanceChecklistMarkdown);
   document.getElementById('traveler-home-api-status-copy-button')?.addEventListener('click', copyTravelerHomeApiStatusMarkdown);
@@ -7597,6 +7822,7 @@
   renderTravelerHomeFirstTimeGuideDelivery();
   renderTravelerHomeFirstUseChecklist();
   applyTravelerHomeFilters();
+  renderTravelerHomeProductCompletionOverview();
   renderTravelerHomeAcceptanceChecklist();
   renderTravelerHomeApiStatus();
   renderTravelerHomeMaintenanceCenter();

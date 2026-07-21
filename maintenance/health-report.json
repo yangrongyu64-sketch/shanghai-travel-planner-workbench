@@ -192,9 +192,15 @@
           "acceptance-report.zip",
           "acceptance-report/acceptance-manifest.json",
           "miniprogram-handoff.zip",
+          "platform-refresh.zip",
+          "platform-refresh/intake-template.json",
+          "platform-refresh/platform-refresh-manifest.json",
           "maintenance-report.zip",
           "maintenance/health-report.json",
           "maintenance/maintenance-manifest.json",
+          "release-evidence.zip",
+          "release-evidence/online-health-check-summary.json",
+          "release-evidence/release-evidence-manifest.json",
           "manifest.webmanifest",
           "app-icon.svg"
         ],
@@ -230,6 +236,19 @@
       "missing": [],
       "route_count": 6
     },
+    "release_evidence": {
+      "status": "healthy",
+      "files": [
+        "release-evidence/README.md",
+        "release-evidence/release-audit-summary.md",
+        "release-evidence/online-health-check-summary.json",
+        "release-evidence/release-regression-checklist.md",
+        "release-evidence/release-evidence-manifest.json",
+        "release-evidence.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "live_deployment": {
       "status": "healthy",
       "files": [
@@ -245,7 +264,7 @@
   "next_actions": [
     "发布后先打开 maintenance/health-report.json 查看 status 是否为 healthy。",
     "如果 route_count 不是 6，先回到 examples/requests 和 data/seed 检查路线输入。",
-    "如果 PWA 或小程序迁移包缺文件，重新运行 --web-workbench 后再部署。",
+    "如果 PWA、小程序迁移包或发布证据包缺文件，重新运行 --web-workbench 后再部署。",
     "若 live_deployment 为 not_configured，说明当前是本地/预发布包，正式发布时补 published-url 参数。"
   ]
 }

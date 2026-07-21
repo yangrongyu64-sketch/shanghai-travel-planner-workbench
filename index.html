@@ -507,6 +507,7 @@
       <a href="place_catalog.html">看点位库</a>
       <a href="product-delivery.zip">下载交付包</a>
       <a href="acceptance-report.zip">下载验收报告</a>
+      <a href="release-evidence.zip">下载发布证据包</a>
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
@@ -5659,6 +5660,7 @@
       '- [ ] 复制、下载、发布包、回归清单和反馈队列按钮',
       '- [ ] 390px 移动端无横向溢出',
       '- [ ] 控制台 0 errors / 0 warnings',
+      '- 发布证据包：release-evidence.zip',
       '- 文件：shanghai-online-health-check.json / shanghai-online-health-check.md',
       `- 线上巡检：${health.healthy}/${health.checked} healthy，失败 ${health.failed} 项`,
       `- 路线页：${health.routeTargets}/${summary.routeCount} 已检查`,
@@ -5687,6 +5689,7 @@
         '<article><b>发布记录</b><span>shanghai-release-notes.md：记录版本、发布范围、发布前检查和回滚依据。</span></article>',
         `<article><b>内容更新发布包</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方复核 ${summary.officialTasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blockingFeedback}</span></article>`,
         '<article><b>发布后回归清单</b><span>shanghai-release-regression-checklist.md：覆盖路线入口、地图、按钮、390px 移动端和控制台。</span></article>',
+        '<article><b>发布证据包</b><span>release-evidence.zip：包含审计摘要、线上巡检口径、回归证据清单和包清单。</span></article>',
         `<article><b>线上健康巡检</b><span>shanghai-online-health-check.json：${escapeHtml(health.statusLabel)}，${health.healthy}/${health.checked} healthy，失败 ${health.failed}。</span><span>路线页 ${health.routeTargets} 条；报告 ${escapeHtml(health.reportFile)}。</span></article>`,
         `<article><b>验收证据</b><span>${escapeHtml(summary.testResult)}｜${escapeHtml(summary.evidence)}</span></article>`,
       ];
@@ -5743,6 +5746,7 @@
       {name:'小程序交接包', href:'miniprogram-handoff.zip', group:'package'},
       {name:'平台刷新包', href:'platform-refresh.zip', group:'package'},
       {name:'维护报告包', href:'maintenance-report.zip', group:'package'},
+      {name:'发布证据包', href:'release-evidence.zip', group:'package'},
     ];
     const routeTargets = TRAVELER_HOME_ROUTES.map(route => ({
       name: `${route.scenario}｜${route.title}`,

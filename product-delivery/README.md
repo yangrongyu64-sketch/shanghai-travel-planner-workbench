@@ -16,7 +16,8 @@
 2. 创作者或维护者打开 `workbench.html`，处理内容、素材、反馈、发布和留档。
 3. 需要离线转发时使用 `workbench-demo.zip`。
 4. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
-5. 后续维护按 `usage-and-maintenance.md` 执行。
+5. 需要正式发布留档时使用 `release-evidence.zip`。
+6. 后续维护按 `usage-and-maintenance.md` 执行。
 
 ## 快速验收
 

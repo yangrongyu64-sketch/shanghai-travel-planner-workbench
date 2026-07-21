@@ -11,6 +11,7 @@
     "product_delivery_zip": "product-delivery.zip",
     "acceptance_report_zip": "acceptance-report.zip",
     "miniprogram_handoff_zip": "miniprogram-handoff.zip",
+    "release_evidence_zip": "release-evidence.zip",
     "pwa_manifest": "manifest.webmanifest",
     "service_worker": "service-worker.js",
     "health_report": "maintenance/health-report.json",

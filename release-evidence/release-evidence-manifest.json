@@ -1,7 +1,7 @@
 {
   "app_name": "上海攻略生成工作台",
-  "package_type": "workbench_acceptance_report_package",
-  "status": "ready_for_public_acceptance",
+  "package_type": "workbench_release_evidence_package",
+  "status": "ready_for_release_archive",
   "completion_percent": 99.8,
   "route_count": 6,
   "api_required": false,
@@ -10,19 +10,22 @@
     "web_entry": "index.html",
     "normal_workbench": "workbench.html",
     "deployment_manifest": "deployment-manifest.json",
-    "product_delivery_zip": "product-delivery.zip",
-    "maintenance_report_zip": "maintenance-report.zip",
-    "release_evidence_zip": "release-evidence.zip",
     "service_worker": "service-worker.js",
+    "acceptance_report_zip": "acceptance-report.zip",
+    "maintenance_report_zip": "maintenance-report.zip",
+    "product_delivery_zip": "product-delivery.zip",
+    "release_audit_markdown": "shanghai-release-audit-package.md",
+    "release_regression_markdown": "shanghai-release-regression-checklist.md",
+    "online_health_check_report": "shanghai-online-health-check.json",
     "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
     "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
     "live_deployment_record": "LIVE_DEPLOYMENT.md"
   },
   "files": [
     "README.md",
-    "test-summary.json",
-    "release-summary.md",
-    "online-acceptance-checklist.md",
-    "acceptance-manifest.json"
+    "release-audit-summary.md",
+    "online-health-check-summary.json",
+    "release-regression-checklist.md",
+    "release-evidence-manifest.json"
   ]
 }

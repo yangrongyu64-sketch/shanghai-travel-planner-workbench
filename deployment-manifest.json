@@ -28,7 +28,8 @@
     "acceptance-report.zip",
     "miniprogram-handoff.zip",
     "platform-refresh.zip",
-    "maintenance-report.zip"
+    "maintenance-report.zip",
+    "release-evidence.zip"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -64,6 +65,12 @@
     "archive": "maintenance-report.zip",
     "health_report": "maintenance/health-report.json"
   },
+  "release_evidence": {
+    "directory": "release-evidence",
+    "archive": "release-evidence.zip",
+    "manifest": "release-evidence/release-evidence-manifest.json",
+    "target": "发布审计 / 线上巡检证据留档"
+  },
   "deploy_scripts": {
     "github_pages": "deploy-github-pages.sh"
   },
@@ -83,6 +90,7 @@
     "公开验收报告包 acceptance-report.zip 可下载",
     "平台素材刷新包 platform-refresh.zip 可下载",
     "维护健康包 maintenance-report.zip 可下载",
+    "发布证据包 release-evidence.zip 可下载",
     "PWA manifest 可访问且 service worker 可注册"
   ],
   "live_deployment": {
@@ -92,6 +100,7 @@
     "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
     "product_delivery_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip",
     "acceptance_report_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/acceptance-report.zip",
+    "release_evidence_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip",
     "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
     "published_at": "2026-07-21"
   }

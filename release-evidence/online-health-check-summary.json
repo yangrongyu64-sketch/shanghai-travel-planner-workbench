@@ -1,0 +1,53 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "online_health_check_evidence_summary",
+  "status": "ready_for_live_verification",
+  "route_count": 6,
+  "expected_target_count": 20,
+  "expected_static_targets": [
+    "index.html",
+    "workbench.html",
+    "place_catalog.html",
+    "manifest.webmanifest",
+    "service-worker.js",
+    "deployment-manifest.json",
+    "maintenance/health-report.json",
+    "workbench-demo.zip",
+    "product-delivery.zip",
+    "acceptance-report.zip",
+    "miniprogram-handoff.zip",
+    "platform-refresh.zip",
+    "maintenance-report.zip",
+    "release-evidence.zip"
+  ],
+  "expected_route_targets": [
+    "routes/relaxed_2d1n_citywalk.html",
+    "routes/first_time_3d2n_balanced.html",
+    "routes/highwalk_3d2n_landmark_citywalk.html",
+    "routes/deep_5d4n_culture_citywalk.html",
+    "routes/local_life_7d6n_balanced.html",
+    "routes/longstay_15d14n_balanced.html"
+  ],
+  "expected_package_targets": [
+    "workbench-demo.zip",
+    "product-delivery.zip",
+    "acceptance-report.zip",
+    "miniprogram-handoff.zip",
+    "platform-refresh.zip",
+    "maintenance-report.zip",
+    "release-evidence.zip"
+  ],
+  "report_files": [
+    "shanghai-online-health-check.json",
+    "shanghai-online-health-check.md"
+  ],
+  "pass_criteria": [
+    "summary.failed_count 为 0。",
+    "summary.healthy_count 等于 summary.checked_count。",
+    "路线页检查数量等于 route_count。",
+    "release-evidence.zip 本身可下载并解压。"
+  ],
+  "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+  "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+  "published_at": "2026-07-21"
+}

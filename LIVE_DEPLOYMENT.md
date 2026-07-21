@@ -7,6 +7,7 @@
 - 离线演示包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip
 - 正式交付包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip
 - 公开验收报告包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/acceptance-report.zip
+- 发布证据包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip
 - GitHub 仓库：https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench
 
 ## 发布后验收记录
@@ -16,3 +17,4 @@
 - `workbench.html` 可作为创作者工作台入口访问。
 - `workbench-demo.zip` 可下载并解压。
 - `acceptance-report.zip` 可下载并解压。
+- `release-evidence.zip` 可下载并解压。

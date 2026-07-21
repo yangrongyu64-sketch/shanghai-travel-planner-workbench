@@ -4,6 +4,7 @@
 - [ ] 首页能看到“下载交付包”和“下载验收报告”。
 - [ ] `product-delivery.zip` 能下载并解压。
 - [ ] `acceptance-report.zip` 能下载并解压，且包含 5 个验收文件。
+- [ ] `release-evidence.zip` 能下载并解压，且包含 5 个证据文件。
 - [ ] `deployment-manifest.json` 包含 `acceptance_report` 节点。
 - [ ] `service-worker.js` 包含 `acceptance-report.zip`。
 - [ ] 手机视口无横向溢出。

@@ -13,6 +13,7 @@
 - pwa：healthy
 - miniprogram_handoff：healthy
 - platform_refresh：healthy
+- release_evidence：healthy
 - live_deployment：healthy
 
 ## 路线快照
@@ -28,5 +29,5 @@
 
 - 发布后先打开 maintenance/health-report.json 查看 status 是否为 healthy。
 - 如果 route_count 不是 6，先回到 examples/requests 和 data/seed 检查路线输入。
-- 如果 PWA 或小程序迁移包缺文件，重新运行 --web-workbench 后再部署。
+- 如果 PWA、小程序迁移包或发布证据包缺文件，重新运行 --web-workbench 后再部署。
 - 若 live_deployment 为 not_configured，说明当前是本地/预发布包，正式发布时补 published-url 参数。

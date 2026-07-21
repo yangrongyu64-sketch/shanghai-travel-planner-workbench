@@ -6845,6 +6845,24 @@
     const recommendation = travelerHomeBestRecommendation();
     return recommendation ? [recommendation.route] : [];
   }
+  function travelerHomeRoutePackWeatherSummaryLines(){
+    const source = travelerHomeWeatherPrecheckCurrent;
+    const days = Array.isArray(source?.days) ? source.days : [];
+    if (!source || !days.length) return [];
+    const lines = [
+      '',
+      '天气预检摘要',
+      `来源：${source.source || '天气预检'}` ,
+      `综合天气风险：${source.overallRisk || '待复核'}` ,
+    ];
+    days.slice(0, 3).forEach(day => {
+      const decision = day.decision || {};
+      lines.push(`- ${day.date || '出发前'}：${decision.mode || day.riskLevel || '待复核'}`);
+      lines.push(`  路线动作：${decision.routeAction || day.actions || '出发当天复核天气和交通。'}`);
+      if (decision.creatorAction) lines.push(`  拍摄建议：${decision.creatorAction}`);
+    });
+    return lines;
+  }
   function travelerHomeRoutePackText(){
     const routes = travelerHomeRoutePackRoutes();
     const state = travelerHomeStorageRead();
@@ -6865,6 +6883,7 @@
       lines.push(`   攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`);
       lines.push(`   地图：${travelerHomeAbsoluteUrl(route.mapHref)}`);
     });
+    lines.push(...travelerHomeRoutePackWeatherSummaryLines());
     lines.push('', '同行人分享', `我先选了 ${routes[0].scenario}｜${routes[0].title}，也收藏了 ${routes.length} 条备选路线。我们可以先按偏好走，出发前再确认开放、预约和交通。`);
     lines.push('', '游记草稿', `这次上海旅行先从“${routes[0].title}”开始，不追求把所有地方塞满，而是按 ${travelerHomePreferenceLabel(preferences)} 的节奏，把路线、休息和拍照点先排顺。`);
     lines.push('', '出发前请复核开放、预约、票务、交通和临时闭馆。');
@@ -7883,6 +7902,24 @@
     if (state === 'crowded') return riskDay.crowdSignal || riskDay.queueRule || '热门点排队过长就换同区点。';
     return `按主线走，使用 ${foodDay.areaName || '当天路线中段补给区'} 做中段休息。`;
   }
+  function travelerHomeDayExecutionWeatherAdvice(day){
+    const source = travelerHomeWeatherPrecheckCurrent;
+    const days = Array.isArray(source?.days) ? source.days : [];
+    if (!day || !days.length) return null;
+    const dayNumber = Math.max(1, Number(day.day || 1));
+    const weatherDay = days[dayNumber - 1] || days.find(item => String(item.date || '') === `Day ${dayNumber}`) || null;
+    const decision = weatherDay?.decision || null;
+    if (!decision) return null;
+    return {
+      source: source.source || '天气预检',
+      date: weatherDay.date || `Day ${dayNumber}` ,
+      riskLevel: weatherDay.riskLevel || '待复核',
+      mode: decision.mode || '原计划可走',
+      routeAction: decision.routeAction || '按原路线走，出发当天再复核。',
+      creatorAction: decision.creatorAction || '正常拍摄，保留一个室内补镜点。',
+      fallback: decision.fallback || '附近商场、咖啡或室内展馆',
+    };
+  }
   function travelerHomeDayExecutionPopulateDays(route){
     const select = document.getElementById('traveler-home-day-execution-day');
     const days = travelerHomeDayExecutionDays(route);
@@ -7903,6 +7940,7 @@
     const foodDay = travelerHomeDayExecutionFoodDay(route, day);
     const stops = travelerHomeDayExecutionStopNames(day);
     const actionLine = travelerHomeDayExecutionActionLine(state, riskDay, foodDay);
+    const weatherAdvice = travelerHomeDayExecutionWeatherAdvice(day);
     const lines = [
       '# 上海行中执行简报',
       '',
@@ -7925,6 +7963,16 @@
       `- 人流：${riskDay.crowdSignal || '避开午晚高峰和长队。'}` ,
       `- 排队：${riskDay.queueRule || '等待超过 20 分钟就换同区补给点。'}` ,
       `- 室内/低能量替代：${riskDay.indoorFallback || '附近商场、咖啡或室内展馆'}` ,
+    ];
+    if (weatherAdvice) {
+      lines.push('', '## 天气改线建议');
+      lines.push(`- 来源：${weatherAdvice.source}｜${weatherAdvice.date}｜风险：${weatherAdvice.riskLevel}`);
+      lines.push(`- 模式：${weatherAdvice.mode}`);
+      lines.push(`- 路线动作：${weatherAdvice.routeAction}`);
+      lines.push(`- 拍摄建议：${weatherAdvice.creatorAction}`);
+      lines.push(`- 室内替代：${weatherAdvice.fallback}`);
+    }
+    lines.push(
       '',
       '## 吃喝休息',
       `- 补给区：${foodDay.areaName || '当天路线中段补给区'}` ,
@@ -7938,7 +7986,7 @@
       '## 出发前现场复核',
       '- 开放、预约、票务和临时闭馆仍以官方渠道和现场信息为准。',
       '- 地铁、打车、天气和人流用当天地图 App / 天气 App 二次确认。',
-    ];
+    );
     return lines.filter(line => line !== '').join('\n');
   }
   function renderTravelerHomeDayExecution(){

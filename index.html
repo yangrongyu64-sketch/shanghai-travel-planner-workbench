@@ -1187,6 +1187,8 @@
       <textarea id="traveler-home-feedback-board-input" rows="6" aria-label="批量试用反馈包" placeholder="粘贴多个 # 上海攻略试用反馈包，可用 --- 分隔。"></textarea>
       <div class="traveler-feedback-actions">
         <button type="button" class="primary" id="traveler-home-feedback-board-import-button" data-traveler-home-feedback-board-import>导入反馈</button>
+        <button type="button" id="traveler-home-feedback-board-sample-button" data-traveler-home-feedback-board-sample>填入样例</button>
+        <button type="button" id="traveler-home-feedback-board-demo-button" data-traveler-home-feedback-board-demo>一键演示闭环</button>
         <button type="button" id="traveler-home-feedback-board-copy-button" data-traveler-home-feedback-board-copy>复制处理队列</button>
         <button type="button" id="traveler-home-feedback-board-download-button" data-traveler-home-feedback-board-download>下载处理队列</button>
         <button type="button" id="traveler-home-feedback-board-clear-button" data-traveler-home-feedback-board-clear>清空看板</button>
@@ -4043,6 +4045,70 @@
       record.id = travelerHomeFeedbackBoardRecordId(record, index);
       return record;
     });
+  }
+  function travelerHomeTrialFeedbackSampleRows(){
+    const sampleRoute = routeId => {
+      const route = travelerHomeRouteById(routeId);
+      return route ? {title:`${route.scenario}｜${route.title}`, guide:travelerHomeAbsoluteUrl(route.guideHref), map:travelerHomeAbsoluteUrl(route.mapHref)} : {title:'未关联路线', guide:'', map:''};
+    };
+    return [
+      {role:'内容创作者', routeId:'relaxed_2d1n_citywalk', type:'地图点位/动线问题', severity:'阻塞使用', note:'武康路步行段到安福路的转弯提示不够清楚，容易从错误出口绕路。', nextAction:'补清武康路步行段、安福路转弯点、地铁出口和容易走错的位置，移动端复核地图无横向溢出。'},
+      {role:'运营/维护者', routeId:'first_time_3d2n_balanced', type:'开放预约票务复核', severity:'影响体验', note:'上海博物馆东馆预约提醒需要发布前复核，用户会担心到现场才发现约不上。', nextAction:'补官方开放、预约、实名、票务和临时闭馆来源，正式发布前只保留已核验表述。'},
+      {role:'内容创作者', routeId:'deep_5d4n_culture_citywalk', type:'文案不好用', severity:'建议优化', note:'小红书标题和开头可以更像真人分享，不要太像模板生成。', nextAction:'调整标题、开头、口播和游记表达，用第一人称真实取舍，不复制第三方平台原文。'},
+    ].map(row => ({...row, ...sampleRoute(row.routeId)}));
+  }
+  function travelerHomeTrialFeedbackSampleMarkdown(){
+    return travelerHomeTrialFeedbackSampleRows().map(row => [
+      '# 上海攻略试用反馈包',
+      '',
+      `反馈人：${row.role}`,
+      `路线：${row.title}`,
+      `问题类型：${row.type}`,
+      `影响程度：${row.severity}`,
+      '',
+      '## 问题描述',
+      row.note,
+      '',
+      '## 关联入口',
+      `攻略：${row.guide || '待补攻略链接'}`,
+      `地图：${row.map || '待补地图链接'}`,
+      '',
+      '## 建议处理',
+      row.nextAction,
+      '处理后回到产品验收清单确认。',
+    ].join('\n')).join('\n\n---\n\n');
+  }
+  function loadTravelerHomeTrialFeedbackSample(){
+    const text = travelerHomeTrialFeedbackSampleMarkdown();
+    const input = document.getElementById('traveler-home-feedback-board-input');
+    const status = document.getElementById('traveler-home-feedback-board-status');
+    const count = travelerHomeTrialFeedbackSampleRows().length;
+    if (input) input.value = text;
+    if (status) status.textContent = `已填入 ${count} 条试用反馈样例，可直接导入或一键演示闭环。`;
+    return {count, text};
+  }
+  function runTravelerHomeTrialFeedbackDemo(){
+    const sample = loadTravelerHomeTrialFeedbackSample();
+    const importResult = importTravelerHomeFeedbackBoard();
+    const cyclePayload = travelerHomeFeedbackCyclePackagePayload();
+    const boardStatus = document.getElementById('traveler-home-feedback-board-status');
+    const trialStatus = document.getElementById('traveler-home-trial-guide-status');
+    const operatorTools = document.getElementById('traveler-home-operator-tools');
+    const feedbackTarget = document.getElementById('traveler-home-feedback');
+    if (operatorTools) operatorTools.open = true;
+    if (feedbackTarget) {
+      feedbackTarget.scrollIntoView?.({behavior:'smooth', block:'start'});
+      feedbackTarget.focus?.();
+    }
+    const result = {
+      ok: Boolean(importResult?.count),
+      feedback_count: importResult?.count || sample.count || 0,
+      complete_stage_count: cyclePayload.summary?.complete_stage_count || 0,
+      publish_adoption_count: cyclePayload.summary?.publish_adoption_count || 0,
+    };
+    if (boardStatus) boardStatus.textContent = `已载入 ${result.feedback_count} 条试用反馈样例，并生成下一版修改建议、候选草案、应用清单和闭环总包。`;
+    if (trialStatus) trialStatus.textContent = `反馈闭环演示已生成：${result.complete_stage_count}/6 个阶段，${result.publish_adoption_count} 条发布采纳项。`;
+    return result;
   }
   function travelerHomeFeedbackBoardSummary(records){
     const source = Array.isArray(records) ? records : travelerHomeFeedbackBoardRecords();
@@ -8774,6 +8840,8 @@
   ['traveler-home-feedback-role','traveler-home-feedback-route','traveler-home-feedback-type','traveler-home-feedback-severity'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '反馈包已随选择更新。'; }));
   document.getElementById('traveler-home-feedback-note')?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-feedback-status'); renderTravelerHomeFeedback(); if (status) status.textContent = '问题描述已更新。'; });
   document.getElementById('traveler-home-feedback-board-import-button')?.addEventListener('click', importTravelerHomeFeedbackBoard);
+  document.getElementById('traveler-home-feedback-board-sample-button')?.addEventListener('click', loadTravelerHomeTrialFeedbackSample);
+  document.getElementById('traveler-home-feedback-board-demo-button')?.addEventListener('click', runTravelerHomeTrialFeedbackDemo);
   document.getElementById('traveler-home-feedback-board-copy-button')?.addEventListener('click', copyTravelerHomeFeedbackBoardMarkdown);
   document.getElementById('traveler-home-feedback-board-download-button')?.addEventListener('click', downloadTravelerHomeFeedbackBoardMarkdown);
   document.getElementById('traveler-home-feedback-board-clear-button')?.addEventListener('click', clearTravelerHomeFeedbackBoard);

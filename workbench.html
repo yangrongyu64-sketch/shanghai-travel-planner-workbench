@@ -936,7 +936,7 @@
         navigator.serviceWorker.register('service-worker.js').catch(() => {});
       });
     }
-    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', workbenchAudienceMode: 'traveler', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, projectPublishArchiveCompletionExports: {}, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackApplicationResults: [], trialFeedbackPublishFinalReviews: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
+    const state = { selectedId: routes[0]?.tripId || '', tab: 'traveler', filter: 'all', query: '', workbenchAudienceMode: 'traveler', officialPlaceId: '', activePreference: '', preferenceVariantEdits: {}, contentDraftEdits: {}, publishReadyEdits: {}, publishReadyEditorRouteId: '', publishScheduleStartDate: '', publishScheduleIntervalDays: 1, publishScheduleXiaohongshuTime: '20:00', publishScheduleDouyinTime: '12:00', publishExecutionUpdates: {}, publishPerformanceUpdates: {}, publishExecutionStatusFilter: 'all', publishPerformanceLevelFilter: 'all', publishExecutionBulkFeedback: '', publishPerformanceBulkFeedback: '', followupDraftEdits: {}, followupDraftAuditFilter: 'all', followupDraftAuditBulkFeedback: '', projectOverviewMode: 'all', projectOverviewStageKey: '', projectOverviewFocusKey: '', projectOverviewFocusRowKey: '', projectOverviewStageActionFeedback: '', projectOverviewImportFeedback: null, projectOverviewPublishExportFeedback: null, projectOverviewExecutionFeedback: null, projectOverviewPerformanceFeedback: null, projectDashboardTaskEdits: {}, projectDashboardTaskStatusFilter: 'all', projectMapReviewDrafts: {}, projectMapRevisionDiffs: [], projectMapReviewStatusFilter: 'all', projectPublishWorkspaceFocusSection: '', projectPublishHealthImportLog: [], platformMaterialImports: [], trendSnapshotImports: [], trendSnapshotImportFeedback: '', platformMaterialAssetRouteFilter: 'all', platformMaterialAssetPlatformFilter: 'all', platformMaterialAssetImportFeedback: '', projectPublishArchiveReceipt: null, projectPublishArchiveCompletionExports: {}, trialFeedbackRecords: [], trialFeedbackBatches: [], trialFeedbackNextVersionPlans: [], trialFeedbackRevisionSuggestions: [], trialFeedbackDraftCandidates: [], trialFeedbackApplicationPackages: [], trialFeedbackApplicationResults: [], trialFeedbackPublishFinalReviews: [], trialFeedbackStatusFilter: 'all', projectWorkbenchLocalRestoreConfirmToken: '', projectDemoPublishStateApplied: false, draftDiffOpen: {}, projectDeliverySelection: [] };
     const labels = { traveler: '游客攻略', xiaohongshu: '小红书', douyin: '抖音', essay: '游记', map: '路线图', route_compare: '路线对比', project_acceptance: '交付验收', audit: '体检', materials: '素材审核', platform_import: '平台导入', publish_dashboard: '发布看板', official_queue: '官方总表', official: '官方回填' };
     const PROJECT_WORKBENCH_STATE_STORAGE_KEY = 'shanghai_planner_workbench_state_v1';
     const PROJECT_WORKBENCH_BEFORE_RESTORE_STORAGE_KEY = 'shanghai_planner_workbench_before_restore_v1';
@@ -3708,6 +3708,240 @@
       const rows = (items || []).map(item => `<tr><td>${escapeHtml(item.return_status)}<br><span>${escapeHtml(item.official_status)}</span></td><td><strong>${escapeHtml(item.place_name)}</strong><br><span>${escapeHtml(item.route_label)}</span></td><td>${escapeHtml(item.official_url || '待回传官方来源')}<br><span>${escapeHtml(item.verified_at || '待回传核验日期')}</span></td><td>${escapeHtml((item.missing_fields || []).join(' / ') || '已补齐')}</td><td>${escapeHtml(item.next_action)}</td></tr>`).join('');
       return rows || '<tr><td colspan="5">暂无素材触发复核回传任务</td></tr>';
     }
+    function trendSnapshotArray(value){
+      return Array.isArray(value) ? value.map(item => String(item || '').trim()).filter(Boolean) : [];
+    }
+    function trendSnapshotCanonicalField(field){
+      const text = String(field || '').trim();
+      const map = {开放: 'opening_status', 开放时间: 'opening_status', 预约: 'reservation_status', 门票预约: 'reservation_status', 票务: 'ticket_status', 门票: 'ticket_status', 交通: 'transport_status', 临时闭馆: 'temporary_closure', opening: 'opening_status', opening_status: 'opening_status', reservation: 'reservation_status', reservation_status: 'reservation_status', ticket: 'ticket_status', ticket_status: 'ticket_status', transport: 'transport_status', transport_status: 'transport_status', temporary_closure: 'temporary_closure', temporary_closure_note: 'temporary_closure'};
+      return map[text] || text || 'opening_status';
+    }
+    function trendSnapshotMatchedRoute(raw){
+      const routeId = String(raw?.route_id || raw?.routeId || raw?.trip_id || raw?.tripId || '').trim();
+      return routes.find(route => route.tripId === routeId) || null;
+    }
+    function normalizeTrendSnapshotRecord(raw){
+      if (!raw || typeof raw !== 'object') return null;
+      const route = trendSnapshotMatchedRoute(raw);
+      if (!route) return null;
+      const platform = String(raw.platform || raw.channel || raw.source_platform || raw.sourcePlatform || 'travel_website').trim();
+      const keyword = String(raw.keyword || raw.query || raw.search_keyword || raw.searchKeyword || '').trim();
+      const topic = String(raw.topic || raw.title || raw.note_title || raw.noteTitle || keyword || `${route.primaryAngle} 热点观察`).trim();
+      const capturedAt = String(raw.captured_at || raw.capturedAt || raw.collected_at || raw.collectedAt || new Date().toISOString().slice(0, 10)).trim();
+      const linkedPlaceIds = trendSnapshotArray(raw.linked_place_ids || raw.linkedPlaceIds || raw.referenced_place_ids || raw.referencedPlaceIds);
+      const linkedPlaceNames = trendSnapshotArray(raw.linked_place_names || raw.linkedPlaceNames || raw.referenced_place_names || raw.referencedPlaceNames);
+      const officialFields = trendSnapshotArray(raw.official_fields_to_verify || raw.officialFieldsToVerify || raw.verify_fields || raw.verifyFields).map(trendSnapshotCanonicalField);
+      const contentAngles = trendSnapshotArray(raw.content_angles || raw.contentAngles || raw.angles);
+      const routeHints = trendSnapshotArray(raw.route_hints || raw.routeHints || raw.hints);
+      const heatSignal = String(raw.heat_signal || raw.heatSignal || raw.heat || raw.score || raw.rank || 'manual_observation').trim();
+      const sourceUrl = String(raw.source_url || raw.sourceUrl || raw.aweme_url || raw.note_url || raw.url || 'paste:trend-snapshot').trim();
+      const id = String(raw.id || `trend_${platformMaterialImportSafeSlug(route.tripId, 'route')}_${platformMaterialImportSafeSlug(platform, 'platform')}_${platformMaterialImportSafeSlug(keyword || topic, 'topic')}_${String(capturedAt).replace(/[^0-9]/g, '') || 'undated'}`).trim();
+      return {id, route_id: route.tripId, route_name: route.templateName, platform, platform_label: platformMaterialImportPlatformLabel(platform), keyword, topic, heat_signal: heatSignal, source_url: sourceUrl, captured_at: capturedAt, linked_place_ids: linkedPlaceIds, linked_place_names: linkedPlaceNames, content_angles: contentAngles.length ? contentAngles : [route.primaryAngle || `${route.durationDays}天${route.intensityLabel}`], route_hints: routeHints.length ? routeHints : ['把热点信号转成路线调整建议，不直接复制平台原文。'], official_fields_to_verify: officialFields.length ? Array.from(new Set(officialFields)) : ['opening_status', 'reservation_status', 'ticket_status', 'transport_status'], review_status: String(raw.review_status || raw.reviewStatus || '待复核').trim() || '待复核'};
+    }
+    function trendSnapshotSourceRecords(payload){
+      if (Array.isArray(payload)) return payload;
+      if (!payload || typeof payload !== 'object') return [];
+      if (Array.isArray(payload.trends)) return payload.trends;
+      if (Array.isArray(payload.items)) return payload.items;
+      if (Array.isArray(payload.records)) return payload.records;
+      if (Array.isArray(payload.trend_snapshots)) return payload.trend_snapshots;
+      if (Array.isArray(payload.trendSnapshots)) return payload.trendSnapshots;
+      if (Array.isArray(payload.data)) return payload.data;
+      return [payload];
+    }
+    function trendSnapshotRecords(records){
+      const source = Array.isArray(records) ? records : records ? trendSnapshotSourceRecords(records) : state.trendSnapshotImports;
+      const seen = new Set();
+      return (Array.isArray(source) ? source : []).map(normalizeTrendSnapshotRecord).filter(record => {
+        if (!record || seen.has(record.id)) return false;
+        seen.add(record.id);
+        return true;
+      });
+    }
+    function trendSnapshotSummary(records){
+      const items = trendSnapshotRecords(records);
+      const routeIds = new Set();
+      const platforms = {};
+      let officialFieldCount = 0;
+      items.forEach(item => {
+        routeIds.add(item.route_id);
+        platforms[item.platform] = (platforms[item.platform] || 0) + 1;
+        officialFieldCount += (item.official_fields_to_verify || []).length;
+      });
+      return {total: items.length, route_count: routeIds.size, platform_counts: platforms, official_field_count: officialFieldCount};
+    }
+    function trendSnapshotRouteRecommendations(records){
+      const items = trendSnapshotRecords(records);
+      const grouped = new Map();
+      items.forEach(item => {
+        const route = routes.find(entry => entry.tripId === item.route_id) || null;
+        const key = item.route_id;
+        if (!grouped.has(key)) {
+          grouped.set(key, {route_id: key, route_name: item.route_name, duration_days: route?.durationDays || 0, platforms: new Set(), topics: [], keywords: [], content_angles: new Set(), official_fields: [], heat_signals: [], source_urls: []});
+        }
+        const record = grouped.get(key);
+        if (item.platform) record.platforms.add(item.platform);
+        if (item.topic && !record.topics.includes(item.topic)) record.topics.push(item.topic);
+        if (item.keyword && !record.keywords.includes(item.keyword)) record.keywords.push(item.keyword);
+        (item.content_angles || []).forEach(angle => record.content_angles.add(angle));
+        (item.official_fields_to_verify || []).forEach(field => { if (!record.official_fields.includes(field)) record.official_fields.push(field); });
+        if (item.heat_signal && !record.heat_signals.includes(item.heat_signal)) record.heat_signals.push(item.heat_signal);
+        if (item.source_url && !record.source_urls.includes(item.source_url)) record.source_urls.push(item.source_url);
+      });
+      return Array.from(grouped.values()).map(record => {
+        const trendCount = items.filter(item => item.route_id === record.route_id).length;
+        const platformList = Array.from(record.platforms);
+        const platformCount = platformList.length;
+        const officialFieldLabels = record.official_fields.map(platformMaterialOfficialFieldLabel);
+        const primaryTopic = record.topics[0] || `${record.route_name} 热点观察`;
+        const suggestedTitle = `${primaryTopic}｜${record.route_name}`;
+        const trendScore = Math.min(100, trendCount * 35 + platformCount * 15 + officialFieldLabels.length * 2);
+        const fieldText = officialFieldLabels.join('、');
+        const hasXiaohongshu = platformList.includes('xiaohongshu');
+        const hasDouyin = platformList.includes('douyin');
+        const contentAction = hasXiaohongshu && hasDouyin ? '优先产出小红书标题和抖音开头' : hasXiaohongshu ? '优先产出小红书标题和封面卖点' : hasDouyin ? '优先产出抖音开头和分镜钩子' : '优先产出路线选题和标题备选';
+        const nextAction = fieldText ? `${contentAction}，同时复核${fieldText}。` : `${contentAction}，再进入人工选题复核。`; 
+        return {route_id: record.route_id, route_name: record.route_name, duration_days: record.duration_days, trend_count: trendCount, platform_count: platformCount, platforms: platformList, platform_labels: platformList.map(platformMaterialImportPlatformLabel), trend_score: trendScore, primary_topic: primaryTopic, suggested_title: suggestedTitle, content_angles: Array.from(record.content_angles), official_fields: record.official_fields, official_field_labels: officialFieldLabels, heat_signals: record.heat_signals, source_urls: record.source_urls, next_action: nextAction};
+      }).sort((a, b) => b.trend_score - a.trend_score || b.trend_count - a.trend_count || a.duration_days - b.duration_days || a.route_id.localeCompare(b.route_id));
+    }
+    function trendSnapshotPublishTopicPlatformOrder(platform){
+      const order = {xiaohongshu: 0, douyin: 1, travel_website: 2};
+      return Object.prototype.hasOwnProperty.call(order, platform) ? order[platform] : 9;
+    }
+    function trendSnapshotPublishTopicAssetPath(routeId, platform){
+      if (platform === 'xiaohongshu') return `routes/${routeId}/xiaohongshu-publish.md`;
+      if (platform === 'douyin') return `routes/${routeId}/douyin-publish.md`;
+      return `routes/${routeId}/traveler.md`;
+    }
+    function trendSnapshotPublishTopicContentAngle(recommendation, platform, primaryRecord, route){
+      const angle = (primaryRecord?.content_angles || recommendation.content_angles || [])[0] || route?.primaryAngle || recommendation.primary_topic;
+      if (platform === 'douyin') return angle ? `${angle}；前三秒强调${primaryRecord?.heat_signal || '热点上升'}` : '前三秒突出路线利益点。';
+      if (platform === 'travel_website') return angle ? `${angle}；补足动线、预约、交通和替代方案` : '整理路线动线、预约、交通和替代方案。';
+      return angle || '提炼封面卖点和正文结构。';
+    }
+    function trendSnapshotPublishTopicNextAction(platform, officialFieldLabels){
+      const fieldText = (officialFieldLabels || []).join('、') || '官方信息';
+      if (platform === 'xiaohongshu') return `优先产出小红书标题、封面字和正文结构；发布前复核${fieldText}。`;
+      if (platform === 'douyin') return `优先产出抖音前三秒开头、分镜钩子和字幕节奏；发布前复核${fieldText}。`;
+      return `优先产出路线专题和事实复核清单；发布前复核${fieldText}。`;
+    }
+    function trendSnapshotPublishTopicItems(records){
+      const sourceRecords = trendSnapshotRecords(records);
+      const recommendations = trendSnapshotRouteRecommendations(sourceRecords);
+      return recommendations.flatMap(recommendation => {
+        const route = routes.find(entry => entry.tripId === recommendation.route_id) || null;
+        const routeRecords = sourceRecords.filter(record => record.route_id === recommendation.route_id);
+        const platforms = (recommendation.platforms || []).length ? recommendation.platforms.slice() : ['travel_website'];
+        return platforms.sort((left, right) => trendSnapshotPublishTopicPlatformOrder(left) - trendSnapshotPublishTopicPlatformOrder(right) || left.localeCompare(right)).map(platform => {
+          const platformRecords = routeRecords.filter(record => record.platform === platform);
+          const primaryRecord = platformRecords[0] || routeRecords[0] || {};
+          const topic = primaryRecord.topic || recommendation.primary_topic || `${recommendation.route_name} 热点观察`; 
+          const suggestedTitle = platform === 'douyin' ? `短视频开头：${topic}｜${recommendation.route_name}` : platform === 'travel_website' ? `路线专题：${recommendation.suggested_title}` : recommendation.suggested_title;
+          const officialLabels = recommendation.official_field_labels || [];
+          return {
+            topic_id: `trend_topic_${platformMaterialImportSafeSlug(recommendation.route_id, 'route')}_${platformMaterialImportSafeSlug(platform, 'platform')}`,
+            route_id: recommendation.route_id,
+            route_name: recommendation.route_name,
+            platform,
+            platform_label: platformMaterialImportPlatformLabel(platform),
+            trend_score: recommendation.trend_score,
+            trend_count: recommendation.trend_count,
+            suggested_title: suggestedTitle,
+            content_angle: trendSnapshotPublishTopicContentAngle(recommendation, platform, primaryRecord, route),
+            official_fields: recommendation.official_fields || [],
+            official_field_labels: officialLabels,
+            source_topics: platformRecords.map(record => record.topic).filter(Boolean),
+            heat_signals: platformRecords.map(record => record.heat_signal).filter(Boolean),
+            source_urls: platformRecords.map(record => record.source_url).filter(Boolean),
+            asset_path: trendSnapshotPublishTopicAssetPath(recommendation.route_id, platform),
+            next_action: trendSnapshotPublishTopicNextAction(platform, officialLabels)
+          };
+        });
+      }).sort((left, right) => right.trend_score - left.trend_score || trendSnapshotPublishTopicPlatformOrder(left.platform) - trendSnapshotPublishTopicPlatformOrder(right.platform) || left.route_id.localeCompare(right.route_id));
+    }
+    function trendSnapshotPublishTopicMarkdown(records){
+      const items = trendSnapshotPublishTopicItems(records);
+      const rows = items.map(item => `| ${markdownTableCell(item.route_name)} | ${markdownTableCell(item.platform_label)} | ${item.trend_score} | ${markdownTableCell(item.suggested_title)} | ${markdownTableCell(item.content_angle)} | ${markdownTableCell((item.official_field_labels || []).join('、') || '待复核')} | ${markdownTableCell(item.asset_path)} | ${markdownTableCell(item.next_action)} |`);
+      return ['# 趋势选题发布队列', '', `- 任务数：${items.length}`, '- 来源边界：只使用趋势快照里的结构化话题、角度、路线信号和复核字段，不复制第三方平台原文。', '- 用途：把高热路线直接分派到小红书、抖音或旅游站内容生产。', '', '| 路线 | 平台 | 趋势指数 | 建议标题 | 内容角度 | 待复核字段 | 素材文件 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows.length ? rows : ['| 暂无 | 暂无 | 0 | 暂无 | 暂无 | 暂无 | 暂无 | 导入趋势源后自动生成。 |']).join('\n');
+    }
+    function trendSnapshotPublishTopicTableHtml(records){
+      const items = trendSnapshotPublishTopicItems(records);
+      const rows = items.map(item => `<tr><td><strong>${escapeHtml(item.route_name)}</strong><br><span>${escapeHtml(item.route_id)}</span></td><td>${escapeHtml(item.platform_label)}</td><td>${escapeHtml(String(item.trend_score))}<br><span>${escapeHtml(String(item.trend_count))} 条趋势</span></td><td><strong>${escapeHtml(item.suggested_title)}</strong><br><span>${escapeHtml(item.content_angle)}</span></td><td>${escapeHtml((item.official_field_labels || []).join(' / ') || '待复核')}</td><td>${escapeHtml(item.asset_path)}</td><td>${escapeHtml(item.next_action)}</td></tr>`).join('') || '<tr><td colspan="7">暂无趋势选题任务，导入趋势源后自动生成。</td></tr>';
+      return `<section class="trend-publish-topic-queue"><h3 class="markdown-section-title">趋势选题发布队列</h3><p class="official-import-status">按路线趋势指数和平台覆盖，把趋势源直接转成小红书、抖音或旅游站的发布选题任务；发布前仍需人工复核官方字段。</p><div class="project-acceptance-table-wrap"><table id="trend-publish-topic-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>趋势指数</th><th>建议标题/角度</th><th>待复核字段</th><th>素材文件</th><th>下一动作</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+    }
+    function trendSnapshotMaterialRecord(record){
+      return {
+        id: `trend_material_${record.id}`.replace(/[^a-zA-Z0-9_\-]+/g, '_'),
+        route_id: record.route_id,
+        route_name: record.route_name,
+        platform: record.platform,
+        platform_label: record.platform_label,
+        source_grade: 'C',
+        source_url: record.source_url,
+        captured_at: record.captured_at,
+        title: `趋势快照：${record.topic}`.slice(0, 120),
+        referenced_place_ids: record.linked_place_ids || [],
+        referenced_place_names: record.linked_place_names || [],
+        content_angles: record.content_angles || [],
+        route_hints: [`热点/话题：${record.keyword || record.topic}`, `热度信号：${record.heat_signal}`, ...(record.route_hints || [])],
+        caution_notes: ['趋势源只用于选题和路线信号，不复制第三方平台原文。'],
+        official_fields_to_verify: record.official_fields_to_verify || [],
+        review_status: record.review_status || '待复核',
+        cleanup_note: '由趋势源导入台生成，发布前需人工复核来源、日期和事实字段。'
+      };
+    }
+    function applyTrendSnapshotRecords(records){
+      const normalized = trendSnapshotRecords(records);
+      const existing = trendSnapshotRecords().filter(item => !normalized.some(next => next.id === item.id));
+      state.trendSnapshotImports = existing.concat(normalized);
+      const materialRecords = normalized.map(trendSnapshotMaterialRecord);
+      materialRecords.forEach(record => applyPlatformMaterialImportPayload(record));
+      return {imported: normalized.length, material_imported: materialRecords.length, total: trendSnapshotRecords().length, records: normalized, message: `已导入 ${normalized.length} 条趋势快照，并同步 ${materialRecords.length} 条到平台素材池。`};
+    }
+    function importTrendSnapshotJsonText(text){
+      return applyTrendSnapshotRecords(JSON.parse(text));
+    }
+    function trendSnapshotMarkdown(records){
+      const items = trendSnapshotRecords(records);
+      const summary = trendSnapshotSummary(items);
+      const recommendations = trendSnapshotRouteRecommendations(items);
+      const platformText = Object.entries(summary.platform_counts || {}).map(([platform, count]) => `${platformMaterialImportPlatformLabel(platform)}:${count}`).join(' / ') || '暂无';
+      const rows = items.map(item => `| ${markdownTableCell(item.route_name)} | ${markdownTableCell(platformMaterialImportPlatformLabel(item.platform))} | ${markdownTableCell(item.keyword || item.topic)} | ${markdownTableCell(item.heat_signal)} | ${markdownTableCell((item.content_angles || []).join('；'))} | ${markdownTableCell((item.official_fields_to_verify || []).map(platformMaterialOfficialFieldLabel).join('；'))} |`).join('\n');
+      const recommendationRows = recommendations.map(item => `| ${markdownTableCell(item.route_name)} | ${item.trend_score} | ${item.trend_count} | ${markdownTableCell(item.platform_labels.join(' / '))} | ${markdownTableCell(item.suggested_title)} | ${markdownTableCell(item.next_action)} |`).join('\n');
+      return ['# 上海趋势源快照摘要', '', `- 趋势条数：${summary.total}`, `- 覆盖路线：${summary.route_count}`, `- 平台分布：${platformText}`, `- 待官方复核字段：${summary.official_field_count}`, '- 使用边界：只保留热点、选题角度、路线信号和复核字段，不复制第三方平台原文。', '', '## 路线趋势推荐', '', '| 路线 | 趋势指数 | 趋势条数 | 平台覆盖 | 建议标题 | 推荐动作 |', '| --- | --- | --- | --- | --- | --- |', recommendationRows || '| 暂无 | 0 | 0 | 暂无 | 暂无 | 暂无 |', '', '## 趋势列表', '', '| 路线 | 平台 | 热点/话题 | 热度信号 | 选题角度 | 待官方复核字段 |', '| --- | --- | --- | --- | --- | --- |', rows || '| 暂无 | 暂无 | 暂无 | 暂无 | 暂无 | 暂无 |', '', '## 下一步', '', '- 高热度但缺官方字段的地点，进入官方复核。', '- 热点角度先变成小红书标题、抖音开头或路线调整建议，再人工润色。', '- TikHub 或其他平台 API 返回后，先映射成 trend-source-template.json 结构再导入。'].join('\n');
+    }
+    function trendSnapshotPreviewText(records){
+      return JSON.stringify({kind: 'shanghai_trend_snapshot_preview', summary: trendSnapshotSummary(records), trends: trendSnapshotRecords(records)}, null, 2);
+    }
+    function trendSnapshotDashboardHtml(){
+      const records = trendSnapshotRecords();
+      const summary = trendSnapshotSummary(records);
+      const recommendations = trendSnapshotRouteRecommendations(records);
+      const tableRows = records.map(record => `<tr><td><strong>${escapeHtml(record.route_name)}</strong><br><span>${escapeHtml(record.route_id)}</span></td><td>${escapeHtml(platformMaterialImportPlatformLabel(record.platform))}</td><td><strong>${escapeHtml(record.topic)}</strong><br><span>${escapeHtml(record.keyword || '未填关键词')}</span></td><td>${escapeHtml(record.heat_signal)}</td><td>${escapeHtml((record.content_angles || []).join(' / ') || '待提炼')}</td><td>${escapeHtml((record.official_fields_to_verify || []).map(platformMaterialOfficialFieldLabel).join(' / ') || '待补')}</td></tr>`).join('') || '<tr><td colspan="6">暂无趋势快照，先粘贴 TikHub / 手动 JSON / 旅游平台热点快照。</td></tr>';
+      const recommendationRows = recommendations.map(item => `<tr><td><strong>${escapeHtml(item.route_name)}</strong><br><span>${escapeHtml(item.route_id)}</span></td><td>${escapeHtml(String(item.trend_score))}</td><td>${escapeHtml(String(item.trend_count))}<br><span>${escapeHtml(item.platform_labels.join(' / ') || '暂无平台')}</span></td><td><strong>${escapeHtml(item.suggested_title)}</strong><br><span>${escapeHtml(item.primary_topic)}</span></td><td>${escapeHtml(item.official_field_labels.join(' / ') || '暂无')}</td><td>${escapeHtml(item.next_action)}</td></tr>`).join('') || '<tr><td colspan="6">暂无路线趋势推荐，导入趋势后自动生成。</td></tr>';
+      const platformText = Object.entries(summary.platform_counts || {}).map(([platform, count]) => `${platformMaterialImportPlatformLabel(platform)}:${count}`).join(' / ') || '暂无';
+      const feedback = state.trendSnapshotImportFeedback || '支持 trend-snapshot-sample.json、trend-source-template.json、TikHub 映射结果或手动 JSON 数组。';
+      return `<section id="trend-snapshot-console" class="official-import trend-snapshot-console"><h3 class="markdown-section-title">趋势源导入台</h3><p class="official-import-status">粘贴 TikHub、手动 JSON、旅游平台热点快照，直接预览每条路线的热点/话题、选题角度和待官方复核字段；导入后会同步到平台素材池。</p><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>趋势条数</span></div><div class="metric"><b>${summary.route_count}</b><span>覆盖路线</span></div><div class="metric"><b>${summary.official_field_count}</b><span>待官方复核字段</span></div><div class="metric"><b>${escapeHtml(platformText)}</b><span>平台分布</span></div></div><div class="field"><label for="trend-snapshot-json-import">趋势源 JSON</label><textarea id="trend-snapshot-json-import" placeholder="粘贴 shanghai_trend_snapshot、TikHub 映射结果、trends/items/records 数组。"></textarea></div><div class="official-import-actions"><button type="button" id="preview-trend-snapshot-button">预览趋势JSON</button><button type="button" id="import-trend-snapshot-button">导入趋势源</button><button type="button" id="download-trend-snapshot-md-button">导出趋势Markdown</button><p id="trend-snapshot-import-status" class="official-import-status">${escapeHtml(feedback)}</p></div><pre id="trend-snapshot-preview" class="official-json-preview"></pre><h4 class="markdown-section-title">路线趋势推荐</h4><p class="official-import-status">趋势指数按趋势条数、平台覆盖和待复核字段粗排，只用于决定先做哪条路线的选题和脚本。</p><div class="project-acceptance-table-wrap"><table id="trend-snapshot-route-score-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>趋势指数</th><th>平台覆盖</th><th>建议标题</th><th>待复核字段</th><th>推荐动作</th></tr></thead><tbody>${recommendationRows}</tbody></table></div><h4 class="markdown-section-title">趋势列表</h4><div class="project-acceptance-table-wrap"><table id="trend-snapshot-table" class="project-acceptance-table"><thead><tr><th>路线</th><th>平台</th><th>热点/话题</th><th>热度信号</th><th>选题角度</th><th>待官方复核字段</th></tr></thead><tbody>${tableRows}</tbody></table></div></section>`;
+    }
+    function renderTrendSnapshotDashboard(){
+      const dashboard = document.getElementById('trend-snapshot-console');
+      if (!dashboard) return;
+      dashboard.outerHTML = trendSnapshotDashboardHtml();
+      bindTrendSnapshotImport();
+    }
+    function downloadTrendSnapshotMarkdown(){
+      const blob = new Blob([trendSnapshotMarkdown()], {type: 'text/markdown;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'trend-snapshot-summary.md';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      const status = document.getElementById('trend-snapshot-import-status');
+      if (status) status.textContent = '已导出趋势 Markdown，可用于选题会或素材复核分派。';
+    }
     function platformMaterialAssetFilteredRecords(records){
       const routeFilter = state.platformMaterialAssetRouteFilter || 'all';
       const platformFilter = state.platformMaterialAssetPlatformFilter || 'all';
@@ -3873,11 +4107,11 @@
       bindPlatformMaterialAssetDashboard();
     }
     function platformMaterialImportMarkdown(route){
-      return `# 平台素材导入\n\n- 当前路线：${route.templateName}\n- 使用原则：不复制第三方原文，只保留结构化洞察。\n- 支持平台：小红书、抖音、旅游网站。\n- 导出 JSON 后，先人工复核，再合并进 data/materials。`; 
+      return `# 平台素材导入\n\n- 当前路线：${route.templateName}\n- 使用原则：不复制第三方原文，只保留结构化洞察。\n- 支持平台：小红书、抖音、旅游网站、TikHub 映射快照。\n- 趋势源：可导入 shanghai_trend_snapshot / trends / items / records JSON，并导出趋势 Markdown。\n- 导出 JSON 后，先人工复核，再合并进 data/materials。`; 
     }
     function platformMaterialImportHtml(route){
       const routeOptions = routes.map(item => `<option value="${escapeHtml(item.tripId)}"${item.tripId === route.tripId ? ' selected' : ''}>${escapeHtml(item.durationDays + '天 · ' + item.templateName)}</option>`).join('');
-      return `<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="import-platform-material-button">导入到素材池</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>${platformMaterialAssetDashboardHtml()}`;
+      return `${trendSnapshotDashboardHtml()}<section class="official-import platform-material-import"><h3 class="markdown-section-title">平台素材导入</h3><p class="official-import-status">把小红书、抖音、旅游网站素材转成结构化 JSON。导出结果不保存第三方原文，只保留地点、角度、路线信号、避坑和官方复核字段。</p><div class="official-queue-form"><label>路线<select id="platform-material-import-route-select">${routeOptions}</select></label><label>平台<select id="platform-material-platform-select"><option value="xiaohongshu">小红书</option><option value="douyin">抖音</option><option value="travel_website">旅游网站</option></select></label><label>来源 URL<input id="platform-material-source-url-input" value="paste:platform-material"></label><label>采集日期<input id="platform-material-captured-at-input" type="date" value="${new Date().toISOString().slice(0, 10)}"></label></div><div class="field"><label for="platform-material-raw-text">粘贴素材文本</label><textarea id="platform-material-raw-text" placeholder="粘贴笔记摘录、口播转写或攻略片段；导出 JSON 不会保存原文整段。"></textarea></div><div class="official-import-actions"><button type="button" id="platform-material-preview-button">预检结构化JSON</button><button type="button" id="import-platform-material-button">导入到素材池</button><button type="button" id="download-platform-material-json-button">下载素材JSON</button><p id="platform-material-import-status" class="official-import-status">先粘贴素材，再预检；事实字段仍需官方复核。</p></div><pre id="platform-material-preview" class="official-json-preview"></pre></section>${platformMaterialAssetDashboardHtml()}`;
     }
     function bindPlatformMaterialAssetDashboard(){
       const routeFilter = document.getElementById('platform-material-asset-route-filter');
@@ -3905,6 +4139,45 @@
       if (handoffMarkdownButton) handoffMarkdownButton.addEventListener('click', downloadPlatformMaterialAssetHandoffMarkdown);
       if (officialReviewJsonButton) officialReviewJsonButton.addEventListener('click', downloadPlatformMaterialOfficialReviewHandoffJson);
       if (officialReviewMarkdownButton) officialReviewMarkdownButton.addEventListener('click', downloadPlatformMaterialOfficialReviewHandoffMarkdown);
+    }
+    function bindTrendSnapshotImport(){
+      const textarea = document.getElementById('trend-snapshot-json-import');
+      const previewButton = document.getElementById('preview-trend-snapshot-button');
+      const importButton = document.getElementById('import-trend-snapshot-button');
+      const downloadButton = document.getElementById('download-trend-snapshot-md-button');
+      const preview = document.getElementById('trend-snapshot-preview');
+      const status = document.getElementById('trend-snapshot-import-status');
+      const setStatus = (message, warn = false) => {
+        if (!status) return;
+        status.textContent = message;
+        status.classList.toggle('warn', Boolean(warn));
+      };
+      const parseRecords = () => {
+        const text = String(textarea?.value || '').trim();
+        return text ? trendSnapshotRecords(JSON.parse(text)) : trendSnapshotRecords();
+      };
+      if (previewButton) previewButton.addEventListener('click', () => {
+        try {
+          const records = parseRecords();
+          if (preview) preview.textContent = trendSnapshotPreviewText(records);
+          setStatus(`已预览 ${records.length} 条趋势快照；导入后会同步为平台素材和官方复核线索。`);
+        } catch (error) {
+          if (preview) preview.textContent = '';
+          setStatus('趋势 JSON 解析失败，请检查格式或路线 ID。', true);
+        }
+      });
+      if (importButton) importButton.addEventListener('click', () => {
+        try {
+          const result = importTrendSnapshotJsonText(String(textarea?.value || ''));
+          state.trendSnapshotImportFeedback = result.message;
+          persistProjectWorkbenchState();
+          renderMain();
+        } catch (error) {
+          state.trendSnapshotImportFeedback = '趋势 JSON 导入失败，请检查格式或路线 ID。';
+          setStatus(state.trendSnapshotImportFeedback, true);
+        }
+      });
+      if (downloadButton) downloadButton.addEventListener('click', downloadTrendSnapshotMarkdown);
     }
     function bindPlatformMaterialImport(){
       const previewButton = document.getElementById('platform-material-preview-button');
@@ -3936,6 +4209,7 @@
       });
       downloadButton.addEventListener('click', () => downloadPlatformMaterialImportJson());
       if (routeSelect) routeSelect.addEventListener('change', () => { state.selectedId = routeSelect.value; renderMain(); });
+      bindTrendSnapshotImport();
       bindPlatformMaterialAssetDashboard();
     }
     function downloadPlatformMaterialImportJson(){
@@ -4691,7 +4965,7 @@
     }
     function publishDashboardMarkdown(){
       const lines = publishDashboardItems().map((item, index) => `- ${index + 1}. ${item.route.templateName}｜优先级 ${item.score}｜官方未回填 ${item.official.missingCount}｜素材风险 ${item.material.status} ${item.material.score}/100｜内容健康 ${item.route.contentScore}/100｜${item.action}`);
-      return `# 发布优先级队列\n\n- 路线数：${routes.length}\n- 用途：先处理最影响发布安全和复用价值的路线。\n\n## 队列\n\n${lines.join('\n')}`;
+      return `# 发布优先级队列\n\n- 路线数：${routes.length}\n- 用途：先处理最影响发布安全和复用价值的路线。\n\n## 队列\n\n${lines.join('\n')}\n\n${trendSnapshotPublishTopicMarkdown()}`;
     }
     function publishDashboardHtml(){
       const items = publishDashboardItems();
@@ -4706,6 +4980,7 @@
         <h3 class="markdown-section-title">发布优先级队列</h3>
         <div class="publish-dashboard-summary"><div class="metric"><b>${items.length}</b><span>路线数</span></div><div class="metric"><b>${missingTotal}</b><span>官方未回填</span></div><div class="metric"><b>${pendingTotal}</b><span>官方待复核</span></div><div class="metric"><b>${readyCount}</b><span>低风险</span></div></div>
         <div class="publish-dashboard-table-wrap"><table id="publish-dashboard-table" class="publish-dashboard-table"><thead><tr><th>路线</th><th>优先级</th><th>官方未回填</th><th>官方待复核</th><th>素材风险</th><th>内容健康</th><th>处理建议</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div>
+        ${trendSnapshotPublishTopicTableHtml()}
       </div>`;
     }
     function publishDashboardSelect(routeId, tab){
@@ -6139,7 +6414,7 @@
     }
     function projectPublishPerformanceHtml(){
       const summary = publishPerformanceSummary();
-      return `<div class="publish-performance-import"><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>复盘任务</span></div><div class="metric"><b>${summary.measured}</b><span>已回填</span></div><div class="metric"><b>${summary.high_potential}</b><span>高潜力</span></div><div class="metric"><b>${summary.total_views}</b><span>总浏览</span></div></div><div class="field"><label for="publish-performance-json-import">导入发布数据 JSON</label><textarea id="publish-performance-json-import" placeholder="粘贴 publish-performance-template.json 回填后的内容"></textarea></div><div class="official-import-actions"><button type="button" id="download-publish-performance-template-json-button">下载数据模板JSON</button><button type="button" id="import-publish-performance-json-button">导入数据JSON</button><input id="publish-performance-json-file" type="file" accept=".json,application/json"><p id="publish-performance-json-import-status" class="official-import-status">可回填浏览、点赞、收藏、评论、分享和涨粉；导入后会生成复盘 CSV/Markdown。</p></div>${publishPerformanceStatusPreviewHtml()}${followupTopicPoolPreviewHtml()}${followupDraftPreviewHtml()}${followupDraftAuditPreviewHtml()}</div>`;
+      return `<div class="publish-performance-import"><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>复盘任务</span></div><div class="metric"><b>${summary.measured}</b><span>已回填</span></div><div class="metric"><b>${summary.high_potential}</b><span>高潜力</span></div><div class="metric"><b>${summary.total_views}</b><span>总浏览</span></div></div><div class="field"><label for="publish-performance-json-import">导入发布数据 JSON</label><textarea id="publish-performance-json-import" placeholder="粘贴 publish-performance-template.json 回填后的内容"></textarea></div><div class="official-import-actions"><button type="button" id="download-publish-performance-template-json-button">下载数据模板JSON</button><button type="button" id="import-publish-performance-json-button">导入数据JSON</button><input id="publish-performance-json-file" type="file" accept=".json,application/json"><p id="publish-performance-json-import-status" class="official-import-status">可回填浏览、点赞、收藏、评论、分享和涨粉；导入后会生成复盘 CSV/Markdown。</p></div>${publishPerformanceStatusPreviewHtml()}${publishTrendPerformanceAttributionHtml()}${followupTopicPoolPreviewHtml()}${followupDraftPreviewHtml()}${followupDraftAuditPreviewHtml()}</div>`;
     }
     function projectPublishCommandCenterItems(){
       const control = publishControlSummary();
@@ -8912,6 +9187,7 @@
         project_map_review_drafts: projectMapReviewDraftRecords(),
         project_publish_health_import_log: projectPublishHealthImportLogRecords(),
         platform_material_imports: platformMaterialImportRecords(),
+        trend_snapshot_imports: trendSnapshotRecords(),
         trial_feedback_records: trialFeedbackRecords(),
         trial_feedback_batches: trialFeedbackBatchRecords(),
         trial_feedback_next_version_plans: trialFeedbackNextVersionPlanRecords(),
@@ -8967,6 +9243,7 @@
         project_map_review_drafts: projectWorkbenchStateRecords(source, 'project_map_review_drafts', 'projectMapReviewDrafts').length,
         project_publish_health_import_log: projectWorkbenchStateRecords(source, 'project_publish_health_import_log', 'projectPublishHealthImportLog').length,
         platform_material_imports: projectWorkbenchStateRecords(source, 'platform_material_imports', 'platformMaterialImports').length,
+        trend_snapshot_imports: projectWorkbenchStateRecords(source, 'trend_snapshot_imports', 'trendSnapshotImports').length,
         trial_feedback_records: projectWorkbenchStateRecords(source, 'trial_feedback_records', 'trialFeedbackRecords').length,
         trial_feedback_batches: projectWorkbenchStateRecords(source, 'trial_feedback_batches', 'trialFeedbackBatches').length,
         trial_feedback_next_version_plans: projectWorkbenchStateRecords(source, 'trial_feedback_next_version_plans', 'trialFeedbackNextVersionPlans').length,
@@ -8981,7 +9258,7 @@
     function projectWorkbenchLocalStateSummaryText(summary){
       if (!summary) return '本机暂无可恢复状态。';
       const scheduleText = summary.schedule_start || '未设置';
-      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，修订建议 ${summary.trial_feedback_revision_suggestions}，候选草案 ${summary.trial_feedback_draft_candidates}，应用清单 ${summary.trial_feedback_application_packages}，应用结果 ${summary.trial_feedback_application_results}，终审面板 ${summary.trial_feedback_publish_final_reviews}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
+      return `本机暂存：保存于 ${summary.saved_at_label}；排期 ${scheduleText} / 每 ${summary.interval_days} 天；小红书 ${summary.xiaohongshu_time}，抖音 ${summary.douyin_time}；发布编辑 ${summary.publish_ready_edits}，执行 ${summary.publish_execution_updates}，复盘 ${summary.publish_performance_updates}，二创编辑 ${summary.followup_draft_edits}，推荐任务 ${summary.project_dashboard_task_edits}，地图复核 ${summary.project_map_review_drafts}，问题包导入 ${summary.project_publish_health_import_log}，平台素材 ${summary.platform_material_imports}，趋势快照 ${summary.trend_snapshot_imports}，试用反馈 ${summary.trial_feedback_records}，反馈批次 ${summary.trial_feedback_batches}，改动清单 ${summary.trial_feedback_next_version_plans}，修订建议 ${summary.trial_feedback_revision_suggestions}，候选草案 ${summary.trial_feedback_draft_candidates}，应用清单 ${summary.trial_feedback_application_packages}，应用结果 ${summary.trial_feedback_application_results}，终审面板 ${summary.trial_feedback_publish_final_reviews}，归档回执 ${summary.project_publish_archive_receipt ? '已生成' : '暂无'}。`;
     }
     function projectWorkbenchCurrentStateSummary(){
       return projectWorkbenchStateSummary(projectWorkbenchStatePayload());
@@ -9002,6 +9279,7 @@
         ['project_dashboard_task_edits', '推荐任务'],
         ['project_map_review_drafts', '地图复核'],
         ['platform_material_imports', '平台素材'],
+        ['trend_snapshot_imports', '趋势快照'],
         ['trial_feedback_records', '试用反馈'],
         ['trial_feedback_batches', '反馈批次'],
         ['trial_feedback_next_version_plans', '改动清单'],
@@ -9339,7 +9617,7 @@
     }
     function applyProjectWorkbenchState(payload){
       const source = projectWorkbenchStateSource(payload);
-      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, trial_feedback_application_results: 0, trial_feedback_publish_final_reviews: 0, project_publish_archive_receipt: 0, project_publish_archive_completion_exports: 0};
+      const imported = {schedule: 0, publish_ready_edits: 0, publish_execution_updates: 0, publish_performance_updates: 0, followup_draft_edits: 0, project_dashboard_task_edits: 0, project_map_review_drafts: 0, project_publish_health_import_log: 0, platform_material_imports: 0, trend_snapshot_imports: 0, trial_feedback_records: 0, trial_feedback_batches: 0, trial_feedback_next_version_plans: 0, trial_feedback_revision_suggestions: 0, trial_feedback_draft_candidates: 0, trial_feedback_application_packages: 0, trial_feedback_application_results: 0, trial_feedback_publish_final_reviews: 0, project_publish_archive_receipt: 0, project_publish_archive_completion_exports: 0};
       imported.schedule = applyProjectWorkbenchSchedule(source?.schedule);
       state.publishReadyEdits = {};
       state.publishExecutionUpdates = {};
@@ -9350,6 +9628,7 @@
       state.projectMapRevisionDiffs = [];
       state.projectPublishHealthImportLog = [];
       state.platformMaterialImports = [];
+      state.trendSnapshotImports = [];
       state.trialFeedbackRecords = [];
       state.trialFeedbackBatches = [];
       state.trialFeedbackNextVersionPlans = [];
@@ -9368,6 +9647,7 @@
       imported.project_map_review_drafts = applyProjectMapReviewDrafts(projectWorkbenchStateRecords(source, 'project_map_review_drafts', 'projectMapReviewDrafts'), {trackDiff: false});
       imported.project_publish_health_import_log = applyProjectPublishHealthImportLog(projectWorkbenchStateRecords(source, 'project_publish_health_import_log', 'projectPublishHealthImportLog'));
       imported.platform_material_imports = applyPlatformMaterialImportRecords(projectWorkbenchStateRecords(source, 'platform_material_imports', 'platformMaterialImports'));
+      imported.trend_snapshot_imports = applyTrendSnapshotRecords(projectWorkbenchStateRecords(source, 'trend_snapshot_imports', 'trendSnapshotImports')).imported;
       imported.trial_feedback_records = applyTrialFeedbackRecords(projectWorkbenchStateRecords(source, 'trial_feedback_records', 'trialFeedbackRecords'), {replace: true}).total;
       imported.trial_feedback_batches = applyTrialFeedbackBatches(projectWorkbenchStateRecords(source, 'trial_feedback_batches', 'trialFeedbackBatches'), {replace: true}).total;
       imported.trial_feedback_next_version_plans = applyTrialFeedbackNextVersionPlans(projectWorkbenchStateRecords(source, 'trial_feedback_next_version_plans', 'trialFeedbackNextVersionPlans'), {replace: true}).total;
@@ -9390,7 +9670,7 @@
       return applyProjectWorkbenchState(payload);
     }
     function projectWorkbenchStateImportSummary(imported, options){
-      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，修订建议 ${imported.trial_feedback_revision_suggestions || 0}，候选草案 ${imported.trial_feedback_draft_candidates || 0}，应用清单 ${imported.trial_feedback_application_packages || 0}，应用结果 ${imported.trial_feedback_application_results || 0}，终审面板 ${imported.trial_feedback_publish_final_reviews || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
+      const summary = `已恢复工作台状态：排期 ${imported.schedule ? '已恢复' : '未包含'}，发布编辑 ${imported.publish_ready_edits}，执行 ${imported.publish_execution_updates}，复盘 ${imported.publish_performance_updates}，二创编辑 ${imported.followup_draft_edits}，推荐任务 ${imported.project_dashboard_task_edits}，地图复核 ${imported.project_map_review_drafts}，问题包导入 ${imported.project_publish_health_import_log || 0}，平台素材 ${imported.platform_material_imports || 0}，趋势快照 ${imported.trend_snapshot_imports || 0}，试用反馈 ${imported.trial_feedback_records || 0}，反馈批次 ${imported.trial_feedback_batches || 0}，改动清单 ${imported.trial_feedback_next_version_plans || 0}，修订建议 ${imported.trial_feedback_revision_suggestions || 0}，候选草案 ${imported.trial_feedback_draft_candidates || 0}，应用清单 ${imported.trial_feedback_application_packages || 0}，应用结果 ${imported.trial_feedback_application_results || 0}，终审面板 ${imported.trial_feedback_publish_final_reviews || 0}，归档回执 ${imported.project_publish_archive_receipt ? '已恢复' : '未包含'}。`;
       return options?.protected_import ? `${summary} 已自动备份导入前状态，可从覆盖前备份或状态历史恢复。` : summary;
     }
     function projectWorkbenchStateImportFailureMessage(){
@@ -9626,23 +9906,70 @@
       const value = tab === 'xiaohongshu' ? state.publishScheduleXiaohongshuTime : state.publishScheduleDouyinTime;
       return /^\d{2}:\d{2}$/.test(String(value || '')) ? String(value) : fallback;
     }
-    function publishScheduleRows(){
-      const channels = [{tab: 'xiaohongshu', platform: '小红书', slot: '晚间', fileName: 'xiaohongshu-publish.md', nextAction: '确认标题、封面字、配图顺序和正文口吻。'}, {tab: 'douyin', platform: '抖音', slot: '午间', fileName: 'douyin-publish.md', nextAction: '确认前三秒钩子、口播节奏、镜头素材和字幕。'}];
-      return projectPublishReadyRoutes().flatMap((route, routeIndex) => channels.map(channel => {
-        const content = publishReadyContentText(route, channel.tab);
+    function publishScheduleChannelDefinitions(){
+      return [{tab: 'xiaohongshu', platform: '小红书', slot: '晚间', fileName: 'xiaohongshu-publish.md', nextAction: '确认标题、封面字、配图顺序和正文口吻。', order: 0}, {tab: 'douyin', platform: '抖音', slot: '午间', fileName: 'douyin-publish.md', nextAction: '确认前三秒钩子、口播节奏、镜头素材和字幕。', order: 1}];
+    }
+    function publishScheduleTrendChannel(platform){
+      const channel = publishScheduleChannelDefinitions().find(item => item.tab === platform);
+      if (channel) return channel;
+      if (platform === 'travel_website') return {tab: 'travel_website', platform: '旅游网站', slot: '资料补全', fileName: 'traveler.md', nextAction: '确认路线动线、官方复核字段和攻略站表达。', order: 2, fixedTime: '10:00'};
+      return {tab: platform || 'topic', platform: platformMaterialImportPlatformLabel(platform), slot: '选题补全', fileName: 'traveler.md', nextAction: '确认选题、事实复核和发布表达。', order: 9, fixedTime: '10:00'};
+    }
+    function publishScheduleChannelPlannedTime(channel){
+      if (channel.fixedTime) return channel.fixedTime;
+      return publishScheduleChannelTime(channel.tab);
+    }
+    function publishScheduleBaseRow(route, routeIndex, channel){
+      const content = publishReadyContentText(route, channel.tab);
+      return {
+        route_id: route.tripId,
+        route_name: route.templateName,
+        channel: channel.tab,
+        platform: channel.platform,
+        suggested_slot: `批次${routeIndex + 1} ${channel.slot}`,
+        planned_date: publishSchedulePlannedDate(routeIndex),
+        planned_time: publishScheduleChannelPlannedTime(channel),
+        asset_path: `routes/${route.tripId}/${channel.fileName}`,
+        headline: publishScheduleHeadline(content),
+        next_action: channel.nextAction,
+        source: 'standard',
+        trend_topic_id: '',
+        trend_score: 0,
+        route_index: routeIndex,
+        channel_order: channel.order
+      };
+    }
+    function publishScheduleTrendTopicRows(){
+      const readyRoutes = projectPublishReadyRoutes();
+      const routeIndexById = new Map(readyRoutes.map((route, index) => [route.tripId, index]));
+      return trendSnapshotPublishTopicItems().filter(topic => routeIndexById.has(topic.route_id)).map(topic => {
+        const routeIndex = routeIndexById.get(topic.route_id);
+        const channel = publishScheduleTrendChannel(topic.platform);
         return {
-          route_id: route.tripId,
-          route_name: route.templateName,
+          route_id: topic.route_id,
+          route_name: topic.route_name,
           channel: channel.tab,
-          platform: channel.platform,
+          platform: topic.platform_label || channel.platform,
           suggested_slot: `批次${routeIndex + 1} ${channel.slot}`,
           planned_date: publishSchedulePlannedDate(routeIndex),
-          planned_time: publishScheduleChannelTime(channel.tab),
-          asset_path: `routes/${route.tripId}/${channel.fileName}`,
-          headline: publishScheduleHeadline(content),
-          next_action: channel.nextAction
+          planned_time: publishScheduleChannelPlannedTime(channel),
+          asset_path: topic.asset_path || `routes/${topic.route_id}/${channel.fileName}`,
+          headline: publishScheduleHeadline(topic.suggested_title || topic.content_angle || topic.route_name),
+          next_action: topic.next_action || channel.nextAction,
+          source: 'trend_topic',
+          trend_topic_id: topic.topic_id,
+          trend_score: topic.trend_score || 0,
+          route_index: routeIndex,
+          channel_order: channel.order
         };
-      }));
+      });
+    }
+    function publishScheduleRows(){
+      const channels = publishScheduleChannelDefinitions();
+      const baseRows = projectPublishReadyRoutes().flatMap((route, routeIndex) => channels.map(channel => publishScheduleBaseRow(route, routeIndex, channel)));
+      const rowByKey = new Map(baseRows.map(row => [`${row.route_id}:${row.channel}`, row]));
+      publishScheduleTrendTopicRows().forEach(row => rowByKey.set(`${row.route_id}:${row.channel}`, row));
+      return Array.from(rowByKey.values()).sort((left, right) => left.route_index - right.route_index || left.channel_order - right.channel_order || left.channel.localeCompare(right.channel));
     }
     function publishScheduleCsv(){
       const header = 'route_id,route_name,platform,suggested_slot,planned_date,planned_time,asset_path,headline,next_action';
@@ -9690,6 +10017,9 @@
     function publishExecutionTaskId(row){
       return `${row.route_id}:${row.channel}`;
     }
+    function publishScheduleSourceLabel(record){
+      return record?.source === 'trend_topic' ? `趋势选题${record.trend_score ? ` ${record.trend_score}` : ''}${record.trend_topic_id ? `｜${record.trend_topic_id}` : ''}` : '标准排期';
+    }
     function publishExecutionTemplateRecords(){
       return publishScheduleRows().map(row => ({
         task_id: publishExecutionTaskId(row),
@@ -9705,7 +10035,10 @@
         published_at: '',
         published_url: '',
         metrics_note: '',
-        next_action: row.next_action
+        next_action: row.next_action,
+        source: row.source || 'standard',
+        trend_topic_id: row.trend_topic_id || '',
+        trend_score: row.trend_score || 0
       }));
     }
     function publishExecutionTemplateJson(){
@@ -9835,8 +10168,8 @@
     }
     function publishExecutionStatusMarkdown(){
       const summary = publishExecutionSummary();
-      const rows = publishExecutionRecords().map(record => `| ${markdownTableCell(record.route_name)} | ${markdownTableCell(record.platform)} | ${markdownTableCell(record.planned_date || '待定')} ${markdownTableCell(record.planned_time || '')} | ${markdownTableCell(record.status)} | ${markdownTableCell(record.published_at)} | ${markdownTableCell(record.published_url)} | ${markdownTableCell(record.metrics_note)} | ${markdownTableCell(record.next_action)} |`);
-      return ['# 发布执行状态', '', `- 发布任务：${summary.total}`, `- 待发布：${summary.pending}`, `- 已预约：${summary.scheduled}`, `- 已发布：${summary.published}`, `- 需返工：${summary.redo}`, '', '| 路线 | 平台 | 计划时间 | 状态 | 实际发布 | 链接 | 数据备注 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows).join('\n');
+      const rows = publishExecutionRecords().map(record => `| ${markdownTableCell(record.route_name)} | ${markdownTableCell(record.platform)} | ${markdownTableCell(publishScheduleSourceLabel(record))} | ${markdownTableCell(record.planned_date || '待定')} ${markdownTableCell(record.planned_time || '')} | ${markdownTableCell(record.status)} | ${markdownTableCell(record.published_at)} | ${markdownTableCell(record.published_url)} | ${markdownTableCell(record.metrics_note)} | ${markdownTableCell(record.next_action)} |`);
+      return ['# 发布执行状态', '', `- 发布任务：${summary.total}`, `- 待发布：${summary.pending}`, `- 已预约：${summary.scheduled}`, `- 已发布：${summary.published}`, `- 需返工：${summary.redo}`, '', '| 路线 | 平台 | 来源 | 计划时间 | 状态 | 实际发布 | 链接 | 数据备注 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows).join('\n');
     }
     function publishMetricCount(value){
       const number = Number(value || 0);
@@ -9856,6 +10189,10 @@
         route_name: record.route_name,
         channel: record.channel,
         platform: record.platform,
+        execution_status: record.status || '待发布',
+        source: record.source || 'standard',
+        trend_topic_id: record.trend_topic_id || '',
+        trend_score: record.trend_score || 0,
         published_url: record.published_url || '',
         headline: record.headline || '',
         views: 0,
@@ -10012,15 +10349,48 @@
         avg_engagement_rate: measured.length ? roundPublishMetric(measured.reduce((sum, record) => sum + record.engagement_rate, 0) / measured.length) : 0
       };
     }
+    function publishTrendPerformanceAttributionItems(){
+      return publishPerformanceRecords().filter(record => record.source === 'trend_topic' || record.trend_topic_id).map(record => ({
+        trend_topic_id: record.trend_topic_id || '',
+        route_id: record.route_id,
+        route_name: record.route_name,
+        channel: record.channel,
+        platform: record.platform,
+        headline: record.headline || '',
+        trend_score: record.trend_score || 0,
+        execution_status: record.execution_status || '待发布',
+        published_url: record.published_url || '',
+        views: record.views || 0,
+        engagement_rate: record.engagement_rate || 0,
+        save_rate: record.save_rate || 0,
+        performance_level: record.performance_level || '未回填',
+        metrics_note: record.metrics_note || '',
+        next_action: record.next_action || '回填发布后数据。'
+      }));
+    }
+    function publishTrendPerformanceAttributionSummary(){
+      const items = publishTrendPerformanceAttributionItems();
+      return {total: items.length, published: items.filter(item => item.execution_status === '已发布').length, measured: items.filter(item => item.views > 0).length, high_potential: items.filter(item => item.performance_level === '高潜力').length, total_views: items.reduce((sum, item) => sum + item.views, 0)};
+    }
+    function publishTrendPerformanceAttributionMarkdown(){
+      const summary = publishTrendPerformanceAttributionSummary();
+      const rows = publishTrendPerformanceAttributionItems().map(item => `| ${markdownTableCell(item.trend_topic_id || '标准选题')} | ${markdownTableCell(item.route_name)} | ${markdownTableCell(item.platform)} | ${item.trend_score} | ${markdownTableCell(item.execution_status)} | ${item.views} | ${item.engagement_rate}% | ${item.save_rate}% | ${markdownTableCell(item.performance_level)} | ${markdownTableCell(item.metrics_note)} | ${markdownTableCell(item.next_action)} |`);
+      return ['# 趋势发布追踪', '', `- 趋势任务：${summary.total}`, `- 已发布：${summary.published}`, `- 已回填数据：${summary.measured}`, `- 高潜力：${summary.high_potential}`, `- 总浏览：${summary.total_views}`, '', '| 趋势选题 | 路线 | 平台 | 趋势指数 | 执行状态 | 浏览 | 互动率 | 收藏率 | 数据等级 | 数据备注 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows.length ? rows : ['| 暂无 | 暂无 | 暂无 | 0 | 待发布 | 0 | 0% | 0% | 未回填 | 导入趋势并进入排期后生成 | 回填发布后数据。 |']).join('\n');
+    }
+    function publishTrendPerformanceAttributionHtml(){
+      const summary = publishTrendPerformanceAttributionSummary();
+      const rows = publishTrendPerformanceAttributionItems().map(item => `<tr><td><strong>${escapeHtml(item.trend_topic_id || '标准选题')}</strong><br><span>${escapeHtml(item.headline)}</span></td><td>${escapeHtml(item.route_name)}<br><span>${escapeHtml(item.platform)}</span></td><td>${escapeHtml(String(item.trend_score))}</td><td>${escapeHtml(item.execution_status)}<br><span>${escapeHtml(item.published_url || '待补链接')}</span></td><td>${item.views}<br><span>${item.engagement_rate}% / 收藏 ${item.save_rate}%</span></td><td><span class="acceptance-status ${item.performance_level === '高潜力' ? 'ready' : item.performance_level === '未回填' ? 'warn' : 'review'}">${escapeHtml(item.performance_level)}</span></td><td>${escapeHtml(item.next_action)}</td></tr>`).join('') || '<tr><td colspan="7">暂无趋势发布追踪任务，导入趋势源并生成排期后自动出现。</td></tr>';
+      return `<div id="trend-performance-attribution" class="trend-performance-attribution"><h4 class="markdown-section-title">趋势发布追踪</h4><div class="project-acceptance-summary"><div class="metric"><b>${summary.total}</b><span>趋势任务</span></div><div class="metric"><b>${summary.published}</b><span>已发布</span></div><div class="metric"><b>${summary.measured}</b><span>已回填</span></div><div class="metric"><b>${summary.high_potential}</b><span>高潜力</span></div></div><div class="project-acceptance-table-wrap"><table id="trend-performance-attribution-table" class="project-acceptance-table"><thead><tr><th>趋势选题</th><th>路线/平台</th><th>趋势指数</th><th>执行</th><th>数据</th><th>等级</th><th>下一动作</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    }
     function publishPerformanceCsv(){
-      const header = 'task_id,route_name,platform,views,likes,collects,comments,shares,followers_delta,engagement_rate,save_rate,performance_level,next_action';
-      const rows = publishPerformanceRecords().map(record => [record.task_id, record.route_name, record.platform, record.views, record.likes, record.collects, record.comments, record.shares, record.followers_delta, record.engagement_rate, record.save_rate, record.performance_level, record.next_action].map(csvCell).join(','));
+      const header = 'task_id,route_name,platform,views,likes,collects,comments,shares,followers_delta,engagement_rate,save_rate,performance_level,next_action,source,trend_topic_id,trend_score';
+      const rows = publishPerformanceRecords().map(record => [record.task_id, record.route_name, record.platform, record.views, record.likes, record.collects, record.comments, record.shares, record.followers_delta, record.engagement_rate, record.save_rate, record.performance_level, record.next_action, record.source || 'standard', record.trend_topic_id || '', record.trend_score || 0].map(csvCell).join(','));
       return [header].concat(rows).join('\n');
     }
     function publishPerformanceReportMarkdown(){
       const summary = publishPerformanceSummary();
-      const rows = publishPerformanceRecords().map(record => `| ${markdownTableCell(record.route_name)} | ${markdownTableCell(record.platform)} | ${record.views} | ${record.engagement_rate}% | ${record.save_rate}% | ${markdownTableCell(record.performance_level)} | ${markdownTableCell(record.metrics_note)} | ${markdownTableCell(record.next_action)} |`);
-      return ['# 发布数据复盘', '', `- 已回填数据：${summary.measured}/${summary.total}`, `- 高潜力：${summary.high_potential}`, `- 总浏览：${summary.total_views}`, `- 平均互动率：${summary.avg_engagement_rate}%`, '', '| 路线 | 平台 | 浏览 | 互动率 | 收藏率 | 等级 | 数据备注 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows).join('\n');
+      const rows = publishPerformanceRecords().map(record => `| ${markdownTableCell(record.route_name)} | ${markdownTableCell(record.platform)} | ${markdownTableCell(publishScheduleSourceLabel(record))} | ${record.views} | ${record.engagement_rate}% | ${record.save_rate}% | ${markdownTableCell(record.performance_level)} | ${markdownTableCell(record.metrics_note)} | ${markdownTableCell(record.next_action)} |`);
+      return ['# 发布数据复盘', '', `- 已回填数据：${summary.measured}/${summary.total}`, `- 高潜力：${summary.high_potential}`, `- 总浏览：${summary.total_views}`, `- 平均互动率：${summary.avg_engagement_rate}%`, '', '| 路线 | 平台 | 来源 | 浏览 | 互动率 | 收藏率 | 等级 | 数据备注 | 下一动作 |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'].concat(rows).concat(['', publishTrendPerformanceAttributionMarkdown()]).join('\n');
     }
     function followupTopicPlatform(channel){
       return channel === 'douyin' ? '抖音' : '小红书';

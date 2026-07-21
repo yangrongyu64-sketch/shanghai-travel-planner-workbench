@@ -42,6 +42,7 @@
 - 下载 `workbench-demo.zip` 应得到离线演示包。
 - 下载 `acceptance-report.zip` 应得到公开验收报告包。
 - 下载 `miniprogram-handoff.zip` 应得到小程序迁移资料包。
+- 下载 `trend-sources.zip` 应得到趋势源接入包。
 - 下载 `platform-refresh.zip` 应得到平台素材刷新资料包。
 - 下载 `official-refresh.zip` 应得到官方复核更新包。
 - 下载 `official-fillback.zip` 应得到官方复核回填闭环包。

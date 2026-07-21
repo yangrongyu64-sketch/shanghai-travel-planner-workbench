@@ -14,6 +14,7 @@
     "acceptance_report_zip": "acceptance-report.zip",
     "maintenance_report_zip": "maintenance-report.zip",
     "product_delivery_zip": "product-delivery.zip",
+    "trend_sources_zip": "trend-sources.zip",
     "official_fillback_zip": "official-fillback.zip",
     "release_audit_markdown": "shanghai-release-audit-package.md",
     "release_regression_markdown": "shanghai-release-regression-checklist.md",

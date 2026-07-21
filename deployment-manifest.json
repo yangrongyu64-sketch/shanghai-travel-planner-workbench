@@ -27,6 +27,7 @@
     "product-delivery.zip",
     "acceptance-report.zip",
     "miniprogram-handoff.zip",
+    "trend-sources.zip",
     "platform-refresh.zip",
     "official-refresh.zip",
     "official-fillback.zip",
@@ -43,6 +44,13 @@
     "directory": "miniprogram-handoff",
     "archive": "miniprogram-handoff.zip",
     "target": "微信小程序 / 移动端壳"
+  },
+  "trend_sources": {
+    "directory": "trend-sources",
+    "archive": "trend-sources.zip",
+    "template": "trend-sources/trend-source-template.json",
+    "manifest": "trend-sources/trend-sources-manifest.json",
+    "target": "TikHub / 手动 JSON / 旅游平台热点快照"
   },
   "product_delivery": {
     "directory": "product-delivery",
@@ -104,6 +112,7 @@
     "离线演示包 workbench-demo.zip 可下载",
     "正式交付包 product-delivery.zip 可下载",
     "公开验收报告包 acceptance-report.zip 可下载",
+    "趋势源接入包 trend-sources.zip 可下载",
     "平台素材刷新包 platform-refresh.zip 可下载",
     "官方复核更新包 official-refresh.zip 可下载",
     "官方复核回填闭环包 official-fillback.zip 可下载",
@@ -118,6 +127,7 @@
     "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
     "product_delivery_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip",
     "acceptance_report_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/acceptance-report.zip",
+    "trend_sources_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/trend-sources.zip",
     "official_refresh_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-refresh.zip",
     "official_fillback_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-fillback.zip",
     "release_evidence_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip",

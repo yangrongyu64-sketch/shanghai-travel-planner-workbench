@@ -1,0 +1,29 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "trend_source_adapter_package",
+  "status": "ready_for_optional_api_or_manual_import",
+  "route_count": 6,
+  "api_required": false,
+  "optional_api_slots": [
+    "tikhub"
+  ],
+  "source_assets": {
+    "web_entry": "index.html",
+    "normal_workbench": "workbench.html",
+    "platform_refresh_zip": "platform-refresh.zip",
+    "materials_dir": "data/materials",
+    "manual_template": "trend-sources/trend-source-template.json",
+    "sample_snapshot": "trend-sources/trend-snapshot-sample.json",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html"
+  },
+  "files": [
+    "README.md",
+    "trend-source-template.json",
+    "trend-snapshot-sample.json",
+    "tikhub-adapter-guide.md",
+    "manual-import-guide.md",
+    "trend-review-checklist.md",
+    "trend-sources-manifest.json"
+  ]
+}

@@ -12,6 +12,7 @@
 - `product-delivery.zip`：正式交付包，包含使用说明、维护步骤、验收清单和路线清单。
 - `acceptance-report.zip`：公开验收报告包，包含测试摘要、发布摘要、线上验收清单和剩余边界。
 - `miniprogram-handoff.zip`：小程序迁移包，给后续微信小程序或移动端壳开发使用。
+- `trend-sources.zip`：趋势源接入包，给 TikHub、手动 JSON、旅游平台热点快照等上游数据源使用。
 - `platform-refresh.zip`：平台素材刷新包，给小红书、抖音、旅游网站素材导入和人工复核使用。
 - `official-refresh.zip`：官方复核更新包，给开放、预约、票务、交通和临时闭馆信息人工更新使用。
 - `official-fillback.zip`：官方复核回填闭环包，用于导入复核结果、预览差异和安全回填。

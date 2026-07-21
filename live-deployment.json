@@ -5,6 +5,7 @@
   "download_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip",
   "product_delivery_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip",
   "acceptance_report_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/acceptance-report.zip",
+  "trend_sources_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/trend-sources.zip",
   "official_refresh_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-refresh.zip",
   "official_fillback_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-fillback.zip",
   "release_evidence_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip",
@@ -16,6 +17,7 @@
     "workbench.html 创作者工作台可访问",
     "workbench-demo.zip 可下载并解压",
     "acceptance-report.zip 可下载并解压",
+    "trend-sources.zip 可下载并解压",
     "official-refresh.zip 可下载并解压",
     "official-fillback.zip 可下载并解压",
     "release-evidence.zip 可下载并解压"

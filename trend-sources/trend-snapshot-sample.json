@@ -1,0 +1,181 @@
+{
+  "kind": "shanghai_trend_snapshot",
+  "version": 1,
+  "source": "manual_json",
+  "route_count": 6,
+  "adapter_slots": {
+    "manual_json": "直接按 trend-source-template.json 填写。",
+    "tikhub": "后续可把 TikHub 返回字段映射到本结构。",
+    "travel_website": "只提炼攻略结构、交通问题和官方复核线索。"
+  },
+  "trends": [
+    {
+      "route_id": "relaxed_2d1n_citywalk",
+      "platform": "xiaohongshu",
+      "keyword": "上海 2天 2天躺平 city walk",
+      "topic": "2天躺平 city walk 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "wukang_road",
+        "anfu_road"
+      ],
+      "content_angles": [
+        "2天躺平 city walk",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    },
+    {
+      "route_id": "first_time_3d2n_balanced",
+      "platform": "xiaohongshu",
+      "keyword": "上海 3天 3天初来上海不绕路",
+      "topic": "3天初来上海不绕路 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "peoples_square",
+        "nanjing_east_road"
+      ],
+      "content_angles": [
+        "3天初来上海不绕路",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    },
+    {
+      "route_id": "highwalk_3d2n_landmark_citywalk",
+      "platform": "xiaohongshu",
+      "keyword": "上海 3天 3天暴走地标线",
+      "topic": "3天暴走地标线 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "peoples_square",
+        "nanjing_east_road"
+      ],
+      "content_angles": [
+        "3天暴走地标线",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    },
+    {
+      "route_id": "deep_5d4n_culture_citywalk",
+      "platform": "douyin",
+      "keyword": "上海 5天 5天文化 city walk",
+      "topic": "5天文化 city walk 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "peoples_square",
+        "nanjing_east_road"
+      ],
+      "content_angles": [
+        "5天文化 city walk",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    },
+    {
+      "route_id": "local_life_7d6n_balanced",
+      "platform": "douyin",
+      "keyword": "上海 7天 7天生活感 city walk",
+      "topic": "7天生活感 city walk 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "jingan_temple",
+        "west_nanjing_road"
+      ],
+      "content_angles": [
+        "7天生活感 city walk",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    },
+    {
+      "route_id": "longstay_15d14n_balanced",
+      "platform": "douyin",
+      "keyword": "上海 15天 15天长住慢旅行",
+      "topic": "15天长住慢旅行 内容热度观察",
+      "heat_signal": "sample_manual_observation",
+      "linked_place_ids": [
+        "jingan_temple",
+        "west_nanjing_road"
+      ],
+      "content_angles": [
+        "15天长住慢旅行",
+        "真实路线体验",
+        "出发前避坑"
+      ],
+      "route_hints": [
+        "优先观察用户评论里的拥挤、排队、交通和天气问题。",
+        "把热点信号转成路线调整建议，不直接复制平台原文。"
+      ],
+      "official_fields_to_verify": [
+        "开放",
+        "预约",
+        "票务",
+        "交通"
+      ],
+      "captured_at": "2026-07-21",
+      "source_url": "manual:sample-trend-snapshot"
+    }
+  ]
+}

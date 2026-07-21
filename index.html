@@ -7591,6 +7591,30 @@
   function travelerHomeHandoffSourceUrl(){
     return window.location?.href || '';
   }
+  function travelerHomeHandoffWeatherPrecheckPayload(){
+    const source = travelerHomeWeatherPrecheckCurrent;
+    if (!source) return null;
+    const days = Array.isArray(source.days) ? source.days : [];
+    return {
+      source: source.source || '',
+      api_status: source.apiStatus || '',
+      route_title: source.routeTitle || '',
+      overall_risk: source.overallRisk || '待复核',
+      fetched_at: source.fetchedAt || '',
+      error_message: source.errorMessage || '',
+      days: days.map(day => ({
+        date: day.date || '',
+        risk_level: day.riskLevel || '待复核',
+        temperature_max: day.temperatureMax ?? null,
+        temperature_min: day.temperatureMin ?? null,
+        precipitation_probability_max: day.precipitationProbabilityMax ?? null,
+        wind_speed_max: day.windSpeedMax ?? null,
+        actions: day.actions || '',
+        fallback: Boolean(day.fallback),
+        decision: day.decision || null,
+      })),
+    };
+  }
   function travelerHomeHandoffPayload(){
     const state = travelerHomeStorageRead();
     const preferences = state.preferences || travelerHomePreferenceInput();
@@ -7639,6 +7663,9 @@
         travelogue_fragments: state.travelogueFragments && typeof state.travelogueFragments === 'object' ? state.travelogueFragments : {},
         travelogue_markdown: travelerHomeTravelogueMarkdown(),
         risk_plan_markdown: travelerHomeRiskPlanMarkdown(),
+        weather_precheck: travelerHomeHandoffWeatherPrecheckPayload(),
+        weather_precheck_markdown: travelerHomeWeatherPrecheckCurrent ? travelerHomeWeatherPrecheckMarkdown(travelerHomeWeatherPrecheckCurrent) : '',
+        day_execution_markdown: travelerHomeDayExecutionMarkdown(),
       },
       privacy_boundary: '只包含当前浏览器里的行程偏好、收藏路线、草稿和游记碎片；不包含地图 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
       next_actions: [

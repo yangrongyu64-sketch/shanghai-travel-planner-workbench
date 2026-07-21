@@ -9029,7 +9029,7 @@
       draftPackageButton.classList.add('downloaded');
     }
     function routeDeliveryPackageFileNames(route){
-      return ['README.md', 'draft-package.md', 'quality-report.md', 'traveler.md', 'xiaohongshu.md', 'douyin.md', 'essay.md', 'route-map.html', 'route-map.geojson', 'handoff-note.md'];
+      return ['README.md', 'draft-package.md', 'quality-report.md', 'traveler.md', 'xiaohongshu.md', 'douyin.md', 'essay.md', 'route-map.html', 'route-map.geojson', 'weather-execution.md', 'handoff-note.md'];
     }
     function routeDeliveryContentFileItems(route){
       return [['traveler.md', 'traveler'], ['xiaohongshu.md', 'xiaohongshu'], ['douyin.md', 'douyin'], ['essay.md', 'essay']];
@@ -9055,9 +9055,27 @@
         '| essay.md | 博主 / 作者 | 个人游记草稿 | 需人工润色 |',
         '| route-map.html | 旅行执行者 / 协作者 | 离线路线图页面 | 出发前复核 |',
         '| route-map.geojson | 地图或开发协作者 | 点位和线路数据 | 数据源待复核 |',
+        '| weather-execution.md | 旅行执行者 / 同行人 | 天气改线、低体力和拍摄执行建议 | 出发前复核 |',
         '| handoff-note.md | 外部协作者 | 交接摘要、复核责任和下一动作 | 可转发协作 |',
       ];
       return ['## 内容索引', '', '| 文件 | 适合谁用 | 用途 | 对外状态 |', '| --- | --- | --- | --- |'].concat(rows).join('\n');
+    }
+    function routeDeliveryWeatherExecutionMarkdown(route){
+      const days = Array.isArray(route.mapDays) ? route.mapDays : [];
+      const dayLines = days.length ? days.flatMap(day => {
+        const stops = Array.isArray(day.stops) ? day.stops : [];
+        const names = stops.map(stop => stop.placeName).filter(Boolean);
+        const first = names[0] || '当天第一站';
+        const last = names[names.length - 1] || '当天收束点';
+        const photoTips = stops.map(stop => stop.photoTip).filter(Boolean).slice(0, 2);
+        return [
+          `- Day ${day.day}｜${day.theme || '当天路线'}：${names.join(' → ') || '待补点位'}`,
+          `  - 天气改线：下雨/高温/大风时先保留 ${first}，把 ${last} 改成短停或删减。`,
+          '  - 低体力规则：不临时加跨区点，优先找同区商场、咖啡、展馆或地铁站附近补给。',
+          `  - 拍摄提示：${photoTips.join('；') || '先拍关键外景，再用室内和补给点补镜。'}`
+        ];
+      }) : ['- 当前路线还没有地图日程，先用 traveler.md 和 route-map.geojson 复核。'];
+      return ['# 天气和行中执行建议', '', `路线：${route.templateName}`, `路线 ID：${route.tripId}`, '', '## 天气改线', ...dayLines, '', '## 拍摄建议', '- 户外镜头优先放在清晨/傍晚或雨停窗口。', '- 正午高温、雨大或江边大风时，改拍室内、咖啡、展馆和街角细节。', '- 短视频收音受风影响时，优先拍短镜头，口播后补。', '', '## 出发前复核', '- 这个文件不替代实时天气预警、官方闭馆通知或实时导航。', '- 出发当天仍需用天气 App、地图 App 和官方渠道确认。'].join('\n');
     }
     function routeDeliveryQualityReportMarkdown(route){
       const readiness = routeDeliveryReadiness(route);
@@ -9071,7 +9089,7 @@
     }
     function routeDeliveryReadmeMarkdown(route){
       const preference = String(state.activePreference || '').trim() || '未填写';
-      return [`# 上海攻略交付包：${route.templateName}`, '', `- 路线 ID：${route.tripId}`, `- 住宿区：${route.stayArea}`, `- 天数：${route.durationDays}天`, `- 偏好：${preference}`, '', routeDeliveryUseGuideMarkdown(route), '', routeDeliveryReadinessMarkdown(route), '', routeMapReviewStatusMarkdown(route), '', routeDeliveryContentIndexMarkdown(route), '', '## 文件说明', '', '- README.md：交付包说明', '- draft-package.md：四类正文合并草稿', '- quality-report.md：交付包质量报告', '- traveler.md：游客攻略', '- xiaohongshu.md：小红书草稿', '- douyin.md：抖音脚本', '- essay.md：游记草稿', '- route-map.html：离线路线图页面', '- route-map.geojson：地图点位和路线数据', '- handoff-note.md：交付说明'].join('\n');
+      return [`# 上海攻略交付包：${route.templateName}`, '', `- 路线 ID：${route.tripId}`, `- 住宿区：${route.stayArea}`, `- 天数：${route.durationDays}天`, `- 偏好：${preference}`, '', routeDeliveryUseGuideMarkdown(route), '', routeDeliveryReadinessMarkdown(route), '', routeMapReviewStatusMarkdown(route), '', routeDeliveryContentIndexMarkdown(route), '', '## 文件说明', '', '- README.md：交付包说明', '- draft-package.md：四类正文合并草稿', '- quality-report.md：交付包质量报告', '- traveler.md：游客攻略', '- xiaohongshu.md：小红书草稿', '- douyin.md：抖音脚本', '- essay.md：游记草稿', '- route-map.html：离线路线图页面', '- route-map.geojson：地图点位和路线数据', '- weather-execution.md：天气和行中执行建议', '- handoff-note.md：交付说明'].join('\n');
     }
     function routeDeliveryPackageBaseFiles(route){
       const contentFiles = routeDeliveryContentFileItems(route);
@@ -9081,7 +9099,8 @@
         ['quality-report.md', routeDeliveryQualityReportMarkdown(route)],
         ...contentFiles.map(([name, tab]) => [name, contentWithPreferenceRewrite(route, tab, routeContentText(route, tab), true)]),
         ['route-map.html', standaloneRouteMapHtml(route)],
-        ['route-map.geojson', JSON.stringify(routeMapGeoJson(route), null, 2)]
+        ['route-map.geojson', JSON.stringify(routeMapGeoJson(route), null, 2)],
+        ['weather-execution.md', routeDeliveryWeatherExecutionMarkdown(route)]
       ];
       return routeFiles.map(([name, content]) => ({name, content: String(content || '')}));
     }
@@ -10758,7 +10777,7 @@
       const previewFiles = includeHandoff ? routeDeliveryPackageFiles(route) : routeDeliveryPackageBaseFiles(route);
       return previewFiles.map(file => file.name).map(name => {
         const tab = contentTabs[name];
-        const status = tab ? (contentDraftExists(route, tab) ? '草稿覆盖' : '原稿') : name === 'route-map.html' ? '路线图' : name === 'route-map.geojson' ? '地图数据' : name === 'handoff-note.md' ? '交付说明' : name === 'quality-report.md' ? '质量报告' : '生成文件';
+        const status = tab ? (contentDraftExists(route, tab) ? '草稿覆盖' : '原稿') : name === 'route-map.html' ? '路线图' : name === 'route-map.geojson' ? '地图数据' : name === 'weather-execution.md' ? '天气执行' : name === 'handoff-note.md' ? '交付说明' : name === 'quality-report.md' ? '质量报告' : '生成文件';
         return {name, status};
       });
     }

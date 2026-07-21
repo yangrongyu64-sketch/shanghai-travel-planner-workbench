@@ -8,6 +8,7 @@
   "manual_review_required": true,
   "source_assets": {
     "web_entry": "index.html",
+    "traveler_demo_url": "index.html?demo=traveler#traveler-home-route-pack",
     "normal_workbench": "workbench.html",
     "place_catalog": "place_catalog.html",
     "offline_demo_zip": "workbench-demo.zip",
@@ -20,6 +21,7 @@
     "release_evidence_zip": "release-evidence.zip",
     "deployment_manifest": "deployment-manifest.json",
     "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_traveler_demo_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/index.html?demo=traveler#traveler-home-route-pack",
     "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
     "live_deployment_record": "LIVE_DEPLOYMENT.md"
   },

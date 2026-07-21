@@ -12,15 +12,16 @@
 
 ## 怎么用
 
-1. 普通游客打开 `index.html`，选择路线、查看攻略、地图和出发前提醒。
-2. 创作者或维护者打开 `workbench.html`，处理内容、素材、反馈、发布和留档。
-3. 需要离线转发时使用 `workbench-demo.zip`。
-4. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
-5. 需要正式发布留档时使用 `release-evidence.zip`。
-6. 后续维护按 `usage-and-maintenance.md` 执行。
+1. 演示链接：`index.html?demo=traveler#traveler-home-route-pack`，会自动载入示例路线、天气预检和交接包，适合先给测试用户看完整效果。
+2. 普通游客打开 `index.html`，选择路线、查看攻略、地图和出发前提醒。
+3. 创作者或维护者打开 `workbench.html`，处理内容、素材、反馈、发布和留档。
+4. 需要离线转发时使用 `workbench-demo.zip`。
+5. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
+6. 需要正式发布留档时使用 `release-evidence.zip`。
+7. 后续维护按 `usage-and-maintenance.md` 执行。
 
 ## 快速验收
 
-1. 打开公开链接或 `index.html`，确认首页能看到上海路线、完成度和交付包入口。
+1. 打开公开链接或 `index.html`，确认首页能看到上海路线；也可打开 `index.html?demo=traveler#traveler-home-route-pack` 自动进入示例路线包。
 2. 下载并解压 `product-delivery.zip`，确认 5 个交付文件都存在。
 3. 对照 `acceptance-checklist.md`，确认 API 边界、人工复核边界和下载包都清楚。

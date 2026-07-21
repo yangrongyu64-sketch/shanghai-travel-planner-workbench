@@ -1,6 +1,7 @@
 # 正式交付验收清单
 
 - [ ] 公开链接或本地 `index.html` 能打开，并能看到“上海旅行路线”。
+- [ ] 演示链接 `index.html?demo=traveler#traveler-home-route-pack` 能自动载入示例路线、天气预检和交接包。
 - [ ] 首页 `index.html` 能打开，并能看到“上海旅行路线”。
 - [ ] 首页能筛选路线，并进入 2/3/5/7/15 天路线详情。
 - [ ] `workbench.html` 能打开完整工作台。

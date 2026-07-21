@@ -5,6 +5,7 @@
 ## 入口文件
 
 - `index.html`：游客首页，适合普通旅行者直接选路线、看攻略和打开路线图。
+- `index.html?demo=traveler#traveler-home-route-pack`：自动演示模式，会自动载入示例路线、天气预检和交接包，适合转发给测试用户先看完整效果。
 - `routes/*.html`：单条路线游客详情页，适合收藏、转发和出发当天查看。
 - `workbench.html`：创作者工作台入口，适合真实填写、本机状态管理、平台文案和交付发布。
 - `place_catalog.html`：上海点位库，按地标、博物馆、美术馆、公园、滨江、街区和深度补充分组。
@@ -30,6 +31,7 @@
 
 1. 把整个 `site/` 目录作为静态站点根目录上传。
 2. 部署完成后访问站点根路径，会默认打开游客首页 `index.html`。
-3. 需要创作者工作台时，打开同域名下的 `workbench.html`。
-4. 需要先看内容资产时，打开同域名下的 `place_catalog.html`。
-5. 在支持 PWA 的浏览器里，可用“添加到主屏幕”把工作台作为应用入口保存。
+3. 需要给测试用户快速看效果时，打开同域名下的 `index.html?demo=traveler#traveler-home-route-pack`。
+4. 需要创作者工作台时，打开同域名下的 `workbench.html`。
+5. 需要先看内容资产时，打开同域名下的 `place_catalog.html`。
+6. 在支持 PWA 的浏览器里，可用“添加到主屏幕”把工作台作为应用入口保存。

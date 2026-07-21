@@ -4,6 +4,7 @@
 
 - 线上首页：GitHub Pages 根路径。
 - 本地首页：`outputs/workbench/site/index.html`。
+- 演示链接：`outputs/workbench/site/index.html?demo=traveler#traveler-home-route-pack`，会自动载入示例路线、天气预检和交接包。
 - 完整工作台：`outputs/workbench/site/workbench.html`。
 - 正式交付包：`outputs/workbench/site/product-delivery.zip`。
 - 发布证据包：`outputs/workbench/site/release-evidence.zip`。

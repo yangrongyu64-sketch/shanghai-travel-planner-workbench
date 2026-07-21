@@ -3,6 +3,7 @@
 - 发布状态：published
 - 发布时间：2026-07-21
 - 公网页面：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/
+- 旅行者一键演示：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/index.html?demo=traveler#traveler-home-route-pack
 - 创作者工作台：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html
 - 离线演示包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip
 - 正式交付包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/product-delivery.zip

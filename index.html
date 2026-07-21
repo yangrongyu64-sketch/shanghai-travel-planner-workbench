@@ -75,6 +75,20 @@
     .traveler-trial-guide .traveler-trial-guide-checklist-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
     .traveler-trial-guide-checklist textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
     .traveler-trial-guide-checklist-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-trial-guide-invitation{grid-column:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f8f6ee}
+    .traveler-trial-guide-invitation b{display:block;font-size:14px;line-height:1.25}
+    .traveler-trial-guide-invitation small{margin-top:4px}
+    .traveler-trial-guide-invitation-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .traveler-trial-guide-invitation-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-invitation-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-trial-guide-invitation-summary{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;min-height:28px}
+    .traveler-trial-guide-invitation-summary span{display:inline-flex;align-items:center;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-trial-guide-invitation-list{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .traveler-trial-guide-invitation-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px}
+    .traveler-trial-guide-invitation-list b{font-size:13px;line-height:1.25}
+    .traveler-trial-guide .traveler-trial-guide-invitation-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
+    .traveler-trial-guide-invitation textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+    .traveler-trial-guide-invitation-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-trial-guide-status{grid-column:2;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-operator-tools{border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-operator-tools summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:16px clamp(16px,4vw,44px);cursor:pointer;list-style:none}
@@ -630,6 +644,22 @@
     <textarea id="traveler-home-trial-guide-checklist-output" readonly rows="8" aria-label="首次试用任务单 Markdown"></textarea>
     <textarea id="traveler-home-trial-guide-checklist-json-output" readonly rows="7" aria-label="首次试用任务单 JSON"></textarea>
     <p id="traveler-home-trial-guide-checklist-status" class="traveler-trial-guide-checklist-status" aria-live="polite"></p>
+  </div>
+  <div id="traveler-home-trial-invitation" class="traveler-trial-guide-invitation" aria-label="试用邀请包">
+    <div>
+      <b>试用邀请包</b>
+      <small>把演示链接、试用任务和反馈格式整理成一份可转发说明。</small>
+    </div>
+    <div class="traveler-trial-guide-invitation-actions">
+      <button type="button" id="traveler-home-trial-invitation-copy-button" data-traveler-home-trial-invitation-copy>复制邀请</button>
+      <button type="button" id="traveler-home-trial-invitation-download-button" data-traveler-home-trial-invitation-download>下载Markdown</button>
+      <button type="button" class="primary" id="traveler-home-trial-invitation-json-download-button" data-traveler-home-trial-invitation-json-download>下载JSON</button>
+    </div>
+    <div id="traveler-home-trial-invitation-summary" class="traveler-trial-guide-invitation-summary" aria-live="polite"></div>
+    <div id="traveler-home-trial-invitation-list" class="traveler-trial-guide-invitation-list"></div>
+    <textarea id="traveler-home-trial-invitation-output" readonly rows="8" aria-label="试用邀请包 Markdown"></textarea>
+    <textarea id="traveler-home-trial-invitation-json-output" readonly rows="7" aria-label="试用邀请包 JSON"></textarea>
+    <p id="traveler-home-trial-invitation-status" class="traveler-trial-guide-invitation-status" aria-live="polite"></p>
   </div>
   <p id="traveler-home-trial-guide-status" class="traveler-trial-guide-status" aria-live="polite"></p>
 </section>
@@ -6569,6 +6599,155 @@
     if (status) status.textContent = '已下载首次试跑交付包。';
     return {filename, text};
   }
+  let travelerHomeTrialInvitationGeneratedAt = '';
+  function travelerHomeTrialInvitationTimestamp(){
+    if (!travelerHomeTrialInvitationGeneratedAt) travelerHomeTrialInvitationGeneratedAt = new Date().toISOString();
+    return travelerHomeTrialInvitationGeneratedAt;
+  }
+  function travelerHomeTrialInvitationDemoUrl(){
+    try {
+      const href = String(window.location?.href || 'index.html');
+      const withoutHash = href.split('#')[0] || 'index.html';
+      const parts = withoutHash.split('?');
+      const base = parts[0] || 'index.html';
+      const params = new URLSearchParams(parts.slice(1).join('?') || window.location?.search || '');
+      params.set('demo', 'traveler');
+      return `${base}?${params.toString()}#traveler-home-route-pack`;
+    } catch (error) {
+      return 'index.html?demo=traveler#traveler-home-route-pack';
+    }
+  }
+  function travelerHomeTrialInvitationTasks(){
+    return [
+      {key:'open_demo', label:'打开演示链接', action:'先点开演示链接，不改任何内容，看看是否能理解这个工具在做什么。', expected_result:'自动看到示例路线包、天气预检和交接包。'},
+      {key:'try_route', label:'换一条路线', action:'按自己的天数、节奏和主题重新选路线，再看攻略、地图和路线包。', expected_result:'能判断哪条路线适合自己，并知道下一步看哪里。'},
+      {key:'send_feedback', label:'回传一个问题', action:'把最卡的一点写成反馈包，优先写地图、开放预约、票务或文案问题。', expected_result:'能按 shanghai-trial-feedback.md 格式回传地图、开放预约、票务或文案问题。'},
+    ];
+  }
+  function travelerHomeTrialInvitationPayload(){
+    const demoUrl = travelerHomeTrialInvitationDemoUrl();
+    const tasks = travelerHomeTrialInvitationTasks();
+    return {
+      kind: 'shanghai_trial_invitation_package',
+      version: 1,
+      generated_at: travelerHomeTrialInvitationTimestamp(),
+      source_url: window.location?.href || '',
+      demo_url: demoUrl,
+      route_count: TRAVELER_HOME_ROUTES.length,
+      feedback_target: 'traveler-home-feedback',
+      return_format: 'shanghai-trial-feedback.md',
+      tester_profiles: ['普通游客', '同行人', '旅游内容创作者'],
+      tasks,
+      feedback_prompt: {
+        role: '你是普通游客、同行人、内容创作者还是运营维护者？',
+        route: '你试的是哪条路线？',
+        issue_type: '问题属于路线、地图、文案、官方复核、小程序迁移还是其他？',
+        severity: '这是建议优化、影响体验，还是阻塞使用？',
+        note: '请写清楚发生在哪个页面、哪一天或哪个点位，希望怎么改。',
+      },
+      privacy_boundary: '不需要登录；只回传体验问题和路线反馈；不提交 API Key、账号、Cookie 或 Authorization 信息。',
+      next_actions: [
+        '把演示链接发给 3-5 个测试用户。',
+        '让每个人完成 3 个试用任务，并回传一份 shanghai-trial-feedback.md。',
+        '把多份反馈粘贴到反馈汇总看板，生成下一版修改建议。',
+      ],
+    };
+  }
+  function travelerHomeTrialInvitationMarkdown(){
+    const payload = travelerHomeTrialInvitationPayload();
+    const lines = [
+      '# 上海攻略试用邀请',
+      '',
+      '我做了一个上海旅行路线工具，想请你帮忙试一下。',
+      `演示链接：${payload.demo_url}`,
+      `当前路线：${payload.route_count} 条，覆盖 2/3/5/7/15 天和多种节奏。`,
+      '',
+      '## 请你试 3 件事',
+    ];
+    payload.tasks.forEach((task, index) => {
+      lines.push(`${index + 1}. ${task.label}`);
+      lines.push(`   - 动作：${task.action}`);
+      lines.push(`   - 看点：${task.expected_result}`);
+    });
+    lines.push('', '## 回传格式');
+    lines.push(`请尽量按 ${payload.return_format} 回传：`);
+    lines.push('- 反馈人：普通游客 / 同行人 / 内容创作者 / 运营维护者');
+    lines.push('- 路线：你试用的路线名');
+    lines.push('- 问题类型：路线 / 地图 / 文案 / 官方复核 / 小程序迁移 / 其他');
+    lines.push('- 影响程度：建议优化 / 影响体验 / 阻塞使用');
+    lines.push('- 问题描述：发生在哪个页面、哪一天或哪个点位，希望怎么改');
+    lines.push('', '## 边界说明');
+    lines.push(payload.privacy_boundary);
+    lines.push('开放、预约、票务、交通和临时闭馆仍以官方信息和现场情况为准。');
+    lines.push('', '## 我会怎么处理');
+    payload.next_actions.forEach(action => lines.push(`- ${action}`));
+    return lines.join('\n');
+  }
+  function renderTravelerHomeTrialInvitationPackage(){
+    const payload = travelerHomeTrialInvitationPayload();
+    const summaryTarget = document.getElementById('traveler-home-trial-invitation-summary');
+    const listTarget = document.getElementById('traveler-home-trial-invitation-list');
+    const output = document.getElementById('traveler-home-trial-invitation-output');
+    const jsonOutput = document.getElementById('traveler-home-trial-invitation-json-output');
+    const status = document.getElementById('traveler-home-trial-invitation-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>路线 ${payload.route_count} 条</span><span>任务 ${payload.tasks.length} 个</span><span>反馈回传：${escapeHtml(payload.return_format)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.tasks.map((task, index) => `<article><b>${index + 1}. ${escapeHtml(task.label)}</b><span>${escapeHtml(task.action)}</span><span>${escapeHtml(task.expected_result)}</span></article>`).join('');
+    const text = travelerHomeTrialInvitationMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = '试用邀请包已生成，可复制给测试用户。';
+    return text;
+  }
+  function travelerHomeTrialInvitationFilename(){
+    return 'shanghai-trial-invitation.md';
+  }
+  function travelerHomeTrialInvitationJsonFilename(){
+    return 'shanghai-trial-invitation.json';
+  }
+  async function copyTravelerHomeTrialInvitationMarkdown(){
+    const text = renderTravelerHomeTrialInvitationPackage();
+    const status = document.getElementById('traveler-home-trial-invitation-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制试用邀请包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制试用邀请包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeTrialInvitationMarkdown(){
+    const text = renderTravelerHomeTrialInvitationPackage();
+    const filename = travelerHomeTrialInvitationFilename();
+    const status = document.getElementById('traveler-home-trial-invitation-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载试用邀请包。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeTrialInvitationJson(){
+    renderTravelerHomeTrialInvitationPackage();
+    const payload = travelerHomeTrialInvitationPayload();
+    const filename = travelerHomeTrialInvitationJsonFilename();
+    const status = document.getElementById('traveler-home-trial-invitation-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载试用邀请包 JSON。';
+    return {filename, payload};
+  }
   let travelerHomeFirstUseChecklistGeneratedAt = '';
   function travelerHomeFirstUseChecklistTimestamp(){
     if (!travelerHomeFirstUseChecklistGeneratedAt) travelerHomeFirstUseChecklistGeneratedAt = new Date().toISOString();
@@ -6743,6 +6922,7 @@
     renderTravelerHomeWorkflow();
     renderTravelerHomeFirstTimeGuideDelivery();
     renderTravelerHomeFirstUseChecklist();
+    renderTravelerHomeTrialInvitationPackage();
     renderTravelerHomeStayDecision();
     renderTravelerHomeFoodSupply();
     renderTravelerHomeRiskPlan();
@@ -8242,6 +8422,7 @@
     renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
     renderTravelerHomeFirstTimeGuideDelivery();
     renderTravelerHomeFirstUseChecklist();
+    renderTravelerHomeTrialInvitationPackage();
     const status = document.getElementById('traveler-home-trial-guide-status');
     if (status && result?.ok) status.textContent = '演示模式已载入：示例路线、天气预检和交接包可直接查看。';
     return result;
@@ -8531,6 +8712,9 @@
     if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-copy]')) { copyTravelerHomeFirstUseChecklistMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-download]')) { downloadTravelerHomeFirstUseChecklistMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-guide-checklist-json-download]')) { downloadTravelerHomeFirstUseChecklistJson(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-invitation-copy]')) { copyTravelerHomeTrialInvitationMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-invitation-download]')) { downloadTravelerHomeTrialInvitationMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-invitation-json-download]')) { downloadTravelerHomeTrialInvitationJson(); return; }
     const control = event.target?.closest?.('[data-traveler-home-trial-guide-target]');
     const targetId = control?.getAttribute?.('data-traveler-home-trial-guide-target');
     if (targetId) goTravelerHomeTrialGuideTarget(targetId);
@@ -8694,6 +8878,7 @@
   renderTravelerHomeTrialGuideProgress();
   renderTravelerHomeFirstTimeGuideDelivery();
   renderTravelerHomeFirstUseChecklist();
+  renderTravelerHomeTrialInvitationPackage();
   applyTravelerHomeFilters();
   renderTravelerHomeProductCompletionOverview();
   renderTravelerHomeAcceptanceChecklist();

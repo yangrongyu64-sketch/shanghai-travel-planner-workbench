@@ -42,7 +42,7 @@
     .traveler-trial-guide h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
     .traveler-trial-guide small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
     .traveler-trial-guide-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .traveler-trial-guide-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 12px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-actions button,.traveler-trial-guide-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 12px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);font-weight:900;cursor:pointer;text-decoration:none}
     .traveler-trial-guide-actions .primary{background:var(--accent);color:#fff}
     .traveler-trial-guide-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     .traveler-trial-guide article{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;min-height:132px;border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:10px}
@@ -573,6 +573,7 @@
     <small>先走这四步，后面的发布、审计和维护工具可以晚一点再看。</small>
     <div class="traveler-trial-guide-actions">
       <button type="button" class="primary" id="traveler-home-trial-guide-run-button" data-traveler-home-trial-guide-run>一键试跑</button>
+      <a href="?demo=traveler#traveler-home-route-pack" data-traveler-home-demo-link>演示链接</a>
     </div>
   </div>
   <div class="traveler-trial-guide-grid">
@@ -8228,6 +8229,23 @@
     if (status && result?.ok) status.textContent = `已导入示例交接包：${result.route_count}条路线、${result.favorite_count}条收藏、${result.draft_count}条本地草稿。`;
     return result;
   }
+  function shouldApplyTravelerHomeDemoSampleFromLocation(){
+    const search = window.location?.search || '';
+    const params = new URLSearchParams(search);
+    const demo = String(params.get('demo') || '').toLowerCase();
+    const sample = String(params.get('handoff_sample') || '').toLowerCase();
+    return ['traveler','sample','handoff'].includes(demo) || ['1','true','yes'].includes(sample);
+  }
+  function applyTravelerHomeDemoSampleFromLocation(){
+    if (!shouldApplyTravelerHomeDemoSampleFromLocation()) return {ok:false, reason:'demo_query_absent'};
+    const result = importTravelerHomeSampleHandoffJson();
+    renderTravelerHomeTrialGuideProgress(['route','map','content','handoff']);
+    renderTravelerHomeFirstTimeGuideDelivery();
+    renderTravelerHomeFirstUseChecklist();
+    const status = document.getElementById('traveler-home-trial-guide-status');
+    if (status && result?.ok) status.textContent = '演示模式已载入：示例路线、天气预检和交接包可直接查看。';
+    return result;
+  }
   function travelerHomeValidPreferenceValue(id, value, fallback){
     const element = document.getElementById(id);
     if (!value) return fallback;
@@ -8719,6 +8737,7 @@
   renderTravelerHomeDayExecution();
   renderTravelerHomePostTripReview();
   renderTravelerHomeWorkflow();
+  applyTravelerHomeDemoSampleFromLocation();
 </script>
 </body>
 </html>

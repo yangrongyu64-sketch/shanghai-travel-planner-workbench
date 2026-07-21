@@ -347,6 +347,7 @@
     .traveler-release-audit h2{margin:0;font-size:22px;line-height:1.15;letter-spacing:0}
     .traveler-release-audit small{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}
     .traveler-release-audit-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .traveler-release-audit-fields label:last-child{grid-column:1/-1}
     .traveler-release-audit label{display:grid;gap:5px;color:var(--muted);font-size:12px;font-weight:800}
     .traveler-release-audit input{height:38px;min-width:0;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
     .traveler-release-audit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -359,6 +360,7 @@
     .traveler-release-audit-list b{font-size:13px;line-height:1.25}
     .traveler-release-audit-list span{color:var(--muted);font-size:12px;line-height:1.35}
     .traveler-release-audit textarea{width:100%;min-height:230px;margin-top:10px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+    #traveler-home-release-audit-health-check-json{min-height:108px;margin-top:0}
     .traveler-release-audit-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-online-health-check{display:grid;grid-template-columns:minmax(220px,.36fr) minmax(0,1fr);gap:14px;padding:16px clamp(16px,4vw,44px);border-bottom:1px solid var(--line);background:#f4f7f4}
     .traveler-online-health-check-head p{margin:0 0 6px;color:var(--brick);font-size:13px;font-weight:900}
@@ -508,7 +510,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-20</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-21</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
 <section id="traveler-home-product-brief" class="traveler-product-brief" aria-label="产品说明">
   <div>
@@ -1282,9 +1284,11 @@
     <div class="traveler-release-audit-fields">
       <label for="traveler-home-release-audit-test-result">测试结果<input id="traveler-home-release-audit-test-result" type="text" value="待填写，例如：294 passed in 13.25s"></label>
       <label for="traveler-home-release-audit-evidence">验收证据<input id="traveler-home-release-audit-evidence" type="text" value="output/playwright/"></label>
+      <label for="traveler-home-release-audit-health-check-json">线上巡检 JSON<textarea id="traveler-home-release-audit-health-check-json" rows="5" aria-label="线上健康巡检 JSON，可粘贴 shanghai-online-health-check.json"></textarea></label>
     </div>
     <div class="traveler-release-audit-actions">
       <button type="button" class="primary" id="traveler-home-release-audit-build-button" data-traveler-home-release-audit-build>生成审计包</button>
+      <button type="button" id="traveler-home-release-audit-health-check-sync-button" data-traveler-home-release-audit-health-check-sync>同步当前巡检</button>
       <button type="button" id="traveler-home-release-audit-copy-button" data-traveler-home-release-audit-copy>复制审计包</button>
       <button type="button" id="traveler-home-release-audit-download-button" data-traveler-home-release-audit-download>下载审计包</button>
     </div>
@@ -5558,6 +5562,60 @@
     const value = document.getElementById(id)?.value;
     return value === undefined || value === null || String(value).trim() === '' ? fallback : String(value).trim();
   }
+  function travelerHomeReleaseAuditParseHealthCheckJson(text){
+    const raw = String(text || '').trim();
+    if (!raw) return null;
+    try {
+      const payload = JSON.parse(raw);
+      return payload && payload.kind === 'shanghai_online_health_check' && Number(payload.version) === 1 ? payload : null;
+    } catch (error) {
+      return null;
+    }
+  }
+  function travelerHomeReleaseAuditHealthCheckPayload(){
+    const inputPayload = travelerHomeReleaseAuditParseHealthCheckJson(document.getElementById('traveler-home-release-audit-health-check-json')?.value);
+    if (inputPayload) return inputPayload;
+    if (travelerHomeOnlineHealthCheckLastPayload) return travelerHomeOnlineHealthCheckLastPayload;
+    const onlineOutputPayload = travelerHomeReleaseAuditParseHealthCheckJson(document.getElementById('traveler-home-online-health-check-json-output')?.value);
+    return onlineOutputPayload || null;
+  }
+  function travelerHomeReleaseAuditHealthCheckSummary(){
+    const payload = travelerHomeReleaseAuditHealthCheckPayload();
+    if (!payload) {
+      return {statusLabel:'待运行线上巡检', deployId:travelerHomeReleaseDeployId(), checked:0, healthy:0, failed:0, targetCount:0, routeTargets:0, sourceUrl:'', generatedAt:'', reportFile:'shanghai-online-health-check.json'};
+    }
+    const targets = Array.isArray(payload.targets) ? payload.targets : [];
+    const summary = payload.summary || {};
+    const checked = Number(summary.checked_count ?? targets.filter(target => target.status !== 'pending').length ?? 0);
+    const healthy = Number(summary.healthy_count ?? targets.filter(target => target.status === 'healthy').length ?? 0);
+    const failed = Number(summary.failed_count ?? targets.filter(target => target.status === 'failed').length ?? 0);
+    const statusLabel = failed ? '线上巡检有失败项' : (checked && healthy === checked ? '线上巡检通过' : '线上巡检待复核');
+    return {
+      statusLabel,
+      deployId: summary.deploy_id || travelerHomeReleaseDeployId(),
+      checked,
+      healthy,
+      failed,
+      targetCount: targets.length || checked,
+      routeTargets: targets.filter(target => target.group === 'route').length,
+      sourceUrl: payload.source_url || '',
+      generatedAt: payload.generated_at || '',
+      reportFile: 'shanghai-online-health-check.json',
+    };
+  }
+  function syncTravelerHomeReleaseAuditHealthCheckJson(){
+    const input = document.getElementById('traveler-home-release-audit-health-check-json');
+    const status = document.getElementById('traveler-home-release-audit-status');
+    const payload = travelerHomeOnlineHealthCheckLastPayload || travelerHomeReleaseAuditParseHealthCheckJson(document.getElementById('traveler-home-online-health-check-json-output')?.value);
+    if (!payload) {
+      if (status) status.textContent = '请先运行线上巡检，或粘贴 shanghai-online-health-check.json。';
+      return null;
+    }
+    if (input) input.value = JSON.stringify(payload, null, 2);
+    renderTravelerHomeReleaseAuditPackage();
+    if (status) status.textContent = '已同步线上巡检 JSON 到发布审计包。';
+    return payload;
+  }
   function travelerHomeReleaseAuditPackageSummary(){
     const regression = travelerHomeReleaseRegressionSummary();
     return {
@@ -5574,6 +5632,7 @@
   }
   function travelerHomeReleaseAuditPackageMarkdown(){
     const summary = travelerHomeReleaseAuditPackageSummary();
+    const health = travelerHomeReleaseAuditHealthCheckSummary();
     return [
       '# 上海攻略一键发布审计包',
       '',
@@ -5600,6 +5659,10 @@
       '- [ ] 复制、下载、发布包、回归清单和反馈队列按钮',
       '- [ ] 390px 移动端无横向溢出',
       '- [ ] 控制台 0 errors / 0 warnings',
+      '- 文件：shanghai-online-health-check.json / shanghai-online-health-check.md',
+      `- 线上巡检：${health.healthy}/${health.checked} healthy，失败 ${health.failed} 项`,
+      `- 路线页：${health.routeTargets}/${summary.routeCount} 已检查`,
+      health.sourceUrl ? `- 来源页面：${health.sourceUrl}` : '- 来源页面：待运行线上巡检后自动填充',
       '',
       '## 4. 回滚说明',
       '- 回滚锚点：部署仓库提交、outputs/workbench/site、workbench-site.zip、workbench-demo.zip 和验收截图。',
@@ -5613,16 +5676,18 @@
   }
   function renderTravelerHomeReleaseAuditPackage(){
     const summary = travelerHomeReleaseAuditPackageSummary();
+    const health = travelerHomeReleaseAuditHealthCheckSummary();
     const summaryTarget = document.getElementById('traveler-home-release-audit-summary');
     const listTarget = document.getElementById('traveler-home-release-audit-list');
     const output = document.getElementById('traveler-home-release-audit-output');
     const status = document.getElementById('traveler-home-release-audit-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>Deploy ${escapeHtml(summary.deployId)}</span><span>风险：${escapeHtml(summary.riskLevel)}</span><span>测试：${escapeHtml(summary.testResult)}</span><span>证据：${escapeHtml(summary.evidence)}</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>Deploy ${escapeHtml(summary.deployId)}</span><span>风险：${escapeHtml(summary.riskLevel)}</span><span>测试：${escapeHtml(summary.testResult)}</span><span>证据：${escapeHtml(summary.evidence)}</span><span>线上巡检 ${health.healthy}/${health.checked}</span><span>失败 ${health.failed}</span>`;
     if (listTarget) {
       const rows = [
         '<article><b>发布记录</b><span>shanghai-release-notes.md：记录版本、发布范围、发布前检查和回滚依据。</span></article>',
         `<article><b>内容更新发布包</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方复核 ${summary.officialTasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blockingFeedback}</span></article>`,
         '<article><b>发布后回归清单</b><span>shanghai-release-regression-checklist.md：覆盖路线入口、地图、按钮、390px 移动端和控制台。</span></article>',
+        `<article><b>线上健康巡检</b><span>shanghai-online-health-check.json：${escapeHtml(health.statusLabel)}，${health.healthy}/${health.checked} healthy，失败 ${health.failed}。</span><span>路线页 ${health.routeTargets} 条；报告 ${escapeHtml(health.reportFile)}。</span></article>`,
         `<article><b>验收证据</b><span>${escapeHtml(summary.testResult)}｜${escapeHtml(summary.evidence)}</span></article>`,
       ];
       listTarget.innerHTML = rows.join('');
@@ -5850,6 +5915,11 @@
     const text = travelerHomeOnlineHealthCheckMarkdown(report);
     if (output) output.value = text;
     if (jsonOutput) jsonOutput.value = JSON.stringify(report, null, 2);
+    const auditInput = document.getElementById('traveler-home-release-audit-health-check-json');
+    if (auditInput && report.kind === 'shanghai_online_health_check' && Number(report.summary?.checked_count || 0) > 0) {
+      auditInput.value = JSON.stringify(report, null, 2);
+      renderTravelerHomeReleaseAuditPackage();
+    }
     if (status && !status.textContent) status.textContent = '待运行线上健康巡检。';
     return text;
   }
@@ -8050,9 +8120,10 @@
   document.getElementById('traveler-home-release-regression-copy-button')?.addEventListener('click', copyTravelerHomeReleaseRegressionMarkdown);
   document.getElementById('traveler-home-release-regression-download-button')?.addEventListener('click', downloadTravelerHomeReleaseRegressionMarkdown);
   document.getElementById('traveler-home-release-audit-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); if (status) status.textContent = '发布审计包已更新。'; });
+  document.getElementById('traveler-home-release-audit-health-check-sync-button')?.addEventListener('click', syncTravelerHomeReleaseAuditHealthCheckJson);
   document.getElementById('traveler-home-release-audit-copy-button')?.addEventListener('click', copyTravelerHomeReleaseAuditPackageMarkdown);
   document.getElementById('traveler-home-release-audit-download-button')?.addEventListener('click', downloadTravelerHomeReleaseAuditPackageMarkdown);
-  ['traveler-home-release-audit-test-result','traveler-home-release-audit-evidence'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布审计证据已更新。'; }));
+  ['traveler-home-release-audit-test-result','traveler-home-release-audit-evidence','traveler-home-release-audit-health-check-json'].forEach(id => document.getElementById(id)?.addEventListener?.('input', () => { const status = document.getElementById('traveler-home-release-audit-status'); renderTravelerHomeReleaseAuditPackage(); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布审计证据已更新。'; }));
   document.getElementById('traveler-home-online-health-check-run-button')?.addEventListener('click', travelerHomeRunOnlineHealthCheck);
   document.getElementById('traveler-home-online-health-check-copy-button')?.addEventListener('click', () => copyTravelerHomeOnlineHealthCheckMarkdown());
   document.getElementById('traveler-home-online-health-check-download-button')?.addEventListener('click', () => downloadTravelerHomeOnlineHealthCheckMarkdown());

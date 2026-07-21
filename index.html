@@ -2182,6 +2182,43 @@
     if (!actions.length) actions.push('按原路线执行，出发当天仍复核天气和交通。');
     return {score, level: travelerHomeWeatherRiskLevel(score), actions: actions.join('')};
   }
+  function travelerHomeWeatherDayDecision(day, route, dayIndex){
+    const riskDays = Array.isArray(route?.riskDays) ? route.riskDays : [];
+    const routeDay = riskDays[dayIndex] || riskDays.find(item => Number(item.day) === dayIndex + 1) || {};
+    const rain = day.precipitationProbabilityMax || 0;
+    const heat = day.temperatureMax || 0;
+    const wind = day.windSpeedMax || 0;
+    let mode = '原计划可走';
+    const routeActions = [];
+    const creatorActions = [];
+    if (rain >= 60) {
+      mode = '室内优先';
+      routeActions.push(`雨天先转室内或有遮挡点，室内替代：${routeDay.indoorFallback || '附近商场、咖啡或室内展馆'}。`);
+      creatorActions.push('户外镜头放在清晨/傍晚或雨停窗口，优先拍室内、咖啡、展馆和街角细节。');
+    } else if (rain >= 35) {
+      mode = '备室内替代';
+      routeActions.push(`保留主线，但把${routeDay.indoorFallback || '室内替代'}作为随时切换选项。`);
+      creatorActions.push('外景先拍关键镜头，剩余内容用室内和补给点补足。');
+    }
+    if (heat >= 33) {
+      if (mode === '原计划可走') mode = '降低步行';
+      routeActions.push(`降低步行强度：${routeDay.lowEnergyPlan || '只保留当天第一站、补给点和收束点。'}`);
+      creatorActions.push('拍摄时间：清晨/傍晚；正午改室内、商场、咖啡或回酒店休息。');
+    }
+    if (wind >= 20) {
+      if (mode === '原计划可走') mode = '江边短停';
+      routeActions.push('外滩、滨江和桥面只短停，不把长时间拍摄压在江边。');
+      creatorActions.push('收音和稳定画面可能受影响，优先拍短镜头和室内补镜。');
+    }
+    if (!routeActions.length) routeActions.push('按原路线走，出发当天再复核实时天气、交通和开放信息。');
+    if (!creatorActions.length) creatorActions.push('正常拍摄，保留一个室内补镜点。');
+    return {
+      mode,
+      routeAction: routeActions.join(' '),
+      creatorAction: creatorActions.join(' '),
+      fallback: routeDay.indoorFallback || '附近商场、咖啡或室内展馆',
+    };
+  }
   function travelerHomeWeatherPrecheckRoute(){
     return travelerHomeRiskPlanRoute() || travelerHomeBestRecommendation()?.route || TRAVELER_HOME_ROUTES[0] || null;
   }
@@ -2189,16 +2226,22 @@
     const route = travelerHomeWeatherPrecheckRoute();
     const profile = travelerHomeRiskPlanProfile(route);
     const riskDays = travelerHomeRiskPlanDays(route);
-    const days = riskDays.length ? riskDays.map(day => ({
-      date: `Day ${day.day}`,
-      riskLevel: day.weatherRisk || '待复核',
-      temperatureMax: null,
-      temperatureMin: null,
-      precipitationProbabilityMax: null,
-      windSpeedMax: null,
-      actions: day.weatherSignal || '按静态路线风险复核天气。',
-      fallback: true,
-    })) : [{date:'出发前', riskLevel: profile.weatherRisk || '待复核', temperatureMax:null, temperatureMin:null, precipitationProbabilityMax:null, windSpeedMax:null, actions:'失败时继续使用静态风险规则，出发当天用天气 App 二次确认。', fallback:true}];
+    const days = riskDays.length ? riskDays.map((riskDay, index) => {
+      const day = {
+        date: `Day ${riskDay.day}`,
+        riskLevel: riskDay.weatherRisk || '待复核',
+        temperatureMax: null,
+        temperatureMin: null,
+        precipitationProbabilityMax: null,
+        windSpeedMax: null,
+        actions: riskDay.weatherSignal || '按静态路线风险复核天气。',
+        fallback: true,
+      };
+      return {...day, decision: travelerHomeWeatherDayDecision(day, route, index)};
+    }) : (() => {
+      const day = {date:'出发前', riskLevel: profile.weatherRisk || '待复核', temperatureMax:null, temperatureMin:null, precipitationProbabilityMax:null, windSpeedMax:null, actions:'失败时继续使用静态风险规则，出发当天用天气 App 二次确认。', fallback:true};
+      return [{...day, decision: travelerHomeWeatherDayDecision(day, route, 0)}];
+    })();
     return {
       source: '静态路线风险规则',
       apiStatus: '失败时继续使用静态风险规则',
@@ -2227,7 +2270,7 @@
         fallback: false,
       };
       const risk = travelerHomeWeatherDayRisk(day);
-      return {...day, riskLevel: risk.level, riskScore: risk.score, actions: risk.actions};
+      return {...day, riskLevel: risk.level, riskScore: risk.score, actions: risk.actions, decision: travelerHomeWeatherDayDecision(day, route, index)};
     });
     if (!days.length) return travelerHomeWeatherPrecheckStaticFallback('Open-Meteo 没有返回 daily 预报。');
     const maxScore = days.reduce((value, day) => Math.max(value, day.riskScore || 0), 0);
@@ -2259,6 +2302,14 @@
       lines.push(`  - 高低温：${travelerHomeWeatherValue(day.temperatureMax, '°C')} / ${travelerHomeWeatherValue(day.temperatureMin, '°C')}`);
       lines.push(`  - 降雨概率 ${travelerHomeWeatherValue(day.precipitationProbabilityMax, '%')}｜风速 ${travelerHomeWeatherValue(day.windSpeedMax, 'km/h')}`);
       lines.push(`  - 行动：${day.actions || '出发当天复核天气和交通。'}`);
+    });
+    lines.push('', '## 当日改线建议');
+    (Array.isArray(source.days) ? source.days : []).forEach(day => {
+      const decision = day.decision || {};
+      lines.push(`- ${day.date}：${decision.mode || '原计划可走'}`);
+      lines.push(`  - 路线动作：${decision.routeAction || '按原路线走，出发当天再复核。'}`);
+      lines.push(`  - 拍摄建议：${decision.creatorAction || '正常拍摄，保留一个室内补镜点。'}`);
+      lines.push(`  - 室内替代：${decision.fallback || '附近商场、咖啡或室内展馆'}`);
     });
     if (source.errorMessage) lines.push('', `接口异常：${source.errorMessage}`);
     lines.push('', '## 使用边界', '- Open-Meteo 用于出发前预检，不替代气象预警、官方闭馆通知或实时导航。', '- 失败时继续使用静态风险规则，路线、地图、离线包和内容生成仍可正常使用。');

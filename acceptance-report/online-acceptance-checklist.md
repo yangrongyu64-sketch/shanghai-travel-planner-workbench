@@ -6,6 +6,7 @@
 - [ ] `acceptance-report.zip` 能下载并解压，且包含 5 个验收文件。
 - [ ] `release-evidence.zip` 能下载并解压，且包含 5 个证据文件。
 - [ ] `official-refresh.zip` 能下载并解压，且包含 6 个官方复核文件。
+- [ ] `official-fillback.zip` 能下载并解压，且包含 6 个官方回填文件。
 - [ ] `deployment-manifest.json` 包含 `acceptance_report` 节点。
 - [ ] `service-worker.js` 包含 `acceptance-report.zip`。
 - [ ] 手机视口无横向溢出。

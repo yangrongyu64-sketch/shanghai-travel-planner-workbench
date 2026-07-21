@@ -1,0 +1,410 @@
+{
+  "kind": "shanghai_official_verification_fillback",
+  "version": 1,
+  "generated_at": "",
+  "source_url": "",
+  "summary": {
+    "records": 35,
+    "needs_date": 35,
+    "needs_official_url": 0,
+    "needs_human_review": 35
+  },
+  "official_verifications": [
+    {
+      "place_id": "wukang_road",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "anfu_road",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "xintiandi",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "bund_source",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "the_bund",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "nanjing_east_road",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "peoples_square",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "fuxing_park",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "shanghai_museum",
+      "status": "待人工复核",
+      "verified_at": "",
+      "official_url": "https://www.shanghaimuseum.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前必须人工确认预约、开放时间和临时闭馆。"
+    },
+    {
+      "place_id": "yuyuan",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "lujiazui",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "suzhou_creek",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "jingan_temple",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "west_nanjing_road",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "shanghai_natural_history_museum",
+      "status": "待人工复核",
+      "verified_at": "",
+      "official_url": "https://www.snhm.org.cn/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "亲子客流和票务变化敏感，发布前必须人工确认。"
+    },
+    {
+      "place_id": "sinan_mansions",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "shanghai_history_museum",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "urban_planning_exhibition_center",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "west_bund",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.westbund.com/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "long_museum_west_bund",
+      "status": "待人工复核",
+      "verified_at": "",
+      "official_url": "https://www.longmuseum.org/",
+      "opening_status": "待查官网展览和开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "展览和票务变化大，发布前必须人工确认。"
+    },
+    {
+      "place_id": "tank_shanghai",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "xuhui_riverside",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "m50",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "north_bund",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "century_park",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "gongqing_forest_park",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "rockbund_art_museum",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.rockbundartmuseum.org/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "shanghai_science_technology_museum",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.sstm.org.cn/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "yangpu_riverside",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "duolun_road",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "xujiahui_park",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "longhua_temple",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "zhujiajiao_old_town",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "qibao_old_street",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    },
+    {
+      "place_id": "sheshan",
+      "status": "未回填",
+      "verified_at": "",
+      "official_url": "https://www.meet-in-shanghai.net/",
+      "opening_status": "待查官网开放信息",
+      "reservation_status": "待查官网预约规则",
+      "ticket_status": "待查官网票务规则",
+      "transport_status": "待查官方交通和到达方式",
+      "publish_note": "发布前人工确认开放、预约、票务和交通。"
+    }
+  ],
+  "targets": {
+    "official_verifications": "data/official_verifications/place_verifications.json",
+    "directory": "data/official_verifications"
+  },
+  "manual_merge_required": true,
+  "privacy_boundary": "只包含官方复核摘要和待人工合并字段；不提交 API Key、账号、Cookie 或 Authorization 信息。",
+  "next_actions": [
+    "在首页官方复核回填包中导入本 JSON，先预览合并差异。",
+    "人工确认 official_url、开放、预约、票务、交通和临时闭馆字段。",
+    "确认无误后再替换 data/official_verifications/place_verifications.json 并重新构建站点。"
+  ]
+}

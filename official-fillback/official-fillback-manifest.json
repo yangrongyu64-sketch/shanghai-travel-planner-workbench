@@ -1,0 +1,28 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "official_verification_fillback_package",
+  "status": "ready_for_manual_merge_preview",
+  "route_count": 6,
+  "place_count": 35,
+  "validation_status": "可继续回填",
+  "manual_merge_required": true,
+  "source_assets": {
+    "web_entry": "index.html",
+    "normal_workbench": "workbench.html",
+    "official_verifications": "data/official_verifications/place_verifications.json",
+    "official_refresh_zip": "official-refresh.zip",
+    "deployment_manifest": "deployment-manifest.json",
+    "service_worker": "service-worker.js",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+    "live_deployment_record": "LIVE_DEPLOYMENT.md"
+  },
+  "files": [
+    "README.md",
+    "shanghai-official-fillback-template.json",
+    "place-verifications-baseline.json",
+    "official-fillback-merge-guide.md",
+    "official-fillback-checklist.md",
+    "official-fillback-manifest.json"
+  ]
+}

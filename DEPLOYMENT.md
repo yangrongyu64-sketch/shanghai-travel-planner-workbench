@@ -44,6 +44,7 @@
 - 下载 `miniprogram-handoff.zip` 应得到小程序迁移资料包。
 - 下载 `platform-refresh.zip` 应得到平台素材刷新资料包。
 - 下载 `official-refresh.zip` 应得到官方复核更新包。
+- 下载 `official-fillback.zip` 应得到官方复核回填闭环包。
 - 下载 `maintenance-report.zip` 应得到站点健康和刷新清单。
 - 下载 `release-evidence.zip` 应得到发布证据包。
 - 浏览器开发者工具里应能看到 PWA manifest，并成功注册 `service-worker.js`。

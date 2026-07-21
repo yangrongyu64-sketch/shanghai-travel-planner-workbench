@@ -13,6 +13,7 @@
     "product_delivery_zip": "product-delivery.zip",
     "maintenance_report_zip": "maintenance-report.zip",
     "official_refresh_zip": "official-refresh.zip",
+    "official_fillback_zip": "official-fillback.zip",
     "release_evidence_zip": "release-evidence.zip",
     "service_worker": "service-worker.js",
     "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",

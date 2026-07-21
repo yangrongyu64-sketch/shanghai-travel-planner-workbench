@@ -198,6 +198,9 @@
           "official-refresh.zip",
           "official-refresh/official-review-template.json",
           "official-refresh/official-refresh-manifest.json",
+          "official-fillback.zip",
+          "official-fillback/shanghai-official-fillback-template.json",
+          "official-fillback/official-fillback-manifest.json",
           "maintenance-report.zip",
           "maintenance/health-report.json",
           "maintenance/maintenance-manifest.json",
@@ -253,6 +256,20 @@
       "missing": [],
       "route_count": 6
     },
+    "official_fillback": {
+      "status": "healthy",
+      "files": [
+        "official-fillback/README.md",
+        "official-fillback/shanghai-official-fillback-template.json",
+        "official-fillback/place-verifications-baseline.json",
+        "official-fillback/official-fillback-merge-guide.md",
+        "official-fillback/official-fillback-checklist.md",
+        "official-fillback/official-fillback-manifest.json",
+        "official-fillback.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "release_evidence": {
       "status": "healthy",
       "files": [
@@ -281,7 +298,7 @@
   "next_actions": [
     "发布后先打开 maintenance/health-report.json 查看 status 是否为 healthy。",
     "如果 route_count 不是 6，先回到 examples/requests 和 data/seed 检查路线输入。",
-    "如果 PWA、小程序迁移包、官方复核包或发布证据包缺文件，重新运行 --web-workbench 后再部署。",
+    "如果 PWA、小程序迁移包、官方复核包、官方回填包或发布证据包缺文件，重新运行 --web-workbench 后再部署。",
     "若 live_deployment 为 not_configured，说明当前是本地/预发布包，正式发布时补 published-url 参数。"
   ]
 }

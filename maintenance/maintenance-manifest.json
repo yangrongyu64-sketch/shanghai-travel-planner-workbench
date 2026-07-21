@@ -12,6 +12,7 @@
     "acceptance_report_zip": "acceptance-report.zip",
     "miniprogram_handoff_zip": "miniprogram-handoff.zip",
     "official_refresh_zip": "official-refresh.zip",
+    "official_fillback_zip": "official-fillback.zip",
     "release_evidence_zip": "release-evidence.zip",
     "pwa_manifest": "manifest.webmanifest",
     "service_worker": "service-worker.js",

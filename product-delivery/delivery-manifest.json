@@ -14,6 +14,7 @@
     "miniprogram_handoff_zip": "miniprogram-handoff.zip",
     "platform_refresh_zip": "platform-refresh.zip",
     "official_refresh_zip": "official-refresh.zip",
+    "official_fillback_zip": "official-fillback.zip",
     "maintenance_report_zip": "maintenance-report.zip",
     "release_evidence_zip": "release-evidence.zip",
     "deployment_manifest": "deployment-manifest.json",

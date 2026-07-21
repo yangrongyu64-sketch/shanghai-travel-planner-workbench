@@ -1,0 +1,98 @@
+route_id,day,place_id,place_name,priority,status,official_url,verification_items,opening_status,reservation_status,ticket_status,transport_status,publish_note
+relaxed_2d1n_citywalk,1,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+relaxed_2d1n_citywalk,1,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+relaxed_2d1n_citywalk,1,xintiandi,新天地,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+relaxed_2d1n_citywalk,2,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+relaxed_2d1n_citywalk,2,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+relaxed_2d1n_citywalk,2,nanjing_east_road,南京东路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,1,peoples_square,人民广场,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,1,nanjing_east_road,南京东路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,1,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,2,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,2,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,2,fuxing_park,复兴公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,2,xintiandi,新天地,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,3,shanghai_museum,上海博物馆,高,待人工复核,https://www.shanghaimuseum.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前必须人工确认预约、开放时间和临时闭馆。
+first_time_3d2n_balanced,3,yuyuan,豫园 / 老城厢,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+first_time_3d2n_balanced,3,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,1,peoples_square,人民广场,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,1,nanjing_east_road,南京东路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,1,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,1,lujiazui,陆家嘴,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,2,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,2,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,2,fuxing_park,复兴公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,2,xintiandi,新天地,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,3,shanghai_museum,上海博物馆,高,待人工复核,https://www.shanghaimuseum.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前必须人工确认预约、开放时间和临时闭馆。
+highwalk_3d2n_landmark_citywalk,3,yuyuan,豫园 / 老城厢,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,3,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+highwalk_3d2n_landmark_citywalk,3,suzhou_creek,苏州河步道,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,1,peoples_square,人民广场,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,1,nanjing_east_road,南京东路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,1,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,2,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,2,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,2,fuxing_park,复兴公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,2,xintiandi,新天地,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,3,shanghai_museum,上海博物馆,高,待人工复核,https://www.shanghaimuseum.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前必须人工确认预约、开放时间和临时闭馆。
+deep_5d4n_culture_citywalk,3,yuyuan,豫园 / 老城厢,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,3,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,4,suzhou_creek,苏州河步道,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+deep_5d4n_culture_citywalk,5,lujiazui,陆家嘴,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,1,jingan_temple,静安寺,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,1,west_nanjing_road,南京西路,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,1,shanghai_natural_history_museum,上海自然博物馆,高,待人工复核,https://www.snhm.org.cn/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,亲子客流和票务变化敏感，发布前必须人工确认。
+local_life_7d6n_balanced,2,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,2,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,2,sinan_mansions,思南公馆,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,2,fuxing_park,复兴公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,3,shanghai_museum,上海博物馆,高,待人工复核,https://www.shanghaimuseum.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前必须人工确认预约、开放时间和临时闭馆。
+local_life_7d6n_balanced,3,shanghai_history_museum,上海市历史博物馆,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,3,urban_planning_exhibition_center,上海城市规划展示馆,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,4,west_bund,西岸滨江,中,未回填,https://www.westbund.com/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,4,long_museum_west_bund,龙美术馆西岸馆,高,待人工复核,https://www.longmuseum.org/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网展览和开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,展览和票务变化大，发布前必须人工确认。
+local_life_7d6n_balanced,4,tank_shanghai,油罐艺术中心,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,4,xuhui_riverside,徐汇滨江,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,5,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,5,suzhou_creek,苏州河步道,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,5,m50,M50 创意园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,5,north_bund,北外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,6,century_park,世纪公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,6,gongqing_forest_park,共青森林公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,6,lujiazui,陆家嘴,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,7,peoples_square,人民广场,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+local_life_7d6n_balanced,7,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,1,jingan_temple,静安寺,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,1,west_nanjing_road,南京西路,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,1,shanghai_natural_history_museum,上海自然博物馆,高,待人工复核,https://www.snhm.org.cn/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,亲子客流和票务变化敏感，发布前必须人工确认。
+longstay_15d14n_balanced,2,wukang_road,武康路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,2,anfu_road,安福路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,2,sinan_mansions,思南公馆,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,2,fuxing_park,复兴公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,3,peoples_square,人民广场,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,3,nanjing_east_road,南京东路,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,3,the_bund,外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,4,shanghai_museum,上海博物馆,高,待人工复核,https://www.shanghaimuseum.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前必须人工确认预约、开放时间和临时闭馆。
+longstay_15d14n_balanced,4,shanghai_history_museum,上海市历史博物馆,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,4,urban_planning_exhibition_center,上海城市规划展示馆,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,5,yuyuan,豫园 / 老城厢,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,5,bund_source,外滩源,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,5,rockbund_art_museum,外滩美术馆,高,未回填,https://www.rockbundartmuseum.org/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,7,west_bund,西岸滨江,中,未回填,https://www.westbund.com/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,7,long_museum_west_bund,龙美术馆西岸馆,高,待人工复核,https://www.longmuseum.org/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网展览和开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,展览和票务变化大，发布前必须人工确认。
+longstay_15d14n_balanced,7,tank_shanghai,油罐艺术中心,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,7,xuhui_riverside,徐汇滨江,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,8,suzhou_creek,苏州河步道,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,8,m50,M50 创意园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,8,north_bund,北外滩,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,9,lujiazui,陆家嘴,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,9,century_park,世纪公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,9,shanghai_science_technology_museum,上海科技馆,高,未回填,https://www.sstm.org.cn/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,10,yangpu_riverside,杨浦滨江,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,10,duolun_road,多伦路文化名人街,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,11,xujiahui_park,徐家汇公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,11,longhua_temple,龙华寺,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,12,gongqing_forest_park,共青森林公园,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式 / 天气/夜景/户外影响,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,13,zhujiajiao_old_town,朱家角古镇,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,13,qibao_old_street,七宝老街,高,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 预约/门票规则 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。
+longstay_15d14n_balanced,13,sheshan,佘山,中,未回填,https://www.meet-in-shanghai.net/,开放时间/临时闭馆 / 官方交通/到达方式,待查官网开放信息,待查官网预约规则,待查官网票务规则,待查官方交通和到达方式,发布前人工确认开放、预约、票务和交通。

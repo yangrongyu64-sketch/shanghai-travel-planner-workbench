@@ -15,5 +15,6 @@
 - `workbench-demo.zip`：离线演示包。
 - `miniprogram-handoff.zip`：小程序迁移资料包。
 - `platform-refresh.zip`：平台素材刷新包。
+- `official-refresh.zip`：官方复核更新包。
 - `maintenance-report.zip`：维护健康包。
 - `release-evidence.zip`：发布证据包。

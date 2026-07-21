@@ -13,6 +13,7 @@
 - `acceptance-report.zip`：公开验收报告包，包含测试摘要、发布摘要、线上验收清单和剩余边界。
 - `miniprogram-handoff.zip`：小程序迁移包，给后续微信小程序或移动端壳开发使用。
 - `platform-refresh.zip`：平台素材刷新包，给小红书、抖音、旅游网站素材导入和人工复核使用。
+- `official-refresh.zip`：官方复核更新包，给开放、预约、票务、交通和临时闭馆信息人工更新使用。
 - `maintenance-report.zip`：站点健康和发布刷新包，用于检查关键文件、路线数和部署状态。
 - `release-evidence.zip`：发布证据包，用于留存线上巡检、发布审计和回归核验口径。
 - `manifest.webmanifest`：PWA 安装清单，支持浏览器添加到主屏幕。

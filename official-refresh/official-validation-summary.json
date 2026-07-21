@@ -1,0 +1,192 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "official_verification_refresh_summary",
+  "source_path": "data/official_verifications/place_verifications.json",
+  "status_label": "可继续回填",
+  "record_count": 35,
+  "unique_place_count": 35,
+  "route_place_count": 35,
+  "route_covered_count": 35,
+  "verified_count": 0,
+  "pending_count": 35,
+  "paused_count": 0,
+  "error_count": 0,
+  "warning_count": 35,
+  "issues": [
+    {
+      "severity": "warning",
+      "item_id": "wukang_road",
+      "message": "wukang_road 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "anfu_road",
+      "message": "anfu_road 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "xintiandi",
+      "message": "xintiandi 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "bund_source",
+      "message": "bund_source 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "the_bund",
+      "message": "the_bund 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "nanjing_east_road",
+      "message": "nanjing_east_road 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "peoples_square",
+      "message": "peoples_square 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "fuxing_park",
+      "message": "fuxing_park 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "shanghai_museum",
+      "message": "shanghai_museum 仍是待人工复核，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "yuyuan",
+      "message": "yuyuan 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "lujiazui",
+      "message": "lujiazui 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "suzhou_creek",
+      "message": "suzhou_creek 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "jingan_temple",
+      "message": "jingan_temple 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "west_nanjing_road",
+      "message": "west_nanjing_road 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "shanghai_natural_history_museum",
+      "message": "shanghai_natural_history_museum 仍是待人工复核，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "sinan_mansions",
+      "message": "sinan_mansions 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "shanghai_history_museum",
+      "message": "shanghai_history_museum 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "urban_planning_exhibition_center",
+      "message": "urban_planning_exhibition_center 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "west_bund",
+      "message": "west_bund 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "long_museum_west_bund",
+      "message": "long_museum_west_bund 仍是待人工复核，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "tank_shanghai",
+      "message": "tank_shanghai 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "xuhui_riverside",
+      "message": "xuhui_riverside 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "m50",
+      "message": "m50 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "north_bund",
+      "message": "north_bund 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "century_park",
+      "message": "century_park 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "gongqing_forest_park",
+      "message": "gongqing_forest_park 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "rockbund_art_museum",
+      "message": "rockbund_art_museum 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "shanghai_science_technology_museum",
+      "message": "shanghai_science_technology_museum 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "yangpu_riverside",
+      "message": "yangpu_riverside 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "duolun_road",
+      "message": "duolun_road 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "xujiahui_park",
+      "message": "xujiahui_park 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "longhua_temple",
+      "message": "longhua_temple 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "zhujiajiao_old_town",
+      "message": "zhujiajiao_old_town 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "qibao_old_street",
+      "message": "qibao_old_street 仍是未回填，发布前不可当作已核验。"
+    },
+    {
+      "severity": "warning",
+      "item_id": "sheshan",
+      "message": "sheshan 仍是未回填，发布前不可当作已核验。"
+    }
+  ]
+}

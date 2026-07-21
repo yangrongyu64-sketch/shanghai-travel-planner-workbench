@@ -3,7 +3,7 @@
   "package_type": "online_health_check_evidence_summary",
   "status": "ready_for_live_verification",
   "route_count": 6,
-  "expected_target_count": 20,
+  "expected_target_count": 21,
   "expected_static_targets": [
     "index.html",
     "workbench.html",
@@ -17,6 +17,7 @@
     "acceptance-report.zip",
     "miniprogram-handoff.zip",
     "platform-refresh.zip",
+    "official-refresh.zip",
     "maintenance-report.zip",
     "release-evidence.zip"
   ],
@@ -34,6 +35,7 @@
     "acceptance-report.zip",
     "miniprogram-handoff.zip",
     "platform-refresh.zip",
+    "official-refresh.zip",
     "maintenance-report.zip",
     "release-evidence.zip"
   ],

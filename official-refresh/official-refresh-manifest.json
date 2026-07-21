@@ -1,19 +1,17 @@
 {
   "app_name": "上海攻略生成工作台",
-  "package_type": "workbench_acceptance_report_package",
-  "status": "ready_for_public_acceptance",
-  "completion_percent": 99.8,
+  "package_type": "official_verification_refresh_package",
+  "status": "ready_for_manual_official_review",
   "route_count": 6,
-  "api_required": false,
+  "place_count": 35,
+  "validation_status": "可继续回填",
   "manual_review_required": true,
   "source_assets": {
     "web_entry": "index.html",
     "normal_workbench": "workbench.html",
+    "official_checklist": "official_checklist.html",
+    "official_verifications": "data/official_verifications/place_verifications.json",
     "deployment_manifest": "deployment-manifest.json",
-    "product_delivery_zip": "product-delivery.zip",
-    "maintenance_report_zip": "maintenance-report.zip",
-    "official_refresh_zip": "official-refresh.zip",
-    "release_evidence_zip": "release-evidence.zip",
     "service_worker": "service-worker.js",
     "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
     "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
@@ -21,9 +19,10 @@
   },
   "files": [
     "README.md",
-    "test-summary.json",
-    "release-summary.md",
-    "online-acceptance-checklist.md",
-    "acceptance-manifest.json"
+    "official-review-template.json",
+    "official-review-tasks.md",
+    "official-review-tasks.csv",
+    "official-validation-summary.json",
+    "official-refresh-manifest.json"
   ]
 }

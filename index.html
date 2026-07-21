@@ -1519,6 +1519,8 @@
         <textarea id="traveler-home-handoff-import-input" rows="5" aria-label="导入个人行程交接 JSON"></textarea>
         <div class="traveler-handoff-import-actions">
           <input id="traveler-home-handoff-import-file" type="file" accept="application/json,.json" aria-label="选择个人行程交接 JSON 文件">
+          <button type="button" id="traveler-home-handoff-sample-button" data-traveler-home-handoff-sample>填入示例</button>
+          <button type="button" id="traveler-home-handoff-sample-import-button" data-traveler-home-handoff-sample-import>导入示例</button>
           <button type="button" class="primary" id="traveler-home-handoff-import-button" data-traveler-home-handoff-import>导入JSON</button>
         </div>
       </div>
@@ -8163,6 +8165,69 @@
   function travelerHomeHandoffSupportedPayload(payload){
     return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_traveler_personal_handoff' && Number(payload.version) === 1);
   }
+  function travelerHomeSampleHandoffPayload(){
+    return {
+      kind: 'shanghai_traveler_personal_handoff',
+      version: 1,
+      generated_at: '2026-07-21T09:00:00.000Z',
+      source_url: travelerHomeHandoffSourceUrl(),
+      preference_label: '5天 / 均衡 / 文化艺术 / 少排队',
+      preferences: {days:'5', pace:'balanced', theme:'文化艺术', avoid:'no_crowd'},
+      selection: {mode:'favorites', route_count:1, route_ids:['deep_5d4n_culture_citywalk'], favorite_route_ids:['deep_5d4n_culture_citywalk'], last_route_id:'deep_5d4n_culture_citywalk'},
+      outputs: {
+        platform_settings: {tone:'relaxed', length:'short'},
+        platform_drafts: [
+          {platform:'group', source:'本地草稿', text:'同行群消息\n示例交接：周六上午先看展，下午留给咖啡和西岸滨江。'},
+        ],
+        travelogue_fragments: {deep_5d4n_culture_citywalk:'示例碎片：西岸看展后，把傍晚留给滨江慢走。'},
+        travelogue_markdown: '# 我的上海游记初稿\n\n## 旅途碎片\n- 示例碎片：西岸看展后，把傍晚留给滨江慢走。',
+        weather_precheck: {
+          source: '示例天气预检',
+          api_status: '示例数据，用于演示跨设备恢复',
+          route_title: '5日文化艺术｜上海5天4晚文化 city walk 深度版',
+          overall_risk: '中高',
+          fetched_at: '2026-07-21T09:00:00.000Z',
+          days: [{
+            date: '2026-07-22',
+            risk_level: '中高',
+            temperature_max: 34,
+            temperature_min: 27,
+            precipitation_probability_max: 70,
+            wind_speed_max: 18,
+            actions: '示例建议：带雨具，降低户外步行。',
+            fallback: false,
+            decision: {
+              mode: '室内优先',
+              routeAction: '示例改线：先转室内展馆，再看雨停窗口走西岸滨江。',
+              creatorAction: '示例拍摄建议：先拍室内展陈，再补街角短镜头。',
+              fallback: '龙美术馆 / 西岸美术馆',
+            },
+          }],
+        },
+        weather_precheck_markdown: '# 上海免费天气预检\n\n## 当日改线建议\n- 2026-07-22：室内优先',
+        day_execution_markdown: '# 上海行中执行简报\n\n## 天气改线建议\n- 模式：室内优先',
+      },
+      privacy_boundary: '示例只包含演示用行程偏好、草稿和天气建议；不包含账号、Cookie、Authorization 或任何 API Key。',
+      next_actions: ['用导入示例验证跨设备恢复。', '再替换成自己的真实行程交接 JSON。'],
+    };
+  }
+  function travelerHomeSampleHandoffJson(){
+    return JSON.stringify(travelerHomeSampleHandoffPayload(), null, 2);
+  }
+  function fillTravelerHomeSampleHandoffJson(){
+    const text = travelerHomeSampleHandoffJson();
+    const input = document.getElementById('traveler-home-handoff-import-input');
+    const status = document.getElementById('traveler-home-handoff-status');
+    if (input) input.value = text;
+    if (status) status.textContent = '已填入示例交接 JSON，可直接导入验证恢复流程。';
+    return text;
+  }
+  function importTravelerHomeSampleHandoffJson(){
+    const result = importTravelerHomeHandoffJsonText(fillTravelerHomeSampleHandoffJson());
+    const status = document.getElementById('traveler-home-handoff-status');
+    if (status && result?.ok) status.textContent = `已导入示例交接包：${result.route_count}条路线、${result.favorite_count}条收藏、${result.draft_count}条本地草稿。`;
+    return result;
+  }
   function travelerHomeValidPreferenceValue(id, value, fallback){
     const element = document.getElementById(id);
     if (!value) return fallback;
@@ -8567,6 +8632,8 @@
   document.getElementById('traveler-home-travelogue-download-button')?.addEventListener('click', downloadTravelerHomeTravelogueMarkdown);
   document.getElementById('traveler-home-handoff-copy-button')?.addEventListener('click', copyTravelerHomeHandoffSummary);
   document.getElementById('traveler-home-handoff-download-button')?.addEventListener('click', downloadTravelerHomeHandoffJson);
+  document.getElementById('traveler-home-handoff-sample-button')?.addEventListener('click', fillTravelerHomeSampleHandoffJson);
+  document.getElementById('traveler-home-handoff-sample-import-button')?.addEventListener('click', importTravelerHomeSampleHandoffJson);
   document.getElementById('traveler-home-handoff-import-button')?.addEventListener('click', importTravelerHomeHandoffFromInput);
   document.getElementById('traveler-home-handoff-import-file')?.addEventListener('change', importTravelerHomeHandoffFile);
   document.getElementById('traveler-home-departure-review-copy-button')?.addEventListener('click', copyTravelerHomeDepartureReviewMarkdown);

@@ -6457,6 +6457,8 @@
     travelerHomeSetPickerValue('traveler-home-picker-pace', preferences.pace);
     travelerHomeSetPickerValue('traveler-home-picker-theme', preferences.theme);
     travelerHomeSetPickerValue('traveler-home-picker-avoid', preferences.avoid);
+    const restoredWeather = travelerHomeImportedWeatherPrecheck({outputs:{weather_precheck: state.weatherPrecheck}});
+    if (restoredWeather) travelerHomeWeatherPrecheckCurrent = restoredWeather;
     travelerHomeRecommendRoute();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), restored ? '已恢复上次选择。' : '');
     return state;
@@ -8228,6 +8230,40 @@
     const text = travelerHomeFragmentsFromMarkdown(payload.outputs?.travelogue_markdown);
     return routeId && text ? {[routeId]: text} : {};
   }
+  function travelerHomeImportedWeatherDecision(decision){
+    if (!decision || typeof decision !== 'object' || Array.isArray(decision)) return null;
+    return {
+      mode: decision.mode || '原计划可走',
+      routeAction: decision.routeAction || decision.route_action || '按原路线走，出发当天再复核。',
+      creatorAction: decision.creatorAction || decision.creator_action || '正常拍摄，保留一个室内补镜点。',
+      fallback: decision.fallback || '附近商场、咖啡或室内展馆',
+    };
+  }
+  function travelerHomeImportedWeatherPrecheck(payload){
+    const source = payload?.outputs?.weather_precheck;
+    if (!source || typeof source !== 'object' || Array.isArray(source)) return null;
+    const sourceDays = Array.isArray(source.days) ? source.days : [];
+    const days = sourceDays.map(day => ({
+      date: day.date || '',
+      riskLevel: day.riskLevel || day.risk_level || '待复核',
+      temperatureMax: travelerHomeWeatherNumber(day.temperatureMax ?? day.temperature_max),
+      temperatureMin: travelerHomeWeatherNumber(day.temperatureMin ?? day.temperature_min),
+      precipitationProbabilityMax: travelerHomeWeatherNumber(day.precipitationProbabilityMax ?? day.precipitation_probability_max),
+      windSpeedMax: travelerHomeWeatherNumber(day.windSpeedMax ?? day.wind_speed_max),
+      actions: day.actions || '',
+      fallback: Boolean(day.fallback),
+      decision: travelerHomeImportedWeatherDecision(day.decision),
+    }));
+    return {
+      source: source.source || '导入天气预检',
+      apiStatus: source.apiStatus || source.api_status || '从个人交接 JSON 恢复',
+      routeTitle: source.routeTitle || source.route_title || '',
+      overallRisk: source.overallRisk || source.overall_risk || '待复核',
+      fetchedAt: source.fetchedAt || source.fetched_at || '',
+      errorMessage: source.errorMessage || source.error_message || '',
+      days,
+    };
+  }
   function refreshTravelerHomeAfterImport(message){
     travelerHomeSetPickerValue('traveler-home-picker-days', travelerHomeStorageRead().preferences?.days);
     travelerHomeSetPickerValue('traveler-home-picker-pace', travelerHomeStorageRead().preferences?.pace);
@@ -8235,6 +8271,7 @@
     travelerHomeSetPickerValue('traveler-home-picker-avoid', travelerHomeStorageRead().preferences?.avoid);
     const recommendationTarget = document.getElementById('traveler-home-recommendation');
     if (recommendationTarget) recommendationTarget.innerHTML = travelerHomeRecommendationHtml(travelerHomeBestRecommendation());
+    if (travelerHomeWeatherPrecheckCurrent) renderTravelerHomeWeatherPrecheck(travelerHomeWeatherPrecheckCurrent);
     renderTravelerHomeRoutePack();
     renderTravelerHomeSocialCard();
     renderTravelerHomePlatformCopy('group');
@@ -8267,7 +8304,9 @@
     const selectedFavorites = favoriteIds;
     const platformDrafts = travelerHomeImportedPlatformDrafts(payload, routeId, settings);
     const travelogueFragments = travelerHomeImportedTravelogueFragments(payload, routeId);
-    const nextState = {...previousState, preferences, lastRouteId: routeId, favorites: selectedFavorites, platformDrafts, travelogueFragments, updatedAt: new Date().toISOString()};
+    const importedWeatherPrecheck = travelerHomeImportedWeatherPrecheck(payload);
+    travelerHomeWeatherPrecheckCurrent = importedWeatherPrecheck;
+    const nextState = {...previousState, preferences, lastRouteId: routeId, favorites: selectedFavorites, platformDrafts, travelogueFragments, weatherPrecheck: importedWeatherPrecheck, updatedAt: new Date().toISOString()};
     travelerHomeStorageWrite(nextState);
     refreshTravelerHomeAfterImport('已恢复导入的行程交接包。');
     const result = {ok:true, route_count: travelerHomeRoutePackRoutes().length, favorite_count: selectedFavorites.length, draft_count: Object.keys(platformDrafts).length};

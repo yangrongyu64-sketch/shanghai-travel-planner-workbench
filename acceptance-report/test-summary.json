@@ -11,16 +11,16 @@
       "expected_result": "1 passed"
     },
     "related_package_suite": {
-      "command": ".venv/bin/python -m pytest tests/test_web_workbench.py::test_cli_run_web_workbench_writes_installable_pwa_shell tests/test_web_workbench.py::test_cli_run_web_workbench_writes_miniprogram_handoff_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_platform_refresh_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_maintenance_health_package tests/test_web_workbench.py::test_cli_run_web_workbench_embeds_live_deployment_record -q",
-      "expected_result": "5 passed"
+      "command": ".venv/bin/python -m pytest tests/test_web_workbench.py::test_cli_run_web_workbench_writes_installable_pwa_shell tests/test_web_workbench.py::test_cli_run_web_workbench_writes_miniprogram_handoff_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_trend_sources_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_platform_refresh_package tests/test_web_workbench.py::test_cli_run_web_workbench_writes_maintenance_health_package tests/test_web_workbench.py::test_cli_run_web_workbench_embeds_live_deployment_record -q",
+      "expected_result": "6 passed"
     },
     "web_workbench_regression": {
       "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest tests/test_web_workbench.py -q",
-      "expected_result": "234 passed"
+      "expected_result": "241 passed"
     },
     "full_regression": {
       "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest -q",
-      "expected_result": "330 passed"
+      "expected_result": "337 passed"
     }
   },
   "online_acceptance": [

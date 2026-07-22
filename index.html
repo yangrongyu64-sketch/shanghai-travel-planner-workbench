@@ -711,6 +711,7 @@
       <textarea id="traveler-home-trial-ops-tracker-input" rows="6" aria-label="首轮试用者进度 JSON" placeholder="粘贴试用者进度 JSON，或先填入样例。"></textarea>
       <div class="traveler-trial-guide-ops-tracker-actions">
         <button type="button" id="traveler-home-trial-ops-tracker-sample-button" data-traveler-home-trial-ops-tracker-sample>填入样例</button>
+        <button type="button" id="traveler-home-trial-ops-tracker-sync-feedback-button" data-traveler-home-trial-ops-tracker-sync-feedback>同步反馈看板</button>
         <button type="button" class="primary" id="traveler-home-trial-ops-tracker-render-button" data-traveler-home-trial-ops-tracker-render>生成看板</button>
         <button type="button" id="traveler-home-trial-ops-tracker-copy-button" data-traveler-home-trial-ops-tracker-copy>复制看板</button>
         <button type="button" id="traveler-home-trial-ops-tracker-download-button" data-traveler-home-trial-ops-tracker-download>下载Markdown</button>
@@ -4252,6 +4253,7 @@
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomePostTripReview();
     renderTravelerHomeFreshnessRadar();
+    syncTravelerHomeTrialOpsTrackerFromFeedbackBoard({silent:true});
     if (status) status.textContent = `已导入 ${records.length} 条反馈。`;
     return {count:records.length};
   }
@@ -7057,8 +7059,36 @@
     return JSON.stringify(travelerHomeTrialOpsTrackerSampleRows(), null, 2);
   }
   function travelerHomeTrialOpsTrackerRoleLabel(role){
+    const normalized = String(role || '').replace(/[\s/]+/g, '');
+    if (normalized.includes('运营') || normalized.includes('维护')) return '运营维护者';
+    if (normalized.includes('创作者') || normalized.includes('博主') || normalized === 'creator') return '内容创作者';
+    if (normalized.includes('同行') || normalized === 'companion') return '同行人';
+    if (normalized.includes('游客') || normalized === 'traveler') return '普通游客';
     const match = travelerHomeTrialOpsRoles().find(item => item.key === role || item.label === role);
     return match?.label || role || '普通游客';
+  }
+  function travelerHomeTrialOpsTrackerRowsFromFeedbackBoard(records){
+    const source = Array.isArray(records) ? records : travelerHomeFeedbackBoardRecords();
+    return source.map((record, index) => {
+      const p1 = travelerHomeFeedbackBoardSeverityRank(record?.severity) === 0;
+      const note = travelerHomeFeedbackBoardFirstLine(record?.note) || '已回传试用反馈。';
+      const nextAction = travelerHomeFeedbackBoardFirstLine(record?.nextAction) || '回到反馈处理队列确认。';
+      return {
+        id: `feedback_${index + 1}_${record?.id || 'record'}`,
+        name: `反馈${index + 1}`,
+        role: record?.role || 'traveler',
+        role_label: travelerHomeTrialOpsTrackerRoleLabel(record?.role || 'traveler'),
+        invited: true,
+        completed: true,
+        feedback: true,
+        p1_blocker: p1,
+        issue_count: 1,
+        note: `${record?.severity || '建议优化'}｜${record?.type || '其他'}｜${note}` ,
+        route: record?.route || '',
+        source_feedback_id: record?.id || '',
+        next_action: nextAction,
+      };
+    });
   }
   function travelerHomeTrialOpsTrackerNormalizeRow(row, index){
     const source = row && typeof row === 'object' ? row : {};
@@ -7196,6 +7226,24 @@
     const status = document.getElementById('traveler-home-trial-ops-tracker-status');
     if (status) status.textContent = `已载入 ${payload.summary.tester_count} 位试用者样例，当前判断：${payload.decision.label}。`;
     return {ok:true, tester_count:payload.summary.tester_count, feedback_count:payload.summary.feedback_count, decision:payload.decision.key};
+  }
+  function syncTravelerHomeTrialOpsTrackerFromFeedbackBoard(){
+    const options = arguments[0];
+    const opts = options && typeof options === 'object' ? options : {};
+    const records = travelerHomeFeedbackBoardRecords();
+    const input = document.getElementById('traveler-home-trial-ops-tracker-input');
+    const status = document.getElementById('traveler-home-trial-ops-tracker-status');
+    if (!records.length) {
+      if (status && !opts.silent) status.textContent = '反馈看板暂无记录，先导入试用反馈包。';
+      return {ok:false, feedback_count:0, p1_blocker_count:0, decision:'pause'};
+    }
+    const rows = travelerHomeTrialOpsTrackerRowsFromFeedbackBoard(records);
+    if (input) input.value = JSON.stringify(rows, null, 2);
+    renderTravelerHomeTrialOpsTracker();
+    const payload = travelerHomeTrialOpsTrackerPayload();
+    const result = {ok:true, feedback_count:payload.summary.feedback_count, p1_blocker_count:payload.summary.p1_blocker_count, decision:payload.decision.key};
+    if (status && !opts.silent) status.textContent = `已从反馈看板同步 ${result.feedback_count} 条反馈，当前判断：${payload.decision.label}。`;
+    return result;
   }
   function travelerHomeTrialOpsTrackerFilename(){
     return 'shanghai-trial-ops-tracker.md';
@@ -9222,6 +9270,7 @@
     if (event.target?.closest?.('[data-traveler-home-trial-ops-download]')) { downloadTravelerHomeTrialOpsPackageMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-json-download]')) { downloadTravelerHomeTrialOpsPackageJson(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-sample]')) { loadTravelerHomeTrialOpsTrackerSample(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-sync-feedback]')) { syncTravelerHomeTrialOpsTrackerFromFeedbackBoard(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-render]')) { const status = document.getElementById('traveler-home-trial-ops-tracker-status'); renderTravelerHomeTrialOpsTracker(); if (status) status.textContent = '试用进度看板已更新。'; return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-copy]')) { copyTravelerHomeTrialOpsTrackerMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-download]')) { downloadTravelerHomeTrialOpsTrackerMarkdown(); return; }

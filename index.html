@@ -588,6 +588,10 @@
     .traveler-travelogue-field{font-size:12px;color:var(--muted);font-weight:800}
     .traveler-handoff{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-handoff h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-data-vault{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-data-vault h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-data-vault-summary{display:flex;gap:8px;flex-wrap:wrap}
+    .traveler-data-vault-summary span{display:inline-flex;align-items:center;min-height:28px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#fffdfa;color:var(--muted);font-size:12px;font-weight:900}
     .traveler-stay-decision{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-stay-decision h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-food-supply{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
@@ -1891,6 +1895,26 @@
         </div>
       </div>
       <p id="traveler-home-handoff-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-data-vault" class="traveler-data-vault" aria-label="旅行数据保险箱">
+      <div class="traveler-social-card-head">
+        <h3>旅行数据保险箱</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-data-vault-copy-button" data-traveler-home-data-vault-copy>复制备份</button>
+          <button type="button" class="primary" id="traveler-home-data-vault-download-button" data-traveler-home-data-vault-download>下载备份JSON</button>
+        </div>
+      </div>
+      <div id="traveler-home-data-vault-summary" class="traveler-data-vault-summary" aria-live="polite"></div>
+      <textarea id="traveler-home-data-vault-output" readonly rows="8" aria-label="旅行数据保险箱 JSON"></textarea>
+      <div class="traveler-handoff-import">
+        <label for="traveler-home-data-vault-import-input">导入保险箱 JSON</label>
+        <textarea id="traveler-home-data-vault-import-input" rows="5" aria-label="导入旅行数据保险箱 JSON"></textarea>
+        <div class="traveler-handoff-import-actions">
+          <input id="traveler-home-data-vault-import-file" type="file" accept="application/json,.json" aria-label="选择旅行数据保险箱 JSON 文件">
+          <button type="button" class="primary" id="traveler-home-data-vault-import-button" data-traveler-home-data-vault-import>导入备份</button>
+        </div>
+      </div>
+      <p id="traveler-home-data-vault-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-departure-review" class="traveler-departure-review" aria-label="出发前复核包">
       <div class="traveler-social-card-head">
@@ -8589,6 +8613,7 @@
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
     renderTravelerHomePostTripReview();
+    renderTravelerHomeDataVault();
     return state;
   }
   function travelerHomeSetPickerValue(id, value){
@@ -10769,6 +10794,159 @@
     if (status) status.textContent = '已下载 JSON 行程交接包。';
     return {filename, text};
   }
+  let travelerHomeDataVaultGeneratedAt = '';
+  function travelerHomeDataVaultTimestamp(){
+    if (!travelerHomeDataVaultGeneratedAt) travelerHomeDataVaultGeneratedAt = new Date().toISOString();
+    return travelerHomeDataVaultGeneratedAt;
+  }
+  function travelerHomeDataVaultIsPlainObject(value){
+    return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+  }
+  function travelerHomeDataVaultSensitiveKey(key){
+    return /(api[_-]?key|apikey|access[_-]?token|refresh[_-]?token|token|authorization|cookie|secret|password|amap|gaode|map[_-]?key)/i.test(String(key || ''));
+  }
+  function travelerHomeDataVaultSanitizedValue(value){
+    if (Array.isArray(value)) return value.map(item => travelerHomeDataVaultSanitizedValue(item));
+    if (!travelerHomeDataVaultIsPlainObject(value)) return value;
+    return Object.entries(value).reduce((next, [key, item]) => {
+      if (travelerHomeDataVaultSensitiveKey(key)) return next;
+      next[key] = travelerHomeDataVaultSanitizedValue(item);
+      return next;
+    }, {});
+  }
+  function travelerHomeDataVaultSanitizedState(state){
+    return travelerHomeDataVaultSanitizedValue(travelerHomeDataVaultIsPlainObject(state) ? state : {});
+  }
+  function travelerHomeDataVaultSummary(state){
+    const source = travelerHomeDataVaultIsPlainObject(state) ? state : {};
+    const platformDrafts = travelerHomeDataVaultIsPlainObject(source.platformDrafts) ? source.platformDrafts : {};
+    const travelogueFragments = travelerHomeDataVaultIsPlainObject(source.travelogueFragments) ? source.travelogueFragments : {};
+    const contentIntake = Array.isArray(source.contentIntakeBoardRecords) ? source.contentIntakeBoardRecords : [];
+    const feedback = Array.isArray(source.feedbackBoardRecords) ? source.feedbackBoardRecords : [];
+    return {
+      has_state: Object.keys(source).length > 0,
+      state_key_count: Object.keys(source).length,
+      last_route_id: source.lastRouteId || '',
+      favorite_count: travelerHomeSavedFavorites(source).length,
+      platform_draft_count: Object.keys(platformDrafts).length,
+      travelogue_fragment_count: Object.keys(travelogueFragments).length,
+      content_intake_count: contentIntake.length,
+      feedback_count: feedback.length,
+      official_fillback_preview: Boolean(source.officialFillbackPreviewPayload),
+      public_trial_content_sync: Boolean(source.publicTrialDataCollectionContentSync),
+    };
+  }
+  function travelerHomeDataVaultPayload(){
+    const state = travelerHomeDataVaultSanitizedState(travelerHomeStorageRead());
+    return {
+      kind: 'shanghai_traveler_home_data_vault',
+      version: 1,
+      generated_at: travelerHomeDataVaultTimestamp(),
+      source_url: window.location?.href || '',
+      storage_key: travelerHomeStorageKey,
+      summary: travelerHomeDataVaultSummary(state),
+      state,
+      restore_policy: '导入后覆盖当前浏览器首页状态，并重新渲染路线、草稿、游记、天气和交接包。',
+      privacy_boundary: '只包含当前浏览器里的上海旅行路线偏好、收藏、草稿、素材、反馈和试用同步状态；不包含 API Key、账号、Cookie、Authorization、token 或第三方平台私密数据。',
+      next_actions: [
+        '换浏览器、换电脑或交给协作者前，先下载本 JSON。',
+        '新环境打开网页后粘贴或上传本 JSON，即可恢复首页本地状态。',
+        '恢复后重新检查官方开放、预约、票务、交通和临时闭馆。',
+      ],
+    };
+  }
+  function travelerHomeDataVaultJson(){
+    return JSON.stringify(travelerHomeDataVaultPayload(), null, 2);
+  }
+  function renderTravelerHomeDataVault(){
+    const payload = travelerHomeDataVaultPayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-data-vault-summary');
+    const output = document.getElementById('traveler-home-data-vault-output');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>收藏 ${summary.favorite_count} 条</span><span>草稿 ${summary.platform_draft_count} 条</span><span>游记碎片 ${summary.travelogue_fragment_count} 条</span><span>素材 ${summary.content_intake_count} 条</span><span>反馈 ${summary.feedback_count} 条</span>`;
+    const text = JSON.stringify(payload, null, 2);
+    if (output) output.value = text;
+    return text;
+  }
+  function travelerHomeDataVaultFilename(){
+    return 'shanghai-traveler-data-vault.json';
+  }
+  async function copyTravelerHomeDataVaultJson(){
+    const text = renderTravelerHomeDataVault();
+    const status = document.getElementById('traveler-home-data-vault-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制数据保险箱 JSON。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制数据保险箱 JSON。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeDataVaultJson(){
+    const payload = travelerHomeDataVaultPayload();
+    renderTravelerHomeDataVault();
+    const filename = travelerHomeDataVaultFilename();
+    const status = document.getElementById('traveler-home-data-vault-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载数据保险箱 JSON。';
+    return {filename, payload};
+  }
+  function travelerHomeDataVaultSupportedPayload(payload){
+    return Boolean(payload && typeof payload === 'object' && payload.kind === 'shanghai_traveler_home_data_vault' && Number(payload.version) === 1 && travelerHomeDataVaultIsPlainObject(payload.state));
+  }
+  function restoreTravelerHomeDataVaultPayload(payload){
+    const status = document.getElementById('traveler-home-data-vault-status');
+    if (!travelerHomeDataVaultSupportedPayload(payload)) {
+      if (status) status.textContent = '导入失败：请选择上海旅行数据保险箱 JSON。';
+      return {ok:false, reason:'unsupported_payload'};
+    }
+    const nextState = travelerHomeDataVaultSanitizedState(payload.state);
+    nextState.updatedAt = new Date().toISOString();
+    nextState.restoredFromDataVault = {source_kind: payload.kind, source_generated_at: payload.generated_at || '', restored_at: nextState.updatedAt};
+    travelerHomeStorageWrite(nextState);
+    refreshTravelerHomeAfterImport('已恢复数据保险箱备份。');
+    const summary = travelerHomeDataVaultSummary(nextState);
+    renderTravelerHomeDataVault();
+    const result = {ok:true, favorite_count: summary.favorite_count, platform_draft_count: summary.platform_draft_count, travelogue_fragment_count: summary.travelogue_fragment_count, content_intake_count: summary.content_intake_count, feedback_count: summary.feedback_count};
+    if (status) status.textContent = `已导入数据保险箱：收藏${result.favorite_count}条、素材${result.content_intake_count}条、反馈${result.feedback_count}条。`; 
+    return result;
+  }
+  function importTravelerHomeDataVaultJsonText(text){
+    const status = document.getElementById('traveler-home-data-vault-status');
+    let payload = null;
+    try { payload = JSON.parse(String(text || '')); }
+    catch (error) {
+      if (status) status.textContent = '导入失败：JSON 格式不正确。';
+      return {ok:false, reason:'invalid_json'};
+    }
+    return restoreTravelerHomeDataVaultPayload(payload);
+  }
+  function importTravelerHomeDataVaultFromInput(){
+    const input = document.getElementById('traveler-home-data-vault-import-input');
+    return importTravelerHomeDataVaultJsonText(input?.value || '');
+  }
+  async function importTravelerHomeDataVaultFile(event){
+    const file = event?.target?.files?.[0];
+    const status = document.getElementById('traveler-home-data-vault-status');
+    if (!file) return {ok:false, reason:'missing_file'};
+    try {
+      const text = await file.text();
+      const input = document.getElementById('traveler-home-data-vault-import-input');
+      if (input) input.value = text;
+      return importTravelerHomeDataVaultJsonText(text);
+    } catch (error) {
+      if (status) status.textContent = '导入失败：无法读取这个 JSON 文件。';
+      return {ok:false, reason:'file_read_failed'};
+    }
+  }
   function travelerHomeDepartureReviewRoute(){
     return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || travelerHomeFirstTimeGuideRoute();
   }
@@ -11398,6 +11576,7 @@
     renderTravelerHomeWorkflow();
     renderTravelerHomeDepartureReview();
     renderTravelerHomeHandoff({silent:true});
+    renderTravelerHomeDataVault();
     renderTravelerHomePretripToolkit();
     renderTravelerHomeDayExecution();
     renderTravelerHomePostTripReview();
@@ -11734,6 +11913,10 @@
   document.getElementById('traveler-home-handoff-sample-import-button')?.addEventListener('click', importTravelerHomeSampleHandoffJson);
   document.getElementById('traveler-home-handoff-import-button')?.addEventListener('click', importTravelerHomeHandoffFromInput);
   document.getElementById('traveler-home-handoff-import-file')?.addEventListener('change', importTravelerHomeHandoffFile);
+  document.getElementById('traveler-home-data-vault-copy-button')?.addEventListener('click', copyTravelerHomeDataVaultJson);
+  document.getElementById('traveler-home-data-vault-download-button')?.addEventListener('click', downloadTravelerHomeDataVaultJson);
+  document.getElementById('traveler-home-data-vault-import-button')?.addEventListener('click', importTravelerHomeDataVaultFromInput);
+  document.getElementById('traveler-home-data-vault-import-file')?.addEventListener('change', importTravelerHomeDataVaultFile);
   document.getElementById('traveler-home-departure-review-copy-button')?.addEventListener('click', copyTravelerHomeDepartureReviewMarkdown);
   document.getElementById('traveler-home-departure-review-download-button')?.addEventListener('click', downloadTravelerHomeDepartureReviewMarkdown);
   document.getElementById('traveler-home-pretrip-toolkit-copy-button')?.addEventListener('click', copyTravelerHomePretripToolkitMarkdown);
@@ -11819,6 +12002,7 @@
   applyTravelerHomeTravelogueFragments();
   renderTravelerHomeTravelogue();
   renderTravelerHomeHandoff({silent:true});
+  renderTravelerHomeDataVault();
   renderTravelerHomeStayDecision();
   renderTravelerHomeFoodSupply();
   renderTravelerHomeRiskPlan();

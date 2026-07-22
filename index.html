@@ -1637,12 +1637,14 @@
   <div class="traveler-public-trial-data-collection-head">
     <p>数据回收</p>
     <h2>公开试用数据回收包</h2>
-    <small>粘贴反馈表 JSON 行，自动汇总参与、打开、选路线、地图、有效反馈、P1/P2 和内容复用，生成可喂给复盘包的 JSON。</small>
+    <small>粘贴反馈表 JSON、CSV 或从表格复制的行数据，自动汇总参与、打开、选路线、地图、有效反馈、P1/P2 和内容复用，生成可喂给复盘包的 JSON。</small>
   </div>
   <div>
-    <textarea id="traveler-home-public-trial-data-collection-input" rows="6" aria-label="公开试用反馈表 JSON 行" placeholder="粘贴 feedback rows JSON 数组，或先填入样例。"></textarea>
+    <textarea id="traveler-home-public-trial-data-collection-input" rows="6" aria-label="公开试用反馈表数据" placeholder="粘贴 feedback rows JSON 数组、CSV，或从飞书/Excel/问卷表格复制整段。"></textarea>
     <div class="traveler-public-trial-data-collection-actions">
       <button type="button" id="traveler-home-public-trial-data-collection-sample-button" data-traveler-home-public-trial-data-collection-sample>填入样例</button>
+      <button type="button" id="traveler-home-public-trial-data-collection-table-sample-button" data-traveler-home-public-trial-data-collection-table-sample>表格样例</button>
+      <button type="button" id="traveler-home-public-trial-data-collection-import-button" data-traveler-home-public-trial-data-collection-import>导入粘贴数据</button>
       <button type="button" class="primary" id="traveler-home-public-trial-data-collection-build-button" data-traveler-home-public-trial-data-collection-build>生成回收包</button>
       <button type="button" id="traveler-home-public-trial-data-collection-copy-button" data-traveler-home-public-trial-data-collection-copy>复制回收包</button>
       <button type="button" id="traveler-home-public-trial-data-collection-download-button" data-traveler-home-public-trial-data-collection-download>下载 Markdown</button>
@@ -7129,18 +7131,145 @@
     }
     return rows;
   }
-  function travelerHomePublicTrialDataCollectionRowsFromInput(){
+  function travelerHomePublicTrialDataCollectionTableSampleText(){
+    const headers = ['用户ID','你选择了哪条路线？','你更像哪类试用者？','链接是否能顺利打开？','是否能在 2 分钟内选出路线？','是否打开过攻略页或地图？','是否提交反馈？','反馈是否有效？','严重程度','有没有可改写成小红书/抖音/游记的内容？','是否发现开放、预约、票务、交通或闭馆不确定？','有没有让你无法继续使用的问题？','一句话建议'];
+    const rows = travelerHomePublicTrialDataCollectionSampleRows().slice(0, 8).map(row => [
+      row.respondent_id,
+      row.route_selected,
+      row.traveler_role,
+      row.open_success ? '是' : '否',
+      row.route_choice_time === 'within_2_min' ? '是' : '否',
+      row.map_or_guide_opened ? '是' : '否',
+      row.submitted_feedback ? '是' : '否',
+      row.feedback_valid ? '是' : '否',
+      row.severity === 'none' ? '' : row.severity,
+      row.content_reuse === 'yes' ? '是' : '否',
+      row.official_uncertainty,
+      row.p1_blocker,
+      row.one_sentence_suggestion,
+    ]);
+    return [headers.join('\t')].concat(rows.map(row => row.join('\t'))).join('\n');
+  }
+  function travelerHomePublicTrialDataCollectionHeaderKey(header){
+    const normalized = String(header || '').trim().replace(/[：:？?]/g, '').replace(/\s+/g, '').toLowerCase();
+    const map = {
+      '用户id':'respondent_id',
+      '用户ID':'respondent_id',
+      'respondent_id':'respondent_id',
+      'id':'respondent_id',
+      '你选择了哪条路线':'route_selected',
+      '路线':'route_selected',
+      'route_selected':'route_selected',
+      'selected_route':'selected_route',
+      '你更像哪类试用者':'traveler_role',
+      '试用者类型':'traveler_role',
+      'traveler_role':'traveler_role',
+      '链接是否能顺利打开':'open_success',
+      '是否能顺利打开':'open_success',
+      'open_success':'open_success',
+      'opened_link':'opened_link',
+      '是否能在2分钟内选出路线':'route_choice_time',
+      'route_choice_time':'route_choice_time',
+      '是否打开过攻略页或地图':'map_or_guide_opened',
+      '是否打开攻略页或地图':'map_or_guide_opened',
+      'map_or_guide_opened':'map_or_guide_opened',
+      'opened_guide_or_map':'opened_guide_or_map',
+      '是否提交反馈':'submitted_feedback',
+      'submitted_feedback':'submitted_feedback',
+      '反馈是否有效':'feedback_valid',
+      'feedback_valid':'feedback_valid',
+      '严重程度':'severity',
+      'severity':'severity',
+      '有没有可改写成小红书/抖音/游记的内容':'content_reuse',
+      '内容可复用':'content_reuse',
+      'content_reuse':'content_reuse',
+      '是否发现开放、预约、票务、交通或闭馆不确定':'official_uncertainty',
+      '官方不确定':'official_uncertainty',
+      'official_uncertainty':'official_uncertainty',
+      '有没有让你无法继续使用的问题':'p1_blocker',
+      '无法继续使用的问题':'p1_blocker',
+      'p1_blocker':'p1_blocker',
+      '一句话建议':'one_sentence_suggestion',
+      '建议':'one_sentence_suggestion',
+      'one_sentence_suggestion':'one_sentence_suggestion',
+    };
+    return map[normalized] || normalized;
+  }
+  function travelerHomePublicTrialDataCollectionSplitDelimitedLine(line, delimiter){
+    const cells = [];
+    let current = '';
+    let inQuotes = false;
+    for (let index = 0; index < String(line || '').length; index += 1) {
+      const char = String(line || '')[index];
+      if (char === '"') {
+        if (inQuotes && String(line || '')[index + 1] === '"') {
+          current += '"';
+          index += 1;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === delimiter && !inQuotes) {
+        cells.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    cells.push(current.trim());
+    return cells;
+  }
+  function travelerHomePublicTrialDataCollectionImportWarnings(rows){
+    const warnings = [];
+    const seenIds = new Set();
+    (Array.isArray(rows) ? rows : []).forEach((row, index) => {
+      const respondentId = String(row.respondent_id || row.id || '').trim();
+      if (respondentId) {
+        if (seenIds.has(respondentId)) warnings.push(`重复用户ID：${respondentId}`);
+        seenIds.add(respondentId);
+      }
+      if (!String(row.route_selected || row.selected_route || '').trim()) warnings.push(`第 ${index + 2} 行缺少路线选择`);
+    });
+    return warnings;
+  }
+  function travelerHomePublicTrialDataCollectionParseDelimitedText(text){
+    const rawText = String(text || '').trim();
+    const lines = rawText.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    if (lines.length < 2) {
+      const rows = travelerHomePublicTrialDataCollectionSampleRows();
+      return {format:'sample', rows, headers:[], warnings:['粘贴内容不足，已使用样例数据。']};
+    }
+    const delimiter = lines[0].includes('\t') ? '\t' : ',';
+    const headers = travelerHomePublicTrialDataCollectionSplitDelimitedLine(lines[0], delimiter);
+    const keys = headers.map(travelerHomePublicTrialDataCollectionHeaderKey);
+    const rows = lines.slice(1).map(line => {
+      const cells = travelerHomePublicTrialDataCollectionSplitDelimitedLine(line, delimiter);
+      const row = {};
+      cells.forEach((cell, index) => {
+        const key = keys[index] || `extra_${index + 1}`;
+        if (key) row[key] = cell.trim();
+      });
+      return row;
+    });
+    return {format: delimiter === '\t' ? 'tsv' : 'csv', rows, headers, warnings: travelerHomePublicTrialDataCollectionImportWarnings(rows)};
+  }
+  function travelerHomePublicTrialDataCollectionImportFromInput(){
     const input = document.getElementById('traveler-home-public-trial-data-collection-input');
     const text = (input?.value || '').trim();
-    if (!text) return travelerHomePublicTrialDataCollectionSampleRows();
+    if (!text) {
+      const rows = travelerHomePublicTrialDataCollectionSampleRows();
+      return {format:'sample', rows, headers:[], warnings:[]};
+    }
     try {
       const parsed = JSON.parse(text);
-      return Array.isArray(parsed) ? parsed : travelerHomePublicTrialDataCollectionSampleRows();
+      const rows = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.rows) ? parsed.rows : travelerHomePublicTrialDataCollectionSampleRows());
+      const format = Array.isArray(parsed) ? 'json' : (parsed.input_format || parsed.format || 'json');
+      return {format, rows, headers:[], warnings: travelerHomePublicTrialDataCollectionImportWarnings(rows)};
     } catch (error) {
-      const status = document.getElementById('traveler-home-public-trial-data-collection-status');
-      if (status) status.textContent = '反馈 JSON 格式不正确，已使用样例数据。';
-      return travelerHomePublicTrialDataCollectionSampleRows();
+      return travelerHomePublicTrialDataCollectionParseDelimitedText(text);
     }
+  }
+  function travelerHomePublicTrialDataCollectionRowsFromInput(){
+    return travelerHomePublicTrialDataCollectionImportFromInput().rows;
   }
   function travelerHomePublicTrialDataCollectionTruthy(value){
     if (value === true) return true;
@@ -7149,6 +7278,8 @@
   }
   function travelerHomePublicTrialDataCollectionSummary(rows){
     const sourceRows = Array.isArray(rows) ? rows : [];
+    const importResult = travelerHomePublicTrialDataCollectionImportFromInput();
+    const warnings = Array.isArray(importResult.warnings) ? importResult.warnings : [];
     const participants = new Set(sourceRows.map((row, index) => row.respondent_id || row.id || `row-${index}`)).size;
     const openedLink = sourceRows.filter(row => travelerHomePublicTrialDataCollectionTruthy(row.open_success || row.opened_link)).length;
     const selectedRoute = sourceRows.filter(row => travelerHomePublicTrialDataCollectionTruthy(row.route_choice_time) || travelerHomePublicTrialDataCollectionTruthy(row.selected_route)).length;
@@ -7172,6 +7303,8 @@
       reusable_content_count: reusableContent,
       ready_for_retrospective: ready,
       status_label: ready ? '可进入复盘' : '继续补样本',
+      input_format: importResult.format || 'json',
+      warning_count: warnings.length,
     };
   }
   function travelerHomePublicTrialDataCollectionRetrospectiveInput(summary, rows){
@@ -7202,7 +7335,8 @@
     return travelerHomePublicTrialDataCollectionPackageGeneratedAt;
   }
   function travelerHomePublicTrialDataCollectionPackagePayload(){
-    const rows = travelerHomePublicTrialDataCollectionRowsFromInput();
+    const importResult = travelerHomePublicTrialDataCollectionImportFromInput();
+    const rows = importResult.rows;
     const summary = travelerHomePublicTrialDataCollectionSummary(rows);
     const retrospectiveInput = travelerHomePublicTrialDataCollectionRetrospectiveInput(summary, rows);
     return {
@@ -7212,6 +7346,8 @@
       source_url: window.location?.href || '',
       summary,
       rows,
+      input_format: importResult.format || 'json',
+      import_warnings: importResult.warnings || [],
       retrospective_input: retrospectiveInput,
       feedback_schema: travelerHomePublicTrialExecutionFeedbackForm({trial_window:'7 天'}),
       artifacts: ['shanghai-public-trial-data-collection-package.md','shanghai-public-trial-data-collection-package.json','shanghai-public-trial-retrospective-input.json','shanghai-public-trial-feedback-form-template.md'],
@@ -7225,6 +7361,7 @@
       '# 上海公开试用数据回收包',
       '',
       `回收状态：${summary.status_label}` ,
+      `- 导入格式：${summary.input_format}；导入检查：${summary.warning_count} 条异常` ,
       `- 反馈行：${summary.row_count} 条；参与人数：${summary.participants}` ,
       `- 打开链接：${summary.opened_link}；选路线：${summary.selected_route}；打开攻略/地图：${summary.opened_guide_or_map}` ,
       `- 有效反馈：${summary.valid_feedback} 条；P1：${summary.p1_count}；P2：${summary.p2_count}` ,
@@ -7233,6 +7370,10 @@
       '## 反馈表字段',
     ];
     payload.feedback_schema.fields.forEach(field => lines.push(`- ${field.label}（${field.key}）`));
+    if (payload.import_warnings.length) {
+      lines.push('', '## 导入检查');
+      payload.import_warnings.forEach(warning => lines.push(`- ${warning}`));
+    }
     lines.push('', '## 复盘 JSON');
     lines.push('```json');
     lines.push(JSON.stringify(payload.retrospective_input, null, 2));
@@ -7252,6 +7393,22 @@
     if (status) status.textContent = '已填入公开试用反馈样例。';
     return rows;
   }
+  function loadTravelerHomePublicTrialDataCollectionTableSample(){
+    const input = document.getElementById('traveler-home-public-trial-data-collection-input');
+    const text = travelerHomePublicTrialDataCollectionTableSampleText();
+    if (input) input.value = text;
+    renderTravelerHomePublicTrialDataCollectionPackage();
+    const status = document.getElementById('traveler-home-public-trial-data-collection-status');
+    if (status) status.textContent = '已填入表格粘贴样例。';
+    return text;
+  }
+  function importTravelerHomePublicTrialDataCollectionPaste(){
+    const importResult = travelerHomePublicTrialDataCollectionImportFromInput();
+    renderTravelerHomePublicTrialDataCollectionPackage();
+    const status = document.getElementById('traveler-home-public-trial-data-collection-status');
+    if (status) status.textContent = `已导入 ${importResult.format} 数据 ${importResult.rows.length} 行，异常 ${importResult.warnings.length} 条。`;
+    return importResult;
+  }
   function renderTravelerHomePublicTrialDataCollectionPackage(){
     const payload = travelerHomePublicTrialDataCollectionPackagePayload();
     const summary = payload.summary;
@@ -7260,10 +7417,11 @@
     const output = document.getElementById('traveler-home-public-trial-data-collection-output');
     const jsonOutput = document.getElementById('traveler-home-public-trial-data-collection-json-output');
     const status = document.getElementById('traveler-home-public-trial-data-collection-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.status_label)}</span><span>参与 ${summary.participants}</span><span>有效反馈 ${summary.valid_feedback}</span><span>P1 ${summary.p1_count}</span><span>内容 ${summary.reusable_content_count}</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.status_label)}</span><span>${escapeHtml(summary.input_format)}</span><span>参与 ${summary.participants}</span><span>有效反馈 ${summary.valid_feedback}</span><span>P1 ${summary.p1_count}</span><span>异常 ${summary.warning_count}</span><span>内容 ${summary.reusable_content_count}</span>`;
     if (listTarget) {
       const rows = [
         `<article><b>数据回收</b><span>反馈行 ${summary.row_count}；打开 ${summary.opened_link}；选路线 ${summary.selected_route}；攻略/地图 ${summary.opened_guide_or_map}</span></article>`,
+        `<article><b>导入检查</b><span>${escapeHtml(payload.import_warnings.length ? payload.import_warnings.join(' / ') : '未发现重复用户、缺少路线等基础异常。')}</span></article>`,
         `<article><b>反馈表字段</b><span>${escapeHtml(payload.feedback_schema.fields.map(field => field.label).join(' / '))}</span></article>`,
         `<article><b>复盘 JSON</b><span>${escapeHtml(summary.ready_for_retrospective ? '可直接复制到公开试用复盘包。' : '样本不足，先继续收集。')}</span></article>`,
         `<article><b>风险信号</b><span>P1 ${summary.p1_count} / P2 ${summary.p2_count} / 官方不确定 ${payload.rows.filter(row => row.official_uncertainty).length}</span></article>`,
@@ -11114,6 +11272,8 @@
   document.getElementById('traveler-home-public-trial-execution-package-download-button')?.addEventListener('click', downloadTravelerHomePublicTrialExecutionPackageMarkdown);
   document.getElementById('traveler-home-public-trial-execution-package-json-download-button')?.addEventListener('click', downloadTravelerHomePublicTrialExecutionPackageJson);
   document.getElementById('traveler-home-public-trial-data-collection-sample-button')?.addEventListener('click', loadTravelerHomePublicTrialDataCollectionSample);
+  document.getElementById('traveler-home-public-trial-data-collection-table-sample-button')?.addEventListener('click', loadTravelerHomePublicTrialDataCollectionTableSample);
+  document.getElementById('traveler-home-public-trial-data-collection-import-button')?.addEventListener('click', importTravelerHomePublicTrialDataCollectionPaste);
   document.getElementById('traveler-home-public-trial-data-collection-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-public-trial-data-collection-status'); renderTravelerHomePublicTrialDataCollectionPackage(); if (status) status.textContent = '公开试用数据回收包已更新。'; });
   document.getElementById('traveler-home-public-trial-data-collection-copy-button')?.addEventListener('click', copyTravelerHomePublicTrialDataCollectionPackageMarkdown);
   document.getElementById('traveler-home-public-trial-data-collection-download-button')?.addEventListener('click', downloadTravelerHomePublicTrialDataCollectionPackageMarkdown);

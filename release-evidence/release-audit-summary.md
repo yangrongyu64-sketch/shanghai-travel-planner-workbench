@@ -14,6 +14,7 @@
 - `shanghai-release-audit-package.md`：首页“发布审计”生成的最终审计 Markdown。
 - `shanghai-online-health-check.json` / `shanghai-online-health-check.md`：线上巡检 JSON 和 Markdown。
 - `shanghai-content-update-execution-package.md/json`：首页“内容更新执行确认包”生成的采纳、复核、阻塞和回归记录。
+- `shanghai-traveler-data-vault.json`：首页“旅行数据保险箱”导出的个人行程状态备份，用于换浏览器或换电脑恢复演练。
 - `shanghai-release-regression-checklist.md`：发布后回归清单。
 - `output/playwright/`：线上下载、移动端和控制台核验证据。
 

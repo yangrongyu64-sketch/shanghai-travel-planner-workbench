@@ -19,6 +19,8 @@
     "official_fillback_zip": "official-fillback.zip",
     "maintenance_report_zip": "maintenance-report.zip",
     "release_evidence_zip": "release-evidence.zip",
+    "data_vault_recovery_guide": "product-delivery/data-vault-recovery-guide.md",
+    "data_vault_export_file": "shanghai-traveler-data-vault.json",
     "deployment_manifest": "deployment-manifest.json",
     "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
     "published_traveler_demo_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/index.html?demo=traveler#traveler-home-route-pack",
@@ -28,6 +30,7 @@
   "files": [
     "README.md",
     "usage-and-maintenance.md",
+    "data-vault-recovery-guide.md",
     "acceptance-checklist.md",
     "route-inventory.json",
     "delivery-manifest.json"

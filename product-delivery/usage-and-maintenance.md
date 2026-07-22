@@ -8,6 +8,7 @@
 - 完整工作台：`outputs/workbench/site/workbench.html`。
 - 正式交付包：`outputs/workbench/site/product-delivery.zip`。
 - 发布证据包：`outputs/workbench/site/release-evidence.zip`。
+- 数据恢复指南：`outputs/workbench/site/product-delivery/data-vault-recovery-guide.md`。
 - 趋势源接入包：`outputs/workbench/site/trend-sources.zip`。
 - 官方复核更新包：`outputs/workbench/site/official-refresh.zip`。
 - 离线演示包：`outputs/workbench/workbench-demo.zip` 或站点内 `workbench-demo.zip`。
@@ -41,3 +42,4 @@
 - 高德地图、天气等 API 只作为后续增强，不是打开网页的前置条件。
 - 不提交 API Key、账号、Cookie 或 Authorization 信息。
 - 不依赖 Codex 账号运行，Codex 只参与生成和维护代码；静态网页、ZIP 和 Markdown 都可独立保存。
+- 旅行数据保险箱只导出浏览器本地行程状态，并过滤 API Key、Token、Cookie、Authorization 等敏感字段。

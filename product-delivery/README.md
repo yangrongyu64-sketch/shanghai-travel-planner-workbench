@@ -18,10 +18,12 @@
 4. 需要离线转发时使用 `workbench-demo.zip`。
 5. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
 6. 需要正式发布留档时使用 `release-evidence.zip`。
-7. 后续维护按 `usage-and-maintenance.md` 执行。
+7. 需要迁移浏览器本地数据时，按 `data-vault-recovery-guide.md` 使用旅行数据保险箱。
+8. 后续维护按 `usage-and-maintenance.md` 执行。
 
 ## 快速验收
 
 1. 打开公开链接或 `index.html`，确认首页能看到上海路线；也可打开 `index.html?demo=traveler#traveler-home-route-pack` 自动进入示例路线包。
-2. 下载并解压 `product-delivery.zip`，确认 5 个交付文件都存在。
+2. 下载并解压 `product-delivery.zip`，确认 6 个交付文件都存在。
 3. 对照 `acceptance-checklist.md`，确认 API 边界、人工复核边界和下载包都清楚。
+4. 在首页“旅行数据保险箱”导出 `shanghai-traveler-data-vault.json`，再按恢复指南完成一次导入演练。

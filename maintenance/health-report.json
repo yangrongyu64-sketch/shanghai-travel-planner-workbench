@@ -152,6 +152,7 @@
       "files": [
         "product-delivery/README.md",
         "product-delivery/usage-and-maintenance.md",
+        "product-delivery/data-vault-recovery-guide.md",
         "product-delivery/acceptance-checklist.md",
         "product-delivery/route-inventory.json",
         "product-delivery/delivery-manifest.json",
@@ -189,6 +190,7 @@
           "workbench-demo.zip",
           "product-delivery.zip",
           "product-delivery/delivery-manifest.json",
+          "product-delivery/data-vault-recovery-guide.md",
           "acceptance-report.zip",
           "acceptance-report/acceptance-manifest.json",
           "miniprogram-handoff.zip",
@@ -210,6 +212,7 @@
           "release-evidence.zip",
           "release-evidence/online-health-check-summary.json",
           "release-evidence/release-evidence-manifest.json",
+          "release-evidence/data-vault-recovery-evidence.json",
           "manifest.webmanifest",
           "app-icon.svg"
         ],
@@ -294,6 +297,8 @@
         "release-evidence/README.md",
         "release-evidence/release-audit-summary.md",
         "release-evidence/online-health-check-summary.json",
+        "release-evidence/data-vault-recovery-evidence.md",
+        "release-evidence/data-vault-recovery-evidence.json",
         "release-evidence/release-regression-checklist.md",
         "release-evidence/release-evidence-manifest.json",
         "release-evidence.zip"

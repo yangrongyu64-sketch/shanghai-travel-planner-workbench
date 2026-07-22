@@ -3,7 +3,7 @@
   "package_type": "online_health_check_evidence_summary",
   "status": "ready_for_live_verification",
   "route_count": 6,
-  "expected_target_count": 23,
+  "expected_target_count": 24,
   "expected_static_targets": [
     "index.html",
     "workbench.html",
@@ -12,6 +12,7 @@
     "service-worker.js",
     "deployment-manifest.json",
     "maintenance/health-report.json",
+    "release-evidence/data-vault-recovery-evidence.json",
     "workbench-demo.zip",
     "product-delivery.zip",
     "acceptance-report.zip",

@@ -18,6 +18,7 @@
     "official_fillback_zip": "official-fillback.zip",
     "content_update_execution_markdown": "shanghai-content-update-execution-package.md",
     "content_update_execution_json": "shanghai-content-update-execution-package.json",
+    "data_vault_recovery_json": "data-vault-recovery-evidence.json",
     "release_audit_markdown": "shanghai-release-audit-package.md",
     "release_regression_markdown": "shanghai-release-regression-checklist.md",
     "online_health_check_report": "shanghai-online-health-check.json",
@@ -31,12 +32,21 @@
     "evidence_json": "content-update-execution-evidence.json",
     "status": "ready_for_manual_execution_import"
   },
+  "data_vault_recovery": {
+    "source_ui_section": "traveler-home-data-vault",
+    "evidence_markdown": "data-vault-recovery-evidence.md",
+    "evidence_json": "data-vault-recovery-evidence.json",
+    "recovery_guide": "product-delivery/data-vault-recovery-guide.md",
+    "status": "ready_for_restore_drill"
+  },
   "files": [
     "README.md",
     "release-audit-summary.md",
     "online-health-check-summary.json",
     "content-update-execution-evidence.md",
     "content-update-execution-evidence.json",
+    "data-vault-recovery-evidence.md",
+    "data-vault-recovery-evidence.json",
     "release-regression-checklist.md",
     "release-evidence-manifest.json"
   ]

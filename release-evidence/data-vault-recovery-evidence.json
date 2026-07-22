@@ -1,0 +1,50 @@
+{
+  "kind": "shanghai_traveler_data_vault_recovery_evidence",
+  "version": 1,
+  "status": "ready_for_restore_drill",
+  "route_count": 6,
+  "source_ui_section": "traveler-home-data-vault",
+  "storage_key": "shanghai-traveler-home-memory-v1",
+  "payload_kind": "shanghai_traveler_home_data_vault",
+  "export_file": "shanghai-traveler-data-vault.json",
+  "recovery_guide": "product-delivery/data-vault-recovery-guide.md",
+  "restore_scenarios": [
+    "同浏览器误删后恢复",
+    "换浏览器或换电脑恢复",
+    "Codex 账号不可用后继续使用静态网页恢复"
+  ],
+  "restored_state_groups": [
+    "路线偏好",
+    "最近路线",
+    "收藏路线",
+    "天气预检",
+    "平台草稿",
+    "游记碎片",
+    "素材入库记录",
+    "试用反馈记录",
+    "官方回填预览",
+    "公开试用内容同步"
+  ],
+  "sanitized_key_examples": [
+    "apiKey",
+    "api_key",
+    "token",
+    "authorization",
+    "cookie",
+    "secret",
+    "password",
+    "amap",
+    "gaode"
+  ],
+  "privacy_boundary": "不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据；只记录静态网页中旅行数据保险箱的导出文件名、恢复入口、过滤口径和恢复演练要求。",
+  "acceptance_steps": [
+    "在首页旅行数据保险箱下载 shanghai-traveler-data-vault.json。",
+    "确认 JSON 的 kind 为 shanghai_traveler_home_data_vault。",
+    "在新浏览器或清空状态后导入备份。",
+    "确认偏好、最近路线、收藏、平台草稿和游记碎片恢复。",
+    "确认错误 JSON 不会覆盖当前状态。"
+  ],
+  "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+  "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+  "published_at": "2026-07-22"
+}

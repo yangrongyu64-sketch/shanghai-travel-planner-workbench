@@ -57,6 +57,7 @@
     "directory": "product-delivery",
     "archive": "product-delivery.zip",
     "manifest": "product-delivery/delivery-manifest.json",
+    "recovery_guide": "product-delivery/data-vault-recovery-guide.md",
     "target": "正式交付 / 未来维护者接手"
   },
   "acceptance_report": {
@@ -94,6 +95,7 @@
     "directory": "release-evidence",
     "archive": "release-evidence.zip",
     "manifest": "release-evidence/release-evidence-manifest.json",
+    "data_vault_recovery_evidence": "release-evidence/data-vault-recovery-evidence.json",
     "target": "发布审计 / 线上巡检证据留档"
   },
   "deploy_scripts": {

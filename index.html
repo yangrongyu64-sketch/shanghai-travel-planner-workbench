@@ -116,6 +116,17 @@
     .traveler-trial-guide-ops-tracker-list b{font-size:13px;line-height:1.25}
     .traveler-trial-guide .traveler-trial-guide-ops-tracker-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
     .traveler-trial-guide-ops-tracker-status{margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-trial-guide-ops-fix-package{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-top:4px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fffdfa}
+    .traveler-trial-guide-ops-fix-package-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start}
+    .traveler-trial-guide-ops-fix-package-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-ops-fix-package-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-trial-guide-ops-fix-package-summary{display:flex;gap:8px;flex-wrap:wrap;min-height:28px}
+    .traveler-trial-guide-ops-fix-package-summary span{display:inline-flex;align-items:center;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#f3f6f7;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-trial-guide-ops-fix-package-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .traveler-trial-guide-ops-fix-package-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff3ee;padding:8px}
+    .traveler-trial-guide-ops-fix-package-list b{font-size:13px;line-height:1.25}
+    .traveler-trial-guide .traveler-trial-guide-ops-fix-package-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
+    .traveler-trial-guide-ops-fix-package-status{margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-trial-guide-status{grid-column:2;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-operator-tools{border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-operator-tools summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:16px clamp(16px,4vw,44px);cursor:pointer;list-style:none}
@@ -546,10 +557,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -722,6 +733,23 @@
       <textarea id="traveler-home-trial-ops-tracker-output" readonly rows="8" aria-label="首轮试用进度看板 Markdown"></textarea>
       <textarea id="traveler-home-trial-ops-tracker-json-output" readonly rows="7" aria-label="首轮试用进度看板 JSON"></textarea>
       <p id="traveler-home-trial-ops-tracker-status" class="traveler-trial-guide-ops-tracker-status" aria-live="polite"></p>
+      <div id="traveler-home-trial-ops-fix-package" class="traveler-trial-guide-ops-fix-package" aria-label="试用阻塞修复行动包">
+        <div>
+          <b>试用阻塞修复行动包</b>
+          <small>当进度看板判断 fix_first 时，把 P1 阻塞反馈整理成修复责任、版本修订和回归验证包。</small>
+        </div>
+        <div class="traveler-trial-guide-ops-fix-package-actions">
+          <button type="button" class="primary" id="traveler-home-trial-ops-fix-package-render-button" data-traveler-home-trial-ops-fix-package-render>生成修复包</button>
+          <button type="button" id="traveler-home-trial-ops-fix-package-copy-button" data-traveler-home-trial-ops-fix-package-copy>复制修复包</button>
+          <button type="button" id="traveler-home-trial-ops-fix-package-download-button" data-traveler-home-trial-ops-fix-package-download>下载Markdown</button>
+          <button type="button" id="traveler-home-trial-ops-fix-package-json-download-button" data-traveler-home-trial-ops-fix-package-json-download>下载JSON</button>
+        </div>
+        <div id="traveler-home-trial-ops-fix-package-summary" class="traveler-trial-guide-ops-fix-package-summary" aria-live="polite"></div>
+        <div id="traveler-home-trial-ops-fix-package-list" class="traveler-trial-guide-ops-fix-package-list"></div>
+        <textarea id="traveler-home-trial-ops-fix-package-output" readonly rows="8" aria-label="试用阻塞修复行动包 Markdown"></textarea>
+        <textarea id="traveler-home-trial-ops-fix-package-json-output" readonly rows="7" aria-label="试用阻塞修复行动包 JSON"></textarea>
+        <p id="traveler-home-trial-ops-fix-package-status" class="traveler-trial-guide-ops-fix-package-status" aria-live="polite"></p>
+      </div>
     </div>
   </div>
   <p id="traveler-home-trial-guide-status" class="traveler-trial-guide-status" aria-live="polite"></p>
@@ -7107,6 +7135,9 @@
       p1_blocker: p1,
       issue_count: Number(source.issue_count ?? source.issueCount ?? (feedback ? 1 : 0)) || 0,
       note: source.note || '',
+      route: source.route || '',
+      source_feedback_id: source.source_feedback_id || source.sourceFeedbackId || '',
+      next_action: source.next_action || source.nextAction || '',
     };
   }
   function travelerHomeTrialOpsTrackerRowsFromInput(){
@@ -7216,6 +7247,7 @@
     if (output) output.value = text;
     if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
     if (status && !status.textContent) status.textContent = `试用进度看板已生成：${payload.decision.label}。`;
+    renderTravelerHomeTrialOpsFixPackage();
     return text;
   }
   function loadTravelerHomeTrialOpsTrackerSample(){
@@ -7293,6 +7325,185 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载首轮试用进度看板 JSON。';
+    return {filename, payload};
+  }
+  let travelerHomeTrialOpsFixPackageGeneratedAt = '';
+  function travelerHomeTrialOpsFixPackageTimestamp(){
+    if (!travelerHomeTrialOpsFixPackageGeneratedAt) travelerHomeTrialOpsFixPackageGeneratedAt = new Date().toISOString();
+    return travelerHomeTrialOpsFixPackageGeneratedAt;
+  }
+  function travelerHomeTrialOpsFixPackageOwner(category){
+    const owners = {map:'路线/地图维护者', official:'运营维护者', content:'内容创作者', miniprogram:'小程序产品负责人', route:'路线编辑', other:'产品维护者'};
+    return owners[category] || owners.other;
+  }
+  function travelerHomeTrialOpsFixPackageItems(trackerPayload, revisionItems){
+    const tracker = trackerPayload || travelerHomeTrialOpsTrackerPayload();
+    const revisions = Array.isArray(revisionItems) ? revisionItems : travelerHomeFeedbackRevisionPlanItems();
+    const byFeedbackId = new Map(revisions.map(item => [item.feedback_id, item]));
+    return (tracker.testers || []).filter(row => row.p1_blocker).map((row, index) => {
+      const revision = byFeedbackId.get(row.source_feedback_id) || {};
+      const category = revision.category || travelerHomeFeedbackRevisionPlanCategory({type: row.note, note: row.note, nextAction: row.next_action});
+      const targetSurface = revision.target_surface || travelerHomeFeedbackRevisionPlanTargetSurface(category);
+      const routeTitle = revision.route_title || row.route || '未关联路线';
+      const note = travelerHomeFeedbackBoardFirstLine(revision.note || row.note) || '存在阻塞使用反馈，需先排查。';
+      return {
+        fix_id: `fix_${index + 1}_${row.source_feedback_id || row.id || 'trial'}`,
+        priority: 'P1',
+        status: '待修复',
+        tester_id: row.id || '',
+        tester_name: row.name || `反馈${index + 1}`,
+        role_label: row.role_label || travelerHomeTrialOpsTrackerRoleLabel(row.role),
+        source_feedback_id: row.source_feedback_id || revision.feedback_id || '',
+        route_id: revision.route_id || '',
+        route_title: routeTitle,
+        target_surface: targetSurface,
+        category,
+        owner: travelerHomeTrialOpsFixPackageOwner(category),
+        note,
+        fix_action: revision.revision_action || travelerHomeFeedbackRevisionPlanAction(category),
+        regression_check: revision.acceptance_check || travelerHomeFeedbackRevisionPlanAcceptance(category),
+      };
+    }).sort((left, right) => String(left.route_title).localeCompare(String(right.route_title), 'zh-Hans-CN') || String(left.target_surface).localeCompare(String(right.target_surface), 'zh-Hans-CN'));
+  }
+  function travelerHomeTrialOpsFixPackageSummary(trackerPayload, items){
+    const tracker = trackerPayload || travelerHomeTrialOpsTrackerPayload();
+    const fixItems = Array.isArray(items) ? items : travelerHomeTrialOpsFixPackageItems(tracker);
+    const routeKeys = new Set(fixItems.map(item => item.route_id || item.route_title).filter(Boolean));
+    return {
+      decision_key: tracker.decision?.key || 'pause',
+      decision_label: tracker.decision?.label || '继续收集反馈',
+      tester_count: tracker.summary?.tester_count || 0,
+      feedback_count: tracker.summary?.feedback_count || 0,
+      p1_blocker_count: tracker.summary?.p1_blocker_count || 0,
+      fix_item_count: fixItems.length,
+      route_count: routeKeys.size,
+      ready_for_next_trial: !fixItems.length && tracker.decision?.key === 'go_next',
+    };
+  }
+  function travelerHomeTrialOpsFixPackagePayload(){
+    const tracker = travelerHomeTrialOpsTrackerPayload();
+    const revisionPayload = travelerHomeFeedbackRevisionPlanPayload();
+    const items = travelerHomeTrialOpsFixPackageItems(tracker, revisionPayload.items);
+    const summary = travelerHomeTrialOpsFixPackageSummary(tracker, items);
+    const regressionChecks = Array.from(new Set(items.map(item => item.regression_check).filter(Boolean)));
+    return {
+      kind: 'shanghai_trial_ops_fix_package',
+      version: 1,
+      generated_at: travelerHomeTrialOpsFixPackageTimestamp(),
+      source_url: window.location?.href || '',
+      tracker_decision: tracker.decision,
+      summary,
+      fix_items: items,
+      revision_package: {filename:'shanghai-trial-feedback-revision-plan.json', kind: revisionPayload.kind, item_count: revisionPayload.items.length, blocking_count: revisionPayload.summary.blocking_count},
+      regression_package: {filename:'shanghai-trial-ops-fix-regression.md', checks: regressionChecks.concat(['重新生成站点并跑完整回归测试。', '上线后用 Playwright 检查桌面、移动端、控制台和复制下载动作。'])},
+      safety_boundary: '只根据试用进度和反馈摘要生成修复行动包；不提交 API Key、账号、Cookie 或 Authorization 信息；官方开放、预约、票务、交通和临时闭馆仍需人工复核。',
+      next_actions: summary.fix_item_count ? ['先处理 P1 修复项。', '确认候选修订后生成下一版发布包。', '修复后执行回归验证包，再重新判断是否扩大试用。'] : ['没有 P1 阻塞时，回到试用进度看板判断是否进入下一版。'],
+    };
+  }
+  function travelerHomeTrialOpsFixPackageMarkdown(){
+    const payload = travelerHomeTrialOpsFixPackagePayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海试用阻塞修复行动包',
+      '',
+      '## 总结论',
+      `- 决策：${summary.decision_label}` ,
+      `- 试用者：${summary.tester_count} 人`,
+      `- 反馈：${summary.feedback_count} 份`,
+      `- P1 阻塞：${summary.p1_blocker_count} 个`,
+      `- 修复项：${summary.fix_item_count} 条`,
+      `- 修复后是否可继续试用：${summary.ready_for_next_trial ? '是' : '否'}` ,
+      '',
+      '## 修复清单',
+    ];
+    if (!payload.fix_items.length) {
+      lines.push('- 暂无 P1 阻塞修复项。');
+    } else {
+      payload.fix_items.forEach((item, index) => {
+        lines.push(`${index + 1}. [${item.priority}/${item.status}] ${item.target_surface}｜${item.route_title}`);
+        lines.push(`   - 反馈：${item.tester_name}｜${item.role_label}｜${item.note}`);
+        lines.push(`   - 负责人：${item.owner}`);
+        lines.push(`   - 修复动作：${item.fix_action}`);
+        lines.push(`   - 回归验证：${item.regression_check}`);
+        if (item.source_feedback_id) lines.push(`   - 反馈 ID：${item.source_feedback_id}`);
+      });
+    }
+    lines.push('', '## 版本修订包');
+    lines.push(`- 文件：${payload.revision_package.filename}`);
+    lines.push(`- 覆盖反馈：${payload.revision_package.item_count} 条，其中阻塞：${payload.revision_package.blocking_count} 条`);
+    lines.push('- 先人工确认修改建议，再进入候选草案和正式应用。');
+    lines.push('', '## 回归验证包');
+    lines.push(`- 文件：${payload.regression_package.filename}`);
+    payload.regression_package.checks.forEach(check => lines.push(`- ${check}`));
+    lines.push('', '## 下一步');
+    payload.next_actions.forEach(action => lines.push(`- ${action}`));
+    lines.push('', `安全边界：${payload.safety_boundary}`);
+    return lines.join('\n');
+  }
+  function renderTravelerHomeTrialOpsFixPackage(){
+    const payload = travelerHomeTrialOpsFixPackagePayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-trial-ops-fix-package-summary');
+    const listTarget = document.getElementById('traveler-home-trial-ops-fix-package-list');
+    const output = document.getElementById('traveler-home-trial-ops-fix-package-output');
+    const jsonOutput = document.getElementById('traveler-home-trial-ops-fix-package-json-output');
+    const status = document.getElementById('traveler-home-trial-ops-fix-package-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>修复项 ${summary.fix_item_count} 条</span><span>P1 ${summary.p1_blocker_count} 个</span><span>路线 ${summary.route_count} 条</span><span>${escapeHtml(summary.decision_label)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.fix_items.length ? payload.fix_items.map(item => `<article><b>${escapeHtml(item.priority)}｜${escapeHtml(item.target_surface)}｜${escapeHtml(item.route_title)}</b><span>${escapeHtml(item.tester_name)}｜${escapeHtml(item.owner)}</span><span>${escapeHtml(item.note)}</span><span>${escapeHtml(item.fix_action)}</span></article>`).join('') : '<article><b>暂无 P1 修复项</b><span>当试用进度看板出现阻塞反馈时，这里会生成修复行动。</span></article>';
+    const text = travelerHomeTrialOpsFixPackageMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.fix_items.length ? '试用阻塞修复行动包已生成。' : '暂无 P1 阻塞修复项。';
+    return text;
+  }
+  function travelerHomeTrialOpsFixPackageFilename(){
+    return 'shanghai-trial-ops-fix-package.md';
+  }
+  function travelerHomeTrialOpsFixPackageJsonFilename(){
+    return 'shanghai-trial-ops-fix-package.json';
+  }
+  async function copyTravelerHomeTrialOpsFixPackageMarkdown(){
+    const text = renderTravelerHomeTrialOpsFixPackage();
+    const status = document.getElementById('traveler-home-trial-ops-fix-package-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制试用阻塞修复行动包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制试用阻塞修复行动包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeTrialOpsFixPackageMarkdown(){
+    const text = renderTravelerHomeTrialOpsFixPackage();
+    const filename = travelerHomeTrialOpsFixPackageFilename();
+    const status = document.getElementById('traveler-home-trial-ops-fix-package-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载试用阻塞修复行动包 Markdown。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeTrialOpsFixPackageJson(){
+    renderTravelerHomeTrialOpsFixPackage();
+    const payload = travelerHomeTrialOpsFixPackagePayload();
+    const filename = travelerHomeTrialOpsFixPackageJsonFilename();
+    const status = document.getElementById('traveler-home-trial-ops-fix-package-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载试用阻塞修复行动包 JSON。';
     return {filename, payload};
   }
   let travelerHomeFirstUseChecklistGeneratedAt = '';
@@ -9275,6 +9486,10 @@
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-copy]')) { copyTravelerHomeTrialOpsTrackerMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-download]')) { downloadTravelerHomeTrialOpsTrackerMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-ops-tracker-json-download]')) { downloadTravelerHomeTrialOpsTrackerJson(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-fix-package-render]')) { const status = document.getElementById('traveler-home-trial-ops-fix-package-status'); renderTravelerHomeTrialOpsFixPackage(); if (status) status.textContent = '试用阻塞修复行动包已更新。'; return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-fix-package-copy]')) { copyTravelerHomeTrialOpsFixPackageMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-fix-package-download]')) { downloadTravelerHomeTrialOpsFixPackageMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-fix-package-json-download]')) { downloadTravelerHomeTrialOpsFixPackageJson(); return; }
     const control = event.target?.closest?.('[data-traveler-home-trial-guide-target]');
     const targetId = control?.getAttribute?.('data-traveler-home-trial-guide-target');
     if (targetId) goTravelerHomeTrialGuideTarget(targetId);
@@ -9443,6 +9658,7 @@
   renderTravelerHomeTrialInvitationPackage();
   renderTravelerHomeTrialOpsPackage();
   renderTravelerHomeTrialOpsTracker();
+  renderTravelerHomeTrialOpsFixPackage();
   applyTravelerHomeFilters();
   renderTravelerHomeProductCompletionOverview();
   renderTravelerHomeAcceptanceChecklist();

@@ -35,6 +35,17 @@
     .route-draft div{border:1px solid #e1e6df;background:#f8faf7;padding:10px;border-radius:6px}
     .route-draft b{display:block;margin-bottom:4px;font-size:12px;color:#173b76}
     .route-draft p{font-size:13px;color:#252525}
+    .route-suggestions{margin:12px 0 18px;padding:14px;border:1px solid #cad7d3;background:#fff;border-radius:8px}
+    .route-suggestions-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+    .route-suggestions h2{margin:0 0 4px;font-size:18px}
+    .route-suggestions p{margin:0;color:#625d55;font-size:13px}
+    .route-suggestions button{min-height:36px;border:1px solid #173b76;background:#173b76;color:#fff;font:inherit;font-weight:800;cursor:pointer;padding:0 12px}
+    .route-suggestion-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
+    .route-suggestion-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0 0 10px;padding:0;list-style:none}
+    .route-suggestion-list li{min-width:0;border:1px solid #e1e6df;background:#f8faf7;padding:10px;border-radius:6px}
+    .route-suggestion-list b{display:block;margin-bottom:5px;color:#173b76;font-size:12px}
+    .route-suggestion-list span{display:block;color:#252525;font-size:13px;line-height:1.55}
+    .route-suggestion-text{white-space:pre-wrap;margin:0;min-height:120px;padding:12px;border:1px solid #e1e6df;background:#f8faf7;color:#252525;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;overflow:auto}
     .route-map-preview{display:grid;grid-template-columns:minmax(320px,1.3fr) minmax(260px,.7fr);gap:12px;margin:12px 0 18px;padding:14px;border:1px solid #cad7d3;background:#fff;border-radius:8px}
     .route-map-preview h2{margin:0 0 4px;font-size:18px}
     .route-map-preview p{margin:0 0 10px;color:#625d55;font-size:13px}
@@ -88,7 +99,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid{grid-template-columns:1fr}.route-draft{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid{grid-template-columns:1fr}.route-draft,.route-suggestion-list{grid-template-columns:1fr}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -142,6 +153,18 @@
         </div>
       </div>
       <div id="place-route-draft" class="route-draft" aria-live="polite"></div>
+    </section>
+    <section id="place-route-suggestions" class="route-suggestions" aria-label="路线替换和加餐建议" data-status="empty">
+      <div class="route-suggestions-head">
+        <div>
+          <h2>路线替换/加餐建议</h2>
+          <p>根据已选点位的路线标签，判断基准路线、可替换点位、可加餐支线和新增候选。</p>
+        </div>
+        <button id="copy-place-route-suggestions-button" type="button">复制建议</button>
+      </div>
+      <p id="place-route-suggestion-status" class="route-suggestion-status" aria-live="polite">请先勾选点位，生成替换/加餐建议。</p>
+      <ul id="place-route-suggestion-list" class="route-suggestion-list"><li><b>基准路线：待选择</b><span>先勾选 2-4 个点位，再判断是替换、加餐还是新增候选。</span></li></ul>
+      <pre id="place-route-suggestion-text" class="route-suggestion-text"># 路线替换/加餐建议&#10;&#10;请先勾选 2-4 个点位。</pre>
     </section>
     <section id="place-route-map-preview" class="route-map-preview" aria-label="自选路线可视图">
       <div>
@@ -408,6 +431,10 @@
     const resultCount = document.getElementById('place-catalog-result-count');
     const selectedPlaceSummary = document.getElementById('selected-place-summary');
     const placeRouteDraft = document.getElementById('place-route-draft');
+    const placeRouteSuggestions = document.getElementById('place-route-suggestions');
+    const placeRouteSuggestionList = document.getElementById('place-route-suggestion-list');
+    const placeRouteSuggestionText = document.getElementById('place-route-suggestion-text');
+    const placeRouteSuggestionStatus = document.getElementById('place-route-suggestion-status');
     const placeRouteMapPreview = document.getElementById('place-route-map-preview');
     const placeRouteMapSvg = document.getElementById('place-route-map-svg');
     const placeRouteSegmentSummary = document.getElementById('place-route-segment-summary');
@@ -430,6 +457,7 @@
     const buildPlaceRouteDraftButton = document.getElementById('build-place-route-draft-button');
     const buildPlaceItineraryDraftButton = document.getElementById('build-place-itinerary-draft-button');
     const copyPlaceItineraryDraftButton = document.getElementById('copy-place-itinerary-draft-button');
+    const copyPlaceRouteSuggestionsButton = document.getElementById('copy-place-route-suggestions-button');
     const copyPlaceRouteGeoJsonButton = document.getElementById('copy-place-route-geojson-button');
     const copyPlaceMapReviewButton = document.getElementById('copy-place-map-review-button');
     const copyPlaceMiniProgramMapConfigButton = document.getElementById('copy-place-miniprogram-map-config-button');
@@ -503,6 +531,7 @@
       const suggestedDays = journeyMinutes <= 240 && areaCount <= 2 ? '半日 / 1日 City Walk' : journeyMinutes <= 420 ? '1日路线' : journeyMinutes <= 720 || areaCount >= 3 ? '2日路线' : '3日+路线';
       const intensity = journeyMinutes <= 300 && areaCount <= 2 ? '躺平' : rows.length >= 5 || areaCount >= 4 || journeyMinutes >= 600 ? '暴走' : '均衡';
       const topThemes = topItemsFromCounts(themeCounts, 3).map(([theme]) => themeLabels[theme] || theme);
+      const routeHits = topItemsFromCounts(routeCounts, 3).map(([routeId, count]) => ({routeId, count}));
       const matchedRoutes = topItemsFromCounts(routeCounts, 3).map(([routeId, count]) => `${routeId}（命中 ${count}）`);
       const warnings = [];
       if (!rows.length) warnings.push('请先勾选 2-4 个点位，再生成路线雏形。');
@@ -510,7 +539,7 @@
       if (rows.length > 6) warnings.push('已选点位较多，建议拆成 2 日以上。');
       if (unlinkedCount) warnings.push('部分点位尚未接入正式路线。');
       if (areaCount >= 3) warnings.push('跨区较多，需地图复核。');
-      return {rows, areas:Array.from(areas), durationMinutes, transitBufferMinutes, journeyMinutes, suggestedDays, intensity, topThemes, matchedRoutes, warnings};
+      return {rows, areas:Array.from(areas), durationMinutes, transitBufferMinutes, journeyMinutes, suggestedDays, intensity, topThemes, routeHits, matchedRoutes, warnings};
     }
     function formatMinutes(minutes) {
       if (!minutes) return '待选择点位';
@@ -527,6 +556,43 @@
       const placeNames = draft.rows.map(row => row.dataset.placeName).filter(Boolean);
       const warnings = draft.warnings.length ? draft.warnings : ['可进入下一步：按地图复核交通，再拆成上午 / 下午 / 夜景段。'];
       placeRouteDraft.innerHTML = [`<div><b>选点</b><p>${placeNames.length ? escapeHtml(placeNames.join(' → ')) : '请先勾选 2-4 个点位'}</p></div>`, `<div><b>建议形态</b><p>${escapeHtml(draft.suggestedDays || '待判断')} · ${escapeHtml(draft.intensity || '待判断')} · ${escapeHtml(formatMinutes(draft.journeyMinutes))}</p></div>`, `<div><b>主题方向</b><p>${escapeHtml(draft.topThemes.length ? draft.topThemes.join(' + ') : '综合路线')}</p></div>`, `<div><b>区域跨度</b><p>${escapeHtml(draft.areas.length ? draft.areas.join('、') : '待选择')}</p></div>`, `<div><b>已有路线匹配</b><p>${escapeHtml(draft.matchedRoutes.length ? draft.matchedRoutes.join('；') : '暂无强匹配，可作为新路线素材')}</p></div>`, `<div><b>下一步</b><p>${escapeHtml(warnings.join('；'))}</p></div>`].join('');
+    }
+    function routeIdsForRow(row) {
+      return (row.dataset.routeIds || '').split(/\s+/).filter(Boolean);
+    }
+    function rowNames(rows) {
+      return rows.map(row => row.dataset.placeName).filter(Boolean);
+    }
+    function routeSuggestionItemsFromDraft(draft) {
+      if (!draft.rows.length) {
+        return [{kind:'empty', title:'基准路线：待选择', detail:'先勾选 2-4 个点位，再判断是替换现有路线、作为半日加餐，还是沉淀为新路线素材。'}];
+      }
+      const baseRoute = draft.routeHits[0] || null;
+      const baseRouteId = baseRoute ? baseRoute.routeId : '';
+      const baseRows = baseRouteId ? draft.rows.filter(row => routeIdsForRow(row).includes(baseRouteId)) : [];
+      const addonRows = baseRouteId ? draft.rows.filter(row => !routeIdsForRow(row).includes(baseRouteId)) : draft.rows;
+      const unlinkedRows = draft.rows.filter(row => !routeIdsForRow(row).length);
+      const sameBaseAreaCount = new Set(baseRows.map(row => row.dataset.area).filter(Boolean)).size;
+      const items = [];
+      items.push({kind:'base', title:baseRoute ? `基准路线：${baseRouteId}` : '基准路线：新路线素材', detail:baseRoute ? `已选点位中有 ${baseRoute.count} 个命中这条路线，优先围绕它做替换或加餐，不直接打散每日行程。` : '当前点位没有明显路线命中，先按新路线素材处理，后续再决定是否并入 5/7/15 日模板。'});
+      items.push({kind:'replace', title:'可替换', detail:baseRows.length ? `${rowNames(baseRows).join('、')} 可优先替换同区/同主题的低优先级点位；${sameBaseAreaCount <= 2 ? '区域集中，替换成本较低。' : '涉及多区，替换前先复核通勤。'}` : '暂无和基准路线强绑定的点位，暂不建议替换正式路线 stops。'});
+      items.push({kind:'addon', title:'可加餐', detail:addonRows.length ? `${rowNames(addonRows).join('、')} 更适合作为半日加餐、雨天备选或长线支线，先不要硬塞进 2-3 日核心路线。` : '已选点位都和基准路线有关系，当前更适合做路线强化，而不是额外加餐。'});
+      items.push({kind:'new', title:'新增候选', detail:unlinkedRows.length ? `${rowNames(unlinkedRows).join('、')} 尚未接入路线，先放进新增候选池，补官方信息和地图复核后再入模板。` : '已选点位都有路线标签，可直接进入替换/加餐判断。'});
+      items.push({kind:'review', title:'复核重点', detail:`总时长 ${formatMinutes(draft.journeyMinutes)}，跨 ${draft.areas.length || 0} 个区域；${draft.warnings.length ? draft.warnings.join('；') : '先复核开放状态、预约规则和实时交通，再生成发布版攻略。'}`});
+      return items;
+    }
+    function routeSuggestionTextFromDraft(draft, items = routeSuggestionItemsFromDraft(draft)) {
+      const lines = ['# 路线替换/加餐建议', '', `选点：${rowNames(draft.rows).join(' → ') || '待选择'}`, `建议形态：${draft.suggestedDays || '待判断'} · ${draft.intensity || '待判断'} · ${formatMinutes(draft.journeyMinutes)}`, '', '## 建议'];
+      items.forEach(item => lines.push(`- ${item.title}：${item.detail}`));
+      lines.push('', '## 使用边界', '- 替换：只替换同区/同主题/低优先级点位，不打散已验证路线骨架。', '- 加餐：优先放进半日、雨天、夜景、亲子或长住支线。', '- 新增候选：补官方开放信息、预约/票价、坐标和交通复核后再入正式模板。');
+      return lines.join('\n');
+    }
+    function renderPlaceRouteSuggestions(draft) {
+      const items = routeSuggestionItemsFromDraft(draft);
+      if (placeRouteSuggestions) placeRouteSuggestions.dataset.status = draft.rows.length ? 'ready' : 'empty';
+      if (placeRouteSuggestionStatus) placeRouteSuggestionStatus.textContent = draft.rows.length ? '路线建议已生成，可复制给攻略编辑或路线协作者。' : '请先勾选点位，生成替换/加餐建议。';
+      if (placeRouteSuggestionList) placeRouteSuggestionList.innerHTML = items.map(item => `<li data-suggestion-kind="${escapeHtml(item.kind)}"><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.detail)}</span></li>`).join('');
+      if (placeRouteSuggestionText) placeRouteSuggestionText.textContent = routeSuggestionTextFromDraft(draft, items);
     }
     function selectedRouteMapPoints(rows) {
       return rows.map((row, index) => ({
@@ -735,6 +801,7 @@
     function buildSelectedPlaceRouteDraft() {
       const draft = routeDraftDataFromRows(selectedPlaceRows());
       renderPlaceRouteDraft(draft);
+      renderPlaceRouteSuggestions(draft);
       renderPlaceItineraryDraft(draft);
       renderSelectedRouteMap(draft);
       updateSelectedPlaceSummary();
@@ -742,9 +809,20 @@
     function buildSelectedPlaceItineraryDraft() {
       const draft = routeDraftDataFromRows(selectedPlaceRows());
       renderPlaceRouteDraft(draft);
+      renderPlaceRouteSuggestions(draft);
       renderPlaceItineraryDraft(draft);
       renderSelectedRouteMap(draft);
       updateSelectedPlaceSummary();
+    }
+    async function copyPlaceRouteSuggestions() {
+      const text = placeRouteSuggestionText?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placeRouteSuggestionStatus) placeRouteSuggestionStatus.textContent = '路线替换/加餐建议已复制。';
+      } catch (error) {
+        if (placeRouteSuggestionStatus) placeRouteSuggestionStatus.textContent = '浏览器未授权复制建议，请手动选中文本复制。';
+      }
     }
     async function copyPlaceItineraryDraft() {
       const text = placeItineraryDraftText?.textContent || '';
@@ -811,6 +889,7 @@
       updateSelectedPlaceSummary();
       const emptyDraft = routeDraftDataFromRows([]);
       renderPlaceRouteDraft(emptyDraft);
+      renderPlaceRouteSuggestions(emptyDraft);
       renderPlaceItineraryDraft(emptyDraft);
       renderSelectedRouteMap(emptyDraft);
     }
@@ -829,6 +908,7 @@
     placeSelects.forEach(checkbox => checkbox.addEventListener('change', updateSelectedPlaceSummary));
     buildPlaceRouteDraftButton?.addEventListener('click', buildSelectedPlaceRouteDraft);
     buildPlaceItineraryDraftButton?.addEventListener('click', buildSelectedPlaceItineraryDraft);
+    copyPlaceRouteSuggestionsButton?.addEventListener('click', copyPlaceRouteSuggestions);
     copyPlaceItineraryDraftButton?.addEventListener('click', copyPlaceItineraryDraft);
     copyPlaceRouteGeoJsonButton?.addEventListener('click', copySelectedRouteGeoJson);
     copyPlaceMapReviewButton?.addEventListener('click', copySelectedRouteMapReview);

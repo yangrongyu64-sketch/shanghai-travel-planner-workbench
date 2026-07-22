@@ -5398,6 +5398,29 @@
     if (status) status.textContent = '已下载反馈闭环总包 JSON。';
     return {filename, payload};
   }
+  function travelerHomePrepublishTrialOpsGate(fixPackagePayload){
+    const fixPackage = fixPackagePayload || travelerHomeTrialOpsFixPackagePayload();
+    const summary = fixPackage.summary || {};
+    const fixItemCount = Number(summary.fix_item_count || 0);
+    const p1Count = Number(summary.p1_blocker_count || 0);
+    const decisionKey = summary.decision_key || fixPackage.tracker_decision?.key || 'pause';
+    const decisionLabel = summary.decision_label || fixPackage.tracker_decision?.label || '继续收集反馈';
+    const allowed = fixItemCount === 0 && p1Count === 0 && decisionKey === 'go_next';
+    const blockReason = allowed ? '已满足首轮试用放行条件，可以评估公开试用或小程序迁移。' : `试用进度为 ${decisionLabel}，P1 ${p1Count} 个，修复项 ${fixItemCount} 条；公开试用和小程序迁移暂不放行。`;
+    return {
+      decision_key: decisionKey,
+      decision_label: decisionLabel,
+      p1_blocker_count: p1Count,
+      fix_item_count: fixItemCount,
+      ready_for_public_trial: allowed,
+      ready_for_miniprogram: allowed,
+      allowed_actions: {public_trial: allowed, miniprogram_migration: allowed},
+      blocked_actions: allowed ? [] : ['public_trial', 'miniprogram_migration'],
+      block_reason: blockReason,
+      fix_package_filename: 'shanghai-trial-ops-fix-package.md',
+      regression_package_filename: fixPackage.regression_package?.filename || 'shanghai-trial-ops-fix-regression.md',
+    };
+  }
   function travelerHomeContentUpdatePackageSummary(){
     const materials = travelerHomeContentIntakeBoardRecords();
     const officialTasks = travelerHomeOfficialVerificationTasks();
@@ -5453,6 +5476,14 @@
         lines.push(`  - 问题：${travelerHomeFeedbackBoardFirstLine(record.note)}`);
       });
     }
+    const trialOpsFixPackage = travelerHomeTrialOpsFixPackagePayload();
+    const trialOpsGate = travelerHomePrepublishTrialOpsGate(trialOpsFixPackage);
+    lines.push('', '## 4. 试用阻塞修复行动包');
+    lines.push(`- 文件：shanghai-trial-ops-fix-package.md`);
+    lines.push(`- 修复项：${trialOpsGate.fix_item_count} 条；P1：${trialOpsGate.p1_blocker_count} 个；判断：${trialOpsGate.decision_label}`);
+    lines.push(`- 公开试用/小程序迁移：${trialOpsGate.ready_for_public_trial ? '可评估放行' : '暂不放行'}`);
+    lines.push(`- 回归验证：${trialOpsGate.regression_package_filename}`);
+    lines.push(`- 原因：${trialOpsGate.block_reason}`);
     lines.push('', '## 发布前检查');
     lines.push('- 运行测试：PATH="/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH" .venv/bin/python -m pytest -q');
     lines.push('- 重建站点：.venv/bin/python -m shanghai_planner.cli --web-workbench ...');
@@ -5480,6 +5511,7 @@
       materials: travelerHomeContentIntakeBoardRecords(),
       official_tasks: travelerHomeOfficialVerificationTasks(),
       feedback: travelerHomeFeedbackBoardRecords(),
+      trial_ops_fix_package: travelerHomeTrialOpsFixPackagePayload(),
       markdown: travelerHomeContentUpdatePackageMarkdown(),
       targets: {
         materials: 'data/materials',
@@ -5487,6 +5519,12 @@
         site: 'outputs/workbench/site',
         deploy_repo: 'work/deploy-pages',
       },
+      artifacts: [
+        'shanghai-content-update-package.md',
+        'shanghai-trial-ops-fix-package.md',
+        'shanghai-trial-feedback-revision-plan.json',
+        'shanghai-trial-ops-fix-regression.md',
+      ],
       privacy_boundary: '只包含素材摘要、复核任务、反馈队列和发布检查；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
       next_actions: [
         '运行测试：PATH="/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH" .venv/bin/python -m pytest -q',
@@ -5500,16 +5538,19 @@
     const materials = travelerHomeContentIntakeBoardRecords();
     const officialTasks = travelerHomeOfficialVerificationTasks();
     const feedback = travelerHomeFeedbackBoardRecords();
+    const trialOpsFixPackage = travelerHomeTrialOpsFixPackagePayload();
+    const trialOpsGate = travelerHomePrepublishTrialOpsGate(trialOpsFixPackage);
     const summaryTarget = document.getElementById('traveler-home-content-update-package-summary');
     const listTarget = document.getElementById('traveler-home-content-update-package-list');
     const output = document.getElementById('traveler-home-content-update-package-output');
     const status = document.getElementById('traveler-home-content-update-package-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>素材 ${summary.materials} 条</span><span>官方复核任务 ${summary.officialTasks} 条</span><span>反馈 ${summary.feedback} 条</span><span>阻塞反馈 ${summary.blockingFeedback} 条</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>素材 ${summary.materials} 条</span><span>官方复核任务 ${summary.officialTasks} 条</span><span>反馈 ${summary.feedback} 条</span><span>阻塞反馈 ${summary.blockingFeedback} 条</span><span>修复包 ${trialOpsGate.fix_item_count} 条</span>`;
     if (listTarget) {
       const rows = [];
       rows.push(`<article><b>素材队列</b><span>${escapeHtml(materials.map(record => `${record.source}｜${record.title}`).join(' / ') || '暂无素材')}</span></article>`);
       rows.push(`<article><b>官方复核任务</b><span>${escapeHtml(officialTasks.map(task => `${task.category}｜${task.title}`).slice(0, 6).join(' / ') || '暂无官方复核')}</span></article>`);
       rows.push(`<article><b>试用反馈</b><span>${escapeHtml(feedback.map(record => `${record.severity}｜${record.type}｜${travelerHomeFeedbackBoardFirstLine(record.note)}`).join(' / ') || '暂无反馈')}</span></article>`);
+      rows.push(`<article><b>试用阻塞修复</b><span>${escapeHtml(`shanghai-trial-ops-fix-package.md：修复项 ${trialOpsGate.fix_item_count} 条；${trialOpsGate.ready_for_public_trial ? '公开试用可评估放行' : '公开试用暂不放行'}`)}</span></article>`);
       listTarget.innerHTML = rows.join('');
     }
     const text = travelerHomeContentUpdatePackageMarkdown();
@@ -5735,7 +5776,7 @@
     };
   }
   function travelerHomePrepublishDataGateVerdict(summary){
-    if ((summary.blocking_feedback || 0) > 0 || (summary.official_skipped_unknown || 0) > 0 || (summary.official_skipped_incomplete || 0) > 0 || (summary.map_missing || 0) > 0) return '需处理后发布';
+    if ((summary.trial_ops_fix_item_count || 0) > 0 || (summary.blocking_feedback || 0) > 0 || (summary.official_skipped_unknown || 0) > 0 || (summary.official_skipped_incomplete || 0) > 0 || (summary.map_missing || 0) > 0) return '需处理后发布';
     if ((summary.official_updated || 0) > 0 || (summary.materials || 0) > 0 || (summary.feedback || 0) > 0) return '可发布前复核';
     return '基础可发布';
   }
@@ -5754,6 +5795,8 @@
     const mapSummary = travelerHomePrepublishDataGateMapSummary();
     const regressionSummary = travelerHomeReleaseRegressionSummary();
     const auditSummary = travelerHomeReleaseAuditPackageSummary();
+    const trialOpsFixPackage = travelerHomeTrialOpsFixPackagePayload();
+    const trialOpsGate = travelerHomePrepublishTrialOpsGate(trialOpsFixPackage);
     const summary = {
       deploy_id: travelerHomeReleaseDeployId(),
       route_count: TRAVELER_HOME_ROUTES.length,
@@ -5776,6 +5819,12 @@
       release_risk: regressionSummary.riskLevel,
       test_result: auditSummary.testResult,
       evidence: auditSummary.evidence,
+      trial_ops_decision_key: trialOpsGate.decision_key,
+      trial_ops_decision_label: trialOpsGate.decision_label,
+      trial_ops_p1_blocker_count: trialOpsGate.p1_blocker_count,
+      trial_ops_fix_item_count: trialOpsGate.fix_item_count,
+      trial_ops_ready_for_public_trial: trialOpsGate.ready_for_public_trial,
+      trial_ops_ready_for_miniprogram: trialOpsGate.ready_for_miniprogram,
     };
     summary.verdict = travelerHomePrepublishDataGateVerdict(summary);
     return summary;
@@ -5786,6 +5835,7 @@
       {key:'official_merge', label:'官方复核合并', status: source.official_skipped_unknown || source.official_skipped_incomplete ? 'block' : (source.official_updated ? 'review' : 'pass'), detail:`更新 ${source.official_updated} 条；未知 ${source.official_skipped_unknown} 条；字段不完整 ${source.official_skipped_incomplete} 条。`},
       {key:'materials', label:'内容素材', status: source.materials ? 'review' : 'pass', detail:`素材 ${source.materials} 条；官方 ${source.official_materials} 条；平台 ${source.platform_materials} 条；游记 ${source.travelogue_materials} 条。`},
       {key:'feedback', label:'试用反馈', status: source.blocking_feedback ? 'block' : (source.feedback ? 'review' : 'pass'), detail:`反馈 ${source.feedback} 条；阻塞 ${source.blocking_feedback} 条。`},
+      {key:'trial_ops_fix', label:'试用阻塞修复', status: source.trial_ops_fix_item_count ? 'block' : (source.trial_ops_decision_key === 'go_next' ? 'pass' : 'review'), detail:`进度：${source.trial_ops_decision_label}；P1 ${source.trial_ops_p1_blocker_count} 个；修复项 ${source.trial_ops_fix_item_count} 条；${source.trial_ops_ready_for_public_trial ? '公开试用和小程序迁移可评估放行。' : '公开试用和小程序迁移暂不放行。'}`},
       {key:'map', label:'地图与路线', status: source.map_missing ? 'block' : 'pass', detail:`地图准备 ${source.map_ready}/${source.route_count} 条。`},
       {key:'release', label:'发布回归与留档', status: source.test_result.includes('待填写') ? 'review' : 'pass', detail:`回归风险：${source.release_risk}；测试：${source.test_result}；证据：${source.evidence}。`},
     ];
@@ -5794,6 +5844,8 @@
     const summary = travelerHomePrepublishDataGateSummary();
     const officialMerge = travelerHomeOfficialFillbackMergedJson();
     const mapSummary = travelerHomePrepublishDataGateMapSummary();
+    const trialOpsFixPackage = travelerHomeTrialOpsFixPackagePayload();
+    const trialOpsGate = travelerHomePrepublishTrialOpsGate(trialOpsFixPackage);
     return {
       kind: 'shanghai_prepublish_data_gate',
       version: 1,
@@ -5804,6 +5856,8 @@
       official_merge: {summary: officialMerge.summary, skipped_unknown_place_ids: officialMerge.skipped_unknown_place_ids || [], skipped_incomplete: officialMerge.skipped_incomplete || [], target_file: officialMerge.target_file},
       materials: travelerHomeContentIntakeBoardRecords(),
       feedback: travelerHomeFeedbackBoardRecords(),
+      trial_ops_gate: trialOpsGate,
+      trial_ops_fix_package: trialOpsFixPackage,
       map: mapSummary,
       targets: {
         official_verifications: 'data/official_verifications/place_verifications.json',
@@ -5815,6 +5869,8 @@
         'place_verifications.merged.json',
         'shanghai-official-fillback-merge-diff.md',
         'shanghai-content-update-package.md',
+        'shanghai-trial-ops-fix-package.md',
+        'shanghai-trial-ops-fix-regression.md',
         'shanghai-release-regression-checklist.md',
         'shanghai-release-audit-package.md',
       ],
@@ -5856,6 +5912,13 @@
     lines.push(`- 反馈处理队列：${summary.feedback} 条；阻塞 ${summary.blocking_feedback} 条`);
     payload.materials.slice(0, 4).forEach(record => lines.push(`- 素材：${record.source}｜${record.title}`));
     payload.feedback.slice(0, 4).forEach(record => lines.push(`- 反馈：${record.severity}｜${record.type}｜${travelerHomeFeedbackBoardFirstLine(record.note)}`));
+    lines.push('', '## 试用放行判断');
+    lines.push(`- 试用进度：${summary.trial_ops_decision_label}`);
+    lines.push(`- P1 阻塞：${summary.trial_ops_p1_blocker_count} 个；修复项：${summary.trial_ops_fix_item_count} 条`);
+    lines.push(`- 公开试用：${summary.trial_ops_ready_for_public_trial ? '可评估放行' : '暂不放行'}`);
+    lines.push(`- 小程序迁移：${summary.trial_ops_ready_for_miniprogram ? '可评估放行' : '暂不放行'}`);
+    lines.push(`- 修复包：${payload.trial_ops_gate.fix_package_filename}`);
+    lines.push(`- 判断原因：${payload.trial_ops_gate.block_reason}`);
     lines.push('', '## 地图与路线检查');
     lines.push(`- 地图准备：${summary.map_ready}/${summary.route_count} 条`);
     if (payload.map.missing_routes.length) payload.map.missing_routes.forEach(route => lines.push(`- 待补地图：${route.route_title}`));
@@ -5878,12 +5941,13 @@
     const output = document.getElementById('traveler-home-prepublish-data-gate-output');
     const jsonOutput = document.getElementById('traveler-home-prepublish-data-gate-json-output');
     const status = document.getElementById('traveler-home-prepublish-data-gate-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.verdict)}</span><span>路线 ${summary.route_count} 条</span><span>官方更新 ${summary.official_updated} 条</span><span>地图 ${summary.map_ready}/${summary.route_count}</span><span>阻塞反馈 ${summary.blocking_feedback} 条</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.verdict)}</span><span>路线 ${summary.route_count} 条</span><span>官方更新 ${summary.official_updated} 条</span><span>地图 ${summary.map_ready}/${summary.route_count}</span><span>阻塞反馈 ${summary.blocking_feedback} 条</span><span>试用放行：${summary.trial_ops_ready_for_public_trial ? '可评估' : '禁止公开试用/小程序迁移'}</span>`;
     if (listTarget) {
       const unknown = (payload.official_merge.skipped_unknown_place_ids || []).join('、') || '无';
       const rows = [
         `<article><b>官方复核合并</b><span>place_verifications.merged.json：更新 ${summary.official_updated} / 未知 ${summary.official_skipped_unknown} / 字段不完整 ${summary.official_skipped_incomplete}</span><span>未知点位：${escapeHtml(unknown)}</span></article>`,
         `<article><b>内容素材与反馈</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方任务 ${summary.official_tasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blocking_feedback}</span></article>`,
+        `<article><b>试用阻塞修复</b><span>${escapeHtml(payload.trial_ops_gate.block_reason)}</span><span>${escapeHtml(payload.trial_ops_gate.fix_package_filename)} / ${escapeHtml(payload.trial_ops_gate.regression_package_filename)}</span></article>`,
         `<article><b>地图与路线</b><span>地图准备 ${summary.map_ready}/${summary.route_count}；待补 ${summary.map_missing} 条。</span></article>`,
         `<article><b>发布动作</b><span>构建 outputs/workbench/site，同步 work/deploy-pages，发布后按 shanghai-release-regression-checklist.md 验收。</span></article>`,
       ];

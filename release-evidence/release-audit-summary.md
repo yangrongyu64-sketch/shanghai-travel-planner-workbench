@@ -1,6 +1,6 @@
 # 上海攻略发布审计摘要
 
-- 发布时间：2026-07-21
+- 发布时间：2026-07-22
 - 公开首页：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/
 - 创作者工作台：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html
 - 路线覆盖：6 条

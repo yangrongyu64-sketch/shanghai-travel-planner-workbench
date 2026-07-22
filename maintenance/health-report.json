@@ -2,7 +2,7 @@
   "app_name": "上海攻略生成工作台",
   "package_type": "static_site_health_report",
   "status": "healthy",
-  "generated_at": "2026-07-21",
+  "generated_at": "2026-07-22",
   "route_count": 6,
   "routes": [
     {
@@ -310,7 +310,7 @@
       "missing": [],
       "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
       "workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
-      "published_at": "2026-07-21"
+      "published_at": "2026-07-22"
     }
   },
   "next_actions": [

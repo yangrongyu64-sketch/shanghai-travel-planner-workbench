@@ -89,6 +89,20 @@
     .traveler-trial-guide .traveler-trial-guide-invitation-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
     .traveler-trial-guide-invitation textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
     .traveler-trial-guide-invitation-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-trial-guide-ops{grid-column:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f3f6f7}
+    .traveler-trial-guide-ops b{display:block;font-size:14px;line-height:1.25}
+    .traveler-trial-guide-ops small{margin-top:4px}
+    .traveler-trial-guide-ops-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .traveler-trial-guide-ops-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+    .traveler-trial-guide-ops-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .traveler-trial-guide-ops-summary{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;min-height:28px}
+    .traveler-trial-guide-ops-summary span{display:inline-flex;align-items:center;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:900}
+    .traveler-trial-guide-ops-list{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+    .traveler-trial-guide-ops-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px}
+    .traveler-trial-guide-ops-list b{font-size:13px;line-height:1.25}
+    .traveler-trial-guide .traveler-trial-guide-ops-list article span{display:block;width:auto;height:auto;border-radius:0;background:transparent;color:var(--muted);font-size:12px;line-height:1.35;font-weight:400}
+    .traveler-trial-guide-ops textarea{grid-column:1/-1;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px;color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+    .traveler-trial-guide-ops-status{grid-column:1/-1;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-trial-guide-status{grid-column:2;margin:0;min-height:18px;color:var(--accent);font-size:12px;font-weight:800}
     .traveler-operator-tools{border-bottom:1px solid var(--line);background:#f8f6ee}
     .traveler-operator-tools summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:16px clamp(16px,4vw,44px);cursor:pointer;list-style:none}
@@ -519,10 +533,10 @@
     .traveler-home-map text{font-size:7px;font-weight:900;fill:#3d3329}
     .traveler-home-map-empty{display:grid;place-items:center;min-height:188px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
     .traveler-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px clamp(16px,4vw,44px);border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:13px}
-    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-progress{grid-column:1}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
+    @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -545,7 +559,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-21</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-22</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
 <section id="traveler-home-product-brief" class="traveler-product-brief" aria-label="产品说明">
   <div>
@@ -660,6 +674,22 @@
     <textarea id="traveler-home-trial-invitation-output" readonly rows="8" aria-label="试用邀请包 Markdown"></textarea>
     <textarea id="traveler-home-trial-invitation-json-output" readonly rows="7" aria-label="试用邀请包 JSON"></textarea>
     <p id="traveler-home-trial-invitation-status" class="traveler-trial-guide-invitation-status" aria-live="polite"></p>
+  </div>
+  <div id="traveler-home-trial-ops-package" class="traveler-trial-guide-ops" aria-label="首轮试用运营包">
+    <div>
+      <b>首轮试用运营包</b>
+      <small>把 3-5 人试用的角色、流程、成功标准和边界整理成可执行运营单。</small>
+    </div>
+    <div class="traveler-trial-guide-ops-actions">
+      <button type="button" id="traveler-home-trial-ops-copy-button" data-traveler-home-trial-ops-copy>复制运营包</button>
+      <button type="button" id="traveler-home-trial-ops-download-button" data-traveler-home-trial-ops-download>下载Markdown</button>
+      <button type="button" class="primary" id="traveler-home-trial-ops-json-download-button" data-traveler-home-trial-ops-json-download>下载JSON</button>
+    </div>
+    <div id="traveler-home-trial-ops-summary" class="traveler-trial-guide-ops-summary" aria-live="polite"></div>
+    <div id="traveler-home-trial-ops-list" class="traveler-trial-guide-ops-list"></div>
+    <textarea id="traveler-home-trial-ops-output" readonly rows="8" aria-label="首轮试用运营包 Markdown"></textarea>
+    <textarea id="traveler-home-trial-ops-json-output" readonly rows="7" aria-label="首轮试用运营包 JSON"></textarea>
+    <p id="traveler-home-trial-ops-status" class="traveler-trial-guide-ops-status" aria-live="polite"></p>
   </div>
   <p id="traveler-home-trial-guide-status" class="traveler-trial-guide-status" aria-live="polite"></p>
 </section>
@@ -6814,6 +6844,169 @@
     if (status) status.textContent = '已下载试用邀请包 JSON。';
     return {filename, payload};
   }
+  let travelerHomeTrialOpsPackageGeneratedAt = '';
+  function travelerHomeTrialOpsPackageTimestamp(){
+    if (!travelerHomeTrialOpsPackageGeneratedAt) travelerHomeTrialOpsPackageGeneratedAt = new Date().toISOString();
+    return travelerHomeTrialOpsPackageGeneratedAt;
+  }
+  function travelerHomeTrialOpsRoles(){
+    return [
+      {key:'traveler', label:'普通游客', mission:'不看说明直接试用，重点观察是否能选路线、看地图、生成路线包。'},
+      {key:'companion', label:'同行人', mission:'只看分享出去的路线包和攻略链接，判断是否能跟着走、是否知道集合和改线点。'},
+      {key:'creator', label:'内容创作者', mission:'测试小红书/抖音/游记草稿是否可改、是否保留真实体验和素材复核空间。'},
+      {key:'operator', label:'运营维护者', mission:'检查反馈回传、官方复核、API 边界和下一版修改建议是否能闭环。'},
+    ];
+  }
+  function travelerHomeTrialOpsPhases(){
+    return [
+      {key:'invite', label:'发邀请', owner:'内容创作者', action:'发送试用邀请包和演示链接，说明 15-20 分钟即可完成。', output:'3-5 位试用者确认参与。'},
+      {key:'test', label:'完成试用', owner:'试用者', action:'打开演示链接，换一条自己的路线，生成路线包或文案。', output:'每人至少发现一个真实体验点。'},
+      {key:'collect_feedback', label:'收反馈', owner:'运营维护者', action:'把反馈按 shanghai-trial-feedback.md 粘贴进反馈汇总看板。', output:'至少 3 份可处理反馈包。'},
+      {key:'review', label:'评审问题', owner:'内容创作者 + 运营维护者', action:'用反馈闭环生成下一版修改建议，先判断是否存在 P1 阻塞。', output:'下一版修改建议和候选草案。'},
+      {key:'next_version', label:'判断下一版', owner:'产品负责人', action:'按成功标准决定继续公开试用、小程序迁移评估，或先修阻塞问题。', output:'明确 go / fix-first / pause 决策。'},
+    ];
+  }
+  function travelerHomeTrialOpsSuccessCriteria(){
+    return [
+      {key:'feedback_count', metric:'至少收回 3 份结构化反馈包。', pass_condition:'反馈汇总看板能导入并生成处理队列。'},
+      {key:'no_p1_blocker', metric:'没有阻塞使用的 P1 问题。', pass_condition:'如果出现阻塞使用问题，先进入修复，不扩大试用。'},
+      {key:'demo_route_pack', metric:'演示链接能打开路线包、地图和反馈入口。', pass_condition:'普通游客无需登录即可完成主流程。'},
+      {key:'privacy_api_boundary', metric:'试用过程不提交 API Key、账号、Cookie 或 Authorization 信息。', pass_condition:'所有反馈只保留体验问题、路线建议和人工复核提醒。'},
+    ];
+  }
+  function travelerHomeTrialOpsPackagePayload(){
+    const roles = travelerHomeTrialOpsRoles();
+    const phases = travelerHomeTrialOpsPhases();
+    const successCriteria = travelerHomeTrialOpsSuccessCriteria();
+    return {
+      kind: 'shanghai_trial_ops_package',
+      version: 1,
+      generated_at: travelerHomeTrialOpsPackageTimestamp(),
+      source_url: window.location?.href || '',
+      demo_url: travelerHomeTrialInvitationDemoUrl(),
+      route_count: TRAVELER_HOME_ROUTES.length,
+      tester_count: {min:3, max:5, target:5},
+      feedback_target: 'traveler-home-feedback',
+      return_format: 'shanghai-trial-feedback.md',
+      roles,
+      phases,
+      success_criteria: successCriteria,
+      decision_gate: {
+        go_next: '收回至少 3 份反馈且没有 P1 阻塞问题，再进入公开试用或小程序迁移评估。',
+        fix_first: '如果路线包、地图、反馈回传或隐私/API 边界任一项阻塞，先修复后再扩大试用。',
+        pause: '如果反馈无法复现或官方信息缺口过多，暂停扩大分发，先补复核材料。',
+      },
+      privacy_boundary: '只收集体验问题、路线建议、地图/文案/官方复核反馈；不提交 API Key、账号、Cookie 或 Authorization 信息。',
+      api_boundary: '首轮不接入抖音/小红书账号，不做平台自动抓取；热点、话题、文案和游记素材采用手动导入或用户提供内容。',
+      next_actions: [
+        '今天先发给 3-5 位试用者。',
+        '24 小时内收回至少 3 份 shanghai-trial-feedback.md。',
+        '把反馈导入看板，生成下一版修改建议和候选草案。',
+      ],
+    };
+  }
+  function travelerHomeTrialOpsPackageMarkdown(){
+    const payload = travelerHomeTrialOpsPackagePayload();
+    const lines = [
+      '# 上海首轮试用运营包',
+      '',
+      `试用人数：${payload.tester_count.min}-${payload.tester_count.max} 人（目标 ${payload.tester_count.target} 人）`,
+      `演示链接：${payload.demo_url}`,
+      `反馈入口：#${payload.feedback_target}` ,
+      `回传格式：${payload.return_format}` ,
+      `当前路线：${payload.route_count} 条`,
+      '',
+      '## 角色分工',
+    ];
+    payload.roles.forEach(role => lines.push(`- ${role.label}：${role.mission}`));
+    lines.push('', '## 5 步流程');
+    payload.phases.forEach((phase, index) => {
+      lines.push(`${index + 1}. ${phase.label}`);
+      lines.push(`   - 负责人：${phase.owner}`);
+      lines.push(`   - 动作：${phase.action}`);
+      lines.push(`   - 产出：${phase.output}`);
+    });
+    lines.push('', '## 成功标准');
+    payload.success_criteria.forEach(criterion => {
+      lines.push(`- ${criterion.metric}`);
+      lines.push(`  - 判定：${criterion.pass_condition}`);
+    });
+    lines.push('', '## 下一版决策');
+    lines.push(`- 继续：${payload.decision_gate.go_next}`);
+    lines.push(`- 先修：${payload.decision_gate.fix_first}`);
+    lines.push(`- 暂停：${payload.decision_gate.pause}`);
+    lines.push('', '## 隐私/API 边界');
+    lines.push(`- ${payload.privacy_boundary}`);
+    lines.push(`- ${payload.api_boundary}`);
+    lines.push('', '## 立即执行');
+    payload.next_actions.forEach(action => lines.push(`- ${action}`));
+    return lines.join('\n');
+  }
+  function renderTravelerHomeTrialOpsPackage(){
+    const payload = travelerHomeTrialOpsPackagePayload();
+    const summaryTarget = document.getElementById('traveler-home-trial-ops-summary');
+    const listTarget = document.getElementById('traveler-home-trial-ops-list');
+    const output = document.getElementById('traveler-home-trial-ops-output');
+    const jsonOutput = document.getElementById('traveler-home-trial-ops-json-output');
+    const status = document.getElementById('traveler-home-trial-ops-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>试用 ${payload.tester_count.min}-${payload.tester_count.max} 人</span><span>角色 ${payload.roles.length} 类</span><span>阶段 ${payload.phases.length} 个</span><span>成功标准 ${payload.success_criteria.length} 条</span>`;
+    if (listTarget) listTarget.innerHTML = payload.phases.map((phase, index) => `<article><b>${index + 1}. ${escapeHtml(phase.label)}</b><span>${escapeHtml(phase.action)}</span><span>${escapeHtml(phase.output)}</span></article>`).join('');
+    const text = travelerHomeTrialOpsPackageMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = '首轮试用运营包已生成，可直接转给试用组织者。';
+    return text;
+  }
+  function travelerHomeTrialOpsPackageFilename(){
+    return 'shanghai-trial-ops-package.md';
+  }
+  function travelerHomeTrialOpsPackageJsonFilename(){
+    return 'shanghai-trial-ops-package.json';
+  }
+  async function copyTravelerHomeTrialOpsPackageMarkdown(){
+    const text = renderTravelerHomeTrialOpsPackage();
+    const status = document.getElementById('traveler-home-trial-ops-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制首轮试用运营包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制首轮试用运营包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeTrialOpsPackageMarkdown(){
+    const text = renderTravelerHomeTrialOpsPackage();
+    const filename = travelerHomeTrialOpsPackageFilename();
+    const status = document.getElementById('traveler-home-trial-ops-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载首轮试用运营包。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeTrialOpsPackageJson(){
+    renderTravelerHomeTrialOpsPackage();
+    const payload = travelerHomeTrialOpsPackagePayload();
+    const filename = travelerHomeTrialOpsPackageJsonFilename();
+    const status = document.getElementById('traveler-home-trial-ops-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载首轮试用运营包 JSON。';
+    return {filename, payload};
+  }
   let travelerHomeFirstUseChecklistGeneratedAt = '';
   function travelerHomeFirstUseChecklistTimestamp(){
     if (!travelerHomeFirstUseChecklistGeneratedAt) travelerHomeFirstUseChecklistGeneratedAt = new Date().toISOString();
@@ -6989,6 +7182,7 @@
     renderTravelerHomeFirstTimeGuideDelivery();
     renderTravelerHomeFirstUseChecklist();
     renderTravelerHomeTrialInvitationPackage();
+    renderTravelerHomeTrialOpsPackage();
     renderTravelerHomeStayDecision();
     renderTravelerHomeFoodSupply();
     renderTravelerHomeRiskPlan();
@@ -8489,6 +8683,7 @@
     renderTravelerHomeFirstTimeGuideDelivery();
     renderTravelerHomeFirstUseChecklist();
     renderTravelerHomeTrialInvitationPackage();
+    renderTravelerHomeTrialOpsPackage();
     const status = document.getElementById('traveler-home-trial-guide-status');
     if (status && result?.ok) status.textContent = '演示模式已载入：示例路线、天气预检和交接包可直接查看。';
     return result;
@@ -8781,6 +8976,9 @@
     if (event.target?.closest?.('[data-traveler-home-trial-invitation-copy]')) { copyTravelerHomeTrialInvitationMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-invitation-download]')) { downloadTravelerHomeTrialInvitationMarkdown(); return; }
     if (event.target?.closest?.('[data-traveler-home-trial-invitation-json-download]')) { downloadTravelerHomeTrialInvitationJson(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-copy]')) { copyTravelerHomeTrialOpsPackageMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-download]')) { downloadTravelerHomeTrialOpsPackageMarkdown(); return; }
+    if (event.target?.closest?.('[data-traveler-home-trial-ops-json-download]')) { downloadTravelerHomeTrialOpsPackageJson(); return; }
     const control = event.target?.closest?.('[data-traveler-home-trial-guide-target]');
     const targetId = control?.getAttribute?.('data-traveler-home-trial-guide-target');
     if (targetId) goTravelerHomeTrialGuideTarget(targetId);
@@ -8947,6 +9145,7 @@
   renderTravelerHomeFirstTimeGuideDelivery();
   renderTravelerHomeFirstUseChecklist();
   renderTravelerHomeTrialInvitationPackage();
+  renderTravelerHomeTrialOpsPackage();
   applyTravelerHomeFilters();
   renderTravelerHomeProductCompletionOverview();
   renderTravelerHomeAcceptanceChecklist();

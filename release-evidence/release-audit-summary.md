@@ -13,6 +13,7 @@
 - `release-evidence.zip`：本发布证据包。
 - `shanghai-release-audit-package.md`：首页“发布审计”生成的最终审计 Markdown。
 - `shanghai-online-health-check.json` / `shanghai-online-health-check.md`：线上巡检 JSON 和 Markdown。
+- `shanghai-content-update-execution-package.md/json`：首页“内容更新执行确认包”生成的采纳、复核、阻塞和回归记录。
 - `shanghai-release-regression-checklist.md`：发布后回归清单。
 - `output/playwright/`：线上下载、移动端和控制台核验证据。
 

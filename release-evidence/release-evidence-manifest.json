@@ -16,6 +16,8 @@
     "product_delivery_zip": "product-delivery.zip",
     "trend_sources_zip": "trend-sources.zip",
     "official_fillback_zip": "official-fillback.zip",
+    "content_update_execution_markdown": "shanghai-content-update-execution-package.md",
+    "content_update_execution_json": "shanghai-content-update-execution-package.json",
     "release_audit_markdown": "shanghai-release-audit-package.md",
     "release_regression_markdown": "shanghai-release-regression-checklist.md",
     "online_health_check_report": "shanghai-online-health-check.json",
@@ -23,10 +25,18 @@
     "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
     "live_deployment_record": "LIVE_DEPLOYMENT.md"
   },
+  "content_update_execution": {
+    "source_ui_section": "traveler-home-content-update-execution-package",
+    "evidence_markdown": "content-update-execution-evidence.md",
+    "evidence_json": "content-update-execution-evidence.json",
+    "status": "ready_for_manual_execution_import"
+  },
   "files": [
     "README.md",
     "release-audit-summary.md",
     "online-health-check-summary.json",
+    "content-update-execution-evidence.md",
+    "content-update-execution-evidence.json",
     "release-regression-checklist.md",
     "release-evidence-manifest.json"
   ]

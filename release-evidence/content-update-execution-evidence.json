@@ -1,0 +1,59 @@
+{
+  "kind": "shanghai_content_update_execution_evidence",
+  "version": 1,
+  "status": "ready_for_manual_execution_import",
+  "route_count": 6,
+  "source_ui_section": "traveler-home-content-update-execution-package",
+  "source_package_files": [
+    "shanghai-content-update-package.md",
+    "shanghai-content-update-package.json"
+  ],
+  "execution_package_files": [
+    "shanghai-content-update-execution-package.md",
+    "shanghai-content-update-execution-package.json"
+  ],
+  "evidence_files": [
+    "content-update-execution-evidence.md",
+    "content-update-execution-evidence.json"
+  ],
+  "summary": {
+    "mode": "static_release_template",
+    "item_count": 0,
+    "accepted_count": 0,
+    "blocked_count": 0,
+    "official_review_count": 0,
+    "deferred_count": 0,
+    "regression_required_count": 0,
+    "ready_for_review": false,
+    "ready_for_publish": false,
+    "readiness_label": "待导入执行确认包"
+  },
+  "execution_statuses": [
+    "accepted",
+    "needs_official_review",
+    "blocked_by_p1",
+    "deferred"
+  ],
+  "owners": [
+    "official",
+    "content",
+    "map",
+    "product"
+  ],
+  "release_gate_policy": [
+    "blocked_by_p1 必须先回填修复证据和回归结果。",
+    "needs_official_review 必须以官方开放、预约、票务、交通和临时闭馆信息复核。",
+    "accepted 项需要保留截图、测试、负责人和可回退说明。",
+    "deferred 项不得进入本次正式发布内容。"
+  ],
+  "privacy_boundary": "不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据；只留存本地内容更新执行确认的文件名、状态口径和人工导入要求。",
+  "next_actions": [
+    "在首页生成或导入内容更新发布包。",
+    "生成 shanghai-content-update-execution-package.md/json。",
+    "把执行确认包与 release-evidence.zip 一并归档。",
+    "重新运行线上巡检、发布闸口和发布审计。"
+  ],
+  "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+  "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+  "published_at": "2026-07-22"
+}

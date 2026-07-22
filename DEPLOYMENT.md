@@ -48,4 +48,5 @@
 - 下载 `official-fillback.zip` 应得到官方复核回填闭环包。
 - 下载 `maintenance-report.zip` 应得到站点健康和刷新清单。
 - 下载 `release-evidence.zip` 应得到发布证据包。
+- 下载 `offline-rescue-kit.zip` 应得到离线应急包，并可双击 `site/index.html` 打开。
 - 浏览器开发者工具里应能看到 PWA manifest，并成功注册 `service-worker.js`。

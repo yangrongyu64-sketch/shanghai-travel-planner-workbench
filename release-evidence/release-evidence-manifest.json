@@ -14,6 +14,7 @@
     "acceptance_report_zip": "acceptance-report.zip",
     "maintenance_report_zip": "maintenance-report.zip",
     "product_delivery_zip": "product-delivery.zip",
+    "offline_rescue_zip": "offline-rescue-kit.zip",
     "trend_sources_zip": "trend-sources.zip",
     "official_fillback_zip": "official-fillback.zip",
     "content_update_execution_markdown": "shanghai-content-update-execution-package.md",

@@ -1,0 +1,49 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "offline_rescue_kit",
+  "status": "ready_for_independent_use",
+  "route_count": 6,
+  "api_required": false,
+  "manual_review_required": true,
+  "source_assets": {
+    "web_entry": "site/index.html",
+    "normal_workbench": "site/workbench.html",
+    "place_catalog": "site/place_catalog.html",
+    "route_directory": "site/routes",
+    "data_vault_recovery_guide": "product-delivery/data-vault-recovery-guide.md",
+    "data_vault_recovery_evidence": "release-evidence/data-vault-recovery-evidence.json",
+    "data_vault_recovery_evidence_markdown": "release-evidence/data-vault-recovery-evidence.md",
+    "online_health_summary": "release-evidence/online-health-check-summary.json",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+    "published_at": "2026-07-22"
+  },
+  "included_entries": [
+    "START_HERE.md",
+    "README.md",
+    "offline-rescue-checklist.md",
+    "checksums.json",
+    "offline-rescue-manifest.json",
+    "site/index.html",
+    "site/workbench.html",
+    "site/place_catalog.html",
+    "site/routes/relaxed_2d1n_citywalk.html",
+    "site/routes/first_time_3d2n_balanced.html",
+    "site/routes/highwalk_3d2n_landmark_citywalk.html",
+    "site/routes/deep_5d4n_culture_citywalk.html",
+    "site/routes/local_life_7d6n_balanced.html",
+    "site/routes/longstay_15d14n_balanced.html",
+    "product-delivery/data-vault-recovery-guide.md",
+    "release-evidence/data-vault-recovery-evidence.md",
+    "release-evidence/data-vault-recovery-evidence.json",
+    "release-evidence/online-health-check-summary.json"
+  ],
+  "restore_entry": "site/index.html#traveler-home-data-vault",
+  "data_vault_export_file": "shanghai-traveler-data-vault.json",
+  "checksum_file": "checksums.json",
+  "excluded_packages": [
+    "offline-rescue-kit.zip",
+    "maintenance-report.zip",
+    "workbench-site.zip"
+  ]
+}

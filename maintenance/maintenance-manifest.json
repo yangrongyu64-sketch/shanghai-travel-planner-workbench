@@ -8,6 +8,7 @@
     "normal_workbench": "workbench.html",
     "deployment_manifest": "deployment-manifest.json",
     "offline_demo_zip": "workbench-demo.zip",
+    "offline_rescue_zip": "offline-rescue-kit.zip",
     "product_delivery_zip": "product-delivery.zip",
     "acceptance_report_zip": "acceptance-report.zip",
     "miniprogram_handoff_zip": "miniprogram-handoff.zip",

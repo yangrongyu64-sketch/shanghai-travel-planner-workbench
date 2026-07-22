@@ -19,6 +19,7 @@
 - `official-fillback.zip`：官方复核回填闭环包，用于导入复核结果、预览差异和安全回填。
 - `maintenance-report.zip`：站点健康和发布刷新包，用于检查关键文件、路线数和部署状态。
 - `release-evidence.zip`：发布证据包，用于留存线上巡检、发布审计和回归核验口径。
+- `offline-rescue-kit.zip`：离线应急包，包含可独立打开的核心网页、路线页、数据恢复指南、恢复证据和校验文件。
 - `manifest.webmanifest`：PWA 安装清单，支持浏览器添加到主屏幕。
 - `service-worker.js`：缓存核心入口文件，提升二次打开和离线兜底体验。
 - `app-icon.svg`：PWA 图标。

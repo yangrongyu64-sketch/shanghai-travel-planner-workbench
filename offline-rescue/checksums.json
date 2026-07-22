@@ -1,0 +1,78 @@
+{
+  "package_type": "offline_rescue_checksums",
+  "algorithm": "sha256",
+  "file_count": 17,
+  "files": {
+    "START_HERE.md": {
+      "sha256": "d5bc5967816b70e551f9a44437188929ca161fdde63fe8f70cdc080d8ba81cc4",
+      "bytes": 1228
+    },
+    "README.md": {
+      "sha256": "488ae9be8a0b7699725fefb5124abc1d1cc09b08eae5bebd997b6c681870e855",
+      "bytes": 1269
+    },
+    "offline-rescue-checklist.md": {
+      "sha256": "4817834be9f339f3d606a44af6141db221057eed7a02c8d6086898cf0d929fcd",
+      "bytes": 1034
+    },
+    "offline-rescue-manifest.json": {
+      "sha256": "3fc1b52cc83d6e7ed4e3e8b0c89cd9018e71159feeea68137bbd1f36c72e0ddb",
+      "bytes": 2049
+    },
+    "site/index.html": {
+      "sha256": "833ae6571a165566b208a9ac7b9b9d28d13f40f717e638188c2732c5b3f7119e",
+      "bytes": 910852
+    },
+    "site/workbench.html": {
+      "sha256": "e8464c18642a016f3bf39aaf5f7872e95d78d4c9b6fc226304c1771cb4d240d1",
+      "bytes": 1208493
+    },
+    "site/place_catalog.html": {
+      "sha256": "c6c0a7667b387d748ac42603c67d2d2905d8d45ebab88b5178dc4e932373534b",
+      "bytes": 140881
+    },
+    "site/routes/relaxed_2d1n_citywalk.html": {
+      "sha256": "2a056df1815270dff27cf6d5a04020be491663d1a5120342af119907dfe3a00f",
+      "bytes": 75016
+    },
+    "site/routes/first_time_3d2n_balanced.html": {
+      "sha256": "6a2f4f8c3c8ae6582a2b0ce3dfe36f5d1a654e50aef3f7c7bed43e59e8989948",
+      "bytes": 89957
+    },
+    "site/routes/highwalk_3d2n_landmark_citywalk.html": {
+      "sha256": "9767d2ed47331ce8e6b1ced1e836e74dd3954830b1974f72560d51b1374e549c",
+      "bytes": 95469
+    },
+    "site/routes/deep_5d4n_culture_citywalk.html": {
+      "sha256": "cf34a692dada53d1e591768c6ae44f2c488301370afab07956a93e0e425ffad2",
+      "bytes": 112144
+    },
+    "site/routes/local_life_7d6n_balanced.html": {
+      "sha256": "d3c58a9c513369c287c21cb26f8d573f5fe7f5316c8071d45be1e1abe862dbd5",
+      "bytes": 141972
+    },
+    "site/routes/longstay_15d14n_balanced.html": {
+      "sha256": "67825da8fc15b6de9e9f4b0ffe0a573d6cc8ba827b48a1f56f57a86654ccbbcd",
+      "bytes": 230684
+    },
+    "product-delivery/data-vault-recovery-guide.md": {
+      "sha256": "fc90ab4d6494df04506cad9ac3d6ddd0dd09b19fb254d099965d97a2885aa1cb",
+      "bytes": 2317
+    },
+    "release-evidence/data-vault-recovery-evidence.md": {
+      "sha256": "402b3c7e2122d9d99cf43f0d0aac626460c714cf65a2dc3ab6feb1c66ec01664",
+      "bytes": 1228
+    },
+    "release-evidence/data-vault-recovery-evidence.json": {
+      "sha256": "ad81ff7552a8966c306bfdc8d395ac341e28f86b7dbbdaee23ad7ba53ee7eded",
+      "bytes": 1857
+    },
+    "release-evidence/online-health-check-summary.json": {
+      "sha256": "db5f80da27304d5fcfb1c682994e16ea265c7d77b381ba62abfdcd878d833433",
+      "bytes": 2025
+    }
+  },
+  "unchecked_files": [
+    "checksums.json"
+  ]
+}

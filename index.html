@@ -8301,14 +8301,21 @@
     const status = Number(response?.status || 0);
     return status === 0 || status === 408 || status === 429 || status >= 500;
   }
+  function travelerHomeOnlineHealthCheckTimeoutMs(target){
+    return target?.group === 'package' ? 30000 : 12000;
+  }
+  function travelerHomeOnlineHealthCheckMaxAttempts(target){
+    return target?.group === 'package' ? 3 : 2;
+  }
   async function travelerHomeCheckOnlineTarget(target){
-    const maxAttempts = 2;
+    const maxAttempts = travelerHomeOnlineHealthCheckMaxAttempts(target);
+    const timeoutMs = travelerHomeOnlineHealthCheckTimeoutMs(target);
     let lastError = '';
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       const checkedAt = new Date().toISOString();
       try {
         if (typeof fetch !== 'function') throw new Error('当前环境不支持 fetch');
-        const response = await travelerHomeFetchWithTimeout(target.href, {method:'GET', cache:'no-store'}, 12000);
+        const response = await travelerHomeFetchWithTimeout(target.href, {method:'GET', cache:'no-store'}, timeoutMs);
         const ok = Boolean(response && response.ok);
         const statusText = response?.statusText || (ok ? 'OK' : '请求失败');
         if (ok || attempt === maxAttempts || !travelerHomeOnlineHealthCheckShouldRetry(response, null)) {

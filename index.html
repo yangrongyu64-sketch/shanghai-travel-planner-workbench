@@ -897,6 +897,11 @@
       <button type="button" data-traveler-home-operator-tool-target="traveler-home-content-update-package">进入</button>
     </article>
     <article class="traveler-operator-tool-card">
+      <b>执行确认</b>
+      <small>采纳和阻塞留档</small>
+      <button type="button" data-traveler-home-operator-tool-target="traveler-home-content-update-execution-package">进入</button>
+    </article>
+    <article class="traveler-operator-tool-card">
       <b>发布闸口</b>
       <small>上线前总判断</small>
       <button type="button" data-traveler-home-operator-tool-target="traveler-home-prepublish-data-gate">进入</button>
@@ -1529,6 +1534,26 @@
       </div>
     </div>
     <p id="traveler-home-content-update-package-status" class="traveler-content-package-status" aria-live="polite"></p>
+  </div>
+</section>
+<section id="traveler-home-content-update-execution-package" class="traveler-content-package" aria-label="内容更新执行确认包">
+  <div class="traveler-content-package-head">
+    <p>执行确认</p>
+    <h2>内容更新执行确认包</h2>
+    <small>把内容更新任务转成采纳、官方复核、P1 阻塞和回归留档记录，发布闸口和审计包会读取这里的结论。</small>
+  </div>
+  <div>
+    <div class="traveler-content-package-actions">
+      <button type="button" class="primary" id="traveler-home-content-update-execution-package-build-button" data-traveler-home-content-update-execution-package-build>生成确认包</button>
+      <button type="button" id="traveler-home-content-update-execution-package-copy-button" data-traveler-home-content-update-execution-package-copy>复制确认包</button>
+      <button type="button" id="traveler-home-content-update-execution-package-download-button" data-traveler-home-content-update-execution-package-download>下载 Markdown</button>
+      <button type="button" id="traveler-home-content-update-execution-package-json-download-button" data-traveler-home-content-update-execution-package-json-download>下载 JSON</button>
+    </div>
+    <div id="traveler-home-content-update-execution-package-summary" class="traveler-content-package-summary" aria-live="polite"></div>
+    <div id="traveler-home-content-update-execution-package-list" class="traveler-content-package-list"></div>
+    <textarea id="traveler-home-content-update-execution-package-output" readonly rows="10" aria-label="内容更新执行确认包 Markdown"></textarea>
+    <textarea id="traveler-home-content-update-execution-package-json-output" readonly rows="8" aria-label="内容更新执行确认包 JSON"></textarea>
+    <p id="traveler-home-content-update-execution-package-status" class="traveler-content-package-status" aria-live="polite"></p>
   </div>
 </section>
 <section id="traveler-home-prepublish-data-gate" class="traveler-prepublish-gate" aria-label="发布前数据更新总闸口">
@@ -5760,6 +5785,7 @@
       },
       artifacts: [
         'shanghai-content-update-package.md',
+        'shanghai-content-update-execution-package.md',
         'shanghai-trial-ops-fix-package.md',
         'shanghai-trial-feedback-revision-plan.json',
         'shanghai-trial-ops-fix-regression.md',
@@ -5797,6 +5823,7 @@
     const text = travelerHomeContentUpdatePackageMarkdown();
     if (output) output.value = text;
     if (status && !status.textContent) status.textContent = summary.materials || summary.feedback ? '内容更新发布包已生成。' : '暂无内容更新发布包。';
+    renderTravelerHomeContentUpdateExecutionPackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomeReleaseAuditPackage();
@@ -5947,6 +5974,7 @@
     renderTravelerHomeFeedbackPublishAdoption();
     renderTravelerHomeFeedbackCyclePackage();
     renderTravelerHomeContentUpdatePackage();
+    renderTravelerHomeContentUpdateExecutionPackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomeReleaseAuditPackage();
@@ -6006,6 +6034,248 @@
       return {ok:false, reason:'read_failed'};
     }
   }
+  function travelerHomeContentUpdateExecutionStatusLabel(status){
+    const labels = {accepted:'已采纳', needs_official_review:'需官方复核', blocked_by_p1:'P1阻塞', deferred:'暂缓'};
+    return labels[status] || status || '待确认';
+  }
+  function travelerHomeContentUpdateExecutionMaterialItem(record, index){
+    const source = String(record?.source || '未标注');
+    const isOfficial = source.includes('官方');
+    return {
+      id: `material-${record?.id || index + 1}`,
+      kind: 'material',
+      source_id: record?.id || '',
+      title: record?.title || '未命名素材',
+      route: record?.route || '未关联路线',
+      source,
+      status: isOfficial ? 'needs_official_review' : 'accepted',
+      owner: isOfficial ? '官方复核负责人' : '内容编辑',
+      evidence: isOfficial ? 'data/official_verifications/place_verifications.json' : 'data/materials',
+      regression_required: isOfficial,
+      note: travelerHomeContentIntakeBoardFirstLine(record?.note) || '待补素材摘要。',
+      action: isOfficial ? '补齐开放、预约、票务、交通和临时闭馆字段后再发布。' : '保留话题、结构和体验信号，人工改写后进入发布草稿。',
+    };
+  }
+  function travelerHomeContentUpdateExecutionOfficialTaskItem(task, index){
+    return {
+      id: `official-task-${task?.recordId || index + 1}-${task?.category || 'task'}`.replace(/\s+/g, '-'),
+      kind: 'official_task',
+      source_id: task?.recordId || '',
+      title: `${task?.category || '官方复核'}｜${task?.title || '未命名任务'}`,
+      route: task?.route || '未关联路线',
+      source: '官方复核任务',
+      status: 'needs_official_review',
+      owner: '官方复核负责人',
+      evidence: 'data/official_verifications/place_verifications.json',
+      regression_required: true,
+      note: task?.checklist || '补齐官方来源、复核日期和发布说明。',
+      action: '完成官方来源复核并写入发布说明，出发或商用发布前再次确认。',
+    };
+  }
+  function travelerHomeContentUpdateExecutionFeedbackOwner(record){
+    const text = `${record?.type || ''} ${record?.note || ''}`;
+    if (text.includes('地图') || text.includes('动线') || text.includes('步行') || text.includes('GeoJSON')) return '路线地图维护';
+    if (text.includes('开放') || text.includes('预约') || text.includes('票务') || text.includes('闭馆') || text.includes('官方')) return '官方复核负责人';
+    if (text.includes('小红书') || text.includes('抖音') || text.includes('文案') || text.includes('标题') || text.includes('口播')) return '内容编辑';
+    return '产品维护者';
+  }
+  function travelerHomeContentUpdateExecutionFeedbackItem(record, index, resolvedP1FeedbackIds){
+    const originallyBlocked = record?.severity === '阻塞使用';
+    const resolvedP1 = originallyBlocked && resolvedP1FeedbackIds?.has?.(record?.id);
+    const blocked = originallyBlocked && !resolvedP1;
+    const owner = travelerHomeContentUpdateExecutionFeedbackOwner(record);
+    return {
+      id: `feedback-${record?.id || index + 1}`,
+      kind: 'feedback',
+      source_id: record?.id || '',
+      title: `${record?.severity || '建议优化'}｜${record?.type || '反馈'}｜${record?.route || '未关联路线'}`,
+      route: record?.route || '未关联路线',
+      source: '试用反馈',
+      status: blocked ? 'blocked_by_p1' : 'accepted',
+      owner,
+      evidence: blocked ? 'shanghai-trial-ops-fix-package.md' : (resolvedP1 ? 'shanghai-trial-ops-fix-regression.md' : 'shanghai-trial-feedback-publish-adoption.md'),
+      regression_required: blocked,
+      note: travelerHomeFeedbackBoardFirstLine(record?.note) || '待补反馈摘要。',
+      action: blocked ? (record?.nextAction || '先处理 P1 阻塞并完成回归，再进入发布。') : (resolvedP1 ? 'P1 已修复并完成回归，保留修复包和回归证据后可进入发布前复核。' : (record?.nextAction || '纳入下一版内容优化，发布前保留采纳证据。')),
+    };
+  }
+  function travelerHomeContentUpdateExecutionItems(){
+    const materials = travelerHomeContentIntakeBoardRecords().map((record, index) => travelerHomeContentUpdateExecutionMaterialItem(record, index));
+    const officialTasks = travelerHomeOfficialVerificationTasks().map((task, index) => travelerHomeContentUpdateExecutionOfficialTaskItem(task, index));
+    const fixPackage = travelerHomeTrialOpsFixPackagePayload();
+    const resolvedP1FeedbackIds = new Set((fixPackage.fix_items || []).filter(item => item.resolution_status === 'fixed' && item.regression_status === 'passed').map(item => item.source_feedback_id).filter(Boolean));
+    const feedback = travelerHomeFeedbackBoardRecords().map((record, index) => travelerHomeContentUpdateExecutionFeedbackItem(record, index, resolvedP1FeedbackIds));
+    return [...materials, ...officialTasks, ...feedback];
+  }
+  function travelerHomeContentUpdateExecutionPackageSummary(items){
+    const source = Array.isArray(items) ? items : travelerHomeContentUpdateExecutionItems();
+    const accepted = source.filter(item => item.status === 'accepted').length;
+    const blocked = source.filter(item => item.status === 'blocked_by_p1').length;
+    const officialReview = source.filter(item => item.status === 'needs_official_review').length;
+    const deferred = source.filter(item => item.status === 'deferred').length;
+    const regressionRequired = source.filter(item => item.regression_required).length;
+    const readyForReview = source.length > 0 && blocked === 0;
+    const readyForPublish = source.length > 0 && blocked === 0 && officialReview === 0 && deferred === 0;
+    const readinessLabel = blocked ? '禁止发布' : (officialReview || deferred ? '待复核' : (source.length ? '可发布前复核' : '暂无更新'));
+    return {
+      item_count: source.length,
+      accepted_count: accepted,
+      blocked_count: blocked,
+      official_review_count: officialReview,
+      deferred_count: deferred,
+      regression_required_count: regressionRequired,
+      ready_for_review: readyForReview,
+      ready_for_publish: readyForPublish,
+      readiness_label: readinessLabel,
+    };
+  }
+  let travelerHomeContentUpdateExecutionPackageGeneratedAt = '';
+  function travelerHomeContentUpdateExecutionPackageTimestamp(){
+    if (!travelerHomeContentUpdateExecutionPackageGeneratedAt) travelerHomeContentUpdateExecutionPackageGeneratedAt = new Date().toISOString();
+    return travelerHomeContentUpdateExecutionPackageGeneratedAt;
+  }
+  function travelerHomeContentUpdateExecutionPackagePayload(){
+    const items = travelerHomeContentUpdateExecutionItems();
+    const summary = travelerHomeContentUpdateExecutionPackageSummary(items);
+    return {
+      kind: 'shanghai_content_update_execution_package',
+      version: 1,
+      generated_at: travelerHomeContentUpdateExecutionPackageTimestamp(),
+      source_url: window.location?.href || '',
+      source_content_update_summary: travelerHomeContentUpdatePackageSummary(),
+      summary,
+      items,
+      audit_trace: {
+        source_package: 'shanghai-content-update-package.json',
+        source_markdown: 'shanghai-content-update-package.md',
+        execution_package: 'shanghai-content-update-execution-package.md',
+        release_audit_package: 'shanghai-release-audit-package.md',
+      },
+      artifacts: [
+        'shanghai-content-update-package.json',
+        'shanghai-content-update-package.md',
+        'shanghai-content-update-execution-package.md',
+        'shanghai-content-update-execution-package.json',
+        'shanghai-release-regression-checklist.md',
+        'shanghai-release-audit-package.md',
+      ],
+      privacy_boundary: '只包含本地内容更新任务、负责人、采纳状态和证据路径；不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
+      next_actions: [
+        '先处理 P1阻塞和官方复核项，再进入正式发布。',
+        '为每个采纳项保留证据截图、测试结果、官方复核日期或回退说明。',
+        '执行确认后重新生成发布闸口、发布回归和审计包。',
+      ],
+    };
+  }
+  function travelerHomeContentUpdateExecutionPackageMarkdown(){
+    const payload = travelerHomeContentUpdateExecutionPackagePayload();
+    const summary = payload.summary;
+    const lines = [
+      '# 上海攻略内容更新执行确认包',
+      '',
+      '## 总结论',
+      `- 执行项：${summary.item_count} 条`,
+      `- 已采纳：${summary.accepted_count} 条`,
+      `- 官方复核：${summary.official_review_count} 条`,
+      `- P1阻塞：${summary.blocked_count} 条`,
+      `- 需要回归：${summary.regression_required_count} 条`,
+      `- 发布判断：${summary.readiness_label}`,
+      '',
+      '## 执行确认清单',
+    ];
+    if (!payload.items.length) {
+      lines.push('- 暂无执行确认项，先生成或导入内容更新发布包。');
+    } else {
+      payload.items.forEach((item, index) => {
+        lines.push(`${index + 1}. [${travelerHomeContentUpdateExecutionStatusLabel(item.status)}] ${item.title}`);
+        lines.push(`   - 路线：${item.route}`);
+        lines.push(`   - 负责人：${item.owner}`);
+        lines.push(`   - 证据：${item.evidence}`);
+        lines.push(`   - 操作：${item.action}`);
+        lines.push(`   - 备注：${item.note}`);
+      });
+    }
+    lines.push('', '## 审计追踪');
+    lines.push('- 来源 JSON：shanghai-content-update-package.json');
+    lines.push('- 来源 Markdown：shanghai-content-update-package.md');
+    lines.push('- 执行确认：shanghai-content-update-execution-package.md');
+    lines.push('- 官方复核证据：data/official_verifications/place_verifications.json');
+    lines.push('- P1 修复证据：shanghai-trial-ops-fix-package.md');
+    lines.push('', '## 发布边界');
+    lines.push('- 本包只做采纳留档和发布判断，不会自动发布、覆盖正式内容或抓取第三方平台私密数据。');
+    lines.push('- 官方开放、预约、票务、交通和临时闭馆必须以官方渠道复核为准。');
+    lines.push('- 平台素材只保留结构、话题和体验信号，发布前人工改写。');
+    lines.push('', '安全边界：不提交 API Key、账号、Cookie 或 Authorization 信息；执行确认包只保存本地证据路径和状态。');
+    return lines.join('\n');
+  }
+  function renderTravelerHomeContentUpdateExecutionPackage(){
+    const payload = travelerHomeContentUpdateExecutionPackagePayload();
+    const summary = payload.summary;
+    const summaryTarget = document.getElementById('traveler-home-content-update-execution-package-summary');
+    const listTarget = document.getElementById('traveler-home-content-update-execution-package-list');
+    const output = document.getElementById('traveler-home-content-update-execution-package-output');
+    const jsonOutput = document.getElementById('traveler-home-content-update-execution-package-json-output');
+    const status = document.getElementById('traveler-home-content-update-execution-package-status');
+    if (summaryTarget) summaryTarget.innerHTML = `<span>执行确认 ${summary.item_count} 项</span><span>采纳 ${summary.accepted_count} 条</span><span>官方复核 ${summary.official_review_count} 条</span><span>P1阻塞 ${summary.blocked_count} 条</span><span>${escapeHtml(summary.readiness_label)}</span>`;
+    if (listTarget) listTarget.innerHTML = payload.items.length ? payload.items.map(item => `<article><b>${escapeHtml(travelerHomeContentUpdateExecutionStatusLabel(item.status))}｜${escapeHtml(item.title)}</b><span>${escapeHtml(item.route)}｜${escapeHtml(item.owner)}</span><span>${escapeHtml(item.note)}</span><span>证据：${escapeHtml(item.evidence)}</span></article>`).join('') : '<article><b>暂无执行确认项</b><span>先生成或导入内容更新发布包。</span></article>';
+    const text = travelerHomeContentUpdateExecutionPackageMarkdown();
+    if (output) output.value = text;
+    if (jsonOutput) jsonOutput.value = JSON.stringify(payload, null, 2);
+    if (status && !status.textContent) status.textContent = payload.items.length ? '内容更新执行确认包已生成。' : '暂无内容更新执行确认包。';
+    renderTravelerHomePrepublishDataGate();
+    renderTravelerHomeReleaseAuditPackage();
+    return text;
+  }
+  function travelerHomeContentUpdateExecutionPackageFilename(){
+    return 'shanghai-content-update-execution-package.md';
+  }
+  function travelerHomeContentUpdateExecutionPackageJsonFilename(){
+    return 'shanghai-content-update-execution-package.json';
+  }
+  async function copyTravelerHomeContentUpdateExecutionPackageMarkdown(){
+    const text = renderTravelerHomeContentUpdateExecutionPackage();
+    const status = document.getElementById('traveler-home-content-update-execution-package-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制内容更新执行确认包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制内容更新执行确认包。';
+    }
+    return text;
+  }
+  function downloadTravelerHomeContentUpdateExecutionPackageMarkdown(){
+    const text = renderTravelerHomeContentUpdateExecutionPackage();
+    const filename = travelerHomeContentUpdateExecutionPackageFilename();
+    const status = document.getElementById('traveler-home-content-update-execution-package-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 Markdown 内容更新执行确认包。';
+    return {filename, text};
+  }
+  function downloadTravelerHomeContentUpdateExecutionPackageJson(){
+    renderTravelerHomeContentUpdateExecutionPackage();
+    const payload = travelerHomeContentUpdateExecutionPackagePayload();
+    const filename = travelerHomeContentUpdateExecutionPackageJsonFilename();
+    const status = document.getElementById('traveler-home-content-update-execution-package-status');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载 JSON 内容更新执行确认包。';
+    return {filename, payload};
+  }
   function travelerHomePrepublishDataGateMapSummary(){
     const readyRoutes = TRAVELER_HOME_ROUTES.filter(route => Array.isArray(route.mapDays) && route.mapDays.length && route.mapHref);
     const missingRoutes = TRAVELER_HOME_ROUTES.filter(route => !Array.isArray(route.mapDays) || !route.mapDays.length || !route.mapHref);
@@ -6019,7 +6289,7 @@
   function travelerHomePrepublishDataGateVerdict(summary){
     const unresolvedTrialOps = Number(summary.trial_ops_unresolved_fix_item_count ?? (summary.trial_ops_fix_item_count || 0));
     const blockingFeedbackWithoutFixPackage = (summary.blocking_feedback || 0) > 0 && !(summary.trial_ops_fix_item_count || 0);
-    if (unresolvedTrialOps > 0 || blockingFeedbackWithoutFixPackage || (summary.official_skipped_unknown || 0) > 0 || (summary.official_skipped_incomplete || 0) > 0 || (summary.map_missing || 0) > 0) return '需处理后发布';
+    if (unresolvedTrialOps > 0 || blockingFeedbackWithoutFixPackage || (summary.content_execution_blocked_count || 0) > 0 || (summary.official_skipped_unknown || 0) > 0 || (summary.official_skipped_incomplete || 0) > 0 || (summary.map_missing || 0) > 0) return '需处理后发布';
     if ((summary.official_updated || 0) > 0 || (summary.materials || 0) > 0 || (summary.feedback || 0) > 0) return '可发布前复核';
     return '基础可发布';
   }
@@ -6038,6 +6308,7 @@
     const mapSummary = travelerHomePrepublishDataGateMapSummary();
     const regressionSummary = travelerHomeReleaseRegressionSummary();
     const auditSummary = travelerHomeReleaseAuditPackageSummary();
+    const contentExecutionSummary = travelerHomeContentUpdateExecutionPackageSummary();
     const trialOpsFixPackage = travelerHomeTrialOpsFixPackagePayload();
     const trialOpsGate = travelerHomePrepublishTrialOpsGate(trialOpsFixPackage);
     const summary = {
@@ -6062,6 +6333,13 @@
       release_risk: regressionSummary.riskLevel,
       test_result: auditSummary.testResult,
       evidence: auditSummary.evidence,
+      content_execution_item_count: contentExecutionSummary.item_count,
+      content_execution_accepted_count: contentExecutionSummary.accepted_count,
+      content_execution_blocked_count: contentExecutionSummary.blocked_count,
+      content_execution_official_review_count: contentExecutionSummary.official_review_count,
+      content_execution_regression_required_count: contentExecutionSummary.regression_required_count,
+      content_execution_ready_for_publish: contentExecutionSummary.ready_for_publish,
+      content_execution_readiness_label: contentExecutionSummary.readiness_label,
       trial_ops_decision_key: trialOpsGate.decision_key,
       trial_ops_decision_label: trialOpsGate.decision_label,
       trial_ops_p1_blocker_count: trialOpsGate.p1_blocker_count,
@@ -6082,6 +6360,7 @@
       {key:'official_merge', label:'官方复核合并', status: source.official_skipped_unknown || source.official_skipped_incomplete ? 'block' : (source.official_updated ? 'review' : 'pass'), detail:`更新 ${source.official_updated} 条；未知 ${source.official_skipped_unknown} 条；字段不完整 ${source.official_skipped_incomplete} 条。`},
       {key:'materials', label:'内容素材', status: source.materials ? 'review' : 'pass', detail:`素材 ${source.materials} 条；官方 ${source.official_materials} 条；平台 ${source.platform_materials} 条；游记 ${source.travelogue_materials} 条。`},
       {key:'feedback', label:'试用反馈', status: source.blocking_feedback && !source.trial_ops_resolution_ready ? 'block' : (source.feedback ? 'review' : 'pass'), detail:`反馈 ${source.feedback} 条；阻塞 ${source.blocking_feedback} 条；修复回填 ${source.trial_ops_resolution_count || 0} 条。`},
+      {key:'content_execution', label:'内容更新执行确认', status: source.content_execution_blocked_count ? 'block' : (source.content_execution_ready_for_publish ? 'pass' : (source.content_execution_item_count ? 'review' : 'pass')), detail:`执行确认 ${source.content_execution_item_count || 0} 项；采纳 ${source.content_execution_accepted_count || 0} 条；官方复核 ${source.content_execution_official_review_count || 0} 条；P1阻塞 ${source.content_execution_blocked_count || 0} 条；判断：${source.content_execution_readiness_label || '暂无更新'}。`},
       {key:'trial_ops_fix', label:'试用阻塞修复', status: source.trial_ops_unresolved_fix_item_count ? 'block' : (source.trial_ops_ready_for_public_trial ? 'pass' : 'review'), detail:`进度：${source.trial_ops_decision_label}；P1 ${source.trial_ops_p1_blocker_count} 个；修复项 ${source.trial_ops_fix_item_count} 条；未完成 ${source.trial_ops_unresolved_fix_item_count || 0} 条；回归通过 ${source.trial_ops_regression_passed_count || 0} 条；${source.trial_ops_ready_for_public_trial ? '公开试用和小程序迁移可评估放行。' : '公开试用和小程序迁移暂不放行。'}`},
       {key:'map', label:'地图与路线', status: source.map_missing ? 'block' : 'pass', detail:`地图准备 ${source.map_ready}/${source.route_count} 条。`},
       {key:'release', label:'发布回归与留档', status: source.test_result.includes('待填写') ? 'review' : 'pass', detail:`回归风险：${source.release_risk}；测试：${source.test_result}；证据：${source.evidence}。`},
@@ -6103,6 +6382,7 @@
       official_merge: {summary: officialMerge.summary, skipped_unknown_place_ids: officialMerge.skipped_unknown_place_ids || [], skipped_incomplete: officialMerge.skipped_incomplete || [], target_file: officialMerge.target_file},
       materials: travelerHomeContentIntakeBoardRecords(),
       feedback: travelerHomeFeedbackBoardRecords(),
+      content_update_execution: {summary: travelerHomeContentUpdateExecutionPackageSummary(), artifact: 'shanghai-content-update-execution-package.md'},
       trial_ops_gate: trialOpsGate,
       trial_ops_fix_package: trialOpsFixPackage,
       map: mapSummary,
@@ -6116,6 +6396,7 @@
         'place_verifications.merged.json',
         'shanghai-official-fillback-merge-diff.md',
         'shanghai-content-update-package.md',
+        'shanghai-content-update-execution-package.md',
         'shanghai-trial-ops-fix-package.md',
         'shanghai-trial-ops-fix-regression.md',
         'shanghai-release-regression-checklist.md',
@@ -6154,9 +6435,11 @@
     if ((official.skipped_incomplete || []).length) official.skipped_incomplete.forEach(item => lines.push(`- 字段不完整：${item.placeId}｜${item.missingFields.join('、')}`));
     lines.push('', '## 内容素材与反馈');
     lines.push(`- 内容更新发布包：shanghai-content-update-package.md`);
+    lines.push(`- 内容更新执行确认包：shanghai-content-update-execution-package.md`);
     lines.push(`- 素材队列：${summary.materials} 条（官方 ${summary.official_materials} / 平台 ${summary.platform_materials} / 游记 ${summary.travelogue_materials}）`);
     lines.push(`- 官方复核任务：${summary.official_tasks} 条`);
     lines.push(`- 反馈处理队列：${summary.feedback} 条；阻塞 ${summary.blocking_feedback} 条`);
+    lines.push(`- 执行确认：${summary.content_execution_readiness_label}；执行项 ${summary.content_execution_item_count} / 采纳 ${summary.content_execution_accepted_count} / 官方复核 ${summary.content_execution_official_review_count} / P1阻塞 ${summary.content_execution_blocked_count}`);
     payload.materials.slice(0, 4).forEach(record => lines.push(`- 素材：${record.source}｜${record.title}`));
     payload.feedback.slice(0, 4).forEach(record => lines.push(`- 反馈：${record.severity}｜${record.type}｜${travelerHomeFeedbackBoardFirstLine(record.note)}`));
     lines.push('', '## 试用放行判断');
@@ -6188,12 +6471,13 @@
     const output = document.getElementById('traveler-home-prepublish-data-gate-output');
     const jsonOutput = document.getElementById('traveler-home-prepublish-data-gate-json-output');
     const status = document.getElementById('traveler-home-prepublish-data-gate-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.verdict)}</span><span>路线 ${summary.route_count} 条</span><span>官方更新 ${summary.official_updated} 条</span><span>地图 ${summary.map_ready}/${summary.route_count}</span><span>阻塞反馈 ${summary.blocking_feedback} 条</span><span>试用放行：${summary.trial_ops_ready_for_public_trial ? '可评估' : '禁止公开试用/小程序迁移'}</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>${escapeHtml(summary.verdict)}</span><span>路线 ${summary.route_count} 条</span><span>官方更新 ${summary.official_updated} 条</span><span>地图 ${summary.map_ready}/${summary.route_count}</span><span>阻塞反馈 ${summary.blocking_feedback} 条</span><span>执行确认 ${summary.content_execution_item_count || 0} 项</span><span>执行确认：${escapeHtml(summary.content_execution_readiness_label || '暂无更新')}</span><span>试用放行：${summary.trial_ops_ready_for_public_trial ? '可评估' : '禁止公开试用/小程序迁移'}</span>`;
     if (listTarget) {
       const unknown = (payload.official_merge.skipped_unknown_place_ids || []).join('、') || '无';
       const rows = [
         `<article><b>官方复核合并</b><span>place_verifications.merged.json：更新 ${summary.official_updated} / 未知 ${summary.official_skipped_unknown} / 字段不完整 ${summary.official_skipped_incomplete}</span><span>未知点位：${escapeHtml(unknown)}</span></article>`,
         `<article><b>内容素材与反馈</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方任务 ${summary.official_tasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blocking_feedback}</span></article>`,
+        `<article><b>内容更新执行确认</b><span>shanghai-content-update-execution-package.md：执行项 ${summary.content_execution_item_count || 0} / 采纳 ${summary.content_execution_accepted_count || 0} / 官方复核 ${summary.content_execution_official_review_count || 0} / P1阻塞 ${summary.content_execution_blocked_count || 0}</span><span>判断：${escapeHtml(summary.content_execution_readiness_label || '暂无更新')}</span></article>`,
         `<article><b>试用阻塞修复</b><span>${escapeHtml(payload.trial_ops_gate.block_reason)}</span><span>${escapeHtml(payload.trial_ops_gate.fix_package_filename)} / ${escapeHtml(payload.trial_ops_gate.regression_package_filename)}</span></article>`,
         `<article><b>地图与路线</b><span>地图准备 ${summary.map_ready}/${summary.route_count}；待补 ${summary.map_missing} 条。</span></article>`,
         `<article><b>发布动作</b><span>构建 outputs/workbench/site，同步 work/deploy-pages，发布后按 shanghai-release-regression-checklist.md 验收。</span></article>`,
@@ -7528,6 +7812,7 @@
     renderTravelerHomeFeedbackCyclePackage();
     syncTravelerHomeTrialOpsTrackerFromFeedbackBoard({silent:true});
     renderTravelerHomeContentUpdatePackage();
+    renderTravelerHomeContentUpdateExecutionPackage();
     renderTravelerHomePrepublishDataGate();
     renderTravelerHomeReleaseRegressionCenter();
     renderTravelerHomeReleaseAuditPackage();
@@ -7791,12 +8076,14 @@
   function travelerHomeReleaseAuditPackageMarkdown(){
     const summary = travelerHomeReleaseAuditPackageSummary();
     const health = travelerHomeReleaseAuditHealthCheckSummary();
+    const execution = travelerHomeContentUpdateExecutionPackageSummary();
     return [
       '# 上海攻略一键发布审计包',
       '',
       `Deploy 参数：${summary.deployId}`,
       `路线覆盖：${summary.routeCount} 条`,
       `风险判断：${summary.riskLevel}`,
+      `执行确认：${execution.readiness_label}（执行项 ${execution.item_count} / 采纳 ${execution.accepted_count} / 官方复核 ${execution.official_review_count} / P1阻塞 ${execution.blocked_count}）`,
       `测试结果：${summary.testResult}`,
       `验收证据：${summary.evidence}`,
       '',
@@ -7807,7 +8094,9 @@
       '',
       '## 2. 内容更新发布包',
       '- 文件：shanghai-content-update-package.md',
+      '- 文件：shanghai-content-update-execution-package.md',
       `- 汇总：素材 ${summary.materials} / 官方复核 ${summary.officialTasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blockingFeedback}`,
+      `- 内容更新执行确认包：${execution.readiness_label}，执行项 ${execution.item_count}，采纳 ${execution.accepted_count}，官方复核 ${execution.official_review_count}，P1阻塞 ${execution.blocked_count}`,
       '- 平台素材只保留话题、结构和体验信号，正式发布前人工改写。',
       '',
       '## 3. 发布后回归清单',
@@ -7836,15 +8125,17 @@
   function renderTravelerHomeReleaseAuditPackage(){
     const summary = travelerHomeReleaseAuditPackageSummary();
     const health = travelerHomeReleaseAuditHealthCheckSummary();
+    const execution = travelerHomeContentUpdateExecutionPackageSummary();
     const summaryTarget = document.getElementById('traveler-home-release-audit-summary');
     const listTarget = document.getElementById('traveler-home-release-audit-list');
     const output = document.getElementById('traveler-home-release-audit-output');
     const status = document.getElementById('traveler-home-release-audit-status');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>Deploy ${escapeHtml(summary.deployId)}</span><span>风险：${escapeHtml(summary.riskLevel)}</span><span>测试：${escapeHtml(summary.testResult)}</span><span>证据：${escapeHtml(summary.evidence)}</span><span>线上巡检 ${health.healthy}/${health.checked}</span><span>失败 ${health.failed}</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>Deploy ${escapeHtml(summary.deployId)}</span><span>风险：${escapeHtml(summary.riskLevel)}</span><span>执行确认：${escapeHtml(execution.readiness_label)}</span><span>测试：${escapeHtml(summary.testResult)}</span><span>证据：${escapeHtml(summary.evidence)}</span><span>线上巡检 ${health.healthy}/${health.checked}</span><span>失败 ${health.failed}</span>`;
     if (listTarget) {
       const rows = [
         '<article><b>发布记录</b><span>shanghai-release-notes.md：记录版本、发布范围、发布前检查和回滚依据。</span></article>',
         `<article><b>内容更新发布包</b><span>shanghai-content-update-package.md：素材 ${summary.materials} / 官方复核 ${summary.officialTasks} / 反馈 ${summary.feedback} / 阻塞 ${summary.blockingFeedback}</span></article>`,
+        `<article><b>内容更新执行确认包</b><span>shanghai-content-update-execution-package.md：${escapeHtml(execution.readiness_label)}，执行项 ${execution.item_count} / 采纳 ${execution.accepted_count} / 官方复核 ${execution.official_review_count} / P1阻塞 ${execution.blocked_count}</span></article>`,
         '<article><b>发布后回归清单</b><span>shanghai-release-regression-checklist.md：覆盖路线入口、地图、按钮、390px 移动端和控制台。</span></article>',
         '<article><b>发布证据包</b><span>release-evidence.zip：包含审计摘要、线上巡检口径、回归证据清单和包清单。</span></article>',
         `<article><b>线上健康巡检</b><span>shanghai-online-health-check.json：${escapeHtml(health.statusLabel)}，${health.healthy}/${health.checked} healthy，失败 ${health.failed}。</span><span>路线页 ${health.routeTargets} 条；报告 ${escapeHtml(health.reportFile)}。</span></article>`,
@@ -11378,6 +11669,10 @@
   document.getElementById('traveler-home-content-update-package-json-sample-button')?.addEventListener('click', loadTravelerHomeContentUpdatePackageSampleJson);
   document.getElementById('traveler-home-content-update-package-json-import-button')?.addEventListener('click', importTravelerHomeContentUpdatePackageFromInput);
   document.getElementById('traveler-home-content-update-package-json-import-file')?.addEventListener('change', importTravelerHomeContentUpdatePackageFile);
+  document.getElementById('traveler-home-content-update-execution-package-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-content-update-execution-package-status'); renderTravelerHomeContentUpdateExecutionPackage(); if (status) status.textContent = '内容更新执行确认包已更新。'; });
+  document.getElementById('traveler-home-content-update-execution-package-copy-button')?.addEventListener('click', copyTravelerHomeContentUpdateExecutionPackageMarkdown);
+  document.getElementById('traveler-home-content-update-execution-package-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdateExecutionPackageMarkdown);
+  document.getElementById('traveler-home-content-update-execution-package-json-download-button')?.addEventListener('click', downloadTravelerHomeContentUpdateExecutionPackageJson);
   document.getElementById('traveler-home-prepublish-data-gate-build-button')?.addEventListener('click', () => { const status = document.getElementById('traveler-home-prepublish-data-gate-status'); renderTravelerHomePrepublishDataGate(); if (status) status.textContent = '发布前数据更新总闸口已更新。'; });
   document.getElementById('traveler-home-prepublish-data-gate-copy-button')?.addEventListener('click', copyTravelerHomePrepublishDataGateMarkdown);
   document.getElementById('traveler-home-prepublish-data-gate-download-button')?.addEventListener('click', downloadTravelerHomePrepublishDataGateMarkdown);
@@ -11507,6 +11802,7 @@
   renderTravelerHomeFeedbackPublishAdoption();
   renderTravelerHomeFeedbackCyclePackage();
   renderTravelerHomeContentUpdatePackage();
+  renderTravelerHomeContentUpdateExecutionPackage();
   renderTravelerHomePrepublishDataGate();
   renderTravelerHomePublicTrialLaunchPackage();
   renderTravelerHomePublicTrialRetrospectivePackage();

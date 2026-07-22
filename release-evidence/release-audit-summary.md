@@ -22,7 +22,7 @@
 
 - 首页、完整工作台、点位库、PWA manifest、service worker 和部署清单均可访问。
 - 6 条路线详情页均可访问。
-- `workbench-demo.zip`、`product-delivery.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`trend-sources.zip`、`platform-refresh.zip`、`official-refresh.zip`、`maintenance-report.zip`、`release-evidence.zip`、`offline-rescue-kit.zip` 均可下载。
+- `workbench-demo.zip`、`product-delivery.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`trend-sources.zip`、`platform-refresh.zip`、`official-refresh.zip`、`maintenance-report.zip`、`release-evidence.zip`、`offline-rescue-kit.zip`、`content-scale.zip` 均可下载。
 - `maintenance/health-report.json`、`release-evidence/online-health-check-summary.json` 和 `release-evidence/release-evidence-manifest.json` 可作为机器核验入口。
 
 ## 回滚锚点

@@ -1,0 +1,40 @@
+{
+  "app_name": "上海攻略生成工作台",
+  "package_type": "content_scale_package",
+  "status": "ready_for_content_expansion",
+  "route_count": 6,
+  "api_required": false,
+  "manual_review_required": true,
+  "source_counts": {
+    "route_count": 6,
+    "seed_place_count": 40,
+    "seed_food_count": 7,
+    "seed_stay_area_count": 3
+  },
+  "source_assets": {
+    "web_entry": "index.html",
+    "normal_workbench": "workbench.html",
+    "place_catalog": "place_catalog.html",
+    "seed_places": "data/seed/places.json",
+    "seed_food_recommendations": "data/seed/food_recommendations.json",
+    "seed_stay_areas": "data/seed/stay_areas.json",
+    "seed_templates": "data/seed/templates.json",
+    "platform_refresh_zip": "platform-refresh.zip",
+    "official_refresh_zip": "official-refresh.zip",
+    "release_evidence_zip": "release-evidence.zip",
+    "published_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/",
+    "published_workbench_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html",
+    "published_at": "2026-07-22"
+  },
+  "files": [
+    "README.md",
+    "place-expansion-template.json",
+    "food-expansion-template.json",
+    "stay-expansion-template.json",
+    "route-expansion-template.json",
+    "content-growth-roadmap.md",
+    "import-checklist.md",
+    "content-scale-manifest.json"
+  ],
+  "privacy_boundary": "不包含 API Key、账号、Cookie、Authorization 或第三方平台私密数据；平台素材只作为结构化话题和体验信号。"
+}

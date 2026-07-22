@@ -63,5 +63,5 @@ fi
 
 gh repo edit "${FULL_REPO}" --homepage "${PAGES_URL}" || true
 echo "GitHub Pages URL: ${PAGES_URL}"
-echo "Smoke check: open ${PAGES_URL} and confirm workbench-demo.zip, product-delivery.zip, acceptance-report.zip, trend-sources.zip, official-refresh.zip, official-fillback.zip, release-evidence.zip, and offline-rescue-kit.zip are downloadable."
-# workbench-demo.zip, product-delivery.zip, acceptance-report.zip, trend-sources.zip, official-refresh.zip, official-fillback.zip, release-evidence.zip, and offline-rescue-kit.zip are included in this static site package.
+echo "Smoke check: open ${PAGES_URL} and confirm workbench-demo.zip, product-delivery.zip, acceptance-report.zip, trend-sources.zip, official-refresh.zip, official-fillback.zip, release-evidence.zip, offline-rescue-kit.zip, and content-scale.zip are downloadable."
+# workbench-demo.zip, product-delivery.zip, acceptance-report.zip, trend-sources.zip, official-refresh.zip, official-fillback.zip, release-evidence.zip, offline-rescue-kit.zip, and content-scale.zip are included in this static site package.

@@ -20,8 +20,8 @@
       "bytes": 2049
     },
     "site/index.html": {
-      "sha256": "833ae6571a165566b208a9ac7b9b9d28d13f40f717e638188c2732c5b3f7119e",
-      "bytes": 910852
+      "sha256": "7dc53ab34d2c2f15005dcd876c85ec02dabf36643095840166dfc9a402cbf99f",
+      "bytes": 910981
     },
     "site/workbench.html": {
       "sha256": "e8464c18642a016f3bf39aaf5f7872e95d78d4c9b6fc226304c1771cb4d240d1",
@@ -68,8 +68,8 @@
       "bytes": 1857
     },
     "release-evidence/online-health-check-summary.json": {
-      "sha256": "db5f80da27304d5fcfb1c682994e16ea265c7d77b381ba62abfdcd878d833433",
-      "bytes": 2025
+      "sha256": "c9720559dae9329703db9b464c45a65cce9c64906bf309b6036d127f53b94b2f",
+      "bytes": 2075
     }
   },
   "unchecked_files": [

@@ -16,11 +16,11 @@
     },
     "web_workbench_regression": {
       "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest tests/test_web_workbench.py -q",
-      "expected_result": "267 passed"
+      "expected_result": "269 passed"
     },
     "full_regression": {
       "command": "PATH=\"/Users/yangduanyu/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH\" .venv/bin/python -m pytest -q",
-      "expected_result": "363 passed"
+      "expected_result": "365 passed"
     }
   },
   "online_acceptance": [

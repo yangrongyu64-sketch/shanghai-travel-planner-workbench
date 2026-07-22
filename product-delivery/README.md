@@ -19,7 +19,8 @@
 5. 需要小程序迁移时使用 `miniprogram-handoff.zip`。
 6. 需要正式发布留档时使用 `release-evidence.zip`。
 7. 需要迁移浏览器本地数据时，按 `data-vault-recovery-guide.md` 使用旅行数据保险箱。
-8. 后续维护按 `usage-and-maintenance.md` 执行。
+8. 需要批量扩充上海点位、美食、住宿和路线时使用 `content-scale.zip`。
+9. 后续维护按 `usage-and-maintenance.md` 执行。
 
 ## 快速验收
 

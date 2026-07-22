@@ -16,8 +16,8 @@
 - [ ] `deployment-manifest.json` 能看到 `maintenance` 节点。
 - [ ] `maintenance/health-report.json` 的 `status` 为 `healthy`。
 - [ ] `route_count` 仍为 6，且包含 2/3/5/7/15 天路线。
-- [ ] `workbench-demo.zip`、`offline-rescue-kit.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 都能解压。
-- [ ] `service-worker.js` 包含 `offline-rescue-kit.zip`、`offline-rescue/offline-rescue-manifest.json`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 和核心 HTML/PWA 文件。
+- [ ] `workbench-demo.zip`、`offline-rescue-kit.zip`、`content-scale.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 都能解压。
+- [ ] `service-worker.js` 包含 `offline-rescue-kit.zip`、`offline-rescue/offline-rescue-manifest.json`、`content-scale.zip`、`content-scale/content-scale-manifest.json`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 和核心 HTML/PWA 文件。
 - [ ] 正式公网发布时传入 `--published-url`，并检查 `live_deployment` 为 `healthy`。
 
 ## 发布后检查
@@ -31,4 +31,5 @@
 - [ ] `maintenance-report.zip` 返回 200。
 - [ ] `release-evidence.zip` 返回 200。
 - [ ] `offline-rescue-kit.zip` 返回 200。
+- [ ] `content-scale.zip` 返回 200。
 - [ ] `LIVE_DEPLOYMENT.md` 返回 200，且发布时间、仓库地址正确。

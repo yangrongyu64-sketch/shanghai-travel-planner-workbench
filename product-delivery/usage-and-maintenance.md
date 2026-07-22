@@ -8,6 +8,7 @@
 - 完整工作台：`outputs/workbench/site/workbench.html`。
 - 正式交付包：`outputs/workbench/site/product-delivery.zip`。
 - 发布证据包：`outputs/workbench/site/release-evidence.zip`。
+- 内容扩容包：`outputs/workbench/site/content-scale.zip`。
 - 数据恢复指南：`outputs/workbench/site/product-delivery/data-vault-recovery-guide.md`。
 - 趋势源接入包：`outputs/workbench/site/trend-sources.zip`。
 - 官方复核更新包：`outputs/workbench/site/official-refresh.zip`。

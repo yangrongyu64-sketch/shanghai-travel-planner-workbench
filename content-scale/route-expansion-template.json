@@ -1,0 +1,60 @@
+{
+  "package_type": "route_expansion_template",
+  "version": 1,
+  "seed_route_count": 6,
+  "target_files": [
+    "examples/requests/*.json",
+    "data/seed/templates.json"
+  ],
+  "recommended_route_types": [
+    "2日躺平",
+    "3日首次来",
+    "5日文化艺术",
+    "7日生活感",
+    "15日长住",
+    "city walk",
+    "骑行",
+    "亲子",
+    "雨天备用"
+  ],
+  "quality_gate": {
+    "required_sections": [
+      "route_brief",
+      "daily_plan",
+      "map_points",
+      "platform_angles",
+      "manual_review_notes"
+    ]
+  },
+  "sample_rows": [
+    {
+      "route_id": "sample_4d3n_family_rainy_day",
+      "duration_days": 4,
+      "intensity": "relaxed",
+      "theme": [
+        "family",
+        "rainy_day",
+        "museum"
+      ],
+      "route_brief": "低奔波、室内兜底、亲子友好。",
+      "daily_plan": [
+        "抵达和人民广场周边",
+        "博物馆和商场兜底",
+        "浦东亲子地标",
+        "轻量街区和返程"
+      ],
+      "map_points": [
+        "shanghai_museum",
+        "century_park"
+      ],
+      "platform_angles": [
+        "雨天不崩的上海亲子路线",
+        "不用赶路的4天3晚"
+      ],
+      "manual_review_notes": [
+        "复核亲子场馆预约和闭馆。",
+        "复核地铁和打车时间。"
+      ]
+    }
+  ]
+}

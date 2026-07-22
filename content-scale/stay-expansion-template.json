@@ -1,0 +1,42 @@
+{
+  "package_type": "stay_expansion_template",
+  "version": 1,
+  "target_files": [
+    "data/seed/stay_areas.json"
+  ],
+  "quality_gate": {
+    "required_fields": [
+      "area_id",
+      "name",
+      "suitable_for",
+      "unsuitable_for",
+      "strengths",
+      "weaknesses",
+      "matching_templates"
+    ]
+  },
+  "sample_rows": [
+    {
+      "area_id": "sample_new_stay_area",
+      "name": "示例住宿区",
+      "suitable_for": [
+        "family",
+        "slow_travel"
+      ],
+      "unsuitable_for": [
+        "late_night_bar_hopping"
+      ],
+      "strengths": [
+        "换乘稳定",
+        "周边补给清楚",
+        "适合长住"
+      ],
+      "weaknesses": [
+        "离部分地标较远"
+      ],
+      "matching_templates": [
+        "local_life_7d6n_balanced"
+      ]
+    }
+  ]
+}

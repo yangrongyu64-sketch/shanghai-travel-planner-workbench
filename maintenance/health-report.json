@@ -160,6 +160,22 @@
       "missing": [],
       "route_count": 6
     },
+    "content_scale": {
+      "status": "healthy",
+      "files": [
+        "content-scale/README.md",
+        "content-scale/place-expansion-template.json",
+        "content-scale/food-expansion-template.json",
+        "content-scale/stay-expansion-template.json",
+        "content-scale/route-expansion-template.json",
+        "content-scale/content-growth-roadmap.md",
+        "content-scale/import-checklist.md",
+        "content-scale/content-scale-manifest.json",
+        "content-scale.zip"
+      ],
+      "missing": [],
+      "route_count": 6
+    },
     "product_delivery": {
       "status": "healthy",
       "files": [
@@ -203,6 +219,8 @@
           "workbench-demo.zip",
           "offline-rescue-kit.zip",
           "offline-rescue/offline-rescue-manifest.json",
+          "content-scale.zip",
+          "content-scale/content-scale-manifest.json",
           "product-delivery.zip",
           "product-delivery/delivery-manifest.json",
           "product-delivery/data-vault-recovery-guide.md",
@@ -336,7 +354,7 @@
   "next_actions": [
     "发布后先打开 maintenance/health-report.json 查看 status 是否为 healthy。",
     "如果 route_count 不是 6，先回到 examples/requests 和 data/seed 检查路线输入。",
-    "如果 PWA、离线应急包、小程序迁移包、趋势源包、官方复核包、官方回填包或发布证据包缺文件，重新运行 --web-workbench 后再部署。",
+    "如果 PWA、离线应急包、内容扩容包、小程序迁移包、趋势源包、官方复核包、官方回填包或发布证据包缺文件，重新运行 --web-workbench 后再部署。",
     "若 live_deployment 为 not_configured，说明当前是本地/预发布包，正式发布时补 published-url 参数。"
   ]
 }

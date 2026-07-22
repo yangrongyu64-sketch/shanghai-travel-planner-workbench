@@ -1,0 +1,62 @@
+{
+  "package_type": "place_expansion_template",
+  "version": 1,
+  "target_files": [
+    "data/seed/places.json",
+    "data/official_verifications/place_verifications.json"
+  ],
+  "recommended_categories": [
+    "landmark",
+    "museum",
+    "art_museum",
+    "park",
+    "neighborhood",
+    "riverside",
+    "hidden_gem",
+    "rainy_day"
+  ],
+  "quality_gate": {
+    "required_fields": [
+      "place_id",
+      "name",
+      "category",
+      "neighborhood",
+      "nearest_metro",
+      "suggested_duration_minutes",
+      "themes",
+      "source_urls",
+      "last_verified"
+    ],
+    "manual_review_required": [
+      "opening_status",
+      "reservation_status",
+      "ticket_status",
+      "transport_status",
+      "temporary_closure"
+    ]
+  },
+  "sample_rows": [
+    {
+      "place_id": "sample_new_place",
+      "name": "示例新点位",
+      "category": "hidden_gem",
+      "neighborhood": "徐汇滨江",
+      "nearest_metro": "示例地铁站",
+      "suggested_duration_minutes": 75,
+      "themes": [
+        "city_walk",
+        "art",
+        "low_crowd"
+      ],
+      "nearby_place_ids": [
+        "west_bund"
+      ],
+      "source_urls": [
+        "https://example.com/official-source"
+      ],
+      "last_verified": "2026-07-22",
+      "source_policy": "只写结构化改写，不复制原文",
+      "manual_review_note": "发布前复核开放、预约、票务、交通和临时闭馆。"
+    }
+  ]
+}

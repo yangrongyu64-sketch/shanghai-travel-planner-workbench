@@ -1,0 +1,32 @@
+{
+  "package_type": "food_expansion_template",
+  "version": 1,
+  "target_files": [
+    "data/seed/food_recommendations.json"
+  ],
+  "quality_gate": {
+    "required_fields": [
+      "name",
+      "neighborhood",
+      "cuisine",
+      "best_for"
+    ],
+    "avoid_fields": [
+      "实时价格",
+      "未复核营业时间",
+      "第三方平台原文评价"
+    ]
+  },
+  "sample_rows": [
+    {
+      "name": "示例咖啡补给点",
+      "neighborhood": "衡复",
+      "cuisine": "咖啡 / 轻食",
+      "best_for": "city walk 中途休息、避雨、写游记",
+      "rest_strategy": "作为路线分段点，不把整条路线押在单一热门店。",
+      "avoid_if": "节假日排队过长时直接切换到附近备选。",
+      "creator_value": "中高",
+      "safety_note": "店铺状态、营业时间和排队情况发布前人工复核。"
+    }
+  ]
+}

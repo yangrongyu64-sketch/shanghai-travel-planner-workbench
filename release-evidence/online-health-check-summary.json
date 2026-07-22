@@ -3,7 +3,7 @@
   "package_type": "online_health_check_evidence_summary",
   "status": "ready_for_live_verification",
   "route_count": 6,
-  "expected_target_count": 25,
+  "expected_target_count": 26,
   "expected_static_targets": [
     "index.html",
     "workbench.html",
@@ -23,7 +23,8 @@
     "official-fillback.zip",
     "maintenance-report.zip",
     "release-evidence.zip",
-    "offline-rescue-kit.zip"
+    "offline-rescue-kit.zip",
+    "content-scale.zip"
   ],
   "expected_route_targets": [
     "routes/relaxed_2d1n_citywalk.html",
@@ -44,7 +45,8 @@
     "official-fillback.zip",
     "maintenance-report.zip",
     "release-evidence.zip",
-    "offline-rescue-kit.zip"
+    "offline-rescue-kit.zip",
+    "content-scale.zip"
   ],
   "report_files": [
     "shanghai-online-health-check.json",

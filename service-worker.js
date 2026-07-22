@@ -6,6 +6,8 @@ const APP_SHELL_ASSETS = [
   './workbench-demo.zip',
   './offline-rescue-kit.zip',
   './offline-rescue/offline-rescue-manifest.json',
+  './content-scale.zip',
+  './content-scale/content-scale-manifest.json',
   './product-delivery.zip',
   './product-delivery/delivery-manifest.json',
   './product-delivery/data-vault-recovery-guide.md',

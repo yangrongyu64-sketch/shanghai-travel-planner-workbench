@@ -13,6 +13,7 @@
 - 官方复核回填包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-fillback.zip
 - 发布证据包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip
 - 离线应急包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/offline-rescue-kit.zip
+- 内容扩容包：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/content-scale.zip
 - GitHub 仓库：https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench
 
 ## 发布后验收记录
@@ -27,3 +28,4 @@
 - `official-fillback.zip` 可下载并解压。
 - `release-evidence.zip` 可下载并解压。
 - `offline-rescue-kit.zip` 可下载并解压。
+- `content-scale.zip` 可下载并解压。

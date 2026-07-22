@@ -34,7 +34,8 @@
     "official-fillback.zip",
     "maintenance-report.zip",
     "release-evidence.zip",
-    "offline-rescue-kit.zip"
+    "offline-rescue-kit.zip",
+    "content-scale.zip"
   ],
   "pwa": {
     "manifest": "manifest.webmanifest",
@@ -105,6 +106,12 @@
     "manifest": "offline-rescue/offline-rescue-manifest.json",
     "target": "离线应急 / 独立保存 / 数据恢复"
   },
+  "content_scale": {
+    "directory": "content-scale",
+    "archive": "content-scale.zip",
+    "manifest": "content-scale/content-scale-manifest.json",
+    "target": "内容扩容 / 批量导入 / 长期运营"
+  },
   "deploy_scripts": {
     "github_pages": "deploy-github-pages.sh"
   },
@@ -129,6 +136,7 @@
     "维护健康包 maintenance-report.zip 可下载",
     "发布证据包 release-evidence.zip 可下载",
     "离线应急包 offline-rescue-kit.zip 可下载",
+    "内容扩容包 content-scale.zip 可下载",
     "PWA manifest 可访问且 service worker 可注册"
   ],
   "live_deployment": {
@@ -144,6 +152,7 @@
     "official_fillback_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-fillback.zip",
     "release_evidence_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip",
     "offline_rescue_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/offline-rescue-kit.zip",
+    "content_scale_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/content-scale.zip",
     "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
     "published_at": "2026-07-22"
   }

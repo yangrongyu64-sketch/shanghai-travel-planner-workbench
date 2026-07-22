@@ -11,6 +11,7 @@
   "official_fillback_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/official-fillback.zip",
   "release_evidence_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/release-evidence.zip",
   "offline_rescue_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/offline-rescue-kit.zip",
+  "content_scale_url": "https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/content-scale.zip",
   "repository_url": "https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench",
   "published_at": "2026-07-22",
   "smoke_checks": [
@@ -23,6 +24,7 @@
     "official-refresh.zip 可下载并解压",
     "official-fillback.zip 可下载并解压",
     "release-evidence.zip 可下载并解压",
-    "offline-rescue-kit.zip 可下载并解压"
+    "offline-rescue-kit.zip 可下载并解压",
+    "content-scale.zip 可下载并解压"
   ]
 }

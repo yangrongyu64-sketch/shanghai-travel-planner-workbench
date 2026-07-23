@@ -32,28 +32,28 @@
       "bytes": 203995
     },
     "site/routes/relaxed_2d1n_citywalk.html": {
-      "sha256": "2a056df1815270dff27cf6d5a04020be491663d1a5120342af119907dfe3a00f",
-      "bytes": 75016
+      "sha256": "9a3b219a38bd0254368f09026c1c3a19ea115bfbe362f55ceb55e0c7a4c318ee",
+      "bytes": 81530
     },
     "site/routes/first_time_3d2n_balanced.html": {
-      "sha256": "6a2f4f8c3c8ae6582a2b0ce3dfe36f5d1a654e50aef3f7c7bed43e59e8989948",
-      "bytes": 89957
+      "sha256": "f190311436c00fef19f247e55df1dbb01a006b6d70fbaf055874be9ebf1aa882",
+      "bytes": 96984
     },
     "site/routes/highwalk_3d2n_landmark_citywalk.html": {
-      "sha256": "9767d2ed47331ce8e6b1ced1e836e74dd3954830b1974f72560d51b1374e549c",
-      "bytes": 95469
+      "sha256": "906ae62ed3a1c4e5e39a617415fda383f3a43d9c4f8f5c3a43b2e7fabc1685f8",
+      "bytes": 102634
     },
     "site/routes/deep_5d4n_culture_citywalk.html": {
-      "sha256": "cf34a692dada53d1e591768c6ae44f2c488301370afab07956a93e0e425ffad2",
-      "bytes": 112144
+      "sha256": "cdd40debb477f6a8cf68d8476223a1f9d790225d710a094dd2cd89b5ff58bce8",
+      "bytes": 120053
     },
     "site/routes/local_life_7d6n_balanced.html": {
-      "sha256": "d3c58a9c513369c287c21cb26f8d573f5fe7f5316c8071d45be1e1abe862dbd5",
-      "bytes": 141972
+      "sha256": "f291a5c85075f770f7650282ee4dc1c9518f5ab22e863aae8b86334212f2bc0b",
+      "bytes": 150901
     },
     "site/routes/longstay_15d14n_balanced.html": {
-      "sha256": "67825da8fc15b6de9e9f4b0ffe0a573d6cc8ba827b48a1f56f57a86654ccbbcd",
-      "bytes": 230684
+      "sha256": "638b3ea1a339d5d32b7318f9a0461434fe06666a284ba5fb891d46005abe59e3",
+      "bytes": 243138
     },
     "product-delivery/data-vault-recovery-guide.md": {
       "sha256": "fc90ab4d6494df04506cad9ac3d6ddd0dd09b19fb254d099965d97a2885aa1cb",

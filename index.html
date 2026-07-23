@@ -10704,6 +10704,7 @@
     if (!route) return '# 我的上海游记初稿\n\n当前还没有可生成的路线。';
     const styleLine = travelerHomeContentStyleLine();
     const angleLine = travelerHomeContentStyleTravelogueAngleLine();
+    const executionLines = travelerHomeRouteGuideExecutionTravelogueLines(route, travelerHomeDayExecutionSelectedDay(route));
     const lines = [
       '# 我的上海游记初稿',
       '',
@@ -10723,6 +10724,10 @@
     if (fragments.length) {
       lines.push('', '## 旅途碎片');
       fragments.forEach(fragment => lines.push(`- ${fragment}`));
+    }
+    if (executionLines.length) {
+      lines.push('', '## 行中记录');
+      executionLines.forEach(line => lines.push(`- ${line}`));
     }
     lines.push('', '## 平台草稿参考');
     rows.forEach(row => lines.push(`- ${row.label}（${row.source}）：${row.preview}`));
@@ -10864,6 +10869,7 @@
         weather_precheck: travelerHomeHandoffWeatherPrecheckPayload(),
         weather_precheck_markdown: travelerHomeWeatherPrecheckCurrent ? travelerHomeWeatherPrecheckMarkdown(travelerHomeWeatherPrecheckCurrent) : '',
         day_execution_markdown: travelerHomeDayExecutionMarkdown(),
+        route_guide_execution: travelerHomeRouteGuideExecutionForRoutes(routes),
       },
       privacy_boundary: '只包含当前浏览器里的行程偏好、收藏路线、草稿和游记碎片；不包含地图 API Key、账号、Cookie、Authorization 或第三方平台私密数据。',
       next_actions: [
@@ -10979,14 +10985,17 @@
   }
   function travelerHomeDataVaultPayload(){
     const state = travelerHomeDataVaultSanitizedState(travelerHomeStorageRead());
+    const routeGuideExecution = travelerHomeRouteGuideExecutionForRoutes(TRAVELER_HOME_ROUTES);
+    const summary = {...travelerHomeDataVaultSummary(state), route_guide_execution_count: routeGuideExecution.filter(item => item.status_count || item.focused_day).length};
     return {
       kind: 'shanghai_traveler_home_data_vault',
       version: 1,
       generated_at: travelerHomeDataVaultTimestamp(),
       source_url: window.location?.href || '',
       storage_key: travelerHomeStorageKey,
-      summary: travelerHomeDataVaultSummary(state),
+      summary,
       state,
+      route_guide_execution: routeGuideExecution,
       restore_policy: '导入后覆盖当前浏览器首页状态，并重新渲染路线、草稿、游记、天气和交接包。',
       privacy_boundary: '只包含当前浏览器里的上海旅行路线偏好、收藏、草稿、素材、反馈和试用同步状态；不包含 API Key、账号、Cookie、Authorization、token 或第三方平台私密数据。',
       next_actions: [
@@ -11004,7 +11013,7 @@
     const summary = payload.summary;
     const summaryTarget = document.getElementById('traveler-home-data-vault-summary');
     const output = document.getElementById('traveler-home-data-vault-output');
-    if (summaryTarget) summaryTarget.innerHTML = `<span>收藏 ${summary.favorite_count} 条</span><span>草稿 ${summary.platform_draft_count} 条</span><span>游记碎片 ${summary.travelogue_fragment_count} 条</span><span>素材 ${summary.content_intake_count} 条</span><span>反馈 ${summary.feedback_count} 条</span>`;
+    if (summaryTarget) summaryTarget.innerHTML = `<span>收藏 ${summary.favorite_count} 条</span><span>草稿 ${summary.platform_draft_count} 条</span><span>游记碎片 ${summary.travelogue_fragment_count} 条</span><span>素材 ${summary.content_intake_count} 条</span><span>反馈 ${summary.feedback_count} 条</span><span>现场 ${summary.route_guide_execution_count || 0} 条</span>`;
     const text = JSON.stringify(payload, null, 2);
     if (output) output.value = text;
     return text;
@@ -11272,6 +11281,121 @@
     const days = Array.isArray(route?.foodDays) ? route.foodDays : [];
     return days.find(item => Number(item.day) === Number(day?.day)) || {};
   }
+  function travelerHomeRouteGuideStopStatusStorageKey(route){
+    return route?.tripId ? `shanghai-traveler-route-guide-stop-status-v1:${route.tripId}` : '';
+  }
+  function travelerHomeRouteGuideDayFocusStorageKey(route){
+    return route?.tripId ? `shanghai-traveler-route-guide-day-focus-v1:${route.tripId}` : '';
+  }
+  function travelerHomeRouteGuideStorageJson(key){
+    if (!key) return {};
+    try {
+      const raw = localStorage.getItem(key);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+  function travelerHomeRouteGuideExecutionStatus(status){
+    return ['want', 'done', 'skip'].includes(status) ? status : 'none';
+  }
+  function travelerHomeRouteGuideExecutionStatusLabel(status){
+    return {want:'想去', done:'已完成', skip:'跳过', none:'未标记'}[travelerHomeRouteGuideExecutionStatus(status)] || '未标记';
+  }
+  function travelerHomeRouteGuideExecutionFocusedDay(route){
+    const payload = travelerHomeRouteGuideStorageJson(travelerHomeRouteGuideDayFocusStorageKey(route));
+    const value = payload.day;
+    const day = Number(value);
+    const days = travelerHomeDayExecutionDays(route).map(item => Number(item.day));
+    return Number.isFinite(day) && days.includes(day) ? day : null;
+  }
+  function travelerHomeRouteGuideExecutionProgressText(daySummary){
+    const total = Number(daySummary?.total || 0);
+    const done = Number(daySummary?.done || 0);
+    const want = Number(daySummary?.want || 0);
+    const skip = Number(daySummary?.skip || 0);
+    const pending = Math.max(total - done - want - skip, 0);
+    return `Day ${daySummary?.day || 1} 进度：已完成 ${done}/${total}，想去 ${want}，跳过 ${skip}，剩余 ${pending}`;
+  }
+  function travelerHomeRouteGuideExecutionForRoute(route){
+    const payload = travelerHomeRouteGuideStorageJson(travelerHomeRouteGuideStopStatusStorageKey(route));
+    const items = payload.items && typeof payload.items === 'object' ? payload.items : {};
+    const focusedDay = travelerHomeRouteGuideExecutionFocusedDay(route);
+    const days = travelerHomeDayExecutionDays(route).map(day => {
+      const stops = (Array.isArray(day.stops) ? day.stops : []).map((stop, index) => {
+        const order = index + 1;
+        const key = `day-${day.day}-stop-${order}`;
+        const status = travelerHomeRouteGuideExecutionStatus(items[key]);
+        return {order, place_name: stop.placeName || '', status, status_label: travelerHomeRouteGuideExecutionStatusLabel(status)};
+      });
+      const counts = stops.reduce((next, stop) => {
+        if (stop.status !== 'none') next[stop.status] += 1;
+        return next;
+      }, {want:0, done:0, skip:0});
+      const total = stops.length;
+      const pending = Math.max(total - counts.done - counts.want - counts.skip, 0);
+      const summary = {day:Number(day.day), theme:day.theme || '', total, done:counts.done, want:counts.want, skip:counts.skip, pending, stops};
+      return {...summary, progress_text: travelerHomeRouteGuideExecutionProgressText(summary)};
+    });
+    const statusCount = days.reduce((sum, day) => sum + day.stops.filter(stop => stop.status !== 'none').length, 0);
+    return {
+      route_id: route?.tripId || '',
+      scenario: route?.scenario || '',
+      title: route?.title || '',
+      focused_day: focusedDay,
+      status_count: statusCount,
+      updated_at: payload.updatedAt || payload.updated_at || '',
+      days,
+    };
+  }
+  function travelerHomeRouteGuideExecutionForRoutes(routes){
+    return (Array.isArray(routes) ? routes : []).map(travelerHomeRouteGuideExecutionForRoute);
+  }
+  function travelerHomeRouteGuideExecutionDaySummary(route, day){
+    const execution = travelerHomeRouteGuideExecutionForRoute(route);
+    const dayNumber = Number(day?.day || day || execution.focused_day || 1);
+    return execution.days.find(item => Number(item.day) === dayNumber) || execution.days[0] || null;
+  }
+  function travelerHomeRouteGuideExecutionDayLines(route, day){
+    const execution = travelerHomeRouteGuideExecutionForRoute(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    if (!daySummary) return ['路线页现场进度：当前路线还没有可同步的每日点位。'];
+    if (!execution.status_count && !execution.focused_day) return ['路线页现场进度：尚未从路线攻略页同步点位状态。', '在攻略页标记想去/已完成/跳过后，这里会自动带回来。'];
+    const lines = ['路线页现场进度：已从路线攻略页同步本地标记。'];
+    if (execution.focused_day) lines.push(`聚焦日：Day ${execution.focused_day}`);
+    lines.push(daySummary.progress_text);
+    daySummary.stops.forEach(stop => lines.push(`${stop.order}. ${stop.place_name}：${stop.status_label}`));
+    return lines;
+  }
+  function travelerHomeRouteGuideExecutionNamesByStatus(daySummary, status){
+    const stops = Array.isArray(daySummary?.stops) ? daySummary.stops : [];
+    return stops.filter(stop => stop.status === status).map(stop => stop.place_name).filter(Boolean);
+  }
+  function travelerHomeRouteGuideExecutionPublishLines(route, day){
+    const execution = travelerHomeRouteGuideExecutionForRoute(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    if (!daySummary || !execution.status_count) return [];
+    const done = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'done');
+    const want = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'want');
+    const skipped = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'skip');
+    const pending = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'none');
+    return [
+      `已完成：${done.length ? done.join('、') : '暂无'}` ,
+      `想去未完成：${want.length ? want.join('、') : '暂无'}` ,
+      `临时跳过：${skipped.length ? skipped.join('、') : '暂无'}` ,
+      `还没标记：${pending.length ? pending.join('、') : '暂无'}` ,
+      '可补素材：天气、人流、花费、排队和最喜欢的一站。',
+    ];
+  }
+  function travelerHomeRouteGuideExecutionTravelogueLines(route, day){
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    if (!daySummary) return [];
+    const publishLines = travelerHomeRouteGuideExecutionPublishLines(route, day);
+    if (!publishLines.length) return [];
+    const progress = daySummary.progress_text.replace(`Day ${daySummary.day} 进度：`, `Day ${daySummary.day} 现场进度：`);
+    return [progress, ...publishLines];
+  }
   function travelerHomeDayExecutionStopNames(day){
     return (Array.isArray(day?.stops) ? day.stops : []).map(stop => stop.placeName).filter(Boolean);
   }
@@ -11304,8 +11428,10 @@
     const days = travelerHomeDayExecutionDays(route);
     if (!select) return days;
     const current = select.value;
+    const focusedDay = travelerHomeRouteGuideExecutionFocusedDay(route);
     select.innerHTML = days.map(day => `<option value="${escapeHtml(String(day.day))}">Day ${escapeHtml(String(day.day))}${day.theme ? `｜${escapeHtml(day.theme)}` : ''}</option>`).join('');
     if (days.some(day => String(day.day) === current)) select.value = current;
+    else if (focusedDay && days.some(day => Number(day.day) === focusedDay)) select.value = String(focusedDay);
     else if (days[0]) select.value = String(days[0].day);
     return days;
   }
@@ -11320,6 +11446,8 @@
     const stops = travelerHomeDayExecutionStopNames(day);
     const actionLine = travelerHomeDayExecutionActionLine(state, riskDay, foodDay);
     const weatherAdvice = travelerHomeDayExecutionWeatherAdvice(day);
+    const routeGuideLines = travelerHomeRouteGuideExecutionDayLines(route, day);
+    const publishLines = travelerHomeRouteGuideExecutionPublishLines(route, day);
     const lines = [
       '# 上海行中执行简报',
       '',
@@ -11361,6 +11489,16 @@
       '',
       '## 同行人简报',
       `今天按 Day ${day?.day || 1} 主线走：${stops.slice(0, 3).join(' → ') || '先确认当天主线'}。现场状态是${travelerHomeDayExecutionStateLabel(state)}，执行规则：${actionLine}` ,
+    );
+    if (routeGuideLines.length) {
+      lines.push('', '## 路线页现场进度');
+      routeGuideLines.forEach(line => lines.push(`- ${line}`));
+    }
+    if (publishLines.length) {
+      lines.push('', '## 当天可发布素材');
+      publishLines.forEach(line => lines.push(`- ${line}`));
+    }
+    lines.push(
       '',
       '## 出发前现场复核',
       '- 开放、预约、票务和临时闭馆仍以官方渠道和现场信息为准。',

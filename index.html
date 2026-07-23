@@ -614,6 +614,11 @@
     .traveler-onsite-publish-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-publish-ops{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-publish-ops h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-publish-status-board{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-publish-status-board h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-publish-status-board-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .traveler-publish-status-board-controls label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-publish-status-board-controls select{height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
     .traveler-post-trip-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-post-trip-review h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
@@ -651,7 +656,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-public-trial-launch,.traveler-public-trial-retrospective,.traveler-next-iteration-roadmap,.traveler-public-trial-execution,.traveler-public-trial-data-collection,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-publish-status-board-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -1996,6 +2001,24 @@
       </div>
       <textarea id="traveler-home-publish-ops-output" readonly rows="12" aria-label="发布运营台内容"></textarea>
       <p id="traveler-home-publish-ops-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-publish-status-board" class="traveler-publish-status-board" aria-label="发布状态看板">
+      <div class="traveler-social-card-head">
+        <h3>发布状态看板</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-publish-status-board-save-button" data-traveler-home-publish-status-board-save>保存状态</button>
+          <button type="button" id="traveler-home-publish-status-board-copy-button" data-traveler-home-publish-status-board-copy>复制看板</button>
+          <button type="button" id="traveler-home-publish-status-board-download-button" data-traveler-home-publish-status-board-download>下载Markdown</button>
+        </div>
+      </div>
+      <div class="traveler-publish-status-board-controls" aria-label="平台发布状态">
+        <label for="traveler-home-publish-status-xiaohongshu">小红书<select id="traveler-home-publish-status-xiaohongshu" aria-label="小红书发布状态"><option value="pending">待发布</option><option value="published">已发布</option><option value="needs_assets">需补图</option><option value="needs_review">需复核</option></select></label>
+        <label for="traveler-home-publish-status-douyin">抖音<select id="traveler-home-publish-status-douyin" aria-label="抖音发布状态"><option value="pending">待发布</option><option value="published">已发布</option><option value="needs_assets">需补图</option><option value="needs_review">需复核</option></select></label>
+        <label for="traveler-home-publish-status-group">同行群<select id="traveler-home-publish-status-group" aria-label="同行群发布状态"><option value="pending">待发布</option><option value="published">已发布</option><option value="needs_assets">需补图</option><option value="needs_review">需复核</option></select></label>
+        <label for="traveler-home-publish-status-travelogue">游记复盘<select id="traveler-home-publish-status-travelogue" aria-label="游记复盘发布状态"><option value="pending">待发布</option><option value="published">已发布</option><option value="needs_assets">需补图</option><option value="needs_review">需复核</option></select></label>
+      </div>
+      <textarea id="traveler-home-publish-status-board-output" readonly rows="12" aria-label="发布状态看板内容"></textarea>
+      <p id="traveler-home-publish-status-board-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-post-trip-review" class="traveler-post-trip-review" aria-label="旅行后复盘包">
       <div class="traveler-social-card-head">
@@ -10905,6 +10928,8 @@
         travelogue_markdown: travelerHomeTravelogueMarkdown(),
         onsite_publish_package_markdown: travelerHomeOnsitePublishPackageMarkdown(),
         publish_ops_markdown: travelerHomePublishOpsMarkdown(),
+        publish_status_board: state.publishStatusBoard && typeof state.publishStatusBoard === 'object' ? state.publishStatusBoard : {},
+        publish_status_board_markdown: travelerHomePublishStatusBoardMarkdown(),
         risk_plan_markdown: travelerHomeRiskPlanMarkdown(),
         weather_precheck: travelerHomeHandoffWeatherPrecheckPayload(),
         weather_precheck_markdown: travelerHomeWeatherPrecheckCurrent ? travelerHomeWeatherPrecheckMarkdown(travelerHomeWeatherPrecheckCurrent) : '',
@@ -11781,6 +11806,7 @@
     const text = travelerHomePublishOpsMarkdown();
     if (output) output.value = text;
     if (status) status.textContent = '已生成发布运营台。';
+    renderTravelerHomePublishStatusBoard();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return text;
@@ -11813,6 +11839,185 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载发布运营台。';
+    return {filename, text};
+  }
+  function travelerHomePublishStatusBoardRoute(){
+    return travelerHomeRoutePackRoutes()[0] || travelerHomeBestRecommendation()?.route || travelerHomeFirstTimeGuideRoute();
+  }
+  function travelerHomePublishStatusBoardDay(route){
+    travelerHomeDayExecutionPopulateDays(route);
+    return travelerHomeDayExecutionSelectedDay(route);
+  }
+  function travelerHomePublishStatusBoardKey(route, day){
+    return `${route?.tripId || 'default'}|day-${day?.day || 1}`;
+  }
+  function travelerHomePublishStatusBoardTasks(dayNumber){
+    return [
+      {key:'xiaohongshu', label:'小红书笔记', detail:`Day ${dayNumber} 现场版`, action:{pending:'整理标题、正文、话题、地点标签和配图。', published:'补数据：链接、收藏、评论问题。', needs_assets:'补齐封面、地点图、排队图和路线截图。', needs_review:'复核事实、地点标签、口吻和不确定信息。'}},
+      {key:'douyin', label:'抖音口播', detail:'30-45秒', action:{pending:'按发布运营台剪出开头、镜头、字幕和收尾。', published:'回收播放、完播和评论问题。', needs_assets:'补图/补镜头/封面/字幕后再发。', needs_review:'复核口播事实、字幕和封面承诺。'}},
+      {key:'group', label:'同行群消息', detail:'即时同步', action:{pending:'把当天主线、已完成和删减规则发给同行人。', published:'记录同行反馈和临时调整。', needs_assets:'补交通截图、集合点或当日照片。', needs_review:'复核集合时间、路线变更和安全提醒。'}},
+      {key:'travelogue', label:'游记复盘', detail:'旅行后24小时内', action:{pending:'补真实体验、花费、排队和路线取舍。', published:'回收读者问题，更新下一版路线。', needs_assets:'补图、花费、排队和最好拍的位置。', needs_review:'检查事实、开放信息、图片授权和语气。'}},
+    ];
+  }
+  function travelerHomePublishStatusBoardLabels(){
+    return {pending:'待发布', published:'已发布', needs_assets:'需补图', needs_review:'需复核'};
+  }
+  function travelerHomePublishStatusBoardStatusLabel(status){
+    const labels = travelerHomePublishStatusBoardLabels();
+    return labels[status] || labels.pending;
+  }
+  function travelerHomePublishStatusBoardNormalizeStatus(status){
+    return Object.prototype.hasOwnProperty.call(travelerHomePublishStatusBoardLabels(), status) ? status : 'pending';
+  }
+  function travelerHomePublishStatusBoardStored(route, day){
+    const state = travelerHomeStorageRead();
+    const board = state.publishStatusBoard && typeof state.publishStatusBoard === 'object' ? state.publishStatusBoard : {};
+    const key = travelerHomePublishStatusBoardKey(route, day);
+    const stored = board[key] && typeof board[key] === 'object' ? board[key] : {};
+    return {key, board, stored};
+  }
+  function travelerHomePublishStatusBoardSelectId(key){
+    return `traveler-home-publish-status-${key}`;
+  }
+  function travelerHomePublishStatusBoardApplyStored(route, day){
+    const dayNumber = day?.day || 1;
+    const {stored} = travelerHomePublishStatusBoardStored(route, day);
+    const tasks = travelerHomePublishStatusBoardTasks(dayNumber);
+    tasks.forEach(task => {
+      const target = document.getElementById(travelerHomePublishStatusBoardSelectId(task.key));
+      if (!target) return;
+      target.value = travelerHomePublishStatusBoardNormalizeStatus(stored[task.key] || target.value || 'pending');
+    });
+    return stored;
+  }
+  function travelerHomePublishStatusBoardState(route, day){
+    const dayNumber = day?.day || 1;
+    travelerHomePublishStatusBoardApplyStored(route, day);
+    const {key, stored} = travelerHomePublishStatusBoardStored(route, day);
+    const state = travelerHomePublishStatusBoardTasks(dayNumber).reduce((next, task) => {
+      const target = document.getElementById(travelerHomePublishStatusBoardSelectId(task.key));
+      next[task.key] = travelerHomePublishStatusBoardNormalizeStatus(target?.value || stored[task.key] || 'pending');
+      return next;
+    }, {});
+    return {...state, key, updatedAt: stored.updatedAt || ''};
+  }
+  function travelerHomePublishStatusBoardSummary(boardState){
+    const counts = {pending:0, published:0, needs_assets:0, needs_review:0};
+    ['xiaohongshu','douyin','group','travelogue'].forEach(key => {
+      counts[travelerHomePublishStatusBoardNormalizeStatus(boardState?.[key])] += 1;
+    });
+    return counts;
+  }
+  function travelerHomePublishStatusBoardPendingActions(tasks, boardState){
+    return tasks.filter(task => ['pending','needs_assets','needs_review'].includes(travelerHomePublishStatusBoardNormalizeStatus(boardState[task.key]))).map(task => `${task.label}${travelerHomePublishStatusBoardStatusLabel(boardState[task.key]).replace('需', '')}`);
+  }
+  function travelerHomePublishStatusBoardMarkdown(){
+    const route = travelerHomePublishStatusBoardRoute();
+    if (!route) return '# 上海发布状态看板\n\n当前还没有可追踪的路线。';
+    const day = travelerHomePublishStatusBoardDay(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    const dayNumber = daySummary?.day || day?.day || 1;
+    const boardState = travelerHomePublishStatusBoardState(route, day);
+    const tasks = travelerHomePublishStatusBoardTasks(dayNumber);
+    const counts = travelerHomePublishStatusBoardSummary(boardState);
+    const done = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'done');
+    const want = travelerHomeRouteGuideExecutionNamesByStatus(daySummary, 'want');
+    const fragments = travelerHomeOnsitePublishPackageFragments();
+    const pendingActions = travelerHomePublishStatusBoardPendingActions(tasks, boardState);
+    const lines = [
+      '# 上海发布状态看板',
+      '',
+      `路线：${route.scenario}｜${route.title}` ,
+      `执行日：Day ${dayNumber}` ,
+      '状态存储：当前浏览器本地',
+      '素材来源：发布运营台',
+      '',
+      '## 状态汇总',
+      `- 已发布：${counts.published}/4`,
+      `- 待发布：${counts.pending}/4`,
+      `- 需补图：${counts.needs_assets}/4`,
+      `- 需复核：${counts.needs_review}/4`,
+      `- 下一步：${pendingActions.length ? pendingActions.join('、') : '四个平台都已发布，进入数据回收。'}` ,
+      '',
+      '## 平台任务',
+    ];
+    tasks.forEach(task => {
+      const status = travelerHomePublishStatusBoardNormalizeStatus(boardState[task.key]);
+      lines.push(`- ${task.label}：${travelerHomePublishStatusBoardStatusLabel(status)}｜${task.detail}｜${task.action[status]}`);
+    });
+    lines.push('', '## 路线现场依据');
+    if (daySummary?.progress_text) lines.push(`- ${daySummary.progress_text}`);
+    lines.push(`- 已完成：${travelerHomeOnsitePublishPackageNamesText(done, '暂无')}`);
+    lines.push(`- 想去未完成：${travelerHomeOnsitePublishPackageNamesText(want, '暂无')}`);
+    if (fragments.length) fragments.forEach(fragment => lines.push(`- 现场碎片：${fragment}`));
+    else lines.push('- 现场碎片：待补天气、人流、排队、花费和同行反馈。');
+    lines.push('', '## 下一步动作');
+    if (pendingActions.length) pendingActions.forEach(action => lines.push(`- ${action}`));
+    else lines.push('- 回收链接、评论、收藏、完播和读者问题。');
+    lines.push('- 把评论里的路线问题回填到点位库、路线页和下一版发布运营台。');
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomePublishStatusBoard(){
+    const route = travelerHomePublishStatusBoardRoute();
+    const day = travelerHomePublishStatusBoardDay(route);
+    travelerHomePublishStatusBoardApplyStored(route, day);
+    const output = document.getElementById('traveler-home-publish-status-board-output');
+    const status = document.getElementById('traveler-home-publish-status-board-status');
+    const text = travelerHomePublishStatusBoardMarkdown();
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成发布状态看板。';
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return text;
+  }
+  function saveTravelerHomePublishStatusBoard(){
+    const route = travelerHomePublishStatusBoardRoute();
+    const day = travelerHomePublishStatusBoardDay(route);
+    const key = travelerHomePublishStatusBoardKey(route, day);
+    const dayNumber = day?.day || 1;
+    const state = travelerHomeStorageRead();
+    const board = state.publishStatusBoard && typeof state.publishStatusBoard === 'object' ? state.publishStatusBoard : {};
+    const entry = travelerHomePublishStatusBoardTasks(dayNumber).reduce((next, task) => {
+      next[task.key] = travelerHomePublishStatusBoardNormalizeStatus(document.getElementById(travelerHomePublishStatusBoardSelectId(task.key))?.value || 'pending');
+      return next;
+    }, {updatedAt:new Date().toISOString()});
+    board[key] = entry;
+    state.publishStatusBoard = board;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    const text = renderTravelerHomePublishStatusBoard();
+    const status = document.getElementById('traveler-home-publish-status-board-status');
+    if (status) status.textContent = '发布状态已保存到本机浏览器。';
+    return {key, entry, text};
+  }
+  async function copyTravelerHomePublishStatusBoardMarkdown(){
+    const text = renderTravelerHomePublishStatusBoard();
+    const status = document.getElementById('traveler-home-publish-status-board-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制发布状态看板。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制发布状态看板。';
+    }
+    return text;
+  }
+  function travelerHomePublishStatusBoardFilename(){
+    return 'shanghai-publish-status-board.md';
+  }
+  function downloadTravelerHomePublishStatusBoardMarkdown(){
+    const text = renderTravelerHomePublishStatusBoard();
+    const filename = travelerHomePublishStatusBoardFilename();
+    const status = document.getElementById('traveler-home-publish-status-board-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载发布状态看板。';
     return {filename, text};
   }
   function travelerHomePostTripReviewRoute(){
@@ -12492,9 +12697,13 @@
   document.getElementById('traveler-home-publish-ops-build-button')?.addEventListener('click', renderTravelerHomePublishOps);
   document.getElementById('traveler-home-publish-ops-copy-button')?.addEventListener('click', copyTravelerHomePublishOpsMarkdown);
   document.getElementById('traveler-home-publish-ops-download-button')?.addEventListener('click', downloadTravelerHomePublishOpsMarkdown);
+  document.getElementById('traveler-home-publish-status-board-save-button')?.addEventListener('click', saveTravelerHomePublishStatusBoard);
+  document.getElementById('traveler-home-publish-status-board-copy-button')?.addEventListener('click', copyTravelerHomePublishStatusBoardMarkdown);
+  document.getElementById('traveler-home-publish-status-board-download-button')?.addEventListener('click', downloadTravelerHomePublishStatusBoardMarkdown);
   document.getElementById('traveler-home-post-trip-review-copy-button')?.addEventListener('click', copyTravelerHomePostTripReviewMarkdown);
   document.getElementById('traveler-home-post-trip-review-download-button')?.addEventListener('click', downloadTravelerHomePostTripReviewMarkdown);
   ['traveler-home-day-execution-day','traveler-home-day-execution-state'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-day-execution-status'); renderTravelerHomeDayExecution(); if (status) status.textContent = '行中执行简报已随现场状态更新。'; }));
+  ['traveler-home-publish-status-xiaohongshu','traveler-home-publish-status-douyin','traveler-home-publish-status-group','traveler-home-publish-status-travelogue'].forEach(id => document.getElementById(id)?.addEventListener('change', saveTravelerHomePublishStatusBoard));
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
     button.addEventListener('click', () => renderTravelerHomePlatformCopy(button.getAttribute('data-traveler-home-platform-copy')));
   });
@@ -12521,6 +12730,7 @@
     renderTravelerHomeTravelogue();
     renderTravelerHomeOnsitePublishPackage();
     renderTravelerHomePublishOps();
+    renderTravelerHomePublishStatusBoard();
     renderTravelerHomeWorkflow();
     refreshTravelerHomeHandoff();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
@@ -12582,6 +12792,7 @@
   renderTravelerHomeDayExecution();
   renderTravelerHomeOnsitePublishPackage();
   renderTravelerHomePublishOps();
+  renderTravelerHomePublishStatusBoard();
   renderTravelerHomePostTripReview();
   renderTravelerHomeWorkflow();
   applyTravelerHomeDemoSampleFromLocation();

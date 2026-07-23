@@ -46,6 +46,10 @@
     .route-guide-day-focus-actions{display:flex;flex-wrap:wrap;gap:8px}
     .route-guide-day-focus-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:850}
     .route-guide-day-focus-actions button.is-active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .route-guide-focused-day-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .route-guide-focused-day-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:12px;font-weight:850}
+    .route-guide-focused-day-actions button:first-child{background:var(--accent);border-color:var(--accent);color:#fff}
+    #route-guide-focused-day-output{width:100%;min-height:148px;border:1px solid var(--line);border-radius:8px;background:#fffdfa;padding:10px;color:var(--ink);font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
     .route-guide-day{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px}
     .route-guide-day.is-focused{border-color:var(--accent);box-shadow:0 0 0 2px rgba(15,118,110,.14)}
     .route-guide-day-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
@@ -119,7 +123,7 @@
     .route-guide-review ul{margin:0;padding-left:18px;color:var(--muted)}
     .route-guide-status{min-height:22px;color:var(--accent);font-size:13px;font-weight:800}
     @media(max-width:860px){.route-guide-hero{grid-template-columns:1fr}.route-guide-actions{justify-content:flex-start}.route-guide-start-nav{grid-template-columns:1fr}.route-guide-start-nav-list{grid-template-columns:repeat(2,minmax(0,1fr))}.route-guide-layout{grid-template-columns:1fr}.route-guide-facts,.route-guide-quick-brief-list{grid-template-columns:1fr 1fr}.route-guide-stop dl,.route-guide-decision-grid{grid-template-columns:1fr}}
-    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-start-nav-list,.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid,.route-guide-departure-checklist-actions{grid-template-columns:1fr}.route-guide-stop-status-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button,.route-guide-departure-checklist-actions button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
+    @media(max-width:520px){.route-guide-hero h1{font-size:28px}.route-guide-layout{padding:12px}.route-guide-card,.route-guide-day{padding:12px}.route-guide-start-nav-list,.route-guide-facts,.route-guide-quick-brief-list,.route-guide-day-execution-grid,.route-guide-departure-checklist-actions,.route-guide-focused-day-actions{grid-template-columns:1fr}.route-guide-stop-status-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.route-guide-day-heading{align-items:flex-start;flex-direction:column}.route-guide-day-heading button,.route-guide-departure-checklist-actions button{width:100%;justify-content:center}.route-guide-actions a,.route-guide-actions button{flex:1 1 130px;justify-content:center}}
   </style>
 </head>
 <body>
@@ -245,7 +249,13 @@
     <button type="button" data-route-guide-focus-day="2" aria-pressed="false">Day 2</button>
     <button type="button" data-route-guide-focus-day="3" aria-pressed="false">Day 3</button>
   </div>
+  <div class="route-guide-focused-day-actions">
+    <button type="button" id="copy-route-guide-focused-day-message-button">复制同行短消息</button>
+    <button type="button" id="copy-route-guide-focused-day-travelogue-button">复制当天游记片段</button>
+  </div>
+  <textarea id="route-guide-focused-day-output" readonly rows="7" aria-label="当前聚焦日输出"></textarea>
   <p id="route-guide-day-focus-status" class="route-guide-status" aria-live="polite">当前显示：全部天数</p>
+  <p id="route-guide-focused-day-output-status" class="route-guide-status" aria-live="polite"></p>
 </section>
       <section class="route-guide-card">
         <h2>行程安排</h2>
@@ -735,7 +745,7 @@
   const TRAVELER_ROUTE_GUIDE_ROUTE_ID = "first_time_3d2n_balanced";
   const TRAVELER_ROUTE_GUIDE_ROUTE_TITLE = "上海3天2晚首次来均衡版";
   const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海3天2晚首次来均衡版\n\n- 天数：3天\n- 玩法：balanced\n- 住宿区：人民广场\n- 适合谁：适合首次来上海、经典均衡和少踩坑\n- 主题：文化艺术\n\n## 吃住行速览\n- 住宿：人民广场\n- 补给：人民广场 / 南京东路\n- 交通：中等\n- 复核：开放、预约、票务、交通和临时闭馆\n\n## 住哪里\n- 建议住在：人民广场\n- 优势：交通居中；适合经典地标路线；临时调整行程比较方便\n- 住宿取舍：人流较大；不同街区酒店品质差异明显\n\n## 吃什么 / 休息补给\n- 人民广场 / 南京东路：首次来上海、短途换乘、经典路线补给\n  - 吃喝类型：商场简餐 / 本帮简餐 / 咖啡 / 甜品\n  - 休息策略：把午餐或下午茶放在商场、地铁站周边，适合接博物馆、南京东路和外滩路线。\n  - 避坑：不要在午晚高峰临时追热门排队店，容易打乱后续外滩或返程节奏。\n- 外滩 / 外滩源：外滩夜景前后的轻食、咖啡和建筑路线停顿\n  - 吃喝类型：咖啡 / 轻食 / 下午茶 / 简餐\n  - 休息策略：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。\n  - 避坑：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。\n- 武康路 / 安福路 / 衡复：city walk、咖啡、brunch、街区内容创作\n  - 吃喝类型：咖啡 / brunch / 面包甜点 / 轻食\n  - 休息策略：只提前锁定一个咖啡或轻食点，其他跟随街区节奏，把休息点嵌进步行路线。\n  - 避坑：周末热门点排队和拍照人流明显，不要把整条路线押在单一网红店上。\n\n## 执行难度\n- 体力：中等：平均每天约 3.3 个停靠点，上午和下午各留一次坐下休息。\n- 人流：中高：南京东路、外滩、武康路 周末和节假日人流更明显，拍照点不要压得太满。\n- 预算倾向：中等：优先把钱花在住宿位置和必要预约上，网红排队店不用强追。\n\n### 每日执行提醒\n- Day 1：从 人民广场 开始，到 外滩 收束，至少预留 30 分钟机动。\n- Day 2：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。\n- Day 3：从 上海博物馆 开始，到 外滩源 收束，至少预留 30 分钟机动；上海博物馆、豫园 / 老城厢 停留时间较长，别被前一站挤掉。\n\n## 出发前核对清单\n- [ ] 开放预约：确认当天开放、预约、票务和临时闭馆。\n- [ ] 天气装备：看雨天、炎热、台风和风力，决定雨具、防晒或改室内。\n- [ ] 交通回程：用实时地图确认首站、跨区移动、末班车和打车落点。\n- [ ] 体力节奏：标出长走路段和可删减点，不把每天排满。\n- [ ] 休息补给：提前确认咖啡、轻食、洗手间和商场休息点。\n- [ ] 备选点位：准备 1 个室内备选和 1 个低体力备选。\n\n## 备选方案 / 雨天替代\n- 雨天替代：优先保留外滩源、商场、咖啡和室内展馆，江边和露天街拍顺延。\n- 体力不足：只保留当天第一站、一个补给点和收束点，删除跨区加点。\n- 排队过久：热门咖啡或餐厅等待超过 20 分钟，改去同片区轻食或商场休息。\n- 临时闭馆：先用同区备选点替换，不临时跨到远区重排行程。\n\n## 每日替换建议\n\n### Day 1 替换建议\n- Day 1 雨天：保留 人民广场 和 外滩；南京东路 可顺延或缩短。\n- Day 1 体力不足：先做 人民广场，再用 人民广场 / 南京东路 作为补给，最后按体力决定是否去 外滩。\n- Day 1 排队过久：南京东路 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 1 临时闭馆：人民广场 或 外滩 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n### Day 2 替换建议\n- Day 2 雨天：保留 武康路 和 新天地；安福路、复兴公园 可顺延或缩短。\n- Day 2 体力不足：先做 武康路，再用 武康路 / 安福路 / 衡复 作为补给，最后按体力决定是否去 新天地。\n- Day 2 排队过久：安福路、复兴公园 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 2 临时闭馆：武康路 或 新天地 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n### Day 3 替换建议\n- Day 3 雨天：保留 上海博物馆 和 外滩源；豫园 / 老城厢 可顺延或缩短。\n- Day 3 体力不足：先做 上海博物馆，再用 人民广场 / 南京东路 作为补给，最后按体力决定是否去 外滩源。\n- Day 3 排队过久：豫园 / 老城厢 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 3 临时闭馆：上海博物馆 或 外滩源 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n## 行程安排\n\n### Day 1 抵达日：人民广场到外滩地标\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：外滩\n- 补给：人民广场 / 南京东路\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n\n### Day 2 衡复 city walk：咖啡、建筑和街区质感\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n\n### Day 3 博物馆或老城厢，给离开留缓冲\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：外滩源\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
-  const TRAVELER_ROUTE_GUIDE_DAYS = [{"day": 1, "title": "Day 1 抵达日：人民广场到外滩地标", "text": "### Day 1 抵达日：人民广场到外滩地标\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：外滩\n- 补给：人民广场 / 南京东路\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。", "stops": [{"key": "day-1-stop-1", "order": 1, "placeName": "人民广场"}, {"key": "day-1-stop-2", "order": 2, "placeName": "南京东路"}, {"key": "day-1-stop-3", "order": 3, "placeName": "外滩"}]}, {"day": 2, "title": "Day 2 衡复 city walk：咖啡、建筑和街区质感", "text": "### Day 2 衡复 city walk：咖啡、建筑和街区质感\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。", "stops": [{"key": "day-2-stop-1", "order": 1, "placeName": "武康路"}, {"key": "day-2-stop-2", "order": 2, "placeName": "安福路"}, {"key": "day-2-stop-3", "order": 3, "placeName": "复兴公园"}, {"key": "day-2-stop-4", "order": 4, "placeName": "新天地"}]}, {"day": 3, "title": "Day 3 博物馆或老城厢，给离开留缓冲", "text": "### Day 3 博物馆或老城厢，给离开留缓冲\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：外滩源\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。", "stops": [{"key": "day-3-stop-1", "order": 1, "placeName": "上海博物馆"}, {"key": "day-3-stop-2", "order": 2, "placeName": "豫园 / 老城厢"}, {"key": "day-3-stop-3", "order": 3, "placeName": "外滩源"}]}];
+  const TRAVELER_ROUTE_GUIDE_DAYS = [{"day": 1, "title": "Day 1 抵达日：人民广场到外滩地标", "text": "### Day 1 抵达日：人民广场到外滩地标\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：外滩\n- 补给：人民广场 / 南京东路\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。", "executionItems": [{"label": "开始", "value": "人民广场"}, {"label": "收束", "value": "外滩"}, {"label": "补给", "value": "人民广场 / 南京东路"}, {"label": "交通", "value": "少量跨片区，优先地铁接驳，近距离用步行或短途骑行。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-1-stop-1", "order": 1, "placeName": "人民广场"}, {"key": "day-1-stop-2", "order": 2, "placeName": "南京东路"}, {"key": "day-1-stop-3", "order": 3, "placeName": "外滩"}]}, {"day": 2, "title": "Day 2 衡复 city walk：咖啡、建筑和街区质感", "text": "### Day 2 衡复 city walk：咖啡、建筑和街区质感\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。", "executionItems": [{"label": "开始", "value": "武康路"}, {"label": "收束", "value": "新天地"}, {"label": "补给", "value": "武康路 / 安福路 / 衡复"}, {"label": "交通", "value": "少量跨片区，优先地铁接驳，近距离用步行或短途骑行。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-2-stop-1", "order": 1, "placeName": "武康路"}, {"key": "day-2-stop-2", "order": 2, "placeName": "安福路"}, {"key": "day-2-stop-3", "order": 3, "placeName": "复兴公园"}, {"key": "day-2-stop-4", "order": 4, "placeName": "新天地"}]}, {"day": 3, "title": "Day 3 博物馆或老城厢，给离开留缓冲", "text": "### Day 3 博物馆或老城厢，给离开留缓冲\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：外滩源\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。", "executionItems": [{"label": "开始", "value": "上海博物馆"}, {"label": "收束", "value": "外滩源"}, {"label": "补给", "value": "人民广场 / 南京东路"}, {"label": "交通", "value": "跨片区较多，优先地铁接驳，赶时间或带行李再打车。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-3-stop-1", "order": 1, "placeName": "上海博物馆"}, {"key": "day-3-stop-2", "order": 2, "placeName": "豫园 / 老城厢"}, {"key": "day-3-stop-3", "order": 3, "placeName": "外滩源"}]}];
   const TRAVELER_ROUTE_GUIDE_MAP_POINTS = [{"day": 1, "order": 1, "placeName": "人民广场", "timeBlock": "下午", "coordinate": [121.4752, 31.2304]}, {"day": 1, "order": 2, "placeName": "南京东路", "timeBlock": "傍晚前", "coordinate": [121.4845, 31.237]}, {"day": 1, "order": 3, "placeName": "外滩", "timeBlock": "晚上", "coordinate": [121.4903, 31.2397]}, {"day": 2, "order": 1, "placeName": "武康路", "timeBlock": "上午", "coordinate": [121.4416, 31.2109]}, {"day": 2, "order": 2, "placeName": "安福路", "timeBlock": "中午", "coordinate": [121.4447, 31.216]}, {"day": 2, "order": 3, "placeName": "复兴公园", "timeBlock": "下午", "coordinate": [121.4675, 31.2189]}, {"day": 2, "order": 4, "placeName": "新天地", "timeBlock": "晚上", "coordinate": [121.4755, 31.219]}, {"day": 3, "order": 1, "placeName": "上海博物馆", "timeBlock": "上午", "coordinate": [121.4756, 31.2285]}, {"day": 3, "order": 2, "placeName": "豫园 / 老城厢", "timeBlock": "下午", "coordinate": [121.492, 31.2273]}, {"day": 3, "order": 3, "placeName": "外滩源", "timeBlock": "下午备选", "coordinate": [121.488, 31.243]}];
   const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
   const travelerRouteGuideMapConfigStorageKey = 'shanghai-traveler-route-guide-map-config-v1';
@@ -784,6 +794,10 @@
       return 'all';
     }
   }
+  function currentTravelerRouteGuideFocusedDay(){
+    const focused = TRAVELER_ROUTE_GUIDE_DAYS.find(day => document.getElementById(`route-guide-day-${day.day}`)?.classList.contains('is-focused'));
+    return focused || TRAVELER_ROUTE_GUIDE_DAYS[0] || null;
+  }
   function applyTravelerRouteGuideDayFocus(day, options){
     const activeDay = travelerRouteGuideValidDayFocus(day);
     const isAll = activeDay === 'all';
@@ -815,6 +829,7 @@
     const status = document.getElementById('route-guide-day-focus-status');
     if (status) status.textContent = isAll ? '当前显示：全部天数' : `当前聚焦：Day ${activeDay}`;
     if (!isAll && options?.scroll !== false) document.getElementById(`route-guide-day-${activeDay}`)?.scrollIntoView({behavior:'smooth', block:'start'});
+    renderTravelerRouteGuideFocusedDayOutput();
     return activeDay;
   }
   function focusTravelerRouteGuideDay(dayNumber){
@@ -957,6 +972,11 @@
     const stops = Array.isArray(day?.stops) ? day.stops : [];
     return stops.map(stop => `${stop.order}. ${stop.placeName}：${travelerRouteGuideStopStatusText(normalizeTravelerRouteGuideStopStatus(activeItems[stop.key]))}`);
   }
+  function travelerRouteGuideDayExecutionValue(day, label){
+    const items = Array.isArray(day?.executionItems) ? day.executionItems : [];
+    const item = items.find(item => item.label === label);
+    return item?.value || '';
+  }
   function travelerRouteGuideDayShareText(dayNumber){
     const day = TRAVELER_ROUTE_GUIDE_DAYS.find(day => day.day === Number(dayNumber));
     if (!day) return '';
@@ -967,6 +987,54 @@
       ...travelerRouteGuideDayStopShareLines(day, activeItems),
     ];
     return [day.text, progressLines.join('\n')].filter(Boolean).join('\n\n');
+  }
+  function travelerRouteGuideFocusedDayCompanionMessage(day){
+    const activeDay = day || currentTravelerRouteGuideFocusedDay();
+    if (!activeDay) return '';
+    const activeItems = currentTravelerRouteGuideStopStatusItems();
+    const start = travelerRouteGuideDayExecutionValue(activeDay, '开始') || '按当天路线第一站';
+    const end = travelerRouteGuideDayExecutionValue(activeDay, '收束') || '按当天路线最后一站';
+    const supply = travelerRouteGuideDayExecutionValue(activeDay, '补给') || '中段安排咖啡、轻食和洗手间';
+    const transport = travelerRouteGuideDayExecutionValue(activeDay, '交通') || '出发前用实时地图复核';
+    return [
+      `# ${activeDay.title} 同行短消息`,
+      `今天主线：${start} → ${end}`.
+        replace('： →', '：按现场情况执行'),
+      `开始：${start}`,
+      `收束：${end}`,
+      `补给：${supply}`,
+      `交通：${transport}`,
+      travelerRouteGuideDayProgressSummaryText(activeDay, activeItems),
+      ...travelerRouteGuideDayStopShareLines(activeDay, activeItems),
+      '出发前再复核开放、预约、票务、交通和临时闭馆。',
+    ].join('\n');
+  }
+  function travelerRouteGuideFocusedDayTravelogueFragment(day){
+    const activeDay = day || currentTravelerRouteGuideFocusedDay();
+    if (!activeDay) return '';
+    const activeItems = currentTravelerRouteGuideStopStatusItems();
+    const stops = Array.isArray(activeDay.stops) ? activeDay.stops : [];
+    const start = travelerRouteGuideDayExecutionValue(activeDay, '开始') || stops[0]?.placeName || '当天第一站';
+    const end = travelerRouteGuideDayExecutionValue(activeDay, '收束') || stops[stops.length - 1]?.placeName || '当天最后一站';
+    const done = travelerRouteGuidePlaceNamesByStatus(activeDay, 'done', activeItems);
+    const want = travelerRouteGuidePlaceNamesByStatus(activeDay, 'want', activeItems);
+    const skipped = travelerRouteGuidePlaceNamesByStatus(activeDay, 'skip', activeItems);
+    const pending = stops.filter(stop => normalizeTravelerRouteGuideStopStatus(activeItems[stop.key]) === 'none').map(stop => stop.placeName);
+    return [
+      `# ${activeDay.title} 游记片段`,
+      `今天这段从 ${start} 走到 ${end}。`,
+      `已完成：${done.length ? done.join('、') : '还没标记'}`,
+      `想去未完成：${want.length ? want.join('、') : '暂无'}`,
+      `临时跳过：${skipped.length ? skipped.join('、') : '暂无'}`,
+      `还没标记：${pending.length ? pending.join('、') : '暂无'}`,
+      '可补素材：天气、人流、花费、排队和最喜欢的一站。',
+    ].join('\n');
+  }
+  function renderTravelerRouteGuideFocusedDayOutput(text){
+    const output = document.getElementById('route-guide-focused-day-output');
+    const activeText = text || travelerRouteGuideFocusedDayCompanionMessage();
+    if (output) output.value = activeText;
+    return activeText;
   }
   function travelerRouteGuideProgressShareText(){
     const activeItems = currentTravelerRouteGuideStopStatusItems();
@@ -1274,6 +1342,36 @@
     if (status) status.textContent = '游记草稿 Markdown 已下载，可继续改成发布稿。';
     return markdown;
   }
+  async function copyTravelerRouteGuideFocusedDayMessage(){
+    const activeDay = currentTravelerRouteGuideFocusedDay();
+    const text = travelerRouteGuideFocusedDayCompanionMessage(activeDay);
+    const status = document.getElementById('route-guide-focused-day-output-status');
+    const button = document.getElementById('copy-route-guide-focused-day-message-button');
+    renderTravelerRouteGuideFocusedDayOutput(text);
+    try {
+      await navigator.clipboard.writeText(text);
+      if (button) button.textContent = '已复制短消息';
+      if (status) status.textContent = activeDay ? `Day ${activeDay.day} 同行短消息已复制。` : '当天同行短消息已复制。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制同行短消息。';
+    }
+    return text;
+  }
+  async function copyTravelerRouteGuideFocusedDayTravelogueFragment(){
+    const activeDay = currentTravelerRouteGuideFocusedDay();
+    const text = travelerRouteGuideFocusedDayTravelogueFragment(activeDay);
+    const status = document.getElementById('route-guide-focused-day-output-status');
+    const button = document.getElementById('copy-route-guide-focused-day-travelogue-button');
+    renderTravelerRouteGuideFocusedDayOutput(text);
+    try {
+      await navigator.clipboard.writeText(text);
+      if (button) button.textContent = '已复制游记片段';
+      if (status) status.textContent = activeDay ? `Day ${activeDay.day} 游记片段已复制，可继续扩写成发布稿。` : '当天游记片段已复制，可继续扩写成发布稿。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制当天游记片段。';
+    }
+    return text;
+  }
   async function copyTravelerRouteGuideDayText(dayNumber){
     const status = document.getElementById('copy-route-guide-status');
     const day = TRAVELER_ROUTE_GUIDE_DAYS.find(day => day.day === Number(dayNumber));
@@ -1305,6 +1403,8 @@
   document.getElementById('download-route-progress-button')?.addEventListener('click', downloadTravelerRouteGuideProgressMarkdown);
   document.getElementById('copy-route-travelogue-button')?.addEventListener('click', copyTravelerRouteGuideTravelogueDraft);
   document.getElementById('download-route-travelogue-button')?.addEventListener('click', downloadTravelerRouteGuideTravelogueDraftMarkdown);
+  document.getElementById('copy-route-guide-focused-day-message-button')?.addEventListener('click', copyTravelerRouteGuideFocusedDayMessage);
+  document.getElementById('copy-route-guide-focused-day-travelogue-button')?.addEventListener('click', copyTravelerRouteGuideFocusedDayTravelogueFragment);
   document.querySelectorAll('[data-route-guide-copy-day]').forEach(button => {
     button.addEventListener('click', () => copyTravelerRouteGuideDayText(button.dataset.routeGuideCopyDay));
   });

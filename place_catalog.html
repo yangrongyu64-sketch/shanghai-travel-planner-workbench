@@ -61,6 +61,9 @@
     .platform-content-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
     .platform-content-pack h2{margin:0 0 4px;font-size:18px}
     .platform-content-pack p{margin:0;color:#625d55;font-size:13px}
+    .platform-style-control{display:grid;gap:5px;min-width:190px}
+    .platform-style-control label{color:#173b76;font-size:12px;font-weight:800}
+    .platform-style-control select{height:36px;border:1px solid #cfd7ca;background:#fff;padding:0 9px;font:inherit;font-size:13px;min-width:0}
     .platform-content-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
     .platform-content-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px;padding:0;list-style:none}
     .platform-content-tabs li{border:1px solid #e1e6df;background:#f8faf7;padding:10px;border-radius:6px}
@@ -124,7 +127,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid,.platform-content-grid{grid-template-columns:1fr}.route-draft,.route-suggestion-list,.route-version-list,.platform-content-tabs{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid,.platform-content-grid{grid-template-columns:1fr}.route-draft,.route-suggestion-list,.route-version-list,.platform-content-tabs{grid-template-columns:1fr}.platform-content-head{display:grid}.platform-style-control{min-width:0}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -208,6 +211,16 @@
         <div>
           <h2>平台发布内容包</h2>
           <p>基于路线版本草案生成小红书笔记、抖音口播脚本和游记正文；默认经过 Hook Lab、Human Voice、Spoken Rhythm、Strict Kill 和平台安全复核。</p>
+        </div>
+        <div class="platform-style-control">
+          <label for="place-platform-style-select">内容风格</label>
+          <select id="place-platform-style-select" aria-label="选择平台内容风格">
+            <option value="practical" selected>实用攻略型</option>
+            <option value="blogger">博主口吻型</option>
+            <option value="relaxed">松弛躺平型</option>
+            <option value="highwalk">暴走打卡型</option>
+            <option value="culture">文化艺术型</option>
+          </select>
         </div>
       </div>
       <p id="place-platform-content-status" class="platform-content-status" aria-live="polite">请先勾选点位，生成平台发布内容包。</p>
@@ -503,6 +516,7 @@
     const placePlatformContentPack = document.getElementById('place-platform-content-pack');
     const placePlatformContentTabs = document.getElementById('place-platform-content-tabs');
     const placePlatformContentStatus = document.getElementById('place-platform-content-status');
+    const placePlatformStyleSelect = document.getElementById('place-platform-style-select');
     const placeXhsNoteText = document.getElementById('place-xhs-note-text');
     const placeDouyinScriptText = document.getElementById('place-douyin-script-text');
     const placeTravelogueText = document.getElementById('place-travelogue-text');
@@ -727,57 +741,90 @@
       if (placeRouteVersionList) placeRouteVersionList.innerHTML = plans.map(plan => `<li data-route-version-days="${plan.dayCount}"><b>${escapeHtml(plan.title)}</b><span>${escapeHtml(plan.days.map(day => `Day ${day.day} ${day.focus}`).join('；'))}</span></li>`).join('');
       if (placeRouteVersionText) placeRouteVersionText.textContent = routeVersionTextFromDraft(draft, plans);
     }
-    function selectedPlaceHookLab(draft) {
+    const PLATFORM_STYLE_CONFIGS = {
+      practical:{key:'practical', label:'实用攻略型', positioning:'清晰决策、路线取舍、检查清单和官方复核', titleAngle:'路线判断', xhsAngle:'把顺路、体力、预约讲清楚', douyinAngle:'先给结论，再给删减顺序', travelogueAngle:'像一篇可执行复盘', quality:`实用攻略：必须出现路线判断、删减顺序和官方复核提醒。`, tags:'#上海攻略 #上海旅行 #路线规划 #周末去哪儿'},
+      blogger:{key:'blogger', label:'博主口吻型', positioning:'第一人称、真实取舍、观点鲜明和可评论', titleAngle:'我的上海路线', xhsAngle:'用个人判断带出取舍', douyinAngle:'多一点主观评价和互动', travelogueAngle:'像博主二刷后的真实记录', quality:`博主口吻：保留个人观点，但避免夸张承诺和空泛种草。`, tags:'#上海旅行 #旅行博主 #上海CityWalk #小众路线'},
+      relaxed:{key:'relaxed', label:'松弛躺平型', positioning:'舒缓、少移动、咖啡和休息缓冲', titleAngle:'不赶路版本', xhsAngle:'强调少移动、慢逛、休息点', douyinAngle:'口播要慢，保留喘气和停顿', travelogueAngle:'像一篇慢旅行日记', quality:`松弛躺平：必须写清少移动、咖啡/休息缓冲和可删点位。`, tags:'#上海慢旅行 #躺平旅行 #上海CityWalk #不赶路'},
+      highwalk:{key:'highwalk', label:'暴走打卡型', positioning:'体力好、多打卡、删减提醒', titleAngle:'暴走打卡版', xhsAngle:'强调效率、顺序和体力门槛', douyinAngle:'节奏更快，但给删减提醒', travelogueAngle:'像一次高密度路线复盘', quality:`暴走打卡：必须提示体力门槛、跨区风险和优先删哪一站。`, tags:'#上海暴走 #地标打卡 #上海路线 #高密度旅行'},
+      culture:{key:'culture', label:'文化艺术型', positioning:'展馆、建筑、城市史和策展线索', titleAngle:'文化艺术线', xhsAngle:'把展馆、建筑和街区史串起来', douyinAngle:'用一个文化线索带路', travelogueAngle:'像一篇带城市史的观察笔记', quality:`文化艺术：必须出现展馆/建筑/城市史线索，并提醒展览和预约复核。`, tags:'#上海展览 #上海美术馆 #城市史 #建筑漫游'},
+    };
+    function selectedPlatformStyleConfig() {
+      const key = placePlatformStyleSelect?.value || 'practical';
+      return PLATFORM_STYLE_CONFIGS[key] || PLATFORM_STYLE_CONFIGS.practical;
+    }
+    function styleHookForDraft(draft, styleConfig, first, last, names) {
+      const line = names.slice(0, 3).join('、') || '这些点位';
+      const hooks = {
+        practical:`来上海别先堆点位，先看 ${line} 能不能顺路、能不能预约、会不会太累。`,
+        blogger:`我这次最想验证一件事：${first} 到 ${last}，到底值不值得放进同一条线。`,
+        relaxed:`如果你不想把上海玩成赶场，我会把 ${first} 到 ${last} 走成一个慢一点的版本。`,
+        highwalk:`体力好的再看这条：${line} 放进同一条上海线，顺序错了会很累。`,
+        culture:`这条上海线我会按展馆、建筑和城市史来走，不只看哪里出片。`,
+      };
+      return hooks[styleConfig.key] || hooks.practical;
+    }
+    function selectedPlaceHookLab(draft, styleConfig) {
+      styleConfig = styleConfig || selectedPlatformStyleConfig();
       const names = rowNames(draft.rows);
       const first = names[0] || '上海';
       const last = names[names.length - 1] || first;
       const theme = draft.topThemes[0] || '路线';
       const baseRouteId = routeVersionBaseRouteId(draft);
       const hooks = [
+        {type:`style_${styleConfig.key}`, hook:styleHookForDraft(draft, styleConfig, first, last, names), score:94},
         {type:'first_person_confession', hook:`我原来以为上海只能打卡，直到我把 ${first} 和 ${last} 放进同一条线。`, score:92},
         {type:'contradiction', hook:`这条上海路线看起来跨度大，真正难的是怎么少走冤枉路。`, score:88},
         {type:'visual_shock', hook:`一张图看懂：${names.slice(0, 3).join('、') || '这些点位'} 怎么变成可执行路线。`, score:86},
         {type:'comment_bait_without_rage', hook:`如果你来上海只有一两天，这几个点你会删哪一个？`, score:82},
       ];
-      return hooks.map(item => ({...item, baseRouteId, theme}));
+      return hooks.map(item => ({...item, baseRouteId, theme, style:styleConfig.label}));
     }
-    function selectedPlaceQualityChecklist(draft) {
+    function selectedPlaceQualityChecklist(draft, styleConfig) {
+      styleConfig = styleConfig || selectedPlatformStyleConfig();
       const checks = [
+        `风格定位：${styleConfig.positioning}`,
         `Hook Lab：前 3 秒先抛路线矛盾或个人判断，不用百科式开场。`,
         `Human Voice：多用“我会怎么走、哪里容易累、哪里值得停”，少用报告腔。`,
         `Spoken Rhythm：抖音口播句子短一点，镜头和停顿分开写。`,
         `Strict Kill：删掉空泛夸奖，只保留点位、路线、体力和取舍。`,
+        styleConfig.quality,
         `平台安全：开放时间、预约、票价和临时闭馆以官方复核为准。`,
       ];
       if (draft.warnings.length) checks.push(`路线风险：${draft.warnings.join('；')}`);
       return checks;
     }
-    function platformContentPackFromDraft(draft) {
+    function platformContentPackFromDraft(draft, styleConfig) {
+      styleConfig = styleConfig || selectedPlatformStyleConfig();
       const names = rowNames(draft.rows);
       const routeLine = names.join(' → ') || '待选择点位';
       const baseRouteId = routeVersionBaseRouteId(draft);
       const themeCopy = draft.topThemes.length ? draft.topThemes.join(' + ') : '上海自选路线';
       const durationCopy = `${draft.suggestedDays || '待判断'} · ${draft.intensity || '待判断'} · ${formatMinutes(draft.journeyMinutes)}`;
-      const hooks = selectedPlaceHookLab(draft);
+      const hooks = selectedPlaceHookLab(draft, styleConfig);
       const bestHook = hooks[0]?.hook || '先选点，再生成内容。';
-      const checklist = selectedPlaceQualityChecklist(draft);
+      const checklist = selectedPlaceQualityChecklist(draft, styleConfig);
       if (!draft.rows.length) {
-        const empty = '# 平台发布内容包\n\n请先勾选 2-4 个点位，再生成小红书笔记、抖音口播脚本和游记正文。\n\n## 质量流程\n- Hook Lab\n- Human Voice\n- Spoken Rhythm\n- Strict Kill';
-        return {xhs:empty, douyin:empty, travelogue:empty, hooks, checklist, ready:false};
+        const empty = `# 平台发布内容包\n\n当前风格：${styleConfig.label}\n风格定位：${styleConfig.positioning}\n\n请先勾选 2-4 个点位，再生成小红书笔记、抖音口播脚本和游记正文。\n\n## 质量流程\n- Hook Lab\n- Human Voice\n- Spoken Rhythm\n- Strict Kill`;
+        return {xhs:empty, douyin:empty, travelogue:empty, hooks, checklist, ready:false, styleLabel:styleConfig.label};
       }
-      const xhs = [`# 小红书笔记`, ``, `标题备选：`, `1. ${themeCopy}｜上海这条线我愿意再走一次`, `2. ${names[0]} 到 ${names[names.length - 1]}，别硬走，按这个节奏来`, `3. 上海 ${draft.intensity} 路线：${names.slice(0, 3).join(' + ')}`, ``, `正文：`, `${bestHook}`, ``, `我的走法是：${routeLine}。`, `这条线适合想把“看点”和“体力”一起算清楚的人。`, ``, `路线判断：${durationCopy}。`, `基准路线：${baseRouteId}。`, ``, `我会这样取舍：`, `- 先保留最想看的 2-3 个点。`, `- 跨区点位放到下午或单独半日。`, `- 雨天优先博物馆/图书馆，晴天再走街区和滨江。`, ``, `出发前一定复核：开放时间、预约、票价、临时闭馆和实时交通。`, ``, `标签：#上海旅行 #上海攻略 #上海CityWalk #周末去哪儿 #旅行路线`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
-      const douyin = [`# 抖音口播脚本`, ``, `3秒钩子：${bestHook}`, ``, `镜头 1｜地图或点位列表`, `口播：这不是把点位堆满的一天，我会先看路线怎么走。`, ``, `镜头 2｜${names[0]}`, `口播：第一站放 ${names[0]}，先完成这条线最有识别度的部分。`, ``, `镜头 3｜${names.slice(1).join('、') || names[0]}`, `口播：后面不要硬赶，按 ${draft.intensity} 节奏拆成 ${draft.suggestedDays || '1日路线'}。`, ``, `镜头 4｜路线复盘`, `口播：如果你时间短，保留核心点；如果你有 3 到 5 天，就把远一点的点位变成加餐。`, ``, `结尾互动：你把想去的点位发我，我帮你判断是替换、加餐，还是该单独成线。`, ``, `发布前检查：`, ...checklist.map(item => `- ${item}`)].join('\n');
-      const travelogue = [`# 游记正文`, ``, `我这次没有先问“上海哪里最热门”，而是先把自己真的想去的点写下来。`, ``, `最后形成的线是：${routeLine}。`, ``, `它的好处是清楚：${themeCopy} 的内容密度够，拍照、走路、休息和交通都能被提前看见。麻烦也很明显：${draft.areas.length >= 3 ? '跨区多，临场很容易累。' : '区域相对集中，但也要留出排队和休息时间。'}`, ``, `我会把它拆成三种版本：2 日版适合短途，3 日版更舒服，5 日版可以把远一点的点位慢慢吃进去。`, ``, `真正决定体验的，不是点位数量，是删减顺序。先留最想看的，再留交通顺的，最后才考虑加餐。`, ``, `出发前我还会复核开放时间、预约、票价、临时闭馆和实时交通。攻略好不好用，最后都要落在这几件小事上。`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
-      return {xhs, douyin, travelogue, hooks, checklist, ready:true};
+      const xhs = [`# 小红书笔记`, ``, `风格：${styleConfig.label}`, `风格定位：${styleConfig.positioning}`, `内容角度：${styleConfig.xhsAngle}`, ``, `标题备选：`, `1. ${styleConfig.titleAngle}｜上海这条线我愿意再走一次`, `2. ${names[0]} 到 ${names[names.length - 1]}，别硬走，按这个节奏来`, `3. 上海 ${draft.intensity} 路线：${names.slice(0, 3).join(' + ')}`, ``, `正文：`, `${bestHook}`, ``, `我的走法是：${routeLine}。`, `这条线适合想把“看点”和“体力”一起算清楚的人，也适合账号做 ${styleConfig.label} 的选题。`, ``, `路线判断：${durationCopy}。`, `基准路线：${baseRouteId}。`, ``, `我会这样取舍：`, `- 先保留最想看的 2-3 个点。`, `- 跨区点位放到下午或单独半日。`, `- ${styleConfig.key === 'relaxed' ? '中间留咖啡、饭点和休息缓冲，不把路线排满。' : styleConfig.key === 'highwalk' ? '体力不够就先删远端点位，别为了打卡牺牲体验。' : styleConfig.key === 'culture' ? '展馆和建筑线索要提前看展讯和预约，不临时碰运气。' : '雨天优先博物馆/图书馆，晴天再走街区和滨江。'}`, ``, `出发前一定复核：开放时间、预约、票价、临时闭馆和实时交通。`, ``, `标签：${styleConfig.tags}`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      const douyin = [`# 抖音口播脚本`, ``, `风格：${styleConfig.label}`, `内容角度：${styleConfig.douyinAngle}`, `3秒钩子：${bestHook}`, ``, `镜头 1｜地图或点位列表`, `口播：这不是把点位堆满的一天，我会先看这条线适不适合 ${styleConfig.positioning}。`, ``, `镜头 2｜${names[0]}`, `口播：第一站放 ${names[0]}，先完成这条线最有识别度的部分。`, ``, `镜头 3｜${names.slice(1).join('、') || names[0]}`, `口播：后面不要硬赶，按 ${draft.intensity} 节奏拆成 ${draft.suggestedDays || '1日路线'}。`, ``, `镜头 4｜路线复盘`, `口播：${styleConfig.key === 'relaxed' ? '想躺平就少移动，累了就坐下来喝一杯。' : styleConfig.key === 'highwalk' ? '想暴走可以，但要先知道哪一站最该删。' : styleConfig.key === 'culture' ? '想走文化线，就把展馆、建筑和街区故事串起来。' : '如果你时间短，保留核心点；如果你有 3 到 5 天，就把远一点的点位变成加餐。'}`, ``, `结尾互动：你把想去的点位发我，我帮你判断是替换、加餐，还是该单独成线。`, ``, `发布前检查：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      const travelogue = [`# 游记正文`, ``, `风格：${styleConfig.label}`, `叙事角度：${styleConfig.travelogueAngle}`, ``, `我这次没有先问“上海哪里最热门”，而是先把自己真的想去的点写下来。`, ``, `最后形成的线是：${routeLine}。`, ``, `它的好处是清楚：${themeCopy} 的内容密度够，拍照、走路、休息和交通都能被提前看见。麻烦也很明显：${draft.areas.length >= 3 ? '跨区多，临场很容易累。' : '区域相对集中，但也要留出排队和休息时间。'}`, ``, `${styleConfig.travelogueAngle} 的关键，是不要只写“去了哪里”，还要写清为什么留下、为什么删除、为什么换顺序。`, ``, `我会把它拆成三种版本：2 日版适合短途，3 日版更舒服，5 日版可以把远一点的点位慢慢吃进去。`, ``, `真正决定体验的，不是点位数量，是删减顺序。先留最想看的，再留交通顺的，最后才考虑加餐。`, ``, `出发前我还会复核开放时间、预约、票价、临时闭馆和实时交通。攻略好不好用，最后都要落在这几件小事上。`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      return {xhs, douyin, travelogue, hooks, checklist, ready:true, styleLabel:styleConfig.label};
     }
     function renderPlacePlatformContentPack(draft) {
-      const pack = platformContentPackFromDraft(draft);
+      const styleConfig = selectedPlatformStyleConfig();
+      const pack = platformContentPackFromDraft(draft, styleConfig);
       if (placePlatformContentPack) placePlatformContentPack.dataset.status = pack.ready ? 'ready' : 'empty';
-      if (placePlatformContentStatus) placePlatformContentStatus.textContent = pack.ready ? '平台发布内容包已生成，可分别复制小红书、抖音和游记版本。' : '请先勾选点位，生成平台发布内容包。';
-      if (placePlatformContentTabs) placePlatformContentTabs.innerHTML = ['小红书笔记', '抖音口播脚本', '游记正文'].map((label, index) => `<li><b>${label}</b><span>${index === 0 ? '图文笔记标题和正文' : index === 1 ? '短视频钩子和口播' : '长文叙事和体验复盘'}</span></li>`).join('');
+      if (placePlatformContentStatus) placePlatformContentStatus.textContent = pack.ready ? `平台发布内容包已生成，当前风格：${pack.styleLabel}，可分别复制小红书、抖音和游记版本。` : `请先勾选点位，生成平台发布内容包；当前风格：${pack.styleLabel}。`;
+      if (placePlatformContentTabs) placePlatformContentTabs.innerHTML = ['小红书笔记', '抖音口播脚本', '游记正文'].map((label, index) => `<li><b>${label}</b><span>${index === 0 ? styleConfig.xhsAngle : index === 1 ? styleConfig.douyinAngle : styleConfig.travelogueAngle}</span></li>`).join('');
       if (placeXhsNoteText) placeXhsNoteText.textContent = pack.xhs;
       if (placeDouyinScriptText) placeDouyinScriptText.textContent = pack.douyin;
       if (placeTravelogueText) placeTravelogueText.textContent = pack.travelogue;
+    }
+    function renderCurrentPlacePlatformContentPack() {
+      const draft = routeDraftDataFromRows(selectedPlaceRows());
+      renderPlacePlatformContentPack(draft);
     }
     function selectedRouteMapPoints(rows) {
       return rows.map((row, index) => ({
@@ -1121,6 +1168,7 @@
     placeSelects.forEach(checkbox => checkbox.addEventListener('change', updateSelectedPlaceSummary));
     buildPlaceRouteDraftButton?.addEventListener('click', buildSelectedPlaceRouteDraft);
     buildPlaceItineraryDraftButton?.addEventListener('click', buildSelectedPlaceItineraryDraft);
+    placePlatformStyleSelect?.addEventListener('change', renderCurrentPlacePlatformContentPack);
     copyPlaceRouteSuggestionsButton?.addEventListener('click', copyPlaceRouteSuggestions);
     copyPlaceRouteVersionButton?.addEventListener('click', copyPlaceRouteVersionText);
     copyPlaceXhsNoteButton?.addEventListener('click', () => copyPlacePlatformContent('xhs'));

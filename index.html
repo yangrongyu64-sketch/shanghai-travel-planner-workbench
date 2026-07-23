@@ -626,6 +626,10 @@
     .traveler-content-feedback-grid label:nth-child(n+5){grid-column:1/-1}
     .traveler-content-feedback-grid input,.traveler-content-feedback-grid textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px 10px;color:var(--ink);font:inherit;resize:vertical}
     .traveler-content-feedback-grid input{height:38px}
+    .traveler-platform-data-import{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-platform-data-import h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-platform-data-import label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-platform-data-import textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
     .traveler-next-revision-task-package{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
@@ -2056,6 +2060,20 @@
       </div>
       <textarea id="traveler-home-content-feedback-board-output" readonly rows="12" aria-label="内容数据回收看板内容"></textarea>
       <p id="traveler-home-content-feedback-board-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-platform-data-import" class="traveler-platform-data-import" aria-label="平台数据导入模板">
+      <div class="traveler-social-card-head">
+        <h3>平台数据导入模板</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" id="traveler-home-platform-data-import-template-button" data-traveler-home-platform-data-import-template>填入模板</button>
+          <button type="button" class="primary" id="traveler-home-platform-data-import-button" data-traveler-home-platform-data-import>导入数据</button>
+          <button type="button" id="traveler-home-platform-data-import-copy-button" data-traveler-home-platform-data-import-copy>复制结果</button>
+          <button type="button" id="traveler-home-platform-data-import-download-button" data-traveler-home-platform-data-import-download>下载Markdown</button>
+        </div>
+      </div>
+      <label for="traveler-home-platform-data-import-input">CSV 数据<textarea id="traveler-home-platform-data-import-input" rows="6" aria-label="平台数据 CSV" placeholder="route_id,day,xiaohongshu_saves,xiaohongshu_comments,douyin_plays,douyin_completion_rate,group_feedback,next_revision"></textarea></label>
+      <textarea id="traveler-home-platform-data-import-output" readonly rows="10" aria-label="平台数据导入结果 Markdown"></textarea>
+      <p id="traveler-home-platform-data-import-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-next-revision-task-package" class="traveler-next-revision-task-package" aria-label="下一版优化任务包">
       <div class="traveler-social-card-head">
@@ -11006,6 +11024,8 @@
         publish_status_board_markdown: travelerHomePublishStatusBoardMarkdown(),
         content_feedback_board: state.contentFeedbackBoard && typeof state.contentFeedbackBoard === 'object' ? state.contentFeedbackBoard : {},
         content_feedback_board_markdown: travelerHomeContentFeedbackBoardMarkdown(),
+        platform_data_import: state.platformDataImport?.lastResult || null,
+        platform_data_import_markdown: travelerHomePlatformDataImportMarkdown(state.platformDataImport?.lastResult || null),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
@@ -12264,6 +12284,218 @@
     if (status) status.textContent = '已下载内容数据回收看板。';
     return {filename, text};
   }
+  function travelerHomePlatformDataImportTemplateCsv(){
+    return [
+      'route_id,day,xiaohongshu_saves,xiaohongshu_comments,douyin_plays,douyin_completion_rate,group_feedback,next_revision',
+      'relaxed_2d1n_citywalk,2,288,南京东路怎么避开人流？,6100,52,同行说室内备选更实用,把南京东路避峰写进前三行。',
+    ].join('\n');
+  }
+  function fillTravelerHomePlatformDataImportTemplate(){
+    const template = travelerHomePlatformDataImportTemplateCsv();
+    const input = document.getElementById('traveler-home-platform-data-import-input');
+    const status = document.getElementById('traveler-home-platform-data-import-status');
+    if (input) input.value = template;
+    if (status) status.textContent = '已填入平台数据 CSV 模板。';
+    return template;
+  }
+  function travelerHomePlatformDataImportCsvRows(text){
+    const source = String(text || '').replace(/^\ufeff/, '');
+    const rows = [];
+    let row = [];
+    let cell = '';
+    let quoted = false;
+    for (let index = 0; index < source.length; index += 1) {
+      const char = source[index];
+      if (quoted) {
+        if (char === '"' && source[index + 1] === '"') { cell += '"'; index += 1; continue; }
+        if (char === '"') { quoted = false; continue; }
+        cell += char;
+        continue;
+      }
+      if (char === '"') { quoted = true; continue; }
+      if (char === ',') { row.push(cell); cell = ''; continue; }
+      if (char === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; continue; }
+      if (char === '\r') continue;
+      cell += char;
+    }
+    if (cell.length || row.length) { row.push(cell); rows.push(row); }
+    return rows.filter(items => items.some(item => travelerHomeContentFeedbackBoardClean(item)));
+  }
+  function parseTravelerHomePlatformDataImportCsv(text){
+    const rawRows = travelerHomePlatformDataImportCsvRows(text);
+    if (!rawRows.length) return {headers:[], rows:[], errors:['missing_header']};
+    const headers = rawRows[0].map(header => travelerHomeContentFeedbackBoardClean(header));
+    const rows = rawRows.slice(1).map((row, index) => {
+      const item = {__line:index + 2};
+      headers.forEach((header, headerIndex) => { item[header] = travelerHomeContentFeedbackBoardClean(row[headerIndex] || ''); });
+      return item;
+    }).filter(row => Object.entries(row).some(([key, value]) => key !== '__line' && travelerHomeContentFeedbackBoardClean(value)));
+    return {headers, rows, errors:[]};
+  }
+  function travelerHomePlatformDataImportCell(row, keys){
+    const normalized = Object.entries(row || {}).reduce((next, [key, value]) => { next[String(key).trim().toLowerCase()] = value; return next; }, {});
+    for (const key of keys) {
+      const value = normalized[String(key).trim().toLowerCase()];
+      if (travelerHomeContentFeedbackBoardClean(value)) return travelerHomeContentFeedbackBoardClean(value);
+    }
+    return '';
+  }
+  function travelerHomePlatformDataImportRoute(row){
+    const routeId = travelerHomePlatformDataImportCell(row, ['route_id','trip_id','routeId','路线ID','路线id']);
+    if (routeId) return {routeId, route: travelerHomeRouteById(routeId)};
+    const route = travelerHomeContentFeedbackBoardRoute();
+    return {routeId: route?.tripId || '', route};
+  }
+  function travelerHomePlatformDataImportDay(row, route){
+    const raw = travelerHomePlatformDataImportCell(row, ['day','day_number','执行日','天数']);
+    const currentDay = travelerHomeContentFeedbackBoardDay(route);
+    const parsed = Number(String(raw || currentDay?.day || 1).replace(/^day\s*/i, ''));
+    const dayNumber = Number.isFinite(parsed) && parsed > 0 ? parsed : Number(currentDay?.day || 1);
+    const matched = travelerHomeDayExecutionDays(route).find(day => Number(day.day) === dayNumber);
+    return matched || {day: dayNumber};
+  }
+  function travelerHomePlatformDataImportEntry(row, stored){
+    const entry = {...(stored && typeof stored === 'object' ? stored : {})};
+    const fields = [
+      ['xiaohongshuSaves', ['xiaohongshu_saves','xhs_saves','小红书收藏']],
+      ['xiaohongshuComments', ['xiaohongshu_comments','xhs_comments','小红书评论','小红书评论问题']],
+      ['douyinPlays', ['douyin_plays','dy_plays','抖音播放']],
+      ['douyinCompletionRate', ['douyin_completion_rate','dy_completion_rate','抖音完播率','完播率']],
+      ['groupFeedback', ['group_feedback','community_feedback','同行反馈','社群反馈']],
+      ['nextRevision', ['next_revision','revision','下一版优化','下一版优化动作']],
+    ];
+    fields.forEach(([field, keys]) => {
+      const value = travelerHomePlatformDataImportCell(row, keys);
+      if (value) entry[field] = value;
+    });
+    entry.updatedAt = new Date().toISOString();
+    return entry;
+  }
+  function importTravelerHomePlatformDataCsvText(text){
+    const parsed = parseTravelerHomePlatformDataImportCsv(text);
+    const state = travelerHomeStorageRead();
+    const board = state.contentFeedbackBoard && typeof state.contentFeedbackBoard === 'object' ? state.contentFeedbackBoard : {};
+    const imported = [];
+    const skipped = [];
+    parsed.rows.forEach(row => {
+      const {routeId, route} = travelerHomePlatformDataImportRoute(row);
+      if (!route) {
+        skipped.push({line:row.__line || 0, routeId: routeId || '未填写', reason:'未找到路线'});
+        return;
+      }
+      const day = travelerHomePlatformDataImportDay(row, route);
+      const key = travelerHomeContentFeedbackBoardKey(route, day);
+      const entry = travelerHomePlatformDataImportEntry(row, board[key]);
+      board[key] = entry;
+      imported.push({line:row.__line || 0, routeId: route.tripId, day: day?.day || 1, key, entry});
+    });
+    const updatedKeys = imported.map(item => item.key);
+    const generatedAt = new Date().toISOString();
+    const result = {
+      ok: imported.length > 0,
+      generatedAt,
+      totalRows: parsed.rows.length,
+      importedRows: imported.length,
+      skippedRows: skipped.length,
+      updatedKeys,
+      imported,
+      skipped,
+      caveat: '手动从平台后台导出或整理后粘贴；不读取账号、Cookie、Authorization 或 API Key。',
+    };
+    state.contentFeedbackBoard = board;
+    state.platformDataImport = {lastResult: result, updatedAt: generatedAt};
+    state.updatedAt = generatedAt;
+    travelerHomeStorageWrite(state);
+    travelerHomeContentFeedbackBoardApplyStored(travelerHomeContentFeedbackBoardRoute(), travelerHomeContentFeedbackBoardDay(travelerHomeContentFeedbackBoardRoute()));
+    const output = document.getElementById('traveler-home-platform-data-import-output');
+    const status = document.getElementById('traveler-home-platform-data-import-status');
+    const markdown = travelerHomePlatformDataImportMarkdown(result);
+    if (output) output.value = markdown;
+    if (status) status.textContent = `已导入${result.importedRows}行平台数据，跳过${result.skippedRows}行。`;
+    renderTravelerHomeContentFeedbackBoard();
+    renderTravelerHomeNextRevisionTaskPackage();
+    renderTravelerHomeNextVersionContentDrafts();
+    renderTravelerHomeContentVersionReview();
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return result;
+  }
+  function importTravelerHomePlatformDataFromInput(){
+    const input = document.getElementById('traveler-home-platform-data-import-input');
+    return importTravelerHomePlatformDataCsvText(input?.value || '');
+  }
+  function travelerHomePlatformDataImportLatestResult(){
+    const source = travelerHomeStorageRead().platformDataImport;
+    return source && typeof source === 'object' ? source.lastResult || null : null;
+  }
+  function travelerHomePlatformDataImportRowLine(item){
+    const entry = item?.entry || {};
+    const completion = entry.douyinCompletionRate ? `${entry.douyinCompletionRate}%` : '待回填';
+    return `- ${item.routeId || '未知路线'}｜Day ${item.day || 1}：小红书收藏 ${entry.xiaohongshuSaves || '待回填'}，抖音播放 ${entry.douyinPlays || '待回填'}，完播率 ${completion}，评论 ${entry.xiaohongshuComments || '待回填'}，反馈 ${entry.groupFeedback || '待回填'}，下一步 ${entry.nextRevision || '待回填'}`;
+  }
+  function travelerHomePlatformDataImportMarkdown(result){
+    const source = result || travelerHomePlatformDataImportLatestResult();
+    if (!source) return '# 上海平台数据导入结果\n\n当前还没有导入平台数据。\n\n来源边界：手动从平台后台导出或整理后粘贴；不读取账号、Cookie、Authorization 或 API Key。';
+    const updatedCount = Array.isArray(source.updatedKeys) ? source.updatedKeys.length : Number(source.importedRows || 0);
+    const lines = [
+      '# 上海平台数据导入结果',
+      '',
+      `生成时间：${source.generatedAt || '当前浏览器'}` ,
+      `导入行数：${Number(source.importedRows || 0)}` ,
+      `更新看板：${updatedCount}` ,
+      `跳过行数：${Number(source.skippedRows || 0)}` ,
+      '来源边界：手动从平台后台导出或整理后粘贴；不读取账号、Cookie、Authorization 或 API Key。',
+      '',
+      '## 已更新',
+    ];
+    const imported = Array.isArray(source.imported) ? source.imported : [];
+    if (imported.length) imported.forEach(item => lines.push(travelerHomePlatformDataImportRowLine(item)));
+    else lines.push('- 暂无成功导入行。');
+    const skipped = Array.isArray(source.skipped) ? source.skipped : [];
+    lines.push('', '## 跳过行');
+    if (skipped.length) skipped.forEach(item => lines.push(`- 第${item.line || '?'}行 ${item.routeId || '未填写路线'}：${item.reason || '未导入'}`));
+    else lines.push('- 无跳过行。');
+    lines.push('', '## 下一步', '- 回看内容数据回收看板，确认数据是否写到正确路线和执行日。', '- 再看下一版优化任务包、下一版内容草稿和 A/B 复盘是否已刷新。');
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomePlatformDataImport(){
+    const text = travelerHomePlatformDataImportMarkdown();
+    const output = document.getElementById('traveler-home-platform-data-import-output');
+    const status = document.getElementById('traveler-home-platform-data-import-status');
+    if (output) output.value = text;
+    if (status && travelerHomePlatformDataImportLatestResult()) status.textContent = '已载入最近一次平台数据导入结果。';
+    return text;
+  }
+  async function copyTravelerHomePlatformDataImportMarkdown(){
+    const text = renderTravelerHomePlatformDataImport();
+    const status = document.getElementById('traveler-home-platform-data-import-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制平台数据导入结果。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制平台数据导入结果。';
+    }
+    return text;
+  }
+  function travelerHomePlatformDataImportFilename(){
+    return 'shanghai-platform-data-import.md';
+  }
+  function downloadTravelerHomePlatformDataImportMarkdown(){
+    const text = renderTravelerHomePlatformDataImport();
+    const filename = travelerHomePlatformDataImportFilename();
+    const status = document.getElementById('traveler-home-platform-data-import-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载平台数据导入结果。';
+    return {filename, text};
+  }
   function travelerHomeNextRevisionTaskPackageRoute(){
     return travelerHomeContentFeedbackBoardRoute();
   }
@@ -12276,7 +12508,7 @@
   function travelerHomeNextRevisionTaskPackageArea(text){
     const source = String(text || '');
     if (/标题|脚本|开头|封面|完播|收藏|文案|口播/.test(source)) return '内容';
-    if (/地图|动线|怎么走|路线|步行|走错|备选|室内|风大|排队|人流/.test(source)) return '地图/路线';
+    if (/地图|动线|怎么走|路线|步行|走错|备选|室内|风大|排队|人流|避峰|高峰/.test(source)) return '地图/路线';
     return '路线页';
   }
   function travelerHomeNextRevisionTaskPackageTaskLine(priority, text, prefix){
@@ -13398,6 +13630,10 @@
   document.getElementById('traveler-home-content-feedback-board-save-button')?.addEventListener('click', saveTravelerHomeContentFeedbackBoard);
   document.getElementById('traveler-home-content-feedback-board-copy-button')?.addEventListener('click', copyTravelerHomeContentFeedbackBoardMarkdown);
   document.getElementById('traveler-home-content-feedback-board-download-button')?.addEventListener('click', downloadTravelerHomeContentFeedbackBoardMarkdown);
+  document.getElementById('traveler-home-platform-data-import-template-button')?.addEventListener('click', fillTravelerHomePlatformDataImportTemplate);
+  document.getElementById('traveler-home-platform-data-import-button')?.addEventListener('click', importTravelerHomePlatformDataFromInput);
+  document.getElementById('traveler-home-platform-data-import-copy-button')?.addEventListener('click', copyTravelerHomePlatformDataImportMarkdown);
+  document.getElementById('traveler-home-platform-data-import-download-button')?.addEventListener('click', downloadTravelerHomePlatformDataImportMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
@@ -13506,6 +13742,7 @@
   renderTravelerHomePublishOps();
   renderTravelerHomePublishStatusBoard();
   renderTravelerHomeContentFeedbackBoard();
+  renderTravelerHomePlatformDataImport();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomeContentVersionReview();

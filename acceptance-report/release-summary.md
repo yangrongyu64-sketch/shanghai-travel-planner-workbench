@@ -1,6 +1,6 @@
 # 上海攻略生成工作台发布摘要
 
-- 发布时间：2026-07-22
+- 发布时间：2026-07-23
 - 公开首页：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/
 - 创作者工作台：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html
 - 当前完成度：99.8%

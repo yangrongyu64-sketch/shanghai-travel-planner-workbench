@@ -1,7 +1,7 @@
 # 上海攻略生成工作台发布后验收记录
 
 - 发布状态：published
-- 发布时间：2026-07-22
+- 发布时间：2026-07-23
 - 公网页面：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/
 - 旅行者一键演示：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/index.html?demo=traveler#traveler-home-route-pack
 - 创作者工作台：https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html

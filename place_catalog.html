@@ -57,6 +57,20 @@
     .route-version-list b{display:block;margin-bottom:5px;color:#173b76;font-size:12px}
     .route-version-list span{display:block;color:#252525;font-size:13px;line-height:1.55}
     .route-version-text{white-space:pre-wrap;margin:0;min-height:150px;max-height:420px;padding:12px;border:1px solid #e1e6df;background:#f8faf7;color:#252525;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;overflow:auto}
+    .platform-content-pack{margin:12px 0 18px;padding:14px;border:1px solid #cad7d3;background:#fff;border-radius:8px}
+    .platform-content-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+    .platform-content-pack h2{margin:0 0 4px;font-size:18px}
+    .platform-content-pack p{margin:0;color:#625d55;font-size:13px}
+    .platform-content-status{margin:0 0 8px;color:#625d55;font-size:12px;font-weight:800}
+    .platform-content-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px;padding:0;list-style:none}
+    .platform-content-tabs li{border:1px solid #e1e6df;background:#f8faf7;padding:10px;border-radius:6px}
+    .platform-content-tabs b{display:block;margin-bottom:5px;color:#173b76;font-size:12px}
+    .platform-content-tabs span{display:block;color:#252525;font-size:13px;line-height:1.55}
+    .platform-content-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .platform-content-panel{min-width:0}
+    .platform-content-panel h3{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 0 6px;color:#173b76;font-size:13px}
+    .platform-content-panel button{min-height:32px;border:1px solid #173b76;background:#173b76;color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:0 10px}
+    .platform-content-text{white-space:pre-wrap;margin:0;min-height:240px;max-height:460px;padding:12px;border:1px solid #e1e6df;background:#f8faf7;color:#252525;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;overflow:auto}
     .route-map-preview{display:grid;grid-template-columns:minmax(320px,1.3fr) minmax(260px,.7fr);gap:12px;margin:12px 0 18px;padding:14px;border:1px solid #cad7d3;background:#fff;border-radius:8px}
     .route-map-preview h2{margin:0 0 4px;font-size:18px}
     .route-map-preview p{margin:0 0 10px;color:#625d55;font-size:13px}
@@ -110,7 +124,7 @@
     small{display:block;color:#6b6259;margin-top:3px}
     .route-chip{display:inline-flex;align-items:center;margin:0 4px 4px 0;min-height:24px;padding:0 7px;border-radius:999px;background:#eaf3ff;color:#173b76;font-size:12px;font-weight:800}
     .route-chip.muted{background:#f0ebe2;color:#6b6259}
-    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid{grid-template-columns:1fr}.route-draft,.route-suggestion-list,.route-version-list{grid-template-columns:1fr}}
+    @media(max-width:900px){.catalog-toolbar{grid-template-columns:1fr 1fr}.search-field,.result-count{grid-column:1/-1}.route-builder,.route-map-preview,.component-preview,.delivery-columns,.map-export-grid,.platform-content-grid{grid-template-columns:1fr}.route-draft,.route-suggestion-list,.route-version-list,.platform-content-tabs{grid-template-columns:1fr}}
     @media(max-width:760px){main{padding:18px}h1{font-size:24px}.catalog-toolbar{position:static;grid-template-columns:1fr}.search-field,.result-count{grid-column:auto}}
   </style>
 </head>
@@ -188,6 +202,30 @@
       <p id="place-route-version-status" class="route-version-status" aria-live="polite">请先勾选点位，生成 2日/3日/5日路线版本。</p>
       <ul id="place-route-version-list" class="route-version-list"><li><b>2日版本</b><span>待生成</span></li><li><b>3日版本</b><span>待生成</span></li><li><b>5日版本</b><span>待生成</span></li></ul>
       <pre id="place-route-version-text" class="route-version-text"># 路线版本草案&#10;&#10;请先勾选点位，再生成 2日版本 / 3日版本 / 5日版本。&#10;&#10;替换说明：只替换同区/同主题/低优先级点位。&#10;加餐说明：优先放半日、雨天、夜景、亲子或长住支线。</pre>
+    </section>
+    <section id="place-platform-content-pack" class="platform-content-pack" aria-label="平台发布内容包" data-status="empty">
+      <div class="platform-content-head">
+        <div>
+          <h2>平台发布内容包</h2>
+          <p>基于路线版本草案生成小红书笔记、抖音口播脚本和游记正文；默认经过 Hook Lab、Human Voice、Spoken Rhythm、Strict Kill 和平台安全复核。</p>
+        </div>
+      </div>
+      <p id="place-platform-content-status" class="platform-content-status" aria-live="polite">请先勾选点位，生成平台发布内容包。</p>
+      <ul id="place-platform-content-tabs" class="platform-content-tabs"><li><b>小红书笔记</b><span>图文笔记标题和正文</span></li><li><b>抖音口播脚本</b><span>短视频钩子和口播</span></li><li><b>游记正文</b><span>长文叙事和体验复盘</span></li></ul>
+      <div class="platform-content-grid">
+        <div class="platform-content-panel">
+          <h3>小红书笔记 <button id="copy-place-xhs-note-button" type="button">复制</button></h3>
+          <pre id="place-xhs-note-text" class="platform-content-text"># 小红书笔记&#10;&#10;请先勾选点位。&#10;&#10;质量流程：Hook Lab / Human Voice / Strict Kill</pre>
+        </div>
+        <div class="platform-content-panel">
+          <h3>抖音口播脚本 <button id="copy-place-douyin-script-button" type="button">复制</button></h3>
+          <pre id="place-douyin-script-text" class="platform-content-text"># 抖音口播脚本&#10;&#10;请先勾选点位。&#10;&#10;质量流程：Hook Lab / Human Voice / Spoken Rhythm / Strict Kill</pre>
+        </div>
+        <div class="platform-content-panel">
+          <h3>游记正文 <button id="copy-place-travelogue-button" type="button">复制</button></h3>
+          <pre id="place-travelogue-text" class="platform-content-text"># 游记正文&#10;&#10;请先勾选点位。&#10;&#10;质量流程：Hook Lab / Human Voice / Strict Kill</pre>
+        </div>
+      </div>
     </section>
     <section id="place-route-map-preview" class="route-map-preview" aria-label="自选路线可视图">
       <div>
@@ -462,6 +500,12 @@
     const placeRouteVersionList = document.getElementById('place-route-version-list');
     const placeRouteVersionText = document.getElementById('place-route-version-text');
     const placeRouteVersionStatus = document.getElementById('place-route-version-status');
+    const placePlatformContentPack = document.getElementById('place-platform-content-pack');
+    const placePlatformContentTabs = document.getElementById('place-platform-content-tabs');
+    const placePlatformContentStatus = document.getElementById('place-platform-content-status');
+    const placeXhsNoteText = document.getElementById('place-xhs-note-text');
+    const placeDouyinScriptText = document.getElementById('place-douyin-script-text');
+    const placeTravelogueText = document.getElementById('place-travelogue-text');
     const placeRouteMapPreview = document.getElementById('place-route-map-preview');
     const placeRouteMapSvg = document.getElementById('place-route-map-svg');
     const placeRouteSegmentSummary = document.getElementById('place-route-segment-summary');
@@ -486,6 +530,9 @@
     const copyPlaceItineraryDraftButton = document.getElementById('copy-place-itinerary-draft-button');
     const copyPlaceRouteSuggestionsButton = document.getElementById('copy-place-route-suggestions-button');
     const copyPlaceRouteVersionButton = document.getElementById('copy-place-route-version-button');
+    const copyPlaceXhsNoteButton = document.getElementById('copy-place-xhs-note-button');
+    const copyPlaceDouyinScriptButton = document.getElementById('copy-place-douyin-script-button');
+    const copyPlaceTravelogueButton = document.getElementById('copy-place-travelogue-button');
     const copyPlaceRouteGeoJsonButton = document.getElementById('copy-place-route-geojson-button');
     const copyPlaceMapReviewButton = document.getElementById('copy-place-map-review-button');
     const copyPlaceMiniProgramMapConfigButton = document.getElementById('copy-place-miniprogram-map-config-button');
@@ -679,6 +726,58 @@
       if (placeRouteVersionStatus) placeRouteVersionStatus.textContent = draft.rows.length ? '路线版本草案已生成，可复制后继续补住宿、美食和预约信息。' : '请先勾选点位，生成 2日/3日/5日路线版本。';
       if (placeRouteVersionList) placeRouteVersionList.innerHTML = plans.map(plan => `<li data-route-version-days="${plan.dayCount}"><b>${escapeHtml(plan.title)}</b><span>${escapeHtml(plan.days.map(day => `Day ${day.day} ${day.focus}`).join('；'))}</span></li>`).join('');
       if (placeRouteVersionText) placeRouteVersionText.textContent = routeVersionTextFromDraft(draft, plans);
+    }
+    function selectedPlaceHookLab(draft) {
+      const names = rowNames(draft.rows);
+      const first = names[0] || '上海';
+      const last = names[names.length - 1] || first;
+      const theme = draft.topThemes[0] || '路线';
+      const baseRouteId = routeVersionBaseRouteId(draft);
+      const hooks = [
+        {type:'first_person_confession', hook:`我原来以为上海只能打卡，直到我把 ${first} 和 ${last} 放进同一条线。`, score:92},
+        {type:'contradiction', hook:`这条上海路线看起来跨度大，真正难的是怎么少走冤枉路。`, score:88},
+        {type:'visual_shock', hook:`一张图看懂：${names.slice(0, 3).join('、') || '这些点位'} 怎么变成可执行路线。`, score:86},
+        {type:'comment_bait_without_rage', hook:`如果你来上海只有一两天，这几个点你会删哪一个？`, score:82},
+      ];
+      return hooks.map(item => ({...item, baseRouteId, theme}));
+    }
+    function selectedPlaceQualityChecklist(draft) {
+      const checks = [
+        `Hook Lab：前 3 秒先抛路线矛盾或个人判断，不用百科式开场。`,
+        `Human Voice：多用“我会怎么走、哪里容易累、哪里值得停”，少用报告腔。`,
+        `Spoken Rhythm：抖音口播句子短一点，镜头和停顿分开写。`,
+        `Strict Kill：删掉空泛夸奖，只保留点位、路线、体力和取舍。`,
+        `平台安全：开放时间、预约、票价和临时闭馆以官方复核为准。`,
+      ];
+      if (draft.warnings.length) checks.push(`路线风险：${draft.warnings.join('；')}`);
+      return checks;
+    }
+    function platformContentPackFromDraft(draft) {
+      const names = rowNames(draft.rows);
+      const routeLine = names.join(' → ') || '待选择点位';
+      const baseRouteId = routeVersionBaseRouteId(draft);
+      const themeCopy = draft.topThemes.length ? draft.topThemes.join(' + ') : '上海自选路线';
+      const durationCopy = `${draft.suggestedDays || '待判断'} · ${draft.intensity || '待判断'} · ${formatMinutes(draft.journeyMinutes)}`;
+      const hooks = selectedPlaceHookLab(draft);
+      const bestHook = hooks[0]?.hook || '先选点，再生成内容。';
+      const checklist = selectedPlaceQualityChecklist(draft);
+      if (!draft.rows.length) {
+        const empty = '# 平台发布内容包\n\n请先勾选 2-4 个点位，再生成小红书笔记、抖音口播脚本和游记正文。\n\n## 质量流程\n- Hook Lab\n- Human Voice\n- Spoken Rhythm\n- Strict Kill';
+        return {xhs:empty, douyin:empty, travelogue:empty, hooks, checklist, ready:false};
+      }
+      const xhs = [`# 小红书笔记`, ``, `标题备选：`, `1. ${themeCopy}｜上海这条线我愿意再走一次`, `2. ${names[0]} 到 ${names[names.length - 1]}，别硬走，按这个节奏来`, `3. 上海 ${draft.intensity} 路线：${names.slice(0, 3).join(' + ')}`, ``, `正文：`, `${bestHook}`, ``, `我的走法是：${routeLine}。`, `这条线适合想把“看点”和“体力”一起算清楚的人。`, ``, `路线判断：${durationCopy}。`, `基准路线：${baseRouteId}。`, ``, `我会这样取舍：`, `- 先保留最想看的 2-3 个点。`, `- 跨区点位放到下午或单独半日。`, `- 雨天优先博物馆/图书馆，晴天再走街区和滨江。`, ``, `出发前一定复核：开放时间、预约、票价、临时闭馆和实时交通。`, ``, `标签：#上海旅行 #上海攻略 #上海CityWalk #周末去哪儿 #旅行路线`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      const douyin = [`# 抖音口播脚本`, ``, `3秒钩子：${bestHook}`, ``, `镜头 1｜地图或点位列表`, `口播：这不是把点位堆满的一天，我会先看路线怎么走。`, ``, `镜头 2｜${names[0]}`, `口播：第一站放 ${names[0]}，先完成这条线最有识别度的部分。`, ``, `镜头 3｜${names.slice(1).join('、') || names[0]}`, `口播：后面不要硬赶，按 ${draft.intensity} 节奏拆成 ${draft.suggestedDays || '1日路线'}。`, ``, `镜头 4｜路线复盘`, `口播：如果你时间短，保留核心点；如果你有 3 到 5 天，就把远一点的点位变成加餐。`, ``, `结尾互动：你把想去的点位发我，我帮你判断是替换、加餐，还是该单独成线。`, ``, `发布前检查：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      const travelogue = [`# 游记正文`, ``, `我这次没有先问“上海哪里最热门”，而是先把自己真的想去的点写下来。`, ``, `最后形成的线是：${routeLine}。`, ``, `它的好处是清楚：${themeCopy} 的内容密度够，拍照、走路、休息和交通都能被提前看见。麻烦也很明显：${draft.areas.length >= 3 ? '跨区多，临场很容易累。' : '区域相对集中，但也要留出排队和休息时间。'}`, ``, `我会把它拆成三种版本：2 日版适合短途，3 日版更舒服，5 日版可以把远一点的点位慢慢吃进去。`, ``, `真正决定体验的，不是点位数量，是删减顺序。先留最想看的，再留交通顺的，最后才考虑加餐。`, ``, `出发前我还会复核开放时间、预约、票价、临时闭馆和实时交通。攻略好不好用，最后都要落在这几件小事上。`, ``, `质量复核：`, ...checklist.map(item => `- ${item}`)].join('\n');
+      return {xhs, douyin, travelogue, hooks, checklist, ready:true};
+    }
+    function renderPlacePlatformContentPack(draft) {
+      const pack = platformContentPackFromDraft(draft);
+      if (placePlatformContentPack) placePlatformContentPack.dataset.status = pack.ready ? 'ready' : 'empty';
+      if (placePlatformContentStatus) placePlatformContentStatus.textContent = pack.ready ? '平台发布内容包已生成，可分别复制小红书、抖音和游记版本。' : '请先勾选点位，生成平台发布内容包。';
+      if (placePlatformContentTabs) placePlatformContentTabs.innerHTML = ['小红书笔记', '抖音口播脚本', '游记正文'].map((label, index) => `<li><b>${label}</b><span>${index === 0 ? '图文笔记标题和正文' : index === 1 ? '短视频钩子和口播' : '长文叙事和体验复盘'}</span></li>`).join('');
+      if (placeXhsNoteText) placeXhsNoteText.textContent = pack.xhs;
+      if (placeDouyinScriptText) placeDouyinScriptText.textContent = pack.douyin;
+      if (placeTravelogueText) placeTravelogueText.textContent = pack.travelogue;
     }
     function selectedRouteMapPoints(rows) {
       return rows.map((row, index) => ({
@@ -889,6 +988,7 @@
       renderPlaceRouteDraft(draft);
       renderPlaceRouteSuggestions(draft);
       renderPlaceRouteVersions(draft);
+      renderPlacePlatformContentPack(draft);
       renderPlaceItineraryDraft(draft);
       renderSelectedRouteMap(draft);
       updateSelectedPlaceSummary();
@@ -898,6 +998,7 @@
       renderPlaceRouteDraft(draft);
       renderPlaceRouteSuggestions(draft);
       renderPlaceRouteVersions(draft);
+      renderPlacePlatformContentPack(draft);
       renderPlaceItineraryDraft(draft);
       renderSelectedRouteMap(draft);
       updateSelectedPlaceSummary();
@@ -920,6 +1021,18 @@
         if (placeRouteVersionStatus) placeRouteVersionStatus.textContent = '路线版本草案已复制。';
       } catch (error) {
         if (placeRouteVersionStatus) placeRouteVersionStatus.textContent = '浏览器未授权复制版本草案，请手动选中文本复制。';
+      }
+    }
+    async function copyPlacePlatformContent(kind) {
+      const targets = {xhs: placeXhsNoteText, douyin: placeDouyinScriptText, travelogue: placeTravelogueText};
+      const labels = {xhs:'小红书笔记', douyin:'抖音口播脚本', travelogue:'游记正文'};
+      const text = targets[kind]?.textContent || '';
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (placePlatformContentStatus) placePlatformContentStatus.textContent = `${labels[kind] || '内容'}已复制。`; 
+      } catch (error) {
+        if (placePlatformContentStatus) placePlatformContentStatus.textContent = '浏览器未授权复制，请手动选中文本复制。';
       }
     }
     async function copyPlaceItineraryDraft() {
@@ -989,6 +1102,7 @@
       renderPlaceRouteDraft(emptyDraft);
       renderPlaceRouteSuggestions(emptyDraft);
       renderPlaceRouteVersions(emptyDraft);
+      renderPlacePlatformContentPack(emptyDraft);
       renderPlaceItineraryDraft(emptyDraft);
       renderSelectedRouteMap(emptyDraft);
     }
@@ -1009,6 +1123,9 @@
     buildPlaceItineraryDraftButton?.addEventListener('click', buildSelectedPlaceItineraryDraft);
     copyPlaceRouteSuggestionsButton?.addEventListener('click', copyPlaceRouteSuggestions);
     copyPlaceRouteVersionButton?.addEventListener('click', copyPlaceRouteVersionText);
+    copyPlaceXhsNoteButton?.addEventListener('click', () => copyPlacePlatformContent('xhs'));
+    copyPlaceDouyinScriptButton?.addEventListener('click', () => copyPlacePlatformContent('douyin'));
+    copyPlaceTravelogueButton?.addEventListener('click', () => copyPlacePlatformContent('travelogue'));
     copyPlaceItineraryDraftButton?.addEventListener('click', copyPlaceItineraryDraft);
     copyPlaceRouteGeoJsonButton?.addEventListener('click', copySelectedRouteGeoJson);
     copyPlaceMapReviewButton?.addEventListener('click', copySelectedRouteMapReview);

@@ -633,6 +633,9 @@
     .traveler-platform-data-trend{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-platform-data-trend h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-platform-data-trend textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
+    .traveler-content-growth-decision{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-content-growth-decision h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-content-growth-decision textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
     .traveler-next-revision-task-package{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
@@ -2089,6 +2092,18 @@
       </div>
       <textarea id="traveler-home-platform-data-trend-output" readonly rows="10" aria-label="平台数据趋势看板 Markdown"></textarea>
       <p id="traveler-home-platform-data-trend-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-content-growth-decision" class="traveler-content-growth-decision" aria-label="内容增长决策面板">
+      <div class="traveler-social-card-head">
+        <h3>内容增长决策面板</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-content-growth-decision-build-button" data-traveler-home-content-growth-decision-build>生成决策</button>
+          <button type="button" id="traveler-home-content-growth-decision-copy-button" data-traveler-home-content-growth-decision-copy>复制决策</button>
+          <button type="button" id="traveler-home-content-growth-decision-download-button" data-traveler-home-content-growth-decision-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-content-growth-decision-output" readonly rows="10" aria-label="内容增长决策 Markdown"></textarea>
+      <p id="traveler-home-content-growth-decision-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-next-revision-task-package" class="traveler-next-revision-task-package" aria-label="下一版优化任务包">
       <div class="traveler-social-card-head">
@@ -11043,6 +11058,8 @@
         platform_data_import_history: travelerHomePlatformDataImportHistory(),
         platform_data_import_markdown: travelerHomePlatformDataImportMarkdown(state.platformDataImport?.lastResult || null),
         platform_data_trend_markdown: travelerHomePlatformDataTrendMarkdown(),
+        content_growth_decision: travelerHomeContentGrowthDecisionSummary(),
+        content_growth_decision_markdown: travelerHomeContentGrowthDecisionMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
@@ -12437,6 +12454,7 @@
     renderTravelerHomeNextVersionContentDrafts();
     renderTravelerHomeContentVersionReview();
     renderTravelerHomePlatformDataTrend();
+    renderTravelerHomeContentGrowthDecision();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return result;
@@ -12654,6 +12672,114 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载平台数据趋势看板。';
+    return {filename, text};
+  }
+  function travelerHomeContentGrowthDecisionRoute(routeId){
+    return travelerHomeRouteById(routeId) || travelerHomeContentFeedbackBoardRoute();
+  }
+  function travelerHomeContentGrowthDecisionPriority(deltas){
+    const saves = Number(deltas?.xiaohongshuSaves || 0);
+    const plays = Number(deltas?.douyinPlays || 0);
+    const completion = Number(deltas?.douyinCompletionRate || 0);
+    if (saves > 0 && plays > 0 && completion >= 0) return 'P1';
+    if (saves > 0 || plays > 0 || completion > 0) return 'P2';
+    return 'P3';
+  }
+  function travelerHomeContentGrowthDecisionSummary(){
+    const trend = travelerHomePlatformDataTrendSummary();
+    const route = travelerHomeContentGrowthDecisionRoute(trend.routeId);
+    const lastEntry = trend.lastEntry || {};
+    const question = travelerHomeContentFeedbackBoardSplitLines(lastEntry.xiaohongshuComments)[0] || '这条路线怎么走更省力？';
+    const feedback = travelerHomeContentFeedbackBoardSplitLines(lastEntry.groupFeedback)[0] || '等待同行反馈补充。';
+    const nextAction = travelerHomeContentFeedbackBoardSplitLines(lastEntry.nextRevision)[0] || '先把高增长信号回填到标题、开头和路线图。';
+    return {
+      priority: travelerHomeContentGrowthDecisionPriority(trend.deltas),
+      focusKey: trend.focusKey || '',
+      routeId: trend.routeId || route?.tripId || '',
+      routeTitle: route?.title || '当前路线',
+      scenario: route?.scenario || '当前路线',
+      day: Number(trend.day || 1),
+      question,
+      feedback,
+      nextAction,
+      deltas: trend.deltas || {xiaohongshuSaves:null, douyinPlays:null, douyinCompletionRate:null},
+    };
+  }
+  function travelerHomeContentGrowthDecisionSigned(value, suffix){
+    if (value === null || value === undefined) return '无变化数据';
+    const sign = Number(value) > 0 ? '+' : '';
+    return `${sign}${value}${suffix || ''}`;
+  }
+  function travelerHomeContentGrowthDecisionMarkdown(){
+    const decision = travelerHomeContentGrowthDecisionSummary();
+    if (!decision.focusKey) return '# 上海内容增长决策面板\n\n当前还没有可决策的平台趋势数据。先导入至少一批平台数据，再生成增长决策。';
+    const titleAngle = decision.question;
+    const douyinHook = `上海 Day ${decision.day} ${decision.question}`;
+    const lines = [
+      '# 上海内容增长决策面板',
+      '',
+      `优先级：${decision.priority}` ,
+      `路线：${decision.scenario}｜${decision.routeTitle}` ,
+      `执行日：Day ${decision.day}` ,
+      '输入来源：平台数据趋势看板 + 内容数据回收看板 + 下一版内容草稿',
+      '',
+      '## 为什么优先',
+      `- 小红书收藏：${travelerHomeContentGrowthDecisionSigned(decision.deltas.xiaohongshuSaves, '')}` ,
+      `- 抖音播放：${travelerHomeContentGrowthDecisionSigned(decision.deltas.douyinPlays, '')}` ,
+      `- 完播率：${travelerHomeContentGrowthDecisionSigned(decision.deltas.douyinCompletionRate, '%')}` ,
+      `- 读者问题：${decision.question}` ,
+      `- 同行反馈：${decision.feedback}` ,
+      '',
+      '## 下一轮内容决策',
+      `- 小红书标题角度：${titleAngle}` ,
+      `- 抖音开头：${douyinHook}` ,
+      `- 路线/地图回填：${decision.nextAction}` ,
+      '- 游记复盘：把这轮增长来自哪个问题、哪段动线、哪类反馈写成可复用段落。',
+      '',
+      '## 暂缓事项',
+      '- 暂缓扩展新路线，先把当前高增长路线的标题、开头、路线图和室内/少走路备选打磨清楚。',
+      '- 不把手动导入当成全网结论，下一轮继续看真实发布数据、评论质量和收藏/完播是否同步提升。',
+    ];
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomeContentGrowthDecision(){
+    const text = travelerHomeContentGrowthDecisionMarkdown();
+    const output = document.getElementById('traveler-home-content-growth-decision-output');
+    const status = document.getElementById('traveler-home-content-growth-decision-status');
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成内容增长决策面板。';
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return text;
+  }
+  async function copyTravelerHomeContentGrowthDecisionMarkdown(){
+    const text = renderTravelerHomeContentGrowthDecision();
+    const status = document.getElementById('traveler-home-content-growth-decision-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制内容增长决策面板。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制内容增长决策面板。';
+    }
+    return text;
+  }
+  function travelerHomeContentGrowthDecisionFilename(){
+    return 'shanghai-content-growth-decision.md';
+  }
+  function downloadTravelerHomeContentGrowthDecisionMarkdown(){
+    const text = renderTravelerHomeContentGrowthDecision();
+    const filename = travelerHomeContentGrowthDecisionFilename();
+    const status = document.getElementById('traveler-home-content-growth-decision-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载内容增长决策面板。';
     return {filename, text};
   }
   function travelerHomeNextRevisionTaskPackageRoute(){
@@ -13797,6 +13923,9 @@
   document.getElementById('traveler-home-platform-data-trend-build-button')?.addEventListener('click', renderTravelerHomePlatformDataTrend);
   document.getElementById('traveler-home-platform-data-trend-copy-button')?.addEventListener('click', copyTravelerHomePlatformDataTrendMarkdown);
   document.getElementById('traveler-home-platform-data-trend-download-button')?.addEventListener('click', downloadTravelerHomePlatformDataTrendMarkdown);
+  document.getElementById('traveler-home-content-growth-decision-build-button')?.addEventListener('click', renderTravelerHomeContentGrowthDecision);
+  document.getElementById('traveler-home-content-growth-decision-copy-button')?.addEventListener('click', copyTravelerHomeContentGrowthDecisionMarkdown);
+  document.getElementById('traveler-home-content-growth-decision-download-button')?.addEventListener('click', downloadTravelerHomeContentGrowthDecisionMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
@@ -13907,6 +14036,7 @@
   renderTravelerHomeContentFeedbackBoard();
   renderTravelerHomePlatformDataImport();
   renderTravelerHomePlatformDataTrend();
+  renderTravelerHomeContentGrowthDecision();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomeContentVersionReview();

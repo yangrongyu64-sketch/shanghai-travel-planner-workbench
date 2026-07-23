@@ -8621,6 +8621,7 @@
   function saveTravelerHomeMemory(recommendation){
     const state = travelerHomeStorageRead();
     state.preferences = travelerHomePreferenceInput();
+    state.contentStyle = travelerHomeContentStyleValue();
     if (recommendation?.route?.tripId) state.lastRouteId = recommendation.route.tripId;
     state.favorites = travelerHomeSavedFavorites(state);
     state.updatedAt = new Date().toISOString();
@@ -8656,6 +8657,7 @@
     travelerHomeSetPickerValue('traveler-home-picker-pace', preferences.pace);
     travelerHomeSetPickerValue('traveler-home-picker-theme', preferences.theme);
     travelerHomeSetPickerValue('traveler-home-picker-avoid', preferences.avoid);
+    restoreTravelerHomeContentStyleFromState(state);
     const restoredWeather = travelerHomeImportedWeatherPrecheck({outputs:{weather_precheck: state.weatherPrecheck}});
     if (restoredWeather) travelerHomeWeatherPrecheckCurrent = restoredWeather;
     travelerHomeRecommendRoute();
@@ -9960,6 +9962,34 @@
     const key = travelerHomeContentStyleSelect()?.value || 'practical';
     return configs[key] || configs.practical;
   }
+  function travelerHomeContentStyleValue(){
+    return travelerHomeContentStyleConfig().key;
+  }
+  function travelerHomeContentStyleSummary(){
+    const style = travelerHomeContentStyleConfig();
+    return {key: style.key, label: style.label, positioning: style.positioning};
+  }
+  function travelerHomeValidContentStyleValue(value, fallback){
+    const select = travelerHomeContentStyleSelect();
+    const nextFallback = fallback || 'practical';
+    if (!value) return nextFallback;
+    if (!select?.options?.length) return value;
+    return Array.from(select.options).some(option => option.value === value) ? value : nextFallback;
+  }
+  function restoreTravelerHomeContentStyleFromState(state){
+    const select = travelerHomeContentStyleSelect();
+    if (!select) return '';
+    const restored = travelerHomeValidContentStyleValue(state?.contentStyle || state?.content_style, select.value || 'practical');
+    select.value = restored;
+    return restored;
+  }
+  function saveTravelerHomeContentStyle(){
+    const state = travelerHomeStorageRead();
+    state.contentStyle = travelerHomeContentStyleValue();
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    return state;
+  }
   function travelerHomeContentStyleDraftKeySegment(){
     return travelerHomeContentStyleSelect() ? travelerHomeContentStyleConfig().key : '';
   }
@@ -10710,6 +10740,7 @@
     return text;
   }
   function refreshTravelerHomeContentStyleOutputs(){
+    saveTravelerHomeContentStyle();
     const routePackText = renderTravelerHomeRoutePack();
     const platformText = renderTravelerHomePlatformCopy(travelerHomePlatformCopyCurrent || 'xiaohongshu');
     renderTravelerHomePlatformDraftOverview();
@@ -10814,6 +10845,7 @@
       source_url: travelerHomeHandoffSourceUrl(),
       preference_label: travelerHomePreferenceLabel(preferences),
       preferences,
+      content_style: travelerHomeContentStyleSummary(),
       selection: {
         mode: favoriteIds.length ? 'favorites' : (state.lastRouteId ? 'last_route' : 'recommendation'),
         route_count: routes.length,
@@ -10940,6 +10972,7 @@
       travelogue_fragment_count: Object.keys(travelogueFragments).length,
       content_intake_count: contentIntake.length,
       feedback_count: feedback.length,
+      content_style: source.contentStyle || '',
       official_fillback_preview: Boolean(source.officialFillbackPreviewPayload),
       public_trial_content_sync: Boolean(source.publicTrialDataCollectionContentSync),
     };
@@ -11596,7 +11629,13 @@
     const settings = payload.outputs?.platform_settings && typeof payload.outputs.platform_settings === 'object' ? payload.outputs.platform_settings : {};
     const tone = travelerHomeValidPreferenceValue('traveler-home-platform-copy-tone', settings.tone, document.getElementById('traveler-home-platform-copy-tone')?.value || 'practical');
     const length = travelerHomeValidPreferenceValue('traveler-home-platform-copy-length', settings.length, document.getElementById('traveler-home-platform-copy-length')?.value || 'standard');
-    return {tone, length};
+    const style = travelerHomeContentStyleDraftKeySegment();
+    return style ? {tone, length, style} : {tone, length};
+  }
+  function travelerHomeNormalizeImportedContentStyle(payload){
+    const source = payload?.content_style;
+    const key = typeof source === 'string' ? source : (source?.key || payload?.contentStyle || payload?.outputs?.platform_settings?.style);
+    return travelerHomeValidContentStyleValue(key, travelerHomeContentStyleValue());
   }
   function travelerHomeSetPlatformSettings(settings){
     travelerHomeSetPickerValue('traveler-home-platform-copy-tone', settings?.tone);
@@ -11605,7 +11644,9 @@
   }
   function travelerHomePlatformDraftKeyForRoute(routeId, platform, settings){
     if (!routeId || !platform || !settings) return '';
-    return `${routeId}|${platform}|${settings.tone}|${settings.length}`;
+    const parts = [routeId, platform, settings.tone, settings.length];
+    if (settings.style) parts.push(settings.style);
+    return parts.join('|');
   }
   function travelerHomeImportedPlatformDrafts(payload, routeId, settings){
     const rows = Array.isArray(payload.outputs?.platform_drafts) ? payload.outputs.platform_drafts : [];
@@ -11669,6 +11710,7 @@
     travelerHomeSetPickerValue('traveler-home-picker-pace', travelerHomeStorageRead().preferences?.pace);
     travelerHomeSetPickerValue('traveler-home-picker-theme', travelerHomeStorageRead().preferences?.theme);
     travelerHomeSetPickerValue('traveler-home-picker-avoid', travelerHomeStorageRead().preferences?.avoid);
+    restoreTravelerHomeContentStyleFromState(travelerHomeStorageRead());
     const recommendationTarget = document.getElementById('traveler-home-recommendation');
     if (recommendationTarget) recommendationTarget.innerHTML = travelerHomeRecommendationHtml(travelerHomeBestRecommendation());
     if (travelerHomeWeatherPrecheckCurrent) renderTravelerHomeWeatherPrecheck(travelerHomeWeatherPrecheckCurrent);
@@ -11698,6 +11740,8 @@
     }
     const previousState = travelerHomeStorageRead();
     const preferences = travelerHomeNormalizeImportedPreferences(payload.preferences);
+    const contentStyle = travelerHomeNormalizeImportedContentStyle(payload);
+    restoreTravelerHomeContentStyleFromState({contentStyle});
     const settings = travelerHomeNormalizeImportedPlatformSettings(payload);
     travelerHomeSetPlatformSettings(settings);
     const routeId = travelerHomeDefaultImportedRouteId(payload);
@@ -11707,7 +11751,7 @@
     const travelogueFragments = travelerHomeImportedTravelogueFragments(payload, routeId);
     const importedWeatherPrecheck = travelerHomeImportedWeatherPrecheck(payload);
     travelerHomeWeatherPrecheckCurrent = importedWeatherPrecheck;
-    const nextState = {...previousState, preferences, lastRouteId: routeId, favorites: selectedFavorites, platformDrafts, travelogueFragments, weatherPrecheck: importedWeatherPrecheck, updatedAt: new Date().toISOString()};
+    const nextState = {...previousState, preferences, contentStyle, lastRouteId: routeId, favorites: selectedFavorites, platformDrafts, travelogueFragments, weatherPrecheck: importedWeatherPrecheck, updatedAt: new Date().toISOString()};
     travelerHomeStorageWrite(nextState);
     refreshTravelerHomeAfterImport('已恢复导入的行程交接包。');
     const result = {ok:true, route_count: travelerHomeRoutePackRoutes().length, favorite_count: selectedFavorites.length, draft_count: Object.keys(platformDrafts).length};

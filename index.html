@@ -567,6 +567,9 @@
     .traveler-pack-actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .traveler-pack textarea{width:100%;min-height:188px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:#fffdfa;color:var(--ink);padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
     .traveler-pack-status{min-height:18px;margin:0;color:var(--accent);font-size:12px;font-weight:800}
+    .traveler-content-style-settings{display:grid;grid-template-columns:minmax(180px,260px);gap:8px}
+    .traveler-content-style-settings label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
+    .traveler-content-style-settings select{height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;color:var(--ink)}
     .traveler-social-card{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-social-card-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
     .traveler-social-card h3{margin:0;font-size:18px;letter-spacing:0}
@@ -644,7 +647,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-public-trial-launch,.traveler-public-trial-retrospective,.traveler-next-iteration-roadmap,.traveler-public-trial-execution,.traveler-public-trial-data-collection,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -1793,6 +1796,15 @@
         <button type="button" id="traveler-home-route-pack-copy-button" data-traveler-home-route-pack-copy>复制路线包</button>
         <button type="button" id="traveler-home-route-pack-download-button" data-traveler-home-route-pack-download>下载Markdown</button>
       </div>
+    </div>
+    <div class="traveler-content-style-settings" aria-label="内容生成风格">
+      <label for="traveler-home-content-style-select">内容风格<select id="traveler-home-content-style-select" aria-label="选择内容风格">
+        <option value="practical" data-positioning="清晰决策、路线取舍、检查清单和官方复核" selected>实用攻略型</option>
+        <option value="blogger" data-positioning="第一人称、真实取舍、观点鲜明和可评论">博主口吻型</option>
+        <option value="relaxed" data-positioning="咖啡、休息缓冲和少移动">松弛躺平型</option>
+        <option value="highwalk" data-positioning="体力好、多打卡、删减提醒">暴走打卡型</option>
+        <option value="culture" data-positioning="展馆、建筑、城市史和策展线索">文化艺术型</option>
+      </select></label>
     </div>
     <textarea id="traveler-home-route-pack-output" readonly rows="8" aria-label="路线包内容"></textarea>
     <p id="traveler-home-route-pack-status" class="traveler-pack-status" aria-live="polite"></p>
@@ -9933,12 +9945,53 @@
     });
     return lines;
   }
+  function travelerHomeContentStyleSelect(){
+    const target = document.getElementById('traveler-home-content-style-select');
+    return target && target.id === 'traveler-home-content-style-select' ? target : null;
+  }
+  function travelerHomeContentStyleConfig(){
+    const configs = {
+      practical:{key:'practical', label:'实用攻略型', positioning:'清晰决策、路线取舍、检查清单和官方复核', routeTake:'先讲清路线判断、删减顺序和官方复核，适合直接发给同行人执行。', platformSentence:'先给结论，再把顺路、预约、体力和删减顺序讲清楚。', travelogueAngle:'像一篇可执行的旅行复盘'},
+      blogger:{key:'blogger', label:'博主口吻型', positioning:'第一人称、真实取舍、观点鲜明和可评论', routeTake:'保留个人判断和取舍理由，适合写成有观点、有互动的博主路线。', platformSentence:'用第一人称说清真实取舍，留下可评论的问题。', travelogueAngle:'像一篇博主二刷后的真实记录'},
+      relaxed:{key:'relaxed', label:'松弛躺平型', positioning:'咖啡、休息缓冲和少移动', routeTake:'少移动、少赶场，把咖啡、休息缓冲和可删点位先写清楚。', platformSentence:'不用赶场，把咖啡、休息和临时调整写出来。', travelogueAngle:'像一篇留白很多的慢旅行手记'},
+      highwalk:{key:'highwalk', label:'暴走打卡型', positioning:'体力好、多打卡、删减提醒', routeTake:'强调效率、顺序和体力门槛，同时标出跨区风险和优先删哪一站。', platformSentence:'节奏可以快，但要写清体力门槛、跨区风险和删减提醒。', travelogueAngle:'像一次高密度路线复盘'},
+      culture:{key:'culture', label:'文化艺术型', positioning:'展馆、建筑、城市史和策展线索', routeTake:'把展馆、建筑和城市史串成一条线，同时提醒展览、预约和闭馆复核。', platformSentence:'把展馆、建筑和街区故事串起来，不只写哪里出片。', travelogueAngle:'像一篇带城市史的观察笔记'},
+    };
+    const key = travelerHomeContentStyleSelect()?.value || 'practical';
+    return configs[key] || configs.practical;
+  }
+  function travelerHomeContentStyleDraftKeySegment(){
+    return travelerHomeContentStyleSelect() ? travelerHomeContentStyleConfig().key : '';
+  }
+  function travelerHomeContentStyleLine(){
+    if (!travelerHomeContentStyleSelect()) return '';
+    const style = travelerHomeContentStyleConfig();
+    return `内容风格：${style.label}｜${style.positioning}`;
+  }
+  function travelerHomeContentStylePlatformLine(){
+    if (!travelerHomeContentStyleSelect()) return '';
+    return `风格：${travelerHomeContentStyleConfig().label}`;
+  }
+  function travelerHomeContentStyleRouteTakeLine(){
+    if (!travelerHomeContentStyleSelect()) return '';
+    return `内容取舍：${travelerHomeContentStyleConfig().routeTake}`;
+  }
+  function travelerHomeContentStyleSentence(){
+    if (!travelerHomeContentStyleSelect()) return '';
+    return travelerHomeContentStyleConfig().platformSentence;
+  }
+  function travelerHomeContentStyleTravelogueAngleLine(){
+    if (!travelerHomeContentStyleSelect()) return '';
+    return `叙事角度：${travelerHomeContentStyleConfig().travelogueAngle}`;
+  }
   function travelerHomeRoutePackText(){
     const routes = travelerHomeRoutePackRoutes();
     const state = travelerHomeStorageRead();
     const preferences = state.preferences || travelerHomePreferenceInput();
     if (!routes.length) return '我的上海路线包\n当前还没有可整理的路线。';
     const hasFavorites = travelerHomeSavedFavorites(state).length > 0;
+    const styleLine = travelerHomeContentStyleLine();
+    const styleTakeLine = travelerHomeContentStyleRouteTakeLine();
     const lines = [
       '我的上海路线包',
       `偏好：${travelerHomePreferenceLabel(preferences)}`,
@@ -9946,6 +9999,8 @@
       '',
       '行程清单',
     ];
+    if (styleLine) lines.splice(2, 0, styleLine);
+    if (styleTakeLine) lines.splice(3, 0, styleTakeLine);
     routes.forEach((route, index) => {
       lines.push(`${index + 1}. ${route.scenario}｜${route.title}`);
       lines.push(`   适合：${route.audience}`);
@@ -10332,6 +10387,7 @@
     return {
       tone: document.getElementById('traveler-home-platform-copy-tone')?.value || 'practical',
       length: document.getElementById('traveler-home-platform-copy-length')?.value || 'standard',
+      style: travelerHomeContentStyleDraftKeySegment(),
     };
   }
   function travelerHomePlatformCopyToneLine(settings){
@@ -10361,6 +10417,8 @@
     const preferenceLabel = travelerHomePreferenceLabel(preferences);
     const guideUrl = travelerHomeAbsoluteUrl(route.guideHref);
     const mapUrl = travelerHomeAbsoluteUrl(route.mapHref);
+    const styleLine = travelerHomeContentStylePlatformLine();
+    const styleSentence = travelerHomeContentStyleSentence();
     if (target === 'moments') {
       const lines = [
         '朋友圈短文',
@@ -10370,6 +10428,8 @@
         `节奏：${preferenceLabel}` ,
         `攻略：${guideUrl}` ,
       ];
+      if (styleLine) lines.splice(3, 0, styleLine);
+      if (styleSentence) lines.push(styleSentence);
       if (settings.length !== 'short') lines.push(travelerHomePlatformCopyToneSentence(settings));
       lines.push('出发前再复核开放、预约、票务、交通和临时闭馆。');
       return lines.join('\n');
@@ -10384,6 +10444,8 @@
         `重点玩法：${route.primaryAngle}` ,
         `攻略：${guideUrl}` ,
       ];
+      if (styleLine) lines.splice(3, 0, styleLine);
+      if (styleSentence) lines.push(styleSentence);
       if (settings.length !== 'short') lines.push(`地图：${mapUrl}`);
       if (settings.length === 'detailed') lines.push('推荐理由：路线强度和偏好比较贴合，可以先锁定主线，再补餐厅和展览。');
       if (settings.length !== 'short') lines.push('同行提醒：先按这条线做基础方案，住宿和吃饭再按大家时间微调。');
@@ -10400,6 +10462,8 @@
       `玩法亮点：${route.primaryAngle}` ,
       `攻略链接：${guideUrl}` ,
     ];
+    if (styleLine) lines.splice(3, 0, styleLine);
+    if (styleSentence) lines.push(styleSentence);
     if (settings.length !== 'short') lines.push(travelerHomePlatformCopyToneSentence(settings));
     if (settings.length === 'detailed') lines.push('推荐理由：这条线先解决路线顺序，再把吃饭、拍照和休息点留给现场微调。');
     if (settings.length !== 'short') lines.push('不想把行程排太满的话，可以先用这条路线做底稿，再把想吃的店和临时展补进去。');
@@ -10413,12 +10477,29 @@
     const route = travelerHomeRoutePackRoutes()[0];
     if (!route?.tripId) return '';
     const settings = travelerHomePlatformCopySettings();
+    const parts = [route.tripId, target, settings.tone, settings.length];
+    if (settings.style) parts.push(settings.style);
+    return parts.join('|');
+  }
+  function travelerHomePlatformCopyLegacyDraftKey(platform){
+    const target = platform || travelerHomePlatformCopyCurrent || 'xiaohongshu';
+    const route = travelerHomeRoutePackRoutes()[0];
+    if (!route?.tripId) return '';
+    const settings = travelerHomePlatformCopySettings();
     return `${route.tripId}|${target}|${settings.tone}|${settings.length}`;
   }
+  function travelerHomePlatformCopyDraftKeys(platform){
+    const primary = travelerHomePlatformCopyDraftKey(platform);
+    const legacy = travelerHomePlatformCopyLegacyDraftKey(platform);
+    const style = travelerHomeContentStyleDraftKeySegment();
+    if (style === 'practical' && primary && legacy && primary !== legacy) return [primary, legacy];
+    return primary ? [primary] : (legacy ? [legacy] : []);
+  }
   function travelerHomePlatformCopySavedDraft(platform){
-    const key = travelerHomePlatformCopyDraftKey(platform);
     const drafts = travelerHomeStorageRead().platformDrafts || {};
-    return key && typeof drafts[key] === 'string' ? drafts[key] : '';
+    const keys = travelerHomePlatformCopyDraftKeys(platform);
+    const key = keys.find(item => typeof drafts[item] === 'string');
+    return key ? drafts[key] : '';
   }
   function travelerHomePlatformCopyDraftText(){
     const output = document.getElementById('traveler-home-platform-copy-output');
@@ -10446,10 +10527,9 @@
   }
   function clearTravelerHomePlatformCopyDraft(){
     const target = travelerHomePlatformCopyCurrent || 'xiaohongshu';
-    const key = travelerHomePlatformCopyDraftKey(target);
     const state = travelerHomeStorageRead();
     const drafts = state.platformDrafts && typeof state.platformDrafts === 'object' ? state.platformDrafts : {};
-    if (key) delete drafts[key];
+    travelerHomePlatformCopyDraftKeys(target).forEach(item => delete drafts[item]);
     state.platformDrafts = drafts;
     state.updatedAt = new Date().toISOString();
     travelerHomeStorageWrite(state);
@@ -10500,6 +10580,7 @@
     const rows = travelerHomePlatformDraftOverviewRows();
     const route = travelerHomeRoutePackRoutes()[0];
     const settings = travelerHomePlatformCopySettings();
+    const styleLine = travelerHomeContentStyleLine();
     const lines = [
       '# 上海平台草稿包',
       '',
@@ -10507,6 +10588,7 @@
       travelerHomePlatformCopyToneLine(settings),
       travelerHomePlatformCopyLengthLine(settings),
     ];
+    if (styleLine) lines.splice(3, 0, styleLine);
     if (route) {
       lines.push(`攻略：${travelerHomeAbsoluteUrl(route.guideHref)}`);
       lines.push(`地图：${travelerHomeAbsoluteUrl(route.mapHref)}`);
@@ -10590,6 +10672,8 @@
     const fragments = travelerHomeTravelogueFragmentsText().split('\n').map(item => item.trim()).filter(Boolean);
     const rows = travelerHomePlatformDraftOverviewRows();
     if (!route) return '# 我的上海游记初稿\n\n当前还没有可生成的路线。';
+    const styleLine = travelerHomeContentStyleLine();
+    const angleLine = travelerHomeContentStyleTravelogueAngleLine();
     const lines = [
       '# 我的上海游记初稿',
       '',
@@ -10604,6 +10688,8 @@
       '## 行程感受',
       `这条线最打动我的地方，是“${route.primaryAngle}”。如果同行人不想赶场，可以先把主线定下来，再把吃饭、展览和下午茶留给现场微调。`,
     ];
+    if (styleLine) lines.splice(4, 0, styleLine);
+    if (angleLine) lines.splice(5, 0, angleLine);
     if (fragments.length) {
       lines.push('', '## 旅途碎片');
       fragments.forEach(fragment => lines.push(`- ${fragment}`));
@@ -10622,6 +10708,16 @@
     if (status) status.textContent = '已生成游记初稿。';
     renderTravelerHomePostTripReview();
     return text;
+  }
+  function refreshTravelerHomeContentStyleOutputs(){
+    const routePackText = renderTravelerHomeRoutePack();
+    const platformText = renderTravelerHomePlatformCopy(travelerHomePlatformCopyCurrent || 'xiaohongshu');
+    renderTravelerHomePlatformDraftOverview();
+    const travelogueText = renderTravelerHomeTravelogue();
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    renderTravelerHomeWorkflow();
+    return {routePackText, platformText, travelogueText};
   }
   async function copyTravelerHomeTravelogue(){
     const text = renderTravelerHomeTravelogue();
@@ -11916,6 +12012,7 @@
   document.getElementById('traveler-home-food-supply-download-button')?.addEventListener('click', downloadTravelerHomeFoodSupplyMarkdown);
   document.getElementById('traveler-home-risk-plan-copy-button')?.addEventListener('click', copyTravelerHomeRiskPlanMarkdown);
   document.getElementById('traveler-home-risk-plan-download-button')?.addEventListener('click', downloadTravelerHomeRiskPlanMarkdown);
+  document.getElementById('traveler-home-content-style-select')?.addEventListener('change', refreshTravelerHomeContentStyleOutputs);
   document.getElementById('traveler-home-travelogue-build-button')?.addEventListener('click', renderTravelerHomeTravelogue);
   document.getElementById('traveler-home-travelogue-copy-button')?.addEventListener('click', copyTravelerHomeTravelogue);
   document.getElementById('traveler-home-travelogue-download-button')?.addEventListener('click', downloadTravelerHomeTravelogueMarkdown);

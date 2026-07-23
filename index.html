@@ -628,6 +628,8 @@
     .traveler-content-feedback-grid input{height:38px}
     .traveler-next-revision-task-package{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-next-version-content-drafts h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-post-trip-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-post-trip-review h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
@@ -2060,6 +2062,18 @@
       </div>
       <textarea id="traveler-home-next-revision-task-package-output" readonly rows="12" aria-label="下一版优化任务包内容"></textarea>
       <p id="traveler-home-next-revision-task-package-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-next-version-content-drafts" class="traveler-next-version-content-drafts" aria-label="下一版内容草稿">
+      <div class="traveler-social-card-head">
+        <h3>下一版内容草稿</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-next-version-content-drafts-build-button" data-traveler-home-next-version-content-drafts-build>生成草稿</button>
+          <button type="button" id="traveler-home-next-version-content-drafts-copy-button" data-traveler-home-next-version-content-drafts-copy>复制草稿</button>
+          <button type="button" id="traveler-home-next-version-content-drafts-download-button" data-traveler-home-next-version-content-drafts-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-next-version-content-drafts-output" readonly rows="14" aria-label="下一版内容草稿"></textarea>
+      <p id="traveler-home-next-version-content-drafts-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-post-trip-review" class="traveler-post-trip-review" aria-label="旅行后复盘包">
       <div class="traveler-social-card-head">
@@ -10974,6 +10988,7 @@
         content_feedback_board: state.contentFeedbackBoard && typeof state.contentFeedbackBoard === 'object' ? state.contentFeedbackBoard : {},
         content_feedback_board_markdown: travelerHomeContentFeedbackBoardMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
+        next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         risk_plan_markdown: travelerHomeRiskPlanMarkdown(),
         weather_precheck: travelerHomeHandoffWeatherPrecheckPayload(),
         weather_precheck_markdown: travelerHomeWeatherPrecheckCurrent ? travelerHomeWeatherPrecheckMarkdown(travelerHomeWeatherPrecheckCurrent) : '',
@@ -12307,6 +12322,7 @@
     const text = travelerHomeNextRevisionTaskPackageMarkdown();
     if (output) output.value = text;
     if (status) status.textContent = '已生成下一版优化任务包。';
+    renderTravelerHomeNextVersionContentDrafts();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return text;
@@ -12339,6 +12355,145 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载下一版优化任务包。';
+    return {filename, text};
+  }
+  function travelerHomeNextVersionContentDraftsRoute(){
+    return travelerHomeNextRevisionTaskPackageRoute();
+  }
+  function travelerHomeNextVersionContentDraftsDay(route){
+    return travelerHomeNextRevisionTaskPackageDay(route);
+  }
+  function travelerHomeNextVersionContentDraftsMetric(value, fallback, suffix){
+    return travelerHomeContentFeedbackBoardMetric(value, fallback, suffix);
+  }
+  function travelerHomeNextVersionContentDraftsJoinedSignals(boardState){
+    return [boardState.xiaohongshuComments, boardState.groupFeedback, boardState.nextRevision].filter(Boolean).join(' ');
+  }
+  function travelerHomeNextVersionContentDraftsTitle(route, boardState){
+    const routeTitle = (route?.title || '上海路线').replace(/\s*city walk\s*版$/, '').replace(/\s*版$/, '');
+    const signals = travelerHomeNextVersionContentDraftsJoinedSignals(boardState);
+    const angle = /风大|大风|强风|有风/.test(signals) ? '外滩风大也能这样走' : '少走路也能拍到重点';
+    return `${routeTitle}攻略：${angle}`;
+  }
+  function travelerHomeNextVersionContentDraftsQuestion(boardState){
+    const questions = travelerHomeContentFeedbackBoardSplitLines(boardState.xiaohongshuComments);
+    return questions[0] || '这条路线怎么走更省力？';
+  }
+  function travelerHomeNextVersionContentDraftsAnswer(question, routeLine){
+    if (/武康路/.test(question) && /安福路/.test(question)) return '：武康路和安福路适合放成一段慢走，先看武康路建筑和街角，再转安福路咖啡/买手店，体力不够就删掉支线，不要来回折返。';
+    return `：先按${routeLine}走主线，再把绕路、删减和地铁口写清楚。`;
+  }
+  function travelerHomeNextVersionContentDraftsFeedback(boardState){
+    const lines = travelerHomeContentFeedbackBoardSplitLines(boardState.groupFeedback);
+    const fallback = lines.find(item => /风大|室内|备选|排队|人流/.test(item)) || lines[0] || '等同行反馈回收后，再补真实改线理由。';
+    return travelerHomeContentFeedbackBoardClean(fallback).replace(/^同行说\s*/, '').replace(/^Day\s*\d+\s*/, '');
+  }
+  function travelerHomeNextVersionContentDraftsFragments(){
+    applyTravelerHomeTravelogueFragments();
+    return travelerHomeTravelogueFragmentsText().split('\n').map(item => item.trim()).filter(Boolean);
+  }
+  function travelerHomeNextVersionContentDraftsRouteLine(day){
+    const stops = travelerHomeDayExecutionStopNames(day);
+    return stops.length ? stops.join(' → ') : '当天主线点位';
+  }
+  function travelerHomeNextVersionContentDraftsSignalLine(boardState){
+    const signals = [];
+    const saves = travelerHomeNextVersionContentDraftsMetric(boardState.xiaohongshuSaves, '', '');
+    const plays = travelerHomeNextVersionContentDraftsMetric(boardState.douyinPlays, '', '');
+    const completion = travelerHomeNextVersionContentDraftsMetric(boardState.douyinCompletionRate, '', '%');
+    if (saves) signals.push(`小红书收藏 ${saves}`);
+    if (plays) signals.push(`抖音播放 ${plays}`);
+    if (completion) signals.push(`完播率 ${completion}`);
+    return signals.length ? signals.join('，') : '第一轮数据待回填';
+  }
+  function travelerHomeNextVersionContentDraftsMarkdown(){
+    const route = travelerHomeNextVersionContentDraftsRoute();
+    if (!route) return '# 上海下一版内容草稿\n\n当前还没有可生成草稿的路线。';
+    const day = travelerHomeNextVersionContentDraftsDay(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    const dayNumber = daySummary?.day || day?.day || 1;
+    const boardState = travelerHomeContentFeedbackBoardState(route, day);
+    const question = travelerHomeNextVersionContentDraftsQuestion(boardState);
+    const feedback = travelerHomeNextVersionContentDraftsFeedback(boardState);
+    const fragments = travelerHomeNextVersionContentDraftsFragments();
+    const fragment = fragments[0] || '补当天真实天气、人流、排队、好拍位置和同行人状态。';
+    const revisions = travelerHomeContentFeedbackBoardSplitLines(boardState.nextRevision);
+    const routeLine = travelerHomeNextVersionContentDraftsRouteLine(day);
+    const title = travelerHomeNextVersionContentDraftsTitle(route, boardState);
+    const windHook = /风大|大风|强风|有风/.test(travelerHomeNextVersionContentDraftsJoinedSignals(boardState)) ? '外滩风大也能走' : '少走路也能看重点';
+    const lines = [
+      '# 上海下一版内容草稿',
+      '',
+      `路线：${route.scenario}｜${route.title}` ,
+      `执行日：Day ${dayNumber}` ,
+      '输入来源：下一版优化任务包 + 内容数据回收看板',
+      `回收信号：${travelerHomeNextVersionContentDraftsSignalLine(boardState)}` ,
+      '',
+      '## 小红书新版',
+      `- 标题：${title}` ,
+      `- 正文第一段：这版先回答评论里问的“${question}”${travelerHomeNextVersionContentDraftsAnswer(question, routeLine)}` ,
+      `- 路线写法：Day ${dayNumber} 按${routeLine}走，重点写清步行动线、删减规则和外滩风大时的室内备选。` ,
+      '- 事实边界：不夸大未验证事实，开放、预约、票务和临时闭馆发布前再查官方渠道。',
+      '',
+      '## 抖音新版',
+      `- 开头：上海 Day ${dayNumber} ${windHook}，先把最容易卡住的一段讲清楚。` ,
+      `- 脚本：1. 用读者问题开场：“${question}”；2. 用路线截图或实拍按${routeLine}讲步行动线；3. 外滩风大或人流高时切到室内备选；4. 收尾提醒收藏并看发布前复核。` ,
+      `- 画面补拍：${feedback}` ,
+      '',
+      '## 游记补充段',
+      `- 现场碎片：${fragment}` ,
+      `- 反馈补充：${feedback}` ,
+      `- 可直接补写：${fragment} 这次复盘后，下一版会把“${question}”和“${feedback}”提前写进路线提醒里。` ,
+      '',
+      '## 发布前复核',
+      '- 复核路线页、地图标点、步行动线和室内备选是否一致。',
+      '- 复核开放、预约、票务、交通和临时闭馆。',
+      '- 复核平台标题、封面和口播，不把本机反馈当成全网结论。',
+    ];
+    if (revisions.length) {
+      lines.push('', '## 这版继承的优化动作');
+      revisions.forEach(item => lines.push(`- ${item}`));
+    }
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomeNextVersionContentDrafts(){
+    const output = document.getElementById('traveler-home-next-version-content-drafts-output');
+    const status = document.getElementById('traveler-home-next-version-content-drafts-status');
+    const text = travelerHomeNextVersionContentDraftsMarkdown();
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成下一版内容草稿。';
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return text;
+  }
+  async function copyTravelerHomeNextVersionContentDraftsMarkdown(){
+    const text = renderTravelerHomeNextVersionContentDrafts();
+    const status = document.getElementById('traveler-home-next-version-content-drafts-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制下一版内容草稿。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制下一版内容草稿。';
+    }
+    return text;
+  }
+  function travelerHomeNextVersionContentDraftsFilename(){
+    return 'shanghai-next-version-content-drafts.md';
+  }
+  function downloadTravelerHomeNextVersionContentDraftsMarkdown(){
+    const text = renderTravelerHomeNextVersionContentDrafts();
+    const filename = travelerHomeNextVersionContentDraftsFilename();
+    const status = document.getElementById('traveler-home-next-version-content-drafts-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载下一版内容草稿。';
     return {filename, text};
   }
   function travelerHomePostTripReviewRoute(){
@@ -12665,6 +12820,8 @@
     renderTravelerHomeDayExecution();
     renderTravelerHomeOnsitePublishPackage();
     renderTravelerHomePublishOps();
+    renderTravelerHomeNextRevisionTaskPackage();
+    renderTravelerHomeNextVersionContentDrafts();
     renderTravelerHomePostTripReview();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), message || '已恢复导入的行程交接包。');
   }
@@ -13027,6 +13184,9 @@
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
+  document.getElementById('traveler-home-next-version-content-drafts-build-button')?.addEventListener('click', renderTravelerHomeNextVersionContentDrafts);
+  document.getElementById('traveler-home-next-version-content-drafts-copy-button')?.addEventListener('click', copyTravelerHomeNextVersionContentDraftsMarkdown);
+  document.getElementById('traveler-home-next-version-content-drafts-download-button')?.addEventListener('click', downloadTravelerHomeNextVersionContentDraftsMarkdown);
   document.getElementById('traveler-home-post-trip-review-copy-button')?.addEventListener('click', copyTravelerHomePostTripReviewMarkdown);
   document.getElementById('traveler-home-post-trip-review-download-button')?.addEventListener('click', downloadTravelerHomePostTripReviewMarkdown);
   ['traveler-home-day-execution-day','traveler-home-day-execution-state'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-day-execution-status'); renderTravelerHomeDayExecution(); if (status) status.textContent = '行中执行简报已随现场状态更新。'; }));
@@ -13061,6 +13221,7 @@
     renderTravelerHomePublishStatusBoard();
     renderTravelerHomeContentFeedbackBoard();
     renderTravelerHomeNextRevisionTaskPackage();
+    renderTravelerHomeNextVersionContentDrafts();
     renderTravelerHomeWorkflow();
     refreshTravelerHomeHandoff();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
@@ -13125,6 +13286,7 @@
   renderTravelerHomePublishStatusBoard();
   renderTravelerHomeContentFeedbackBoard();
   renderTravelerHomeNextRevisionTaskPackage();
+  renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomePostTripReview();
   renderTravelerHomeWorkflow();
   applyTravelerHomeDemoSampleFromLocation();

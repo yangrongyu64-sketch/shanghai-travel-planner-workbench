@@ -630,6 +630,9 @@
     .traveler-platform-data-import h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-platform-data-import label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:800}
     .traveler-platform-data-import textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
+    .traveler-platform-data-trend{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-platform-data-trend h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-platform-data-trend textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
     .traveler-next-revision-task-package{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
@@ -2074,6 +2077,18 @@
       <label for="traveler-home-platform-data-import-input">CSV 数据<textarea id="traveler-home-platform-data-import-input" rows="6" aria-label="平台数据 CSV" placeholder="route_id,day,xiaohongshu_saves,xiaohongshu_comments,douyin_plays,douyin_completion_rate,group_feedback,next_revision"></textarea></label>
       <textarea id="traveler-home-platform-data-import-output" readonly rows="10" aria-label="平台数据导入结果 Markdown"></textarea>
       <p id="traveler-home-platform-data-import-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-platform-data-trend" class="traveler-platform-data-trend" aria-label="平台数据趋势看板">
+      <div class="traveler-social-card-head">
+        <h3>平台数据趋势看板</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-platform-data-trend-build-button" data-traveler-home-platform-data-trend-build>生成趋势</button>
+          <button type="button" id="traveler-home-platform-data-trend-copy-button" data-traveler-home-platform-data-trend-copy>复制趋势</button>
+          <button type="button" id="traveler-home-platform-data-trend-download-button" data-traveler-home-platform-data-trend-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-platform-data-trend-output" readonly rows="10" aria-label="平台数据趋势看板 Markdown"></textarea>
+      <p id="traveler-home-platform-data-trend-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-next-revision-task-package" class="traveler-next-revision-task-package" aria-label="下一版优化任务包">
       <div class="traveler-social-card-head">
@@ -11025,7 +11040,9 @@
         content_feedback_board: state.contentFeedbackBoard && typeof state.contentFeedbackBoard === 'object' ? state.contentFeedbackBoard : {},
         content_feedback_board_markdown: travelerHomeContentFeedbackBoardMarkdown(),
         platform_data_import: state.platformDataImport?.lastResult || null,
+        platform_data_import_history: travelerHomePlatformDataImportHistory(),
         platform_data_import_markdown: travelerHomePlatformDataImportMarkdown(state.platformDataImport?.lastResult || null),
+        platform_data_trend_markdown: travelerHomePlatformDataTrendMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
@@ -12402,8 +12419,11 @@
       skipped,
       caveat: '手动从平台后台导出或整理后粘贴；不读取账号、Cookie、Authorization 或 API Key。',
     };
+    const previousImportState = state.platformDataImport && typeof state.platformDataImport === 'object' ? state.platformDataImport : {};
+    const previousHistory = Array.isArray(previousImportState.history) ? previousImportState.history : (previousImportState.lastResult ? [previousImportState.lastResult] : []);
+    const history = previousHistory.concat([result]).slice(-12);
     state.contentFeedbackBoard = board;
-    state.platformDataImport = {lastResult: result, updatedAt: generatedAt};
+    state.platformDataImport = {lastResult: result, history, updatedAt: generatedAt};
     state.updatedAt = generatedAt;
     travelerHomeStorageWrite(state);
     travelerHomeContentFeedbackBoardApplyStored(travelerHomeContentFeedbackBoardRoute(), travelerHomeContentFeedbackBoardDay(travelerHomeContentFeedbackBoardRoute()));
@@ -12416,6 +12436,7 @@
     renderTravelerHomeNextRevisionTaskPackage();
     renderTravelerHomeNextVersionContentDrafts();
     renderTravelerHomeContentVersionReview();
+    renderTravelerHomePlatformDataTrend();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return result;
@@ -12494,6 +12515,145 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载平台数据导入结果。';
+    return {filename, text};
+  }
+  function travelerHomePlatformDataImportHistory(){
+    const source = travelerHomeStorageRead().platformDataImport;
+    if (!source || typeof source !== 'object') return [];
+    if (Array.isArray(source.history)) return source.history.filter(Boolean);
+    return source.lastResult ? [source.lastResult] : [];
+  }
+  function travelerHomePlatformDataTrendPoints(history){
+    return travelerHomePlatformDataImportHistory().flatMap((batch, batchIndex) => {
+      const imported = Array.isArray(batch?.imported) ? batch.imported : [];
+      return imported.map((item, itemIndex) => ({...item, batchIndex, itemIndex, batchGeneratedAt: batch.generatedAt || ''}));
+    });
+  }
+  function travelerHomePlatformDataTrendNumber(value){
+    const text = String(value || '').replace(/[^0-9.\-]/g, '');
+    const number = Number(text);
+    return Number.isFinite(number) ? number : null;
+  }
+  function travelerHomePlatformDataTrendDelta(firstValue, lastValue){
+    const first = travelerHomePlatformDataTrendNumber(firstValue);
+    const last = travelerHomePlatformDataTrendNumber(lastValue);
+    if (first === null || last === null) return null;
+    return last - first;
+  }
+  function travelerHomePlatformDataTrendSigned(value, suffix){
+    if (value === null || value === undefined) return '无变化数据';
+    const sign = value > 0 ? '+' : '';
+    return `${sign}${value}${suffix || ''}`;
+  }
+  function travelerHomePlatformDataTrendMetricLine(label, field, firstEntry, lastEntry, suffix){
+    const firstValue = travelerHomeContentFeedbackBoardClean(firstEntry?.[field]) || '待回填';
+    const lastValue = travelerHomeContentFeedbackBoardClean(lastEntry?.[field]) || '待回填';
+    const delta = travelerHomePlatformDataTrendDelta(firstValue, lastValue);
+    const firstText = suffix && firstValue !== '待回填' && !String(firstValue).endsWith(suffix) ? `${firstValue}${suffix}` : firstValue;
+    const lastText = suffix && lastValue !== '待回填' && !String(lastValue).endsWith(suffix) ? `${lastValue}${suffix}` : lastValue;
+    return `- ${label}：${firstText} → ${lastText}（${travelerHomePlatformDataTrendSigned(delta, suffix)}）`;
+  }
+  function travelerHomePlatformDataTrendSummary(){
+    const history = travelerHomePlatformDataImportHistory();
+    const points = travelerHomePlatformDataTrendPoints(history);
+    const latest = points[points.length - 1] || null;
+    const focusKey = latest?.key || '';
+    const focusPoints = focusKey ? points.filter(point => point.key === focusKey) : [];
+    const first = focusPoints[0] || latest || null;
+    const last = focusPoints[focusPoints.length - 1] || latest || null;
+    const firstEntry = first?.entry || {};
+    const lastEntry = last?.entry || {};
+    const deltas = {
+      xiaohongshuSaves: travelerHomePlatformDataTrendDelta(firstEntry.xiaohongshuSaves, lastEntry.xiaohongshuSaves),
+      douyinPlays: travelerHomePlatformDataTrendDelta(firstEntry.douyinPlays, lastEntry.douyinPlays),
+      douyinCompletionRate: travelerHomePlatformDataTrendDelta(firstEntry.douyinCompletionRate, lastEntry.douyinCompletionRate),
+    };
+    return {
+      batchCount: history.length,
+      pointCount: points.length,
+      focusKey,
+      focusPointCount: focusPoints.length,
+      routeId: last?.routeId || '',
+      day: last?.day || 1,
+      first,
+      last,
+      firstEntry,
+      lastEntry,
+      deltas,
+    };
+  }
+  function travelerHomePlatformDataTrendMarkdown(){
+    const summary = travelerHomePlatformDataTrendSummary();
+    if (!summary.pointCount) return '# 上海平台数据趋势看板\n\n当前还没有可分析的平台导入历史。\n\n来源边界：手动导入数据只用于站内运营判断，不读取账号、Cookie、Authorization 或 API Key。';
+    const firstEntry = summary.firstEntry || {};
+    const lastEntry = summary.lastEntry || {};
+    const latestQuestion = travelerHomeContentFeedbackBoardSplitLines(lastEntry.xiaohongshuComments)[0] || '待继续观察评论问题';
+    const latestFeedback = travelerHomeContentFeedbackBoardSplitLines(lastEntry.groupFeedback)[0] || '待继续观察同行反馈';
+    const latestAction = travelerHomeContentFeedbackBoardSplitLines(lastEntry.nextRevision)[0] || '先保留当前有效角度，再等下一批数据。';
+    const routeDay = `${summary.routeId || '未知路线'}｜Day ${summary.day || 1}`;
+    const lines = [
+      '# 上海平台数据趋势看板',
+      '',
+      `导入批次：${summary.batchCount}` ,
+      `数据点：${summary.pointCount}` ,
+      `重点路线：${routeDay}` ,
+      '来源边界：手动从平台后台导出或整理后粘贴；不读取账号、Cookie、Authorization 或 API Key。',
+      '',
+      '## 增长对比',
+      travelerHomePlatformDataTrendMetricLine('小红书收藏', 'xiaohongshuSaves', firstEntry, lastEntry, ''),
+      travelerHomePlatformDataTrendMetricLine('抖音播放', 'douyinPlays', firstEntry, lastEntry, ''),
+      travelerHomePlatformDataTrendMetricLine('抖音完播率', 'douyinCompletionRate', firstEntry, lastEntry, '%'),
+      '',
+      '## 最新信号',
+      `- 最近问题：${latestQuestion}` ,
+      `- 最近反馈：${latestFeedback}` ,
+      `- 最近优化动作：${latestAction}` ,
+      '',
+      '## 运营判断',
+      `- 建议：继续放大 ${summary.routeId || '当前路线'} Day ${summary.day || 1}，把高增长信号回填到标题、开头、路线图和室内/少走路备选。` ,
+      '- 看收藏判断标题和选题，看完播判断开头节奏，看评论判断路线解释是否够清楚。',
+      '- 不把两次手动导入当成全网结论，下一轮继续对照真实发布数据和评论质量。',
+    ];
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomePlatformDataTrend(){
+    const text = travelerHomePlatformDataTrendMarkdown();
+    const output = document.getElementById('traveler-home-platform-data-trend-output');
+    const status = document.getElementById('traveler-home-platform-data-trend-status');
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成平台数据趋势看板。';
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return text;
+  }
+  async function copyTravelerHomePlatformDataTrendMarkdown(){
+    const text = renderTravelerHomePlatformDataTrend();
+    const status = document.getElementById('traveler-home-platform-data-trend-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制平台数据趋势看板。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制平台数据趋势看板。';
+    }
+    return text;
+  }
+  function travelerHomePlatformDataTrendFilename(){
+    return 'shanghai-platform-data-trend.md';
+  }
+  function downloadTravelerHomePlatformDataTrendMarkdown(){
+    const text = renderTravelerHomePlatformDataTrend();
+    const filename = travelerHomePlatformDataTrendFilename();
+    const status = document.getElementById('traveler-home-platform-data-trend-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载平台数据趋势看板。';
     return {filename, text};
   }
   function travelerHomeNextRevisionTaskPackageRoute(){
@@ -13634,6 +13794,9 @@
   document.getElementById('traveler-home-platform-data-import-button')?.addEventListener('click', importTravelerHomePlatformDataFromInput);
   document.getElementById('traveler-home-platform-data-import-copy-button')?.addEventListener('click', copyTravelerHomePlatformDataImportMarkdown);
   document.getElementById('traveler-home-platform-data-import-download-button')?.addEventListener('click', downloadTravelerHomePlatformDataImportMarkdown);
+  document.getElementById('traveler-home-platform-data-trend-build-button')?.addEventListener('click', renderTravelerHomePlatformDataTrend);
+  document.getElementById('traveler-home-platform-data-trend-copy-button')?.addEventListener('click', copyTravelerHomePlatformDataTrendMarkdown);
+  document.getElementById('traveler-home-platform-data-trend-download-button')?.addEventListener('click', downloadTravelerHomePlatformDataTrendMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
@@ -13743,6 +13906,7 @@
   renderTravelerHomePublishStatusBoard();
   renderTravelerHomeContentFeedbackBoard();
   renderTravelerHomePlatformDataImport();
+  renderTravelerHomePlatformDataTrend();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomeContentVersionReview();

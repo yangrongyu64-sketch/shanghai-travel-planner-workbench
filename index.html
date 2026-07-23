@@ -630,6 +630,12 @@
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-version-content-drafts h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-content-version-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-content-version-review h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-content-version-review-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .traveler-content-version-review-list article{display:grid;gap:4px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px 10px;font-size:12px}
+    .traveler-content-version-review-list b{font-size:13px;color:var(--ink)}
+    .traveler-content-version-review-list span{color:var(--muted)}
     .traveler-post-trip-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-post-trip-review h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-handoff-import{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
@@ -667,7 +673,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-public-trial-launch,.traveler-public-trial-retrospective,.traveler-next-iteration-roadmap,.traveler-public-trial-execution,.traveler-public-trial-data-collection,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-publish-status-board-controls,.traveler-content-feedback-grid,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-feedback-grid label:nth-child(n+5),.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-publish-status-board-controls,.traveler-content-feedback-grid,.traveler-content-version-review-list,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-feedback-grid label:nth-child(n+5),.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -2074,6 +2080,19 @@
       </div>
       <textarea id="traveler-home-next-version-content-drafts-output" readonly rows="14" aria-label="下一版内容草稿"></textarea>
       <p id="traveler-home-next-version-content-drafts-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-content-version-review" class="traveler-content-version-review" aria-label="内容版本 A/B 复盘">
+      <div class="traveler-social-card-head">
+        <h3>内容版本 A/B 复盘</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-content-version-review-save-button" data-traveler-home-content-version-review-save>保存为版本</button>
+          <button type="button" id="traveler-home-content-version-review-copy-button" data-traveler-home-content-version-review-copy>复制复盘</button>
+          <button type="button" id="traveler-home-content-version-review-download-button" data-traveler-home-content-version-review-download>下载Markdown</button>
+        </div>
+      </div>
+      <div id="traveler-home-content-version-review-list" class="traveler-content-version-review-list" aria-label="内容版本列表"></div>
+      <textarea id="traveler-home-content-version-review-output" readonly rows="12" aria-label="内容版本复盘 Markdown"></textarea>
+      <p id="traveler-home-content-version-review-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-post-trip-review" class="traveler-post-trip-review" aria-label="旅行后复盘包">
       <div class="traveler-social-card-head">
@@ -10989,6 +11008,8 @@
         content_feedback_board_markdown: travelerHomeContentFeedbackBoardMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
+        content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
+        content_version_review_markdown: travelerHomeContentVersionReviewMarkdown(),
         risk_plan_markdown: travelerHomeRiskPlanMarkdown(),
         weather_precheck: travelerHomeHandoffWeatherPrecheckPayload(),
         weather_precheck_markdown: travelerHomeWeatherPrecheckCurrent ? travelerHomeWeatherPrecheckMarkdown(travelerHomeWeatherPrecheckCurrent) : '',
@@ -12462,6 +12483,7 @@
     const text = travelerHomeNextVersionContentDraftsMarkdown();
     if (output) output.value = text;
     if (status) status.textContent = '已生成下一版内容草稿。';
+    renderTravelerHomeContentVersionReview();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return text;
@@ -12494,6 +12516,200 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载下一版内容草稿。';
+    return {filename, text};
+  }
+  function travelerHomeContentVersionReviewRoute(){
+    return travelerHomeNextVersionContentDraftsRoute();
+  }
+  function travelerHomeContentVersionReviewDay(route){
+    return travelerHomeNextVersionContentDraftsDay(route);
+  }
+  function travelerHomeContentVersionReviewKey(route, day){
+    return travelerHomeContentFeedbackBoardKey(route, day);
+  }
+  function travelerHomeContentVersionReviewStore(route, day){
+    const state = travelerHomeStorageRead();
+    const board = state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {};
+    const key = travelerHomeContentVersionReviewKey(route, day);
+    const versions = Array.isArray(board[key]) ? board[key] : [];
+    return {state, board, key, versions};
+  }
+  function travelerHomeContentVersionReviewVersions(route, day){
+    return travelerHomeContentVersionReviewStore(route, day).versions;
+  }
+  function travelerHomeContentVersionReviewTitle(markdown){
+    const match = String(markdown || '').match(/\n- 标题：([^\n]+)/);
+    return match ? match[1].trim() : '待提取标题';
+  }
+  function travelerHomeContentVersionReviewAngle(title){
+    const source = String(title || '');
+    if (source.includes('攻略：')) return source.split('攻略：').pop().trim();
+    return source || '下一版角度';
+  }
+  function travelerHomeContentVersionReviewMetrics(boardState){
+    return {
+      xiaohongshuSaves: travelerHomeContentFeedbackBoardClean(boardState.xiaohongshuSaves),
+      douyinPlays: travelerHomeContentFeedbackBoardClean(boardState.douyinPlays),
+      douyinCompletionRate: travelerHomeContentFeedbackBoardClean(boardState.douyinCompletionRate),
+    };
+  }
+  function travelerHomeContentVersionReviewMetricLine(metrics){
+    const saves = metrics?.xiaohongshuSaves || '待回填';
+    const plays = metrics?.douyinPlays || '待回填';
+    const completion = metrics?.douyinCompletionRate ? `${metrics.douyinCompletionRate}%` : '待回填';
+    return `小红书收藏 ${saves}，抖音播放 ${plays}，完播率 ${completion}`;
+  }
+  function travelerHomeContentVersionReviewMetricDiff(label, beforeValue, afterValue, suffix){
+    const beforeText = travelerHomeContentFeedbackBoardClean(beforeValue) || '待回填';
+    const afterText = travelerHomeContentFeedbackBoardClean(afterValue) || '待回填';
+    const beforeDisplay = suffix && beforeText !== '待回填' ? `${beforeText}${suffix}` : beforeText;
+    const afterDisplay = suffix && afterText !== '待回填' ? `${afterText}${suffix}` : afterText;
+    return `- ${label}：${beforeDisplay} → ${afterDisplay}`;
+  }
+  function travelerHomeContentVersionReviewFirstLine(value){
+    return travelerHomeContentFeedbackBoardSplitLines(value)[0] || '';
+  }
+  function travelerHomeContentVersionReviewLatest(route, day){
+    const versions = travelerHomeContentVersionReviewVersions(route, day);
+    return versions[versions.length - 1] || null;
+  }
+  function saveTravelerHomeContentVersionReview(){
+    const route = travelerHomeContentVersionReviewRoute();
+    if (!route) return {ok:false, reason:'missing_route'};
+    const day = travelerHomeContentVersionReviewDay(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    const dayNumber = daySummary?.day || day?.day || 1;
+    const boardState = travelerHomeContentFeedbackBoardState(route, day);
+    const draftMarkdown = travelerHomeNextVersionContentDraftsMarkdown();
+    const {state, board, key, versions} = travelerHomeContentVersionReviewStore(route, day);
+    const nextIndex = versions.length + 1;
+    const version = {
+      id: `content-version-${Date.now()}-${nextIndex}`,
+      label: `V${nextIndex}`,
+      createdAt: new Date().toISOString(),
+      routeId: route.tripId,
+      routeTitle: route.title,
+      scenario: route.scenario,
+      day: dayNumber,
+      title: travelerHomeContentVersionReviewTitle(draftMarkdown),
+      metrics: travelerHomeContentVersionReviewMetrics(boardState),
+      question: travelerHomeContentVersionReviewFirstLine(boardState.xiaohongshuComments),
+      feedback: travelerHomeContentVersionReviewFirstLine(boardState.groupFeedback),
+      nextAction: travelerHomeContentVersionReviewFirstLine(boardState.nextRevision),
+      draftMarkdown,
+    };
+    board[key] = versions.concat([version]).slice(-12);
+    state.contentVersionReview = board;
+    state.updatedAt = new Date().toISOString();
+    travelerHomeStorageWrite(state);
+    const text = renderTravelerHomeContentVersionReview();
+    const status = document.getElementById('traveler-home-content-version-review-status');
+    if (status) status.textContent = `已保存${version.label}，可继续对比下一版。`;
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return {key, version, text};
+  }
+  function travelerHomeContentVersionReviewListHtml(versions){
+    if (!versions.length) return '<article><b>暂无版本</b><span>先生成下一版内容草稿，再点“保存为版本”。</span></article>';
+    return versions.slice().reverse().map(version => `<article><b>${escapeHtml(version.label)}｜${escapeHtml(version.title)}</b><span>${escapeHtml(travelerHomeContentVersionReviewMetricLine(version.metrics))}</span><span>${escapeHtml(version.nextAction || '待补下一动作')}</span></article>`).join('');
+  }
+  function travelerHomeContentVersionReviewMarkdown(){
+    const route = travelerHomeContentVersionReviewRoute();
+    if (!route) return '# 上海内容版本 A/B 复盘\n\n当前还没有可复盘的路线。';
+    const day = travelerHomeContentVersionReviewDay(route);
+    const daySummary = travelerHomeRouteGuideExecutionDaySummary(route, day);
+    const dayNumber = daySummary?.day || day?.day || 1;
+    const versions = travelerHomeContentVersionReviewVersions(route, day);
+    const currentDraft = travelerHomeNextVersionContentDraftsMarkdown();
+    const currentTitle = travelerHomeContentVersionReviewTitle(currentDraft);
+    const lines = [
+      '# 上海内容版本 A/B 复盘',
+      '',
+      `路线：${route.scenario}｜${route.title}` ,
+      `执行日：Day ${dayNumber}` ,
+      `版本数：${versions.length}` ,
+      '状态存储：当前浏览器本地',
+    ];
+    if (!versions.length) {
+      lines.push('', '## 当前草稿', `- 标题：${currentTitle}`, '- 下一步：点击“保存为版本”后，再用下一轮数据保存 V2 做对比。');
+      return lines.filter(line => line !== '').join('\n');
+    }
+    const latest = versions[versions.length - 1];
+    const previous = versions[versions.length - 2] || null;
+    lines.push(
+      '',
+      '## 最新版本',
+      `- 版本：${latest.label}` ,
+      `- 标题：${latest.title}` ,
+      `- 回收信号：${travelerHomeContentVersionReviewMetricLine(latest.metrics)}` ,
+      `- 读者问题：${latest.question || '待回填'}` ,
+      `- 同行反馈：${latest.feedback || '待回填'}` ,
+    );
+    lines.push('', '## 对比上一版');
+    if (previous) {
+      lines.push(travelerHomeContentVersionReviewMetricDiff('收藏', previous.metrics?.xiaohongshuSaves, latest.metrics?.xiaohongshuSaves, ''));
+      lines.push(travelerHomeContentVersionReviewMetricDiff('播放', previous.metrics?.douyinPlays, latest.metrics?.douyinPlays, ''));
+      lines.push(travelerHomeContentVersionReviewMetricDiff('完播率', previous.metrics?.douyinCompletionRate, latest.metrics?.douyinCompletionRate, '%'));
+      lines.push(`- 标题变化：${previous.title} → ${latest.title}`);
+    } else {
+      lines.push('- 还没有上一版，先把 V1 作为基线。');
+    }
+    const angle = travelerHomeContentVersionReviewAngle(latest.title);
+    lines.push(
+      '',
+      '## 复盘判断',
+      `- 可继续测试：${angle}` ,
+      '- 看收藏判断标题/选题，看完播判断开头和节奏，看评论判断路线解释是否够清楚。',
+      '- 不把一次本机回填当成全网结论，下一轮继续看真实发布数据。',
+      '',
+      '## 下一动作',
+      `- ${latest.nextAction || '保留有效角度，继续补地图动线、室内备选和发布前复核。'}` ,
+      '- 复核开放、预约、票务、交通和临时闭馆。',
+      '- 下一次发布后继续保存 V3，再比较标题、开头和路线解释的表现。',
+    );
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomeContentVersionReview(){
+    const route = travelerHomeContentVersionReviewRoute();
+    const day = travelerHomeContentVersionReviewDay(route);
+    const versions = route ? travelerHomeContentVersionReviewVersions(route, day) : [];
+    const list = document.getElementById('traveler-home-content-version-review-list');
+    const output = document.getElementById('traveler-home-content-version-review-output');
+    const status = document.getElementById('traveler-home-content-version-review-status');
+    const text = travelerHomeContentVersionReviewMarkdown();
+    if (list) list.innerHTML = travelerHomeContentVersionReviewListHtml(versions);
+    if (output) output.value = text;
+    if (status) status.textContent = versions.length ? `已载入${versions.length}个内容版本。` : '可先保存当前草稿作为 V1。';
+    return text;
+  }
+  async function copyTravelerHomeContentVersionReviewMarkdown(){
+    const text = renderTravelerHomeContentVersionReview();
+    const status = document.getElementById('traveler-home-content-version-review-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制内容版本复盘。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制内容版本复盘。';
+    }
+    return text;
+  }
+  function travelerHomeContentVersionReviewFilename(){
+    return 'shanghai-content-version-review.md';
+  }
+  function downloadTravelerHomeContentVersionReviewMarkdown(){
+    const text = renderTravelerHomeContentVersionReview();
+    const filename = travelerHomeContentVersionReviewFilename();
+    const status = document.getElementById('traveler-home-content-version-review-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载内容版本复盘。';
     return {filename, text};
   }
   function travelerHomePostTripReviewRoute(){
@@ -12822,6 +13038,7 @@
     renderTravelerHomePublishOps();
     renderTravelerHomeNextRevisionTaskPackage();
     renderTravelerHomeNextVersionContentDrafts();
+    renderTravelerHomeContentVersionReview();
     renderTravelerHomePostTripReview();
     updateTravelerHomeMemoryStatus(travelerHomeStorageRead(), message || '已恢复导入的行程交接包。');
   }
@@ -13187,9 +13404,12 @@
   document.getElementById('traveler-home-next-version-content-drafts-build-button')?.addEventListener('click', renderTravelerHomeNextVersionContentDrafts);
   document.getElementById('traveler-home-next-version-content-drafts-copy-button')?.addEventListener('click', copyTravelerHomeNextVersionContentDraftsMarkdown);
   document.getElementById('traveler-home-next-version-content-drafts-download-button')?.addEventListener('click', downloadTravelerHomeNextVersionContentDraftsMarkdown);
+  document.getElementById('traveler-home-content-version-review-save-button')?.addEventListener('click', saveTravelerHomeContentVersionReview);
+  document.getElementById('traveler-home-content-version-review-copy-button')?.addEventListener('click', copyTravelerHomeContentVersionReviewMarkdown);
+  document.getElementById('traveler-home-content-version-review-download-button')?.addEventListener('click', downloadTravelerHomeContentVersionReviewMarkdown);
   document.getElementById('traveler-home-post-trip-review-copy-button')?.addEventListener('click', copyTravelerHomePostTripReviewMarkdown);
   document.getElementById('traveler-home-post-trip-review-download-button')?.addEventListener('click', downloadTravelerHomePostTripReviewMarkdown);
-  ['traveler-home-day-execution-day','traveler-home-day-execution-state'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-day-execution-status'); renderTravelerHomeDayExecution(); if (status) status.textContent = '行中执行简报已随现场状态更新。'; }));
+  ['traveler-home-day-execution-day','traveler-home-day-execution-state'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { const status = document.getElementById('traveler-home-day-execution-status'); renderTravelerHomeDayExecution(); renderTravelerHomeNextVersionContentDrafts(); renderTravelerHomeContentVersionReview(); if (status) status.textContent = '行中执行简报已随现场状态更新。'; }));
   ['traveler-home-publish-status-xiaohongshu','traveler-home-publish-status-douyin','traveler-home-publish-status-group','traveler-home-publish-status-travelogue'].forEach(id => document.getElementById(id)?.addEventListener('change', saveTravelerHomePublishStatusBoard));
   ['traveler-home-content-feedback-xiaohongshu-saves','traveler-home-content-feedback-xiaohongshu-comments','traveler-home-content-feedback-douyin-plays','traveler-home-content-feedback-douyin-completion','traveler-home-content-feedback-group-feedback','traveler-home-content-feedback-next-revision'].forEach(id => document.getElementById(id)?.addEventListener('input', saveTravelerHomeContentFeedbackBoard));
   document.querySelectorAll('[data-traveler-home-platform-copy]').forEach(button => {
@@ -13222,6 +13442,7 @@
     renderTravelerHomeContentFeedbackBoard();
     renderTravelerHomeNextRevisionTaskPackage();
     renderTravelerHomeNextVersionContentDrafts();
+    renderTravelerHomeContentVersionReview();
     renderTravelerHomeWorkflow();
     refreshTravelerHomeHandoff();
     if (status) status.textContent = '旅途碎片已保存并更新游记。';
@@ -13287,6 +13508,7 @@
   renderTravelerHomeContentFeedbackBoard();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
+  renderTravelerHomeContentVersionReview();
   renderTravelerHomePostTripReview();
   renderTravelerHomeWorkflow();
   applyTravelerHomeDemoSampleFromLocation();

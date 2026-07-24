@@ -636,6 +636,14 @@
     .traveler-content-growth-decision{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-content-growth-decision h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-content-growth-decision textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
+    .traveler-content-growth-execution,.traveler-content-growth-review{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+    .traveler-content-growth-execution h3,.traveler-content-growth-review h3{margin:0;font-size:18px;letter-spacing:0}
+    .traveler-content-growth-execution textarea,.traveler-content-growth-review textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;resize:vertical}
+    .traveler-growth-review-checks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .traveler-growth-review-checks label{display:flex;align-items:center;gap:8px;min-height:42px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px;font-size:13px;font-weight:800}
+    .traveler-growth-review-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .traveler-growth-review-fields label,.traveler-growth-review-note{display:grid;gap:5px;color:var(--muted);font-size:12px;font-weight:800}
+    .traveler-growth-review-fields input,.traveler-growth-review-note textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px;color:var(--ink);font:inherit}
     .traveler-next-revision-task-package{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
     .traveler-next-revision-task-package h3{margin:0;font-size:18px;letter-spacing:0}
     .traveler-next-version-content-drafts{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
@@ -683,7 +691,7 @@
     @media(max-width:1080px){.traveler-product-brief,.traveler-trial-guide,.traveler-product-completion-overview,.traveler-acceptance,.traveler-api-status,.traveler-weather-precheck,.traveler-maintenance,.traveler-release,.traveler-content-template-library,.traveler-content-intake,.traveler-feedback,.traveler-content-package,.traveler-prepublish-gate,.traveler-public-trial-launch,.traveler-public-trial-retrospective,.traveler-next-iteration-roadmap,.traveler-public-trial-execution,.traveler-public-trial-data-collection,.traveler-release-regression,.traveler-release-audit,.traveler-online-health-check{grid-template-columns:1fr}.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-product-completion-overview-grid,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-intake-grid,.traveler-operator-tools-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-trial-guide-status,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-ops,.traveler-trial-guide-progress{grid-column:1}.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form,.traveler-feedback-form{grid-template-columns:repeat(2,minmax(0,1fr))}.traveler-content-intake-form label:last-child{grid-column:1/-1}}
     @media(max-width:980px){.traveler-picker{grid-template-columns:1fr}.traveler-picker-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:820px){.traveler-top{grid-template-columns:1fr}.traveler-top-actions{justify-content:flex-start}.traveler-workflow-steps{grid-template-columns:1fr 1fr}.traveler-controls{grid-template-columns:1fr 1fr;position:static}.traveler-home-status{grid-column:1/-1}.traveler-route-card{grid-template-columns:1fr}.traveler-route-visual{min-height:160px}.live-deployment-banner{display:grid}}
-    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-publish-status-board-controls,.traveler-content-feedback-grid,.traveler-content-version-review-list,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-feedback-grid label:nth-child(n+5),.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
+    @media(max-width:520px){.traveler-controls,.traveler-picker-grid,.traveler-content-style-settings,.traveler-platform-settings,.traveler-day-execution-controls,.traveler-publish-status-board-controls,.traveler-content-feedback-grid,.traveler-content-version-review-list,.traveler-growth-review-checks,.traveler-growth-review-fields,.traveler-draft-row,.traveler-workflow-steps,.traveler-product-brief-grid,.traveler-trial-guide-grid,.traveler-trial-guide-progress,.traveler-trial-guide-delivery,.traveler-trial-guide-checklist,.traveler-trial-guide-invitation,.traveler-trial-guide-invitation-list,.traveler-trial-guide-ops,.traveler-trial-guide-ops-list,.traveler-trial-guide-ops-tracker-list,.traveler-trial-guide-ops-fix-package-list,.traveler-product-completion-overview-grid,.traveler-product-completion-overview-list,.traveler-acceptance-grid,.traveler-api-status-grid,.traveler-weather-precheck-grid,.traveler-maintenance-grid,.traveler-release-grid,.traveler-content-template-library-grid,.traveler-content-template-library-list,.traveler-content-intake-grid,.traveler-content-intake-form,.traveler-feedback-form,.traveler-release-audit-fields,.traveler-online-health-check-list,.traveler-operator-tools-nav{grid-template-columns:1fr}.traveler-content-feedback-grid label:nth-child(n+5),.traveler-content-intake-form label:last-child{grid-column:auto}.traveler-brand h1{font-size:30px}.traveler-route-card{padding:12px}.traveler-route-card h2{font-size:19px}.traveler-route-actions a,.traveler-recommendation-actions a{flex:1 1 120px}.traveler-draft-actions,.traveler-handoff-import-actions,.traveler-content-package-import-actions,.traveler-trial-guide-delivery-actions,.traveler-trial-guide-checklist-actions,.traveler-trial-guide-invitation-actions,.traveler-trial-guide-ops-actions,.traveler-trial-guide-ops-tracker-actions,.traveler-trial-guide-ops-fix-package-actions,.traveler-product-completion-overview-actions,.traveler-weather-precheck-actions,.traveler-public-trial-launch-actions,.traveler-public-trial-retrospective-actions,.traveler-next-iteration-roadmap-actions,.traveler-public-trial-execution-actions,.traveler-public-trial-data-collection-actions,.traveler-online-health-check-actions{justify-content:flex-start}}
   </style>
 </head>
 <body>
@@ -2116,6 +2124,30 @@
       </div>
       <textarea id="traveler-home-content-growth-execution-output" readonly rows="12" aria-label="内容增长执行包 Markdown"></textarea>
       <p id="traveler-home-content-growth-execution-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-content-growth-review" class="traveler-content-growth-review" aria-label="内容增长结果复盘">
+      <div class="traveler-social-card-head">
+        <h3>内容增长结果复盘</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-content-growth-review-save-button" data-traveler-home-content-growth-review-save>保存复盘</button>
+          <button type="button" id="traveler-home-content-growth-review-copy-button" data-traveler-home-content-growth-review-copy>复制复盘</button>
+          <button type="button" id="traveler-home-content-growth-review-download-button" data-traveler-home-content-growth-review-download>下载Markdown</button>
+        </div>
+      </div>
+      <div class="traveler-growth-review-checks">
+        <label><input id="traveler-home-content-growth-review-title-done" type="checkbox">标题已更新</label>
+        <label><input id="traveler-home-content-growth-review-video-done" type="checkbox">短视频开头已更新</label>
+        <label><input id="traveler-home-content-growth-review-map-done" type="checkbox">路线/地图已更新</label>
+        <label><input id="traveler-home-content-growth-review-drafts-done" type="checkbox">平台草稿已刷新</label>
+      </div>
+      <div class="traveler-growth-review-fields">
+        <label for="traveler-home-content-growth-review-saves">改版后小红书收藏<input id="traveler-home-content-growth-review-saves" type="number" min="0" inputmode="numeric"></label>
+        <label for="traveler-home-content-growth-review-plays">改版后抖音播放<input id="traveler-home-content-growth-review-plays" type="number" min="0" inputmode="numeric"></label>
+        <label for="traveler-home-content-growth-review-completion">改版后抖音完播率<input id="traveler-home-content-growth-review-completion" type="number" min="0" max="100" step="0.1" inputmode="decimal"></label>
+      </div>
+      <label class="traveler-growth-review-note" for="traveler-home-content-growth-review-note">复盘备注<textarea id="traveler-home-content-growth-review-note" rows="3" placeholder="记录这轮为什么有效或为什么没有达到预期"></textarea></label>
+      <textarea id="traveler-home-content-growth-review-output" readonly rows="12" aria-label="内容增长结果复盘 Markdown"></textarea>
+      <p id="traveler-home-content-growth-review-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-next-revision-task-package" class="traveler-next-revision-task-package" aria-label="下一版优化任务包">
       <div class="traveler-social-card-head">
@@ -11074,6 +11106,8 @@
         content_growth_decision_markdown: travelerHomeContentGrowthDecisionMarkdown(),
         content_growth_execution: travelerHomeContentGrowthExecutionSummary(),
         content_growth_execution_markdown: travelerHomeContentGrowthExecutionMarkdown(),
+        content_growth_reviews: travelerHomeContentGrowthReviews(),
+        content_growth_review_markdown: travelerHomeContentGrowthReviewMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
@@ -12874,6 +12908,119 @@
     if (status) status.textContent = '已下载内容增长执行包。';
     return {filename, text};
   }
+  function travelerHomeContentGrowthReviews(){
+    const reviews = travelerHomeStorageRead().contentGrowthReviews;
+    return Array.isArray(reviews) ? reviews.filter(Boolean) : [];
+  }
+  function travelerHomeContentGrowthReviewNumber(id){
+    const value = travelerHomePlatformDataTrendNumber(document.getElementById(id)?.value);
+    return value === null ? 0 : value;
+  }
+  function travelerHomeContentGrowthReviewMetric(entry, field){
+    const value = travelerHomePlatformDataTrendNumber(entry?.[field]);
+    return value === null ? 0 : value;
+  }
+  function travelerHomeContentGrowthReviewVerdict(deltas, completedCount){
+    const positive = [deltas.xiaohongshuSaves, deltas.douyinPlays, deltas.douyinCompletionRate].filter(value => value > 0).length;
+    if (completedCount === 4 && positive >= 2) return '继续放大';
+    if (positive >= 1) return '继续观察';
+    return '回退调整';
+  }
+  function saveTravelerHomeContentGrowthReview(){
+    const decision = travelerHomeContentGrowthDecisionSummary();
+    const baselineEntry = travelerHomePlatformDataTrendSummary().lastEntry || {};
+    const completed = {
+      title: Boolean(document.getElementById('traveler-home-content-growth-review-title-done')?.checked),
+      video: Boolean(document.getElementById('traveler-home-content-growth-review-video-done')?.checked),
+      map: Boolean(document.getElementById('traveler-home-content-growth-review-map-done')?.checked),
+      drafts: Boolean(document.getElementById('traveler-home-content-growth-review-drafts-done')?.checked),
+    };
+    const completedCount = Object.values(completed).filter(Boolean).length;
+    const baseline = {
+      xiaohongshuSaves: travelerHomeContentGrowthReviewMetric(baselineEntry, 'xiaohongshuSaves'),
+      douyinPlays: travelerHomeContentGrowthReviewMetric(baselineEntry, 'douyinPlays'),
+      douyinCompletionRate: travelerHomeContentGrowthReviewMetric(baselineEntry, 'douyinCompletionRate'),
+    };
+    const results = {
+      xiaohongshuSaves: travelerHomeContentGrowthReviewNumber('traveler-home-content-growth-review-saves'),
+      douyinPlays: travelerHomeContentGrowthReviewNumber('traveler-home-content-growth-review-plays'),
+      douyinCompletionRate: travelerHomeContentGrowthReviewNumber('traveler-home-content-growth-review-completion'),
+    };
+    const deltas = {
+      xiaohongshuSaves: results.xiaohongshuSaves - baseline.xiaohongshuSaves,
+      douyinPlays: results.douyinPlays - baseline.douyinPlays,
+      douyinCompletionRate: results.douyinCompletionRate - baseline.douyinCompletionRate,
+    };
+    const review = {
+      id: `content-growth-review-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      priority: decision.priority, routeId: decision.routeId, routeTitle: decision.routeTitle, scenario: decision.scenario, day: decision.day,
+      question: decision.question, nextAction: decision.nextAction, completed, completedCount, baseline, results, deltas,
+      note: travelerHomeContentFeedbackBoardClean(document.getElementById('traveler-home-content-growth-review-note')?.value),
+      verdict: travelerHomeContentGrowthReviewVerdict(deltas, completedCount),
+    };
+    const state = travelerHomeStorageRead();
+    const reviews = Array.isArray(state.contentGrowthReviews) ? state.contentGrowthReviews : [];
+    state.contentGrowthReviews = reviews.concat([review]).slice(-12);
+    state.updatedAt = review.createdAt;
+    travelerHomeStorageWrite(state);
+    renderTravelerHomeContentGrowthReview();
+    const status = document.getElementById('traveler-home-content-growth-review-status');
+    if (status) status.textContent = `已保存复盘，判断：${review.verdict}。`;
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return review;
+  }
+  function travelerHomeContentGrowthReviewMetricLine(label, before, after, suffix){
+    const delta = after - before;
+    const sign = delta > 0 ? '+' : '';
+    return `- ${label}：${before}${suffix || ''} → ${after}${suffix || ''}（${sign}${delta}${suffix || ''}）`;
+  }
+  function travelerHomeContentGrowthReviewMarkdown(){
+    const reviews = travelerHomeContentGrowthReviews();
+    const review = reviews[reviews.length - 1];
+    if (!review) return '# 上海内容增长结果复盘\n\n尚未保存执行结果。完成执行任务并填写改版后数据，再生成复盘。';
+    const lines = [
+      '# 上海内容增长结果复盘', '',
+      `路线：${review.scenario}｜${review.routeTitle}`,
+      `执行日：Day ${review.day}`,
+      `执行完成：${review.completedCount}/4`,
+      '', '## 效果对比',
+      travelerHomeContentGrowthReviewMetricLine('小红书收藏', review.baseline.xiaohongshuSaves, review.results.xiaohongshuSaves, ''),
+      travelerHomeContentGrowthReviewMetricLine('抖音播放', review.baseline.douyinPlays, review.results.douyinPlays, ''),
+      travelerHomeContentGrowthReviewMetricLine('抖音完播率', review.baseline.douyinCompletionRate, review.results.douyinCompletionRate, '%'),
+      '', '## 复盘结论',
+      `- 结论：${review.verdict}`,
+      `- 可复用规则：${review.question}`,
+      `- 本轮动作：${review.nextAction}`,
+      `- 备注：${review.note || '未填写'}`,
+      '- 边界：单轮数据只用于下一轮内容判断，不代表平台整体趋势。',
+    ];
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomeContentGrowthReview(){
+    const text = travelerHomeContentGrowthReviewMarkdown();
+    const output = document.getElementById('traveler-home-content-growth-review-output');
+    if (output) output.value = text;
+    return text;
+  }
+  async function copyTravelerHomeContentGrowthReviewMarkdown(){
+    const text = renderTravelerHomeContentGrowthReview();
+    const status = document.getElementById('traveler-home-content-growth-review-status');
+    try { await navigator.clipboard.writeText(text); if (status) status.textContent = '已复制内容增长结果复盘。'; }
+    catch (error) { if (status) status.textContent = '复制失败，可以手动复制内容增长结果复盘。'; }
+    return text;
+  }
+  function downloadTravelerHomeContentGrowthReviewMarkdown(){
+    const text = renderTravelerHomeContentGrowthReview();
+    const filename = 'shanghai-content-growth-review.md';
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = href; link.download = filename; document.body?.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(href);
+    const status = document.getElementById('traveler-home-content-growth-review-status');
+    if (status) status.textContent = '已下载内容增长结果复盘。';
+    return {filename, text};
+  }
   function travelerHomeNextRevisionTaskPackageRoute(){
     return travelerHomeContentFeedbackBoardRoute();
   }
@@ -14021,6 +14168,9 @@
   document.getElementById('traveler-home-content-growth-execution-build-button')?.addEventListener('click', renderTravelerHomeContentGrowthExecution);
   document.getElementById('traveler-home-content-growth-execution-copy-button')?.addEventListener('click', copyTravelerHomeContentGrowthExecutionMarkdown);
   document.getElementById('traveler-home-content-growth-execution-download-button')?.addEventListener('click', downloadTravelerHomeContentGrowthExecutionMarkdown);
+  document.getElementById('traveler-home-content-growth-review-save-button')?.addEventListener('click', saveTravelerHomeContentGrowthReview);
+  document.getElementById('traveler-home-content-growth-review-copy-button')?.addEventListener('click', copyTravelerHomeContentGrowthReviewMarkdown);
+  document.getElementById('traveler-home-content-growth-review-download-button')?.addEventListener('click', downloadTravelerHomeContentGrowthReviewMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
@@ -14133,6 +14283,7 @@
   renderTravelerHomePlatformDataTrend();
   renderTravelerHomeContentGrowthDecision();
   renderTravelerHomeContentGrowthExecution();
+  renderTravelerHomeContentGrowthReview();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomeContentVersionReview();

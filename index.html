@@ -708,7 +708,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-23</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-24</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
 <section id="traveler-home-product-brief" class="traveler-product-brief" aria-label="产品说明">
   <div>
@@ -2104,6 +2104,18 @@
       </div>
       <textarea id="traveler-home-content-growth-decision-output" readonly rows="10" aria-label="内容增长决策 Markdown"></textarea>
       <p id="traveler-home-content-growth-decision-status" class="traveler-pack-status" aria-live="polite"></p>
+    </div>
+    <div id="traveler-home-content-growth-execution" class="traveler-content-growth-execution" aria-label="内容增长执行包">
+      <div class="traveler-social-card-head">
+        <h3>内容增长执行包</h3>
+        <div class="traveler-pack-actions">
+          <button type="button" class="primary" id="traveler-home-content-growth-execution-build-button" data-traveler-home-content-growth-execution-build>生成执行包</button>
+          <button type="button" id="traveler-home-content-growth-execution-copy-button" data-traveler-home-content-growth-execution-copy>复制执行包</button>
+          <button type="button" id="traveler-home-content-growth-execution-download-button" data-traveler-home-content-growth-execution-download>下载Markdown</button>
+        </div>
+      </div>
+      <textarea id="traveler-home-content-growth-execution-output" readonly rows="12" aria-label="内容增长执行包 Markdown"></textarea>
+      <p id="traveler-home-content-growth-execution-status" class="traveler-pack-status" aria-live="polite"></p>
     </div>
     <div id="traveler-home-next-revision-task-package" class="traveler-next-revision-task-package" aria-label="下一版优化任务包">
       <div class="traveler-social-card-head">
@@ -11060,6 +11072,8 @@
         platform_data_trend_markdown: travelerHomePlatformDataTrendMarkdown(),
         content_growth_decision: travelerHomeContentGrowthDecisionSummary(),
         content_growth_decision_markdown: travelerHomeContentGrowthDecisionMarkdown(),
+        content_growth_execution: travelerHomeContentGrowthExecutionSummary(),
+        content_growth_execution_markdown: travelerHomeContentGrowthExecutionMarkdown(),
         next_revision_task_package_markdown: travelerHomeNextRevisionTaskPackageMarkdown(),
         next_version_content_drafts_markdown: travelerHomeNextVersionContentDraftsMarkdown(),
         content_version_review: state.contentVersionReview && typeof state.contentVersionReview === 'object' ? state.contentVersionReview : {},
@@ -12455,6 +12469,7 @@
     renderTravelerHomeContentVersionReview();
     renderTravelerHomePlatformDataTrend();
     renderTravelerHomeContentGrowthDecision();
+    renderTravelerHomeContentGrowthExecution();
     refreshTravelerHomeHandoff();
     renderTravelerHomeDataVault();
     return result;
@@ -12780,6 +12795,83 @@
     link.remove();
     URL.revokeObjectURL(href);
     if (status) status.textContent = '已下载内容增长决策面板。';
+    return {filename, text};
+  }
+  function travelerHomeContentGrowthExecutionSummary(){
+    const decision = travelerHomeContentGrowthDecisionSummary();
+    return {...decision, tasks: travelerHomeContentGrowthExecutionTasks()};
+  }
+  function travelerHomeContentGrowthExecutionTasks(){
+    const decision = travelerHomeContentGrowthDecisionSummary();
+    if (!decision.focusKey) return [];
+    return [
+      `[${decision.priority}][标题] 小红书标题角度：${decision.question}`,
+      `[${decision.priority}][短视频] 抖音开头：上海 Day ${decision.day} ${decision.question}`,
+      `[${decision.priority}][路线/地图] ${decision.nextAction}`,
+      `[${decision.priority}][内容刷新] 刷新下一版小红书和抖音草稿。`,
+    ];
+  }
+  function travelerHomeContentGrowthExecutionMarkdown(){
+    const execution = travelerHomeContentGrowthExecutionSummary();
+    if (!execution.focusKey) return '# 上海内容增长执行包\n\n当前还没有可执行的平台趋势数据。先导入至少一批平台数据，再生成执行包。';
+    const lines = [
+      '# 上海内容增长执行包',
+      '',
+      `优先级：${execution.priority}`,
+      `路线：${execution.scenario}｜${execution.routeTitle}`,
+      `执行日：Day ${execution.day}`,
+      `本轮信号：${execution.question}｜${execution.feedback}`,
+      '',
+      '## 执行任务',
+      ...execution.tasks.map(task => `- ${task}`),
+      '',
+      '## 验收清单',
+      '- 标题、开头、路线/地图三处均出现少走路解法。',
+      '- 下一版小红书和抖音草稿已按本轮问题刷新，并保留真实行程边界。',
+      '- 移动端复看路线页，确认夜景段少走路提示和必要的删减/备选能看懂。',
+      '- 下一轮只依据真实发布数据、评论质量和收藏/完播变化继续调整。',
+    ];
+    return lines.filter(line => line !== '').join('\n');
+  }
+  function renderTravelerHomeContentGrowthExecution(){
+    const text = travelerHomeContentGrowthExecutionMarkdown();
+    const output = document.getElementById('traveler-home-content-growth-execution-output');
+    const status = document.getElementById('traveler-home-content-growth-execution-status');
+    if (output) output.value = text;
+    if (status) status.textContent = '已生成内容增长执行包。';
+    renderTravelerHomeNextRevisionTaskPackage();
+    refreshTravelerHomeHandoff();
+    renderTravelerHomeDataVault();
+    return text;
+  }
+  async function copyTravelerHomeContentGrowthExecutionMarkdown(){
+    const text = renderTravelerHomeContentGrowthExecution();
+    const status = document.getElementById('traveler-home-content-growth-execution-status');
+    try {
+      await navigator.clipboard.writeText(text);
+      if (status) status.textContent = '已复制内容增长执行包。';
+    } catch (error) {
+      if (status) status.textContent = '复制失败，可以手动复制内容增长执行包。';
+    }
+    return text;
+  }
+  function travelerHomeContentGrowthExecutionFilename(){
+    return 'shanghai-content-growth-execution.md';
+  }
+  function downloadTravelerHomeContentGrowthExecutionMarkdown(){
+    const text = renderTravelerHomeContentGrowthExecution();
+    const filename = travelerHomeContentGrowthExecutionFilename();
+    const status = document.getElementById('traveler-home-content-growth-execution-status');
+    const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body?.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+    if (status) status.textContent = '已下载内容增长执行包。';
     return {filename, text};
   }
   function travelerHomeNextRevisionTaskPackageRoute(){
@@ -13926,6 +14018,9 @@
   document.getElementById('traveler-home-content-growth-decision-build-button')?.addEventListener('click', renderTravelerHomeContentGrowthDecision);
   document.getElementById('traveler-home-content-growth-decision-copy-button')?.addEventListener('click', copyTravelerHomeContentGrowthDecisionMarkdown);
   document.getElementById('traveler-home-content-growth-decision-download-button')?.addEventListener('click', downloadTravelerHomeContentGrowthDecisionMarkdown);
+  document.getElementById('traveler-home-content-growth-execution-build-button')?.addEventListener('click', renderTravelerHomeContentGrowthExecution);
+  document.getElementById('traveler-home-content-growth-execution-copy-button')?.addEventListener('click', copyTravelerHomeContentGrowthExecutionMarkdown);
+  document.getElementById('traveler-home-content-growth-execution-download-button')?.addEventListener('click', downloadTravelerHomeContentGrowthExecutionMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-build-button')?.addEventListener('click', renderTravelerHomeNextRevisionTaskPackage);
   document.getElementById('traveler-home-next-revision-task-package-copy-button')?.addEventListener('click', copyTravelerHomeNextRevisionTaskPackageMarkdown);
   document.getElementById('traveler-home-next-revision-task-package-download-button')?.addEventListener('click', downloadTravelerHomeNextRevisionTaskPackageMarkdown);
@@ -14037,6 +14132,7 @@
   renderTravelerHomePlatformDataImport();
   renderTravelerHomePlatformDataTrend();
   renderTravelerHomeContentGrowthDecision();
+  renderTravelerHomeContentGrowthExecution();
   renderTravelerHomeNextRevisionTaskPackage();
   renderTravelerHomeNextVersionContentDrafts();
   renderTravelerHomeContentVersionReview();

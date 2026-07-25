@@ -721,7 +721,7 @@
       <a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">下载离线包</a>
       <button type="button" id="copy-traveler-home-share-button">复制分享</button>
     </div>
-    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-24</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
+    <div class="live-deployment-banner" aria-label="发布信息"><div><b>公网版本</b><span>发布：2026-07-25</span></div><nav aria-label="公网发布入口"><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/">公网首页</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench.html">工作台</a><a href="https://yangrongyu64-sketch.github.io/shanghai-travel-planner-workbench/workbench-demo.zip">离线包</a><a href="LIVE_DEPLOYMENT.md">发布记录</a><a href="https://github.com/yangrongyu64-sketch/shanghai-travel-planner-workbench">GitHub仓库</a></nav></div>
   </header>
   <nav id="traveler-home-mode-switcher" class="traveler-mode-switcher" aria-label="工作台模式">
     <button type="button" id="traveler-home-mode-traveler" data-traveler-home-mode="traveler" aria-pressed="true">游客规划</button>
@@ -1913,6 +1913,7 @@
         <h3>平台文案变体</h3>
         <div class="traveler-pack-actions">
           <button type="button" class="primary" data-traveler-home-platform-copy="xiaohongshu">小红书</button>
+          <button type="button" data-traveler-home-platform-copy="douyin">抖音</button>
           <button type="button" data-traveler-home-platform-copy="moments">朋友圈</button>
           <button type="button" data-traveler-home-platform-copy="group">同行群</button>
           <button type="button" id="traveler-home-platform-copy-button">复制当前</button>
@@ -10705,7 +10706,7 @@
   }
   let travelerHomePlatformCopyCurrent = 'xiaohongshu';
   function travelerHomePlatformCopyLabel(platform){
-    const labels = {xiaohongshu:'小红书笔记', moments:'朋友圈短文', group:'同行群消息'};
+    const labels = {xiaohongshu:'小红书笔记', douyin:'抖音口播脚本', moments:'朋友圈短文', group:'同行群消息'};
     return labels[platform] || labels.xiaohongshu;
   }
   function travelerHomePlatformCopyTags(route){
@@ -10749,6 +10750,26 @@
     const mapUrl = travelerHomeAbsoluteUrl(route.mapHref);
     const styleLine = travelerHomeContentStylePlatformLine();
     const styleSentence = travelerHomeContentStyleSentence();
+    if (target === 'douyin') {
+      const firstStop = route.mapDays?.[0]?.stops?.[0]?.placeName || route.primaryAngle;
+      const lastStop = route.mapDays?.[0]?.stops?.slice(-1)?.[0]?.placeName || route.title;
+      const lines = [
+        '抖音口播脚本',
+        travelerHomePlatformCopyToneLine(settings),
+        travelerHomePlatformCopyLengthLine(settings),
+        `3秒开场：来上海别急着堆景点，${route.scenario}先按这条顺路路线走。` ,
+        `镜头顺序：路线地图 → ${firstStop} → 当天补给点 → ${lastStop}` ,
+        `口播：这条${route.title}适合${route.audience.replace(/^适合/, '')}。先看地图定顺序，再按体力删点，不为一个热门店折返。` ,
+        `攻略：${guideUrl}` ,
+        `地图：${mapUrl}` ,
+      ];
+      if (styleLine) lines.splice(3, 0, styleLine);
+      if (styleSentence) lines.push(`表达提醒：${styleSentence}`);
+      if (settings.length !== 'short') lines.push(`拍摄重点：${route.primaryAngle}，每个镜头只讲一个路线判断。`);
+      if (settings.length === 'detailed') lines.push(`补充口播：我的偏好是${preferenceLabel}，现场遇到下雨、人多或低体力就切同区备选。`);
+      lines.push('发布前复核开放、预约、票务、交通和临时闭馆；只把亲历内容说成个人体验。');
+      return lines.join('\n');
+    }
     if (target === 'moments') {
       const lines = [
         '朋友圈短文',
@@ -10866,7 +10887,7 @@
     return state;
   }
   function travelerHomePlatformDraftOverviewRows(){
-    return ['xiaohongshu','moments','group'].map(platform => {
+    return ['xiaohongshu','douyin','moments','group'].map(platform => {
       const generated = travelerHomePlatformCopyText(platform);
       const savedDraft = travelerHomePlatformCopySavedDraft(platform);
       const text = savedDraft || generated;

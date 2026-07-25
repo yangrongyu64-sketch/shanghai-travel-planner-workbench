@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="app-icon.svg" type="image/svg+xml">
+  <title>上海攻略真实试跑反馈</title>
+  <style>
+    :root { color-scheme: light; --ink:#17211d; --muted:#637069; --line:#d9dfdc; --paper:#f6f7f5; --white:#fff; --green:#176b4d; --green-dark:#0f5139; --yellow:#f1c75b; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:0; }
+    header { background:var(--ink); color:#fff; }
+    header > div, main { width:min(920px,calc(100% - 32px)); margin:auto; }
+    header > div { display:flex; align-items:center; justify-content:space-between; min-height:64px; gap:20px; }
+    header strong { font-size:17px; }
+    header a { color:#fff; text-decoration:none; }
+    main { padding:36px 0 64px; }
+    h1 { margin:0 0 8px; font-size:30px; line-height:1.25; }
+    h2 { margin:0 0 16px; font-size:19px; }
+    p { margin:0; }
+    .intro { margin-bottom:28px; }
+    .intro p { color:var(--muted); }
+    .notice { margin-top:16px; padding:12px 14px; border-left:4px solid var(--yellow); background:#fff9e9; }
+    section { padding:24px 0; border-top:1px solid var(--line); }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    label, fieldset { min-width:0; }
+    label > span, legend { display:block; margin-bottom:6px; font-weight:650; }
+    input, select, textarea, button { font:inherit; letter-spacing:0; }
+    input[type="text"], select, textarea { width:100%; border:1px solid #b8c2bd; border-radius:6px; background:var(--white); color:var(--ink); padding:10px 11px; }
+    textarea { min-height:94px; resize:vertical; }
+    input:focus, select:focus, textarea:focus, button:focus { outline:3px solid rgba(23,107,77,.2); outline-offset:1px; border-color:var(--green); }
+    fieldset { margin:0; padding:0; border:0; }
+    .checks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .check { display:flex; align-items:flex-start; gap:9px; padding:11px; border:1px solid var(--line); border-radius:6px; background:var(--white); }
+    .check input { margin-top:5px; }
+    .stack { display:grid; gap:16px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
+    button { min-height:44px; border:1px solid #aeb9b4; border-radius:6px; padding:9px 15px; background:#fff; color:var(--ink); cursor:pointer; }
+    button.primary { border-color:var(--green); background:var(--green); color:#fff; font-weight:700; }
+    button.primary:hover { background:var(--green-dark); }
+    .status { min-height:24px; color:var(--green-dark); font-weight:650; }
+    .output-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:16px; }
+    .output-grid textarea { min-height:250px; font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    small { color:var(--muted); }
+    @media (max-width:640px) {
+      header > div, main { width:min(100% - 24px,920px); }
+      header > div { min-height:56px; }
+      main { padding-top:24px; }
+      h1 { font-size:25px; }
+      .grid, .checks, .output-grid { grid-template-columns:1fr; }
+      section { padding:20px 0; }
+      .actions button { flex:1 1 140px; }
+    }
+  </style>
+</head>
+<body>
+<header><div><strong>上海攻略试跑</strong><a href="index.html">返回路线首页</a></div></header>
+<main id="pilot-feedback">
+  <div class="intro">
+    <h1>真实试跑反馈</h1>
+    <p>只记录哪里卡住、什么有用，以及下一版最该先改什么。</p>
+    <div class="notice"><b>隐私与提交说明</b><br>本页面不会自动上传。生成后请把 Markdown 或 JSON 文件发给主理人。不要填写账号、Cookie、API Key、手机号、身份证或定位记录。</div>
+  </div>
+  <form id="pilot-feedback-form">
+    <section>
+      <h2>1. 本次体验</h2>
+      <div class="grid">
+        <label><span>测试者编号</span><input id="pilot-feedback-tester-id" type="text" placeholder="例如 T01" autocomplete="off"></label>
+        <label><span>身份</span><select id="pilot-feedback-role"><option>普通游客</option><option>同行人</option><option>旅游内容创作者</option><option>旅行从业者</option></select></label>
+        <label><span>设备</span><select id="pilot-feedback-device"><option>手机</option><option>电脑</option><option>平板</option></select></label>
+        <label><span>测试路线</span><select id="pilot-feedback-route"><option>2日躺平 city walk</option><option>3日经典初游</option><option>5日文化深游</option><option>7日城市探索</option><option>15日慢住上海</option><option>其他路线</option></select></label>
+      </div>
+    </section>
+    <section>
+      <h2>2. 做到了哪些步骤</h2>
+      <fieldset><legend>完成状态</legend><div class="checks">
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="选出路线"><span>选出路线</span></label>
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="看懂每日安排"><span>看懂每日安排</span></label>
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="打开路线地图"><span>打开路线地图</span></label>
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="找到交通或备选"><span>找到交通或备选</span></label>
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="生成路线或内容包"><span>生成路线或内容包</span></label>
+        <label class="check"><input type="checkbox" name="pilot-feedback-completion" value="愿意照着实际出行"><span>愿意照着实际出行</span></label>
+      </div></fieldset>
+    </section>
+    <section>
+      <h2>3. 最关键的反馈</h2>
+      <div class="stack">
+        <label><span>最卡的一步</span><textarea id="pilot-feedback-hardest-step" placeholder="在哪一步停住了？为什么？"></textarea></label>
+        <label><span>地图或动线问题</span><textarea id="pilot-feedback-map-issue" placeholder="哪个点位、顺序、地铁口或步行说明不清楚？"></textarea></label>
+        <label><span>可以直接使用的内容</span><textarea id="pilot-feedback-usable-content" placeholder="哪段路线、提醒或文案你会直接用？"></textarea></label>
+        <label><span>看起来像模板的内容</span><textarea id="pilot-feedback-template-content" placeholder="哪句话空泛、重复或不像真实体验？"></textarea></label>
+        <label><span>如果只能改一个地方</span><textarea id="pilot-feedback-priority-change" placeholder="请只写一个最高优先级修改项。" required></textarea></label>
+        <div class="grid">
+          <label><span>影响程度</span><select id="pilot-feedback-impact"><option value="blocks_use">阻塞使用</option><option value="affects_experience" selected>影响体验</option><option value="suggestion">建议优化</option></select></label>
+          <label><span>是否愿意再次使用</span><select id="pilot-feedback-reuse"><option>愿意</option><option>改完愿意</option><option>不确定</option><option>不愿意</option></select></label>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2>4. 生成并发回</h2>
+      <small>先生成，再复制 Markdown 或下载 JSON。页面不会替你发送。</small>
+      <div class="actions">
+        <button class="primary" type="button" id="pilot-feedback-build-button">生成反馈</button>
+        <button type="button" id="pilot-feedback-copy-button">复制 Markdown</button>
+        <button type="button" id="pilot-feedback-json-download-button">下载 JSON</button>
+      </div>
+      <p id="pilot-feedback-status" class="status" aria-live="polite"></p>
+      <div class="output-grid">
+        <label><span>Markdown</span><textarea id="pilot-feedback-markdown-output" readonly></textarea></label>
+        <label><span>JSON</span><textarea id="pilot-feedback-json-output" readonly></textarea></label>
+      </div>
+    </section>
+  </form>
+</main>
+<script>
+  const value = id => document.getElementById(id).value.trim();
+  const completionValues = () => Array.from(document.querySelectorAll('input[name="pilot-feedback-completion"]:checked')).map(item => item.value);
+  function buildPilotFeedbackRecord(){
+    return {
+      schema: 'shanghai-real-pilot-feedback-v1',
+      createdAt: new Date().toISOString(),
+      testerId: value('pilot-feedback-tester-id') || '未填写',
+      role: value('pilot-feedback-role'), device: value('pilot-feedback-device'), route: value('pilot-feedback-route'),
+      completed: completionValues(), hardestStep: value('pilot-feedback-hardest-step'), mapIssue: value('pilot-feedback-map-issue'),
+      usableContent: value('pilot-feedback-usable-content'), templateContent: value('pilot-feedback-template-content'),
+      priorityChange: value('pilot-feedback-priority-change'), impact: value('pilot-feedback-impact'), reuse: value('pilot-feedback-reuse')
+    };
+  }
+  function buildPilotFeedbackMarkdown(){
+    const r = buildPilotFeedbackRecord();
+    const completed = r.completed.length ? r.completed.map(item => `- [x] ${item}`).join('\n') : '- [ ] 未勾选完成步骤';
+    return `# 上海攻略真实试跑反馈\n\n- 测试者编号：${r.testerId}\n- 反馈人：${r.role}\n- 设备：${r.device}\n- 关联路线：${r.route}\n- 影响程度：${r.impact}\n- 是否愿意再次使用：${r.reuse}\n\n## 完成状态\n${completed}\n\n## 最卡的一步\n${r.hardestStep || '无'}\n\n## 地图/动线问题\n${r.mapIssue || '无'}\n\n## 可直接使用的内容\n${r.usableContent || '无'}\n\n## 模板感内容\n${r.templateContent || '无'}\n\n## 唯一优先修改项\n${r.priorityChange || '未填写'}\n`;
+  }
+  function renderPilotFeedback(){
+    const record = buildPilotFeedbackRecord();
+    document.getElementById('pilot-feedback-markdown-output').value = buildPilotFeedbackMarkdown();
+    document.getElementById('pilot-feedback-json-output').value = JSON.stringify(record, null, 2);
+    document.getElementById('pilot-feedback-status').textContent = record.priorityChange ? '反馈已生成，请复制或下载后发给主理人。' : '反馈已生成；请补充唯一优先修改项后再发送。';
+    return record;
+  }
+  function downloadPilotFeedbackJson(){
+    const record = renderPilotFeedback();
+    const blob = new Blob([JSON.stringify(record, null, 2)], {type:'application/json;charset=utf-8'});
+    const anchor = document.createElement('a'); anchor.href = URL.createObjectURL(blob); anchor.download = `shanghai-pilot-feedback-${record.testerId}.json`;
+    document.body.appendChild(anchor); anchor.click(); anchor.remove(); URL.revokeObjectURL(anchor.href);
+    document.getElementById('pilot-feedback-status').textContent = 'JSON 已下载，请把文件发给主理人。';
+  }
+  document.getElementById('pilot-feedback-build-button').addEventListener('click', renderPilotFeedback);
+  document.getElementById('pilot-feedback-copy-button').addEventListener('click', async () => {
+    const markdown = buildPilotFeedbackMarkdown();
+    renderPilotFeedback();
+    await navigator.clipboard.writeText(markdown);
+    document.getElementById('pilot-feedback-status').textContent = 'Markdown 已复制，请发给主理人。';
+  });
+  document.getElementById('pilot-feedback-json-download-button').addEventListener('click', downloadPilotFeedbackJson);
+</script>
+</body>
+</html>

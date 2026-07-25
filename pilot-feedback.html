@@ -126,10 +126,19 @@
       priorityChange: value('pilot-feedback-priority-change'), impact: value('pilot-feedback-impact'), reuse: value('pilot-feedback-reuse')
     };
   }
+  function pilotFeedbackIssueType(r){
+    if (r.mapIssue) return '地图点位/动线问题';
+    if (r.templateContent) return '文案不好用';
+    if (r.hardestStep) return '路线不顺/节奏问题';
+    return '其他';
+  }
+  function pilotFeedbackImpactLabel(impact){
+    return {blocks_use:'阻塞使用', affects_experience:'影响体验', suggestion:'建议优化'}[impact] || '建议优化';
+  }
   function buildPilotFeedbackMarkdown(){
     const r = buildPilotFeedbackRecord();
     const completed = r.completed.length ? r.completed.map(item => `- [x] ${item}`).join('\n') : '- [ ] 未勾选完成步骤';
-    return `# 上海攻略真实试跑反馈\n\n- 测试者编号：${r.testerId}\n- 反馈人：${r.role}\n- 设备：${r.device}\n- 关联路线：${r.route}\n- 影响程度：${r.impact}\n- 是否愿意再次使用：${r.reuse}\n\n## 完成状态\n${completed}\n\n## 最卡的一步\n${r.hardestStep || '无'}\n\n## 地图/动线问题\n${r.mapIssue || '无'}\n\n## 可直接使用的内容\n${r.usableContent || '无'}\n\n## 模板感内容\n${r.templateContent || '无'}\n\n## 唯一优先修改项\n${r.priorityChange || '未填写'}\n`;
+    return `# 上海攻略试用反馈包\n\n测试者编号：${r.testerId}\n反馈人：${r.role}\n设备：${r.device}\n路线：${r.route}\n问题类型：${pilotFeedbackIssueType(r)}\n影响程度：${pilotFeedbackImpactLabel(r.impact)}\n是否愿意再次使用：${r.reuse}\n\n## 问题描述\n- 最卡的一步：${r.hardestStep || '无'}\n- 地图/动线问题：${r.mapIssue || '无'}\n- 可直接使用的内容：${r.usableContent || '无'}\n- 模板感内容：${r.templateContent || '无'}\n\n## 建议处理\n${r.priorityChange || '未填写'}\n\n## 完成状态\n${completed}\n`;
   }
   function renderPilotFeedback(){
     const record = buildPilotFeedbackRecord();
@@ -145,6 +154,18 @@
     document.body.appendChild(anchor); anchor.click(); anchor.remove(); URL.revokeObjectURL(anchor.href);
     document.getElementById('pilot-feedback-status').textContent = 'JSON 已下载，请把文件发给主理人。';
   }
+  function applyPilotFeedbackPrefill(){
+    const params = new URLSearchParams(window.location.search);
+    const tester = params.get('tester');
+    const role = params.get('role');
+    const route = params.get('route');
+    if (tester) document.getElementById('pilot-feedback-tester-id').value = tester.slice(0, 24);
+    [['pilot-feedback-role', role], ['pilot-feedback-route', route]].forEach(([id, selected]) => {
+      const field = document.getElementById(id);
+      if (selected && Array.from(field.options).some(option => option.value === selected)) field.value = selected;
+    });
+  }
+  applyPilotFeedbackPrefill();
   document.getElementById('pilot-feedback-build-button').addEventListener('click', renderPilotFeedback);
   document.getElementById('pilot-feedback-copy-button').addEventListener('click', async () => {
     const markdown = buildPilotFeedbackMarkdown();

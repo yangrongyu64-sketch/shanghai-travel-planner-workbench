@@ -1,7 +1,10 @@
 # 上海攻略生成工作台站点健康报告
 
-- 状态：healthy
-- 生成日期：2026-07-25
+- 总体状态：needs_attention
+- 技术状态：healthy
+- 官方信息状态：needs_official_review
+- 官方信息计数（路线点位引用，同一景点可能重复）：已核验 0｜待复核 9｜未回填 88
+- 生成日期：2026-08-19
 - 路线数量：6
 
 ## 检查项
@@ -32,7 +35,9 @@
 
 ## 下一步动作
 
-- 发布后先打开 maintenance/health-report.json 查看 status 是否为 healthy。
+- 发布后先打开 maintenance/health-report.json：technical_status 为 healthy 表示站点文件可用，不代表官方信息已经核验。
+- official_data_status 为 needs_official_review 时，出行或发布前必须继续核验营业时间、预约、票价和临时闭馆等官方信息。
+- 官方信息尚未核验时，顶层 status 为 needs_attention 是符合预期的安全状态。
 - 如果 route_count 不是 6，先回到 examples/requests 和 data/seed 检查路线输入。
 - 如果 PWA、离线应急包、内容扩容包、小程序迁移包、趋势源包、官方复核包、官方回填包或发布证据包缺文件，重新运行 --web-workbench 后再部署。
 - 若 live_deployment 为 not_configured，说明当前是本地/预发布包，正式发布时补 published-url 参数。

@@ -14,7 +14,8 @@
 ## 发布前检查
 
 - [ ] `deployment-manifest.json` 能看到 `maintenance` 节点。
-- [ ] `maintenance/health-report.json` 的 `status` 为 `healthy`。
+- [ ] `maintenance/health-report.json` 的 `technical_status` 为 `healthy`。
+- [ ] 检查 `official_data_status`；若为 `needs_official_review`，保留出发前复核提示，不能把路线标记为官方信息已确认。
 - [ ] `route_count` 仍为 6，且包含 2/3/5/7/15 天路线。
 - [ ] `workbench-demo.zip`、`offline-rescue-kit.zip`、`content-scale.zip`、`acceptance-report.zip`、`miniprogram-handoff.zip`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 都能解压。
 - [ ] `service-worker.js` 包含 `offline-rescue-kit.zip`、`offline-rescue/offline-rescue-manifest.json`、`content-scale.zip`、`content-scale/content-scale-manifest.json`、`trend-sources.zip`、`official-refresh.zip`、`official-fillback.zip`、`maintenance-report.zip`、`release-evidence.zip` 和核心 HTML/PWA 文件。

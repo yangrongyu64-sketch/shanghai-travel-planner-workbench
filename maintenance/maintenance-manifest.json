@@ -2,6 +2,7 @@
   "app_name": "上海攻略生成工作台",
   "package_type": "workbench_maintenance_package",
   "status": "healthy",
+  "health_report_status": "needs_attention",
   "route_count": 6,
   "source_assets": {
     "web_entry": "index.html",

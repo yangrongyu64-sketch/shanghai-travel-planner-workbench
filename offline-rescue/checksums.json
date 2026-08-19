@@ -16,15 +16,15 @@
       "bytes": 1034
     },
     "offline-rescue-manifest.json": {
-      "sha256": "db9a561b6832e967d164ec5de1e0b5715fdd27b7b7cb9c86d8a6c307cfb6720a",
+      "sha256": "abeaf1823696caad91389a1a89c250383ab1023f944339cab7ce2d3c5d3233af",
       "bytes": 2049
     },
     "site/index.html": {
-      "sha256": "a567f59cc4b93b6cbfd4fbef7191c0c24e49d399a46fe507e33da3f71b413c80",
-      "bytes": 1070483
+      "sha256": "10842133fb4a12161a09e2e1705b7ed8d14580b88d3a2e5f97489e20b5e5be5d",
+      "bytes": 1070423
     },
     "site/workbench.html": {
-      "sha256": "2a59d5892b8b247f4fc81b3b8d7900c32f6458d174ee3b85bf763b6376d8046e",
+      "sha256": "23253b047cab0e6a1ddd50faa6ac67bbad1ceaf52486a5d40d0213cbcab15b6e",
       "bytes": 1208493
     },
     "site/place_catalog.html": {
@@ -64,11 +64,11 @@
       "bytes": 1228
     },
     "release-evidence/data-vault-recovery-evidence.json": {
-      "sha256": "493f96ffeeaba46dc5ffdfb925a2b93f0ec1e3f0c6ee51516d1fbe78fe265c02",
+      "sha256": "8651af20473af5692786c72ca8ddd427d7b5ad371f7310737da3d22bb59ce7fa",
       "bytes": 1857
     },
     "release-evidence/online-health-check-summary.json": {
-      "sha256": "5ae884740ca308428b49cf2f2f127099e4862a28d77187e9ef5024f5df71e0c2",
+      "sha256": "5867e9bb224b9bab3838a21510403c165e6b220605fc2668523697e6c9ab01af",
       "bytes": 2075
     }
   },

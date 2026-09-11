@@ -24,36 +24,36 @@
       "bytes": 1070423
     },
     "site/workbench.html": {
-      "sha256": "23253b047cab0e6a1ddd50faa6ac67bbad1ceaf52486a5d40d0213cbcab15b6e",
-      "bytes": 1208493
+      "sha256": "1da3c641bd2cb3b7d22d316368c95e49b28bbe674f14e6b073a4f9087e2ce96a",
+      "bytes": 1263532
     },
     "site/place_catalog.html": {
-      "sha256": "6a047df3501949e743f8df3cd5d14062b0f7bc8b192da7d4ca442c0fd9dcf650",
-      "bytes": 203995
+      "sha256": "1744ef5938ed2f60fde61a947085739d549f97ed9bf05eaf5227ceb58066a3c9",
+      "bytes": 224637
     },
     "site/routes/relaxed_2d1n_citywalk.html": {
-      "sha256": "cf0e498d065db9b51180b1e5dc2152c7c752aa78865e5487849b3a9db689cf53",
-      "bytes": 89017
+      "sha256": "01c8270d29bb6501c0fc02b215b2ade1b8ff787c059dd2561c17711e46bde761",
+      "bytes": 95499
     },
     "site/routes/first_time_3d2n_balanced.html": {
-      "sha256": "b641b5dae3c47e840d8ce7dd127e38064d50ab5b727a97baeb8ca492e8fde0d8",
-      "bytes": 104857
+      "sha256": "947adc9ee831d2b98a2689d0fad998064357b2f1d7c0f06a7fe9f05dab00b1a6",
+      "bytes": 115378
     },
     "site/routes/highwalk_3d2n_landmark_citywalk.html": {
-      "sha256": "80dfa0736a8b48e7734cec4e7bab318faf4c29decdec90e6cbf2608a9f87d13b",
-      "bytes": 110513
+      "sha256": "ce0b1fe7cd59bcbc8e11d8384767090074935f779cd93f1ce01e0f7ab3653b3a",
+      "bytes": 123005
     },
     "site/routes/deep_5d4n_culture_citywalk.html": {
-      "sha256": "bbaa39d70c07a98c29d076276d16ab842cc3623fce539d513a56c021fc249c77",
-      "bytes": 128653
+      "sha256": "8844209a6fdcaf561c46a21b4c01fd80066a28773aae72955943e509f1e76e3f",
+      "bytes": 144967
     },
     "site/routes/local_life_7d6n_balanced.html": {
-      "sha256": "42b06e17e86fc745c671833e5bf1d6f6a44628cc395d95d82e4d6ae55f57d52c",
-      "bytes": 160270
+      "sha256": "e7c48e48c469658dba49adbab49d8cd9551eb1fed4e40a2773f4e2c355d420bb",
+      "bytes": 185389
     },
     "site/routes/longstay_15d14n_balanced.html": {
-      "sha256": "a13990a1bfbaf35a47a71032a83158628294de4f93c77e3d0cc5fdab0a207b5c",
-      "bytes": 255523
+      "sha256": "dfbe59613c6808cb72bd70f107765897aa4cf9ef6ae12707a70ad11e956ebe34",
+      "bytes": 303512
     },
     "product-delivery/data-vault-recovery-guide.md": {
       "sha256": "fc90ab4d6494df04506cad9ac3d6ddd0dd09b19fb254d099965d97a2885aa1cb",

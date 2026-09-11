@@ -1,7 +1,7 @@
 {
   "package_type": "offline_rescue_checksums",
   "algorithm": "sha256",
-  "file_count": 17,
+  "file_count": 20,
   "files": {
     "START_HERE.md": {
       "sha256": "d5bc5967816b70e551f9a44437188929ca161fdde63fe8f70cdc080d8ba81cc4",
@@ -16,8 +16,8 @@
       "bytes": 1034
     },
     "offline-rescue-manifest.json": {
-      "sha256": "abeaf1823696caad91389a1a89c250383ab1023f944339cab7ce2d3c5d3233af",
-      "bytes": 2049
+      "sha256": "984f7479a686fc84fdd75f61dac6b68df9f5e6ff5815a1aba991a0dfff1c3c0f",
+      "bytes": 2161
     },
     "site/index.html": {
       "sha256": "10842133fb4a12161a09e2e1705b7ed8d14580b88d3a2e5f97489e20b5e5be5d",
@@ -32,28 +32,40 @@
       "bytes": 224637
     },
     "site/routes/relaxed_2d1n_citywalk.html": {
-      "sha256": "01c8270d29bb6501c0fc02b215b2ade1b8ff787c059dd2561c17711e46bde761",
-      "bytes": 95499
+      "sha256": "59a9adf40afe63abba084f1101fbeed10454056fc2a6916b52b93d50bf7adc89",
+      "bytes": 109144
     },
     "site/routes/first_time_3d2n_balanced.html": {
-      "sha256": "947adc9ee831d2b98a2689d0fad998064357b2f1d7c0f06a7fe9f05dab00b1a6",
-      "bytes": 115378
+      "sha256": "36743ca2628d88fbfecbcd1a909e39236d027e9902f224c78ff2f7bb410aecb8",
+      "bytes": 131150
     },
     "site/routes/highwalk_3d2n_landmark_citywalk.html": {
-      "sha256": "ce0b1fe7cd59bcbc8e11d8384767090074935f779cd93f1ce01e0f7ab3653b3a",
-      "bytes": 123005
+      "sha256": "ecd8d20b46b2a8870cdef40e20ef47e441203ceeaf1dafad626f865a57dbf95c",
+      "bytes": 139821
     },
     "site/routes/deep_5d4n_culture_citywalk.html": {
-      "sha256": "8844209a6fdcaf561c46a21b4c01fd80066a28773aae72955943e509f1e76e3f",
-      "bytes": 144967
+      "sha256": "36bb60a52d4c36b0c61c0477e3ff493f0ac58e01386c2482d3bb1c155fe126b7",
+      "bytes": 163825
     },
     "site/routes/local_life_7d6n_balanced.html": {
-      "sha256": "e7c48e48c469658dba49adbab49d8cd9551eb1fed4e40a2773f4e2c355d420bb",
-      "bytes": 185389
+      "sha256": "9a0587fcc2ebe6d321981e9c200a458b3fd0d064fe2d2ac70b36f81714c3952f",
+      "bytes": 208946
     },
     "site/routes/longstay_15d14n_balanced.html": {
-      "sha256": "dfbe59613c6808cb72bd70f107765897aa4cf9ef6ae12707a70ad11e956ebe34",
-      "bytes": 303512
+      "sha256": "ecbf70745718d10a8fd63569d57910ec23c0d7efee3a35be227cf9d682916737",
+      "bytes": 339311
+    },
+    "site/vendor/leaflet/leaflet.js": {
+      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
+      "bytes": 147552
+    },
+    "site/vendor/leaflet/leaflet.css": {
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6",
+      "bytes": 14806
+    },
+    "site/vendor/leaflet/LICENSE": {
+      "sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb",
+      "bytes": 1395
     },
     "product-delivery/data-vault-recovery-guide.md": {
       "sha256": "fc90ab4d6494df04506cad9ac3d6ddd0dd09b19fb254d099965d97a2885aa1cb",

@@ -7,6 +7,8 @@
   <meta name="theme-color" content="#0f766e">
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="apple-touch-icon" href="../app-icon.svg">
+  <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
+  <script src="../vendor/leaflet/leaflet.js" defer></script>
   <title>上海3天2晚首次来均衡版｜上海旅行路线</title>
   <style>
     :root{--bg:#f7f5f1;--surface:#fffdfa;--ink:#252525;--muted:#68635b;--line:#ddd5c8;--accent:#0f766e;--blue:#2457a6;--brick:#9f3d2e;--gold:#8a6a17}
@@ -73,6 +75,20 @@
     .route-guide-stop dl div{border:1px solid var(--line);border-radius:8px;background:#fbfaf7;padding:9px}
     .route-guide-stop dt{font-size:12px;color:var(--brick);font-weight:900}.route-guide-stop dd{margin:4px 0 0;color:var(--ink);font-size:13px}
     .route-guide-map-note{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+    .route-guide-real-map{position:relative;height:340px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#eef5f3}
+    .route-guide-real-map.is-hidden{display:none}
+    .route-guide-real-map-placeholder{position:absolute;inset:0;display:grid;place-items:center;padding:16px;color:var(--muted);font-size:13px;text-align:center;pointer-events:none;z-index:400}
+    .route-guide-map-schematic{margin-top:10px}
+    .route-guide-map-schematic summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:850}
+    .route-guide-map-schematic[open] summary{margin-bottom:8px}
+    .route-guide-map-marker{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:var(--brick);color:#fff;font-size:10px;font-weight:900;box-shadow:0 1px 4px rgba(0,0,0,.35);white-space:nowrap}
+    .route-guide-map-marker.is-day-2{background:#2457a6}.route-guide-map-marker.is-day-3{background:#b45309}.route-guide-map-marker.is-day-4{background:#7c3aed}.route-guide-map-marker.is-day-5{background:#be123c}.route-guide-map-marker.is-day-6{background:#15803d}.route-guide-map-marker.is-day-7{background:#0e7490}
+    .route-guide-map-popup h4{margin:0 0 4px;font-size:14px}.route-guide-map-popup p{margin:0 0 6px;color:#68635b;font-size:12px}.route-guide-map-popup a{display:inline-block;margin-right:8px;color:#0f766e;font-weight:800;font-size:12px}
+    .leaflet-container{font-family:inherit}
+    .leaflet-control-layers-toggle{width:auto!important;height:auto!important;min-width:44px;padding:6px 8px;background-image:none!important;font-size:12px;font-weight:900;color:var(--accent);line-height:1.2}
+    .leaflet-control-layers-toggle::before{content:'按天'}
+    .leaflet-control-layers label{font-size:13px;font-weight:800}
+    .route-guide-map-legend{display:inline-block;width:10px;height:10px;margin:0 6px 0 2px;border-radius:50%;background:var(--day-color)}
     .route-guide-stop-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
     .route-guide-stop-nav a{display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border:1px solid var(--accent);border-radius:999px;background:#fff;color:var(--accent);font-size:13px;font-weight:850;text-decoration:none}
     .route-guide-stop-nav a:first-child{background:var(--accent);color:#fff}
@@ -691,6 +707,10 @@
     <aside class="route-guide-side">
       <section id="route-map" class="route-guide-card">
         <h2>路线图</h2>
+        <div id="route-guide-real-map" class="route-guide-real-map" role="region" aria-label="真实底图路线"><div class="route-guide-real-map-placeholder" id="route-guide-real-map-placeholder">正在加载真实底图（OpenStreetMap）…</div></div>
+        <p id="route-guide-real-map-status" class="route-guide-map-note" aria-live="polite">底图来自 OpenStreetMap / CARTO，免费、无需 Key；点标记可看点位名并跳转高德。国内网络较慢时请稍等几秒，加载失败会自动改用下方示意图。</p>
+        <details id="route-guide-map-schematic" class="route-guide-map-schematic">
+          <summary>示意图（离线也能看）</summary>
 <svg class="route-guide-map-svg" viewBox="0 0 100 96" role="img" aria-label="路线图">
           <rect x="1" y="1" width="98" height="94" rx="8"></rect>
           <polyline data-route-guide-map-day-line="1" points="65.1,33.2 77.1,24.2 87.1,21.3"></polyline>
@@ -708,10 +728,11 @@
           <g data-route-guide-map-day="3" data-route-guide-map-order="3"><circle cx="84.4" cy="15.1" r="3.2"></circle><text x="80.0" y="11.5" text-anchor="end">D3-3</text></g>
           <title>人民广场 到 外滩源</title>
         </svg>
-        <p class="route-guide-map-note">示意图按真实经纬度等比投影，只表示点位相对位置和顺序；要看街道和导航，请点每个点位下方的“在高德打开”。</p>
+          <p class="route-guide-map-note">示意图按真实经纬度等比投影，只表示点位相对位置和顺序；要看街道和导航，请点每个点位下方的“在高德打开”。</p>
+        </details>
 <div id="route-guide-amap-panel" class="route-guide-amap-panel" aria-label="真实地图增强">
-  <h3>真实地图增强</h3>
-  <p>不填 Key 时继续使用上方 SVG 示意图；填入高德 Key 后可在本页加载真实底图。</p>
+  <h3>高德底图（可选，需 Key）</h3>
+  <p>上方 OpenStreetMap 底图不需要 Key。如果你有高德 Web Key，填入后可改用高德底图，国内加载更快、中文 POI 更全。</p>
   <label for="route-guide-map-api-key-input">高德 Web Key<input id="route-guide-map-api-key-input" type="text" autocomplete="off" placeholder="可选：高德 JS API Key"></label>
   <label for="route-guide-amap-security-code-input">高德安全密钥<input id="route-guide-amap-security-code-input" type="text" autocomplete="off" placeholder="可选：高德 JS 安全密钥"></label>
   <div class="route-guide-amap-actions">
@@ -721,7 +742,7 @@
     <button type="button" id="route-guide-clear-map-config-button">清除本机配置</button>
   </div>
   <p id="route-guide-map-config-status" class="route-guide-map-status">地图 Key 只在点击保存后写入当前浏览器 localStorage，不会写入项目文件。</p>
-  <p id="route-guide-amap-status" class="route-guide-map-status" aria-live="polite">未填写高德 Key 时不会加载第三方地图。</p>
+  <p id="route-guide-amap-status" class="route-guide-map-status" aria-live="polite">未填写高德 Key 时不会加载高德地图。</p>
   <div id="route-guide-amap-live-map" class="route-guide-amap-live-map"><div>填入高德 Key 后点击“加载高德底图”，这里会显示真实地图点位和路线。</div></div>
 </div>
       </section>
@@ -802,7 +823,7 @@
   const TRAVELER_ROUTE_GUIDE_ROUTE_TITLE = "上海3天2晚首次来均衡版";
   const TRAVELER_ROUTE_GUIDE_TEXT = "# 上海3天2晚首次来均衡版\n\n- 天数：3天\n- 玩法：balanced\n- 住宿区：人民广场\n- 适合谁：适合首次来上海、经典均衡和少踩坑\n- 主题：文化艺术\n\n## 吃住行速览\n- 住宿：人民广场\n- 补给：人民广场 / 南京东路\n- 交通：中等\n- 复核：开放、预约、票务、交通和临时闭馆\n\n## 住哪里\n- 建议住在：人民广场\n- 优势：交通居中；适合经典地标路线；临时调整行程比较方便\n- 住宿取舍：人流较大；不同街区酒店品质差异明显\n\n## 吃什么 / 休息补给\n- 人民广场 / 南京东路：首次来上海、短途换乘、经典路线补给\n  - 吃喝类型：商场简餐 / 本帮简餐 / 咖啡 / 甜品\n  - 休息策略：把午餐或下午茶放在商场、地铁站周边，适合接博物馆、南京东路和外滩路线。\n  - 避坑：不要在午晚高峰临时追热门排队店，容易打乱后续外滩或返程节奏。\n- 外滩 / 外滩源：外滩夜景前后的轻食、咖啡和建筑路线停顿\n  - 吃喝类型：咖啡 / 轻食 / 下午茶 / 简餐\n  - 休息策略：把正式用餐放在外滩源或南京东路一侧，江边只承担散步和拍摄，不把吃饭压在观景点上。\n  - 避坑：避免为江景位支付过高溢价，也不要在夜景高峰前临时排队。\n- 武康路 / 安福路 / 衡复：city walk、咖啡、brunch、街区内容创作\n  - 吃喝类型：咖啡 / brunch / 面包甜点 / 轻食\n  - 休息策略：只提前锁定一个咖啡或轻食点，其他跟随街区节奏，把休息点嵌进步行路线。\n  - 避坑：周末热门点排队和拍照人流明显，不要把整条路线押在单一网红店上。\n\n## 执行难度\n- 体力：中等：平均每天约 3.3 个停靠点，上午和下午各留一次坐下休息。\n- 人流：中高：南京东路、外滩、武康路 周末和节假日人流更明显，拍照点不要压得太满。\n- 预算倾向：中等：优先把钱花在住宿位置和必要预约上，网红排队店不用强追。\n\n### 每日执行提醒\n- Day 1：从 人民广场 开始，到 外滩 收束，至少预留 30 分钟机动。\n- Day 2：从 武康路 开始，到 新天地 收束，至少预留 30 分钟机动；武康路 停留时间较长，别被前一站挤掉。\n- Day 3：从 上海博物馆 开始，到 外滩源 收束，至少预留 30 分钟机动；上海博物馆、豫园 / 老城厢 停留时间较长，别被前一站挤掉。\n\n## 出发前核对清单\n- [ ] 开放预约：确认当天开放、预约、票务和临时闭馆。\n- [ ] 天气装备：看雨天、炎热、台风和风力，决定雨具、防晒或改室内。\n- [ ] 交通回程：用实时地图确认首站、跨区移动、末班车和打车落点。\n- [ ] 体力节奏：标出长走路段和可删减点，不把每天排满。\n- [ ] 休息补给：提前确认咖啡、轻食、洗手间和商场休息点。\n- [ ] 备选点位：准备 1 个室内备选和 1 个低体力备选。\n\n## 备选方案 / 雨天替代\n- 雨天替代：优先保留外滩源、商场、咖啡和室内展馆，江边和露天街拍顺延。\n- 体力不足：只保留当天第一站、一个补给点和收束点，删除跨区加点。\n- 排队过久：热门咖啡或餐厅等待超过 20 分钟，改去同片区轻食或商场休息。\n- 临时闭馆：先用同区备选点替换，不临时跨到远区重排行程。\n\n## 每日替换建议\n\n### Day 1 替换建议\n- Day 1 雨天：保留 人民广场 和 外滩；南京东路 可顺延或缩短。\n- Day 1 体力不足：先做 人民广场，再用 人民广场 / 南京东路 作为补给，最后按体力决定是否去 外滩。\n- Day 1 排队过久：南京东路 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 1 临时闭馆：人民广场 或 外滩 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n### Day 2 替换建议\n- Day 2 雨天：保留 武康路 和 新天地；安福路、复兴公园 可顺延或缩短。\n- Day 2 体力不足：先做 武康路，再用 武康路 / 安福路 / 衡复 作为补给，最后按体力决定是否去 新天地。\n- Day 2 排队过久：安福路、复兴公园 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 2 临时闭馆：武康路 或 新天地 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n### Day 3 替换建议\n- Day 3 雨天：保留 上海博物馆 和 外滩源；豫园 / 老城厢 可顺延或缩短。\n- Day 3 体力不足：先做 上海博物馆，再用 人民广场 / 南京东路 作为补给，最后按体力决定是否去 外滩源。\n- Day 3 排队过久：豫园 / 老城厢 等待超过 20 分钟，改去同片区轻食、咖啡或商场休息。\n- Day 3 临时闭馆：上海博物馆 或 外滩源 临时闭馆时，优先找同区室内点替换，不临时跨区重排。\n\n## 行程安排\n\n### Day 1 抵达日：人民广场到外滩地标\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：外滩\n- 补给：人民广场 / 南京东路\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n  - 高德定位：https://uri.amap.com/marker?position=121.475594,31.231956&name=%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n  - 高德定位：https://uri.amap.com/marker?position=121.483745,31.237147&name=%E5%8D%97%E4%BA%AC%E4%B8%9C%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n  - 高德定位：https://uri.amap.com/marker?position=121.490482,31.238828&name=%E5%A4%96%E6%BB%A9&src=shanghai-planner&coordinate=gaode&callnative=1\n\n### Day 2 衡复 city walk：咖啡、建筑和街区质感\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n  - 高德定位：https://uri.amap.com/marker?position=121.438352,31.204388&name=%E6%AD%A6%E5%BA%B7%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n  - 高德定位：https://uri.amap.com/marker?position=121.442651,31.213747&name=%E5%AE%89%E7%A6%8F%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n  - 高德定位：https://uri.amap.com/marker?position=121.469199,31.216738&name=%E5%A4%8D%E5%85%B4%E5%85%AC%E5%9B%AD&src=shanghai-planner&coordinate=gaode&callnative=1\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n  - 高德定位：https://uri.amap.com/marker?position=121.474970,31.219994&name=%E6%96%B0%E5%A4%A9%E5%9C%B0&src=shanghai-planner&coordinate=gaode&callnative=1\n\n### Day 3 博物馆或老城厢，给离开留缓冲\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：外滩源\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n  - 高德定位：https://uri.amap.com/marker?position=121.475532,31.228223&name=%E4%B8%8A%E6%B5%B7%E5%8D%9A%E7%89%A9%E9%A6%86&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n  - 高德定位：https://uri.amap.com/marker?position=121.492449,31.226944&name=%E8%B1%AB%E5%9B%AD%20%2F%20%E8%80%81%E5%9F%8E%E5%8E%A2&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n  - 高德定位：https://uri.amap.com/marker?position=121.488649,31.242423&name=%E5%A4%96%E6%BB%A9%E6%BA%90&src=shanghai-planner&coordinate=gaode&callnative=1\n\n## 出发前复核\n- 开放、预约、票务、交通和临时闭馆以官方渠道为准。\n- 当前素材状态：需补官方信息。";
   const TRAVELER_ROUTE_GUIDE_DAYS = [{"day": 1, "title": "Day 1 抵达日：人民广场到外滩地标", "text": "### Day 1 抵达日：人民广场到外滩地标\n\n#### Day 1 执行卡\n- 开始：人民广场\n- 收束：外滩\n- 补给：人民广场 / 南京东路\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 下午｜人民广场｜peoples_square\n  - 停留建议：60 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：大型换乘站，尽量避开早晚高峰。\n  - 高德定位：https://uri.amap.com/marker?position=121.475594,31.231956&name=%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 傍晚前｜南京东路｜bund\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍第一眼识别度强的全景，再补一张人物或路口尺度。\n  - 避坑提醒：周末和节假日人流很大。\n  - 高德定位：https://uri.amap.com/marker?position=121.483745,31.237147&name=%E5%8D%97%E4%BA%AC%E4%B8%9C%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 晚上｜外滩｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：夜景价值高，但晚间人流压力也高。\n  - 高德定位：https://uri.amap.com/marker?position=121.490482,31.238828&name=%E5%A4%96%E6%BB%A9&src=shanghai-planner&coordinate=gaode&callnative=1", "executionItems": [{"label": "开始", "value": "人民广场"}, {"label": "收束", "value": "外滩"}, {"label": "补给", "value": "人民广场 / 南京东路"}, {"label": "交通", "value": "少量跨片区，优先地铁接驳，近距离用步行或短途骑行。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-1-stop-1", "order": 1, "placeName": "人民广场"}, {"key": "day-1-stop-2", "order": 2, "placeName": "南京东路"}, {"key": "day-1-stop-3", "order": 3, "placeName": "外滩"}]}, {"day": 2, "title": "Day 2 衡复 city walk：咖啡、建筑和街区质感", "text": "### Day 2 衡复 city walk：咖啡、建筑和街区质感\n\n#### Day 2 执行卡\n- 开始：武康路\n- 收束：新天地\n- 补给：武康路 / 安福路 / 衡复\n- 交通：少量跨片区，优先地铁接驳，近距离用步行或短途骑行。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜武康路｜hengfu\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：Shanghai Library。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：周末热门拍照点人多，不要只挤在武康大楼门口。\n  - 高德定位：https://uri.amap.com/marker?position=121.438352,31.204388&name=%E6%AD%A6%E5%BA%B7%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 中午｜安福路｜hengfu\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Changshu Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合生活方式内容，不适合只想看大地标的游客。\n  - 高德定位：https://uri.amap.com/marker?position=121.442651,31.213747&name=%E5%AE%89%E7%A6%8F%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 下午｜复兴公园｜hengfu\n  - 停留建议：60 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合拍店招、橱窗、街角和停下来休息的片段，内容更有生活感。\n  - 避坑提醒：更适合作为路线中的休息点，不建议单独为它跨城前往。\n  - 高德定位：https://uri.amap.com/marker?position=121.469199,31.216738&name=%E5%A4%8D%E5%85%B4%E5%85%AC%E5%9B%AD&src=shanghai-planner&coordinate=gaode&callnative=1\n- 4. 晚上｜新天地｜huaihai\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：Xintiandi。\n  - 拍照提示：适合抓黄昏、夜景和城市天际线，先看天气和灯光条件。\n  - 避坑提醒：商业感较强，更适合作为晚餐或夜间补充点。\n  - 高德定位：https://uri.amap.com/marker?position=121.474970,31.219994&name=%E6%96%B0%E5%A4%A9%E5%9C%B0&src=shanghai-planner&coordinate=gaode&callnative=1", "executionItems": [{"label": "开始", "value": "武康路"}, {"label": "收束", "value": "新天地"}, {"label": "补给", "value": "武康路 / 安福路 / 衡复"}, {"label": "交通", "value": "少量跨片区，优先地铁接驳，近距离用步行或短途骑行。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-2-stop-1", "order": 1, "placeName": "武康路"}, {"key": "day-2-stop-2", "order": 2, "placeName": "安福路"}, {"key": "day-2-stop-3", "order": 3, "placeName": "复兴公园"}, {"key": "day-2-stop-4", "order": 4, "placeName": "新天地"}]}, {"day": 3, "title": "Day 3 博物馆或老城厢，给离开留缓冲", "text": "### Day 3 博物馆或老城厢，给离开留缓冲\n\n#### Day 3 执行卡\n- 开始：上海博物馆\n- 收束：外滩源\n- 补给：人民广场 / 南京东路\n- 交通：跨片区较多，优先地铁接驳，赶时间或带行李再打车。\n- 机动：至少预留 30 分钟，长停留点不要被前一站挤掉。\n- 1. 上午｜上海博物馆｜peoples_square\n  - 停留建议：120 分钟\n  - 交通判断：第一站从住宿地或抵达点出发，先用地图 App 复核实时到达方式；附近地铁：People's Square。\n  - 拍照提示：适合拍建筑外观、展陈节奏和观展动线，馆内拍摄规则以现场为准。\n  - 避坑提醒：预约方式和开放时间出发前必须以官网为准。\n  - 高德定位：https://uri.amap.com/marker?position=121.475532,31.228223&name=%E4%B8%8A%E6%B5%B7%E5%8D%9A%E7%89%A9%E9%A6%86&src=shanghai-planner&coordinate=gaode&callnative=1\n- 2. 下午｜豫园 / 老城厢｜old_city\n  - 停留建议：120 分钟\n  - 交通判断：跨片区移动，优先地铁接驳，赶时间或带行李再打车；附近地铁：Yuyuan Garden。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：游客密度较高，门票和开放信息出发前需要再次确认。\n  - 高德定位：https://uri.amap.com/marker?position=121.492449,31.226944&name=%E8%B1%AB%E5%9B%AD%20%2F%20%E8%80%81%E5%9F%8E%E5%8E%A2&src=shanghai-planner&coordinate=gaode&callnative=1\n- 3. 下午备选｜外滩源｜bund\n  - 停留建议：90 分钟\n  - 交通判断：与上一站距离近，优先步行或短途骑行，体力下降再打车；附近地铁：East Nanjing Road。\n  - 拍照提示：适合拍建筑细节、街角层次和步行动线，别只挤在单一热门机位。\n  - 避坑提醒：适合慢慢看建筑细节，不适合当作纯打卡点匆匆路过。\n  - 高德定位：https://uri.amap.com/marker?position=121.488649,31.242423&name=%E5%A4%96%E6%BB%A9%E6%BA%90&src=shanghai-planner&coordinate=gaode&callnative=1", "executionItems": [{"label": "开始", "value": "上海博物馆"}, {"label": "收束", "value": "外滩源"}, {"label": "补给", "value": "人民广场 / 南京东路"}, {"label": "交通", "value": "跨片区较多，优先地铁接驳，赶时间或带行李再打车。"}, {"label": "机动", "value": "至少预留 30 分钟，长停留点不要被前一站挤掉。"}], "stops": [{"key": "day-3-stop-1", "order": 1, "placeName": "上海博物馆"}, {"key": "day-3-stop-2", "order": 2, "placeName": "豫园 / 老城厢"}, {"key": "day-3-stop-3", "order": 3, "placeName": "外滩源"}]}];
-  const TRAVELER_ROUTE_GUIDE_MAP_POINTS = [{"day": 1, "order": 1, "placeName": "人民广场", "timeBlock": "下午", "coordinate": [121.475594, 31.231956]}, {"day": 1, "order": 2, "placeName": "南京东路", "timeBlock": "傍晚前", "coordinate": [121.483745, 31.237147]}, {"day": 1, "order": 3, "placeName": "外滩", "timeBlock": "晚上", "coordinate": [121.490482, 31.238828]}, {"day": 2, "order": 1, "placeName": "武康路", "timeBlock": "上午", "coordinate": [121.438352, 31.204388]}, {"day": 2, "order": 2, "placeName": "安福路", "timeBlock": "中午", "coordinate": [121.442651, 31.213747]}, {"day": 2, "order": 3, "placeName": "复兴公园", "timeBlock": "下午", "coordinate": [121.469199, 31.216738]}, {"day": 2, "order": 4, "placeName": "新天地", "timeBlock": "晚上", "coordinate": [121.47497, 31.219994]}, {"day": 3, "order": 1, "placeName": "上海博物馆", "timeBlock": "上午", "coordinate": [121.475532, 31.228223]}, {"day": 3, "order": 2, "placeName": "豫园 / 老城厢", "timeBlock": "下午", "coordinate": [121.492449, 31.226944]}, {"day": 3, "order": 3, "placeName": "外滩源", "timeBlock": "下午备选", "coordinate": [121.488649, 31.242423]}];
+  const TRAVELER_ROUTE_GUIDE_MAP_POINTS = [{"day": 1, "order": 1, "placeName": "人民广场", "timeBlock": "下午", "coordinate": [121.475594, 31.231956], "coordinateWgs84": [121.471062, 31.23389], "coordinateAnchor": "人民广场", "nearestMetro": "People's Square", "stayMinutes": 60, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.475594,31.231956&name=%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.475594,31.231956,%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&mode=bus&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "bus"}, {"day": 1, "order": 2, "placeName": "南京东路", "timeBlock": "傍晚前", "coordinate": [121.483745, 31.237147], "coordinateWgs84": [121.47924, 31.239101], "coordinateAnchor": "南京东路", "nearestMetro": "East Nanjing Road", "stayMinutes": 60, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.483745,31.237147&name=%E5%8D%97%E4%BA%AC%E4%B8%9C%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.483745,31.237147,%E5%8D%97%E4%BA%AC%E4%B8%9C%E8%B7%AF&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}, {"day": 1, "order": 3, "placeName": "外滩", "timeBlock": "晚上", "coordinate": [121.490482, 31.238828], "coordinateWgs84": [121.486, 31.2408], "coordinateAnchor": "外滩（南京东路口 / 陈毅广场观景平台）", "nearestMetro": "East Nanjing Road", "stayMinutes": 90, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.490482,31.238828&name=%E5%A4%96%E6%BB%A9&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.490482,31.238828,%E5%A4%96%E6%BB%A9&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}, {"day": 2, "order": 1, "placeName": "武康路", "timeBlock": "上午", "coordinate": [121.438352, 31.204388], "coordinateWgs84": [121.433729, 31.206256], "coordinateAnchor": "武康大楼", "nearestMetro": "Shanghai Library", "stayMinutes": 120, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.438352,31.204388&name=%E6%AD%A6%E5%BA%B7%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.438352,31.204388,%E6%AD%A6%E5%BA%B7%E8%B7%AF&mode=bus&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "bus"}, {"day": 2, "order": 2, "placeName": "安福路", "timeBlock": "中午", "coordinate": [121.442651, 31.213747], "coordinateWgs84": [121.438035, 31.215618], "coordinateAnchor": "安福路", "nearestMetro": "Changshu Road", "stayMinutes": 90, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.442651,31.213747&name=%E5%AE%89%E7%A6%8F%E8%B7%AF&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.442651,31.213747,%E5%AE%89%E7%A6%8F%E8%B7%AF&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}, {"day": 2, "order": 3, "placeName": "复兴公园", "timeBlock": "下午", "coordinate": [121.469199, 31.216738], "coordinateWgs84": [121.464648, 31.218662], "coordinateAnchor": "复兴公园", "nearestMetro": "Xintiandi", "stayMinutes": 60, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.469199,31.216738&name=%E5%A4%8D%E5%85%B4%E5%85%AC%E5%9B%AD&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.469199,31.216738,%E5%A4%8D%E5%85%B4%E5%85%AC%E5%9B%AD&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}, {"day": 2, "order": 4, "placeName": "新天地", "timeBlock": "晚上", "coordinate": [121.47497, 31.219994], "coordinateWgs84": [121.470437, 31.221931], "coordinateAnchor": "新天地", "nearestMetro": "Xintiandi", "stayMinutes": 90, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.474970,31.219994&name=%E6%96%B0%E5%A4%A9%E5%9C%B0&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.474970,31.219994,%E6%96%B0%E5%A4%A9%E5%9C%B0&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}, {"day": 3, "order": 1, "placeName": "上海博物馆", "timeBlock": "上午", "coordinate": [121.475532, 31.228223], "coordinateWgs84": [121.471, 31.230158], "coordinateAnchor": "上海博物馆", "nearestMetro": "People's Square", "stayMinutes": 120, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.475532,31.228223&name=%E4%B8%8A%E6%B5%B7%E5%8D%9A%E7%89%A9%E9%A6%86&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.475532,31.228223,%E4%B8%8A%E6%B5%B7%E5%8D%9A%E7%89%A9%E9%A6%86&mode=bus&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "bus"}, {"day": 3, "order": 2, "placeName": "豫园 / 老城厢", "timeBlock": "下午", "coordinate": [121.492449, 31.226944], "coordinateWgs84": [121.487975, 31.228927], "coordinateAnchor": "豫园", "nearestMetro": "Yuyuan Garden", "stayMinutes": 120, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.492449,31.226944&name=%E8%B1%AB%E5%9B%AD%20%2F%20%E8%80%81%E5%9F%8E%E5%8E%A2&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.492449,31.226944,%E8%B1%AB%E5%9B%AD%20%2F%20%E8%80%81%E5%9F%8E%E5%8E%A2&mode=bus&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "bus"}, {"day": 3, "order": 3, "placeName": "外滩源", "timeBlock": "下午备选", "coordinate": [121.488649, 31.242423], "coordinateWgs84": [121.48416, 31.244389], "coordinateAnchor": "外滩源", "nearestMetro": "East Nanjing Road", "stayMinutes": 90, "amapMarkerUrl": "https://uri.amap.com/marker?position=121.488649,31.242423&name=%E5%A4%96%E6%BB%A9%E6%BA%90&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationUrl": "https://uri.amap.com/navigation?to=121.488649,31.242423,%E5%A4%96%E6%BB%A9%E6%BA%90&mode=walk&policy=1&src=shanghai-planner&coordinate=gaode&callnative=1", "amapNavigationMode": "walk"}];
   const TRAVELER_ROUTE_GUIDE_PWA_ENABLED = true;
   const travelerRouteGuideMapConfigStorageKey = 'shanghai-traveler-route-guide-map-config-v1';
   let travelerRouteGuideAmapLoadPromise = null;
@@ -1210,6 +1231,98 @@
       button.addEventListener('click', () => setTravelerRouteGuideStopStatus(button.dataset.routeGuideStopKey, button.dataset.routeGuideStopStatusButton));
     });
   }
+  const TRAVELER_ROUTE_GUIDE_DAY_COLORS = ['#9f3d2e', '#2457a6', '#b45309', '#7c3aed', '#be123c', '#15803d', '#0e7490'];
+  const TRAVELER_ROUTE_GUIDE_TILE_SOURCES = [
+    {name: 'OpenStreetMap（中文标注）', url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', subdomains: 'abc', maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 贡献者'},
+    {name: 'CARTO Voyager（英文标注）', url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', subdomains: 'abcd', maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 贡献者 &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'}
+  ];
+  let travelerRouteGuideRealMap = null;
+  function travelerRouteGuideRealMapPoints(){
+    return TRAVELER_ROUTE_GUIDE_MAP_POINTS.filter(point => Number.isFinite(Number(point.coordinateWgs84?.[0])) && Number.isFinite(Number(point.coordinateWgs84?.[1])));
+  }
+  function travelerRouteGuideRealMapFallback(message){
+    const container = document.getElementById('route-guide-real-map');
+    const status = document.getElementById('route-guide-real-map-status');
+    const schematic = document.getElementById('route-guide-map-schematic');
+    if (container) container.classList.add('is-hidden');
+    if (status) { status.textContent = message; status.style.color = 'var(--brick)'; }
+    if (schematic) schematic.open = true;
+  }
+  function travelerRouteGuideMarkerHtml(point){
+    const dayClass = `is-day-${Math.min(Math.max(Number(point.day) || 1, 1), 7)}`;
+    return `<span class="route-guide-map-marker ${dayClass}" title="D${point.day}-${point.order} ${escapeTravelerRouteGuideHtml(point.placeName)}">${point.day}-${point.order}</span>`;
+  }
+  function escapeTravelerRouteGuideHtml(value){
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[ch]));
+  }
+  function travelerRouteGuidePopupHtml(point){
+    const modeLabel = point.amapNavigationMode === 'walk' ? '步行导航' : '公交/地铁导航';
+    const anchor = point.coordinateAnchor ? `定位点：${escapeTravelerRouteGuideHtml(point.coordinateAnchor)}` : '';
+    const metro = point.nearestMetro ? ` · 地铁 ${escapeTravelerRouteGuideHtml(point.nearestMetro)}` : '';
+    return `<div class="route-guide-map-popup"><h4>D${point.day}-${point.order} ${escapeTravelerRouteGuideHtml(point.placeName)}</h4><p>${escapeTravelerRouteGuideHtml(point.timeBlock || '')}${metro}<br>${anchor}</p><a href="${escapeTravelerRouteGuideHtml(point.amapMarkerUrl)}" target="_blank" rel="noopener">在高德打开</a><a href="${escapeTravelerRouteGuideHtml(point.amapNavigationUrl)}" target="_blank" rel="noopener">${modeLabel}</a></div>`;
+  }
+  function initializeTravelerRouteGuideRealMap(){
+    const container = document.getElementById('route-guide-real-map');
+    if (!container) return;
+    const points = travelerRouteGuideRealMapPoints();
+    if (!points.length) { travelerRouteGuideRealMapFallback('这条路线还没有可用坐标，先看下方示意图。'); return; }
+    if (typeof L === 'undefined') { travelerRouteGuideRealMapFallback('地图组件未加载（可能离线或被拦截），已改用下方示意图；导航仍可用点位下方的高德按钮。'); return; }
+    try {
+      const map = L.map(container, {scrollWheelZoom: false, attributionControl: true, zoomControl: true});
+      travelerRouteGuideRealMap = map;
+      let sourceIndex = 0;
+      let firstTileLoaded = false;
+      let tileErrors = 0;
+      let layer = null;
+      const placeholder = document.getElementById('route-guide-real-map-placeholder');
+      const status = document.getElementById('route-guide-real-map-status');
+      const useSource = (index) => {
+        const source = TRAVELER_ROUTE_GUIDE_TILE_SOURCES[index];
+        if (!source) { travelerRouteGuideRealMapFallback('真实底图暂时加载不出来（网络原因），已改用下方示意图；导航请用点位下方的高德按钮。'); return; }
+        if (layer) map.removeLayer(layer);
+        tileErrors = 0;
+        layer = L.tileLayer(source.url, {subdomains: source.subdomains, maxZoom: source.maxZoom, attribution: source.attribution, crossOrigin: true});
+        layer.on('tileload', () => { if (!firstTileLoaded) { firstTileLoaded = true; if (placeholder) placeholder.remove(); if (status) status.textContent = `底图：${source.name}（免费、无需 Key）。点标记看点位名，导航请用“在高德打开”。`; } });
+        layer.on('tileerror', () => { tileErrors += 1; if (!firstTileLoaded && tileErrors >= 3) { sourceIndex += 1; useSource(sourceIndex); } });
+        layer.addTo(map);
+      };
+      useSource(sourceIndex);
+      const byDay = new Map();
+      points.forEach(point => { const key = Number(point.day) || 1; if (!byDay.has(key)) byDay.set(key, []); byDay.get(key).push(point); });
+      const bounds = [];
+      const dayLayers = {};
+      byDay.forEach((dayPoints, day) => {
+        const color = TRAVELER_ROUTE_GUIDE_DAY_COLORS[(day - 1) % TRAVELER_ROUTE_GUIDE_DAY_COLORS.length];
+        const latLngs = dayPoints.map(point => [Number(point.coordinateWgs84[1]), Number(point.coordinateWgs84[0])]);
+        latLngs.forEach(latLng => bounds.push(latLng));
+        const group = L.layerGroup();
+        if (latLngs.length > 1) L.polyline(latLngs, {color, weight: 4, opacity: 0.8}).addTo(group);
+        dayPoints.forEach((point, index) => {
+          const icon = L.divIcon({className: 'route-guide-map-marker-wrap', html: travelerRouteGuideMarkerHtml(point), iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -14]});
+          L.marker(latLngs[index], {icon, title: `D${point.day}-${point.order} ${point.placeName}`}).bindPopup(travelerRouteGuidePopupHtml(point), {maxWidth: 260}).addTo(group);
+        });
+        group.addTo(map);
+        dayLayers[`<span class="route-guide-map-legend" style="--day-color:${color}"></span>Day ${day}`] = group;
+      });
+      if (Object.keys(dayLayers).length > 1) L.control.layers(null, dayLayers, {collapsed: true, position: 'topright'}).addTo(map);
+      if (bounds.length === 1) map.setView(bounds[0], 15); else map.fitBounds(bounds, {padding: [28, 28], maxZoom: 16});
+      window.setTimeout(() => { if (!firstTileLoaded) { sourceIndex += 1; useSource(sourceIndex); window.setTimeout(() => { if (!firstTileLoaded) travelerRouteGuideRealMapFallback('真实底图加载超时（国内网络可能较慢），已改用下方示意图；导航请用点位下方的高德按钮。'); }, 8000); } }, 8000);
+    } catch (error) {
+      travelerRouteGuideRealMapFallback('真实底图初始化失败，已改用下方示意图；导航请用点位下方的高德按钮。');
+    }
+  }
+  function travelerRouteGuideRealMapWhenReady(){
+    if (typeof document === 'undefined' || typeof document.getElementById !== 'function' || !document.getElementById('route-guide-real-map')) return;
+    if (typeof L !== 'undefined') { initializeTravelerRouteGuideRealMap(); return; }
+    const script = typeof document.querySelector === 'function' ? document.querySelector('script[src$="leaflet.js"]') : null;
+    if (!script || typeof window === 'undefined' || typeof window.addEventListener !== 'function') { initializeTravelerRouteGuideRealMap(); return; }
+    let settled = false;
+    const settle = () => { if (settled) return; settled = true; initializeTravelerRouteGuideRealMap(); };
+    script.addEventListener('load', settle);
+    script.addEventListener('error', settle);
+    window.addEventListener('load', settle);
+    window.setTimeout(settle, 6000);
+  }
   function travelerRouteGuideMapPoints(){
     return TRAVELER_ROUTE_GUIDE_MAP_POINTS.filter(point => Number.isFinite(Number(point.coordinate?.[0])) && Number.isFinite(Number(point.coordinate?.[1])));
   }
@@ -1449,6 +1562,7 @@
   initializeTravelerRouteGuideDayFocus();
   initializeTravelerRouteGuideChecklist();
   initializeTravelerRouteGuideStopStatus();
+  travelerRouteGuideRealMapWhenReady();
   applyTravelerRouteGuideMapConfig();
   document.getElementById('route-guide-save-map-config-button')?.addEventListener('click', saveTravelerRouteGuideMapConfig);
   document.getElementById('route-guide-clear-map-config-button')?.addEventListener('click', () => { clearTravelerRouteGuideMapConfig(); clearTravelerRouteGuideAmap(); });

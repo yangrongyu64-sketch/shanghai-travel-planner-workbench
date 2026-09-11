@@ -35,6 +35,8 @@ const APP_SHELL_ASSETS = [
   './release-evidence/data-vault-recovery-evidence.json',
   './manifest.webmanifest',
   './app-icon.svg',
+  './vendor/leaflet/leaflet.js',
+  './vendor/leaflet/leaflet.css',
   './README.md',
   './DEPLOYMENT.md',
   './deployment-manifest.json',

@@ -12,6 +12,6 @@
 
 - [ ] 运行官方校验：`.venv/bin/python -m shanghai_planner.cli --validate-official-verifications`。
 - [ ] 重新生成工作台：`.venv/bin/python -m shanghai_planner.cli --web-workbench ...`。
-- [ ] 检查 `maintenance/health-report.json` 为 healthy。
+- [ ] 检查 `maintenance/health-report.json`：`technical_status` 为 healthy，且 `official_data` 的待复核/未回填计数随回填下降；全部核验后 `official_data_status` 应变为 healthy。
 - [ ] 在线巡检显示全部资源 healthy。
 - [ ] 手机视口无横向溢出，控制台无应用级错误。

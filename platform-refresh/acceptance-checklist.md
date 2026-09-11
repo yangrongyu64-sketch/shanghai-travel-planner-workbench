@@ -5,4 +5,4 @@
 - [ ] 每条素材都标记了提到地点、路线角度、避坑信号。
 - [ ] 开放时间、预约、票务、交通、临时闭馆等官方复核字段已列出。
 - [ ] 合并后重新生成工作台，路线素材数量和内容角度能在页面看到。
-- [ ] `maintenance/health-report.json` 仍为 `healthy`。
+- [ ] `maintenance/health-report.json` 的 `technical_status` 仍为 `healthy`；官方信息未核验前顶层 `status` 为 `needs_attention` 属预期，不代表素材刷新失败。
